@@ -1,5 +1,7 @@
 # Rally documentation
 
+**Browser platform handoff:** [Current features, evidence and first call checks](platform-progress-2026-10-29.md).
+
 **Morning update:** [Speech reliability fixes and isolated audio measurement](morning-reliability-2026-10-29.md) · [rehearsal checklist](morning-rehearsal.md). The app is version 12; live browser-call and Teams speech validation are pending.
 
 **Current release:** [Version 12 — browser meetings, a free audio check, presenter view and WhatsApp follow-up](releases/2026-10-29-v12.md) is live on the existing restricted Site. WhatsApp Web, Zoom Web, Meet and Jitsi presets use host-selected tab audio; real call compatibility remains unverified. Earlier version-7/local-only entries below are historical. Teams spoken output and fresh live pacing retry remain pending; final submission is on hold.

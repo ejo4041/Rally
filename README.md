@@ -18,7 +18,7 @@ Tests stop after three minutes including preparation/lobby time. Version 9 inclu
 
 ## Browser meeting inputs
 
-Choose **Meeting browser tab** when creating a meeting to capture a user-selected WhatsApp Web, Zoom Web, Google Meet, Jitsi or other browser call, with an optional host microphone. Use **Check audio · free** to verify separate input levels locally before starting Muse transcription. Prompts stay with the host; this route does not add Rally as a call participant. [Presenter view](docs/presenter-view.md) provides a clean call display. **Share confirmed outcomes** prepares a manual WhatsApp draft after the meeting. No additional connector subscription is used; real Muse calls retain their existing costs. [Instructions and validation limits](docs/browser-meetings.md).
+Choose **Meeting browser tab** when creating a meeting to capture a user-selected WhatsApp Web, Zoom Web, Google Meet, Jitsi or other browser call, with an optional host microphone. Use **Check audio · free** to verify separate input levels locally before starting Muse transcription. Prompts stay with the host; this route does not add Rally as a call participant. [Presenter view](docs/presenter-view.md) provides a clean call display. **Share confirmed outcomes** prepares a manual WhatsApp draft after the meeting. No additional connector subscription is used; real Muse calls retain their existing costs. [Instructions and validation limits](docs/browser-meetings.md) · [Platform handoff](docs/platform-progress-2026-10-29.md).
 
 ## Meta model use and competition voice
 
