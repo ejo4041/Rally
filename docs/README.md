@@ -1,10 +1,12 @@
+# Rally documentation
+
+**Backend team handoff:** [start here](backend-team-handoff.md). Backend MVP and Astra fixes are committed on `main`; frontend integration and deployment remain separate.
+
 Backend deeper validation: [Astra review and fixes](backend-astra-review.md) · [actual AI input/output examples](backend-ai-examples.md).
 
 Backend MVP: [implementation status](backend-implementation-status.md) · [API contract](backend-api.md) · [AI processing](ai-processing.md) · [streaming decision](research/backend-streaming.md) · [review results](backend-review.md).
 
-Backend worktree checkpoint: [implementation status](backend-implementation-status.md) and [agreed plan](backend-plan.md). Backend code remains pending.
 
-# Rally documentation
 
 **Browser platform handoff:** [Current features, evidence and first call checks](platform-progress-2026-10-29.md).
 

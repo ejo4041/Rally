@@ -39,4 +39,4 @@ The audio test's single synthetic voice became two speaker labels; “Alice” b
 
 This pass made 17 paid operations totaling **$0.28876035**, including the failed report. Cumulative tracked estimate: **$0.47338150**; conditional $150 remainder: **$149.52661850**. Unknown charges: **0**. The actual grant and Billing balance remain unverified. [Usage ledger](research/muse-cost-ledger.md).
 
-Typechecking and the full suite pass. Test processes were stopped after their checks. Shared ignored secrets and existing private Sites access remain unchanged. Updates are committed on the existing isolated backend branch and reconciled with remote main before delivery.
+Typechecking and the full suite pass. Test processes were stopped after their checks. Shared ignored secrets and existing private Sites access remain unchanged. Implementation and review fixes were committed as `50bfab1` and pushed to remote `main`. See the [team handoff](backend-team-handoff.md) for the current documentation entry point.

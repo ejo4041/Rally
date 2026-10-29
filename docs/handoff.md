@@ -1,10 +1,14 @@
+# Rally handoff — current checkpoint
+
+**Backend delivered on main:** [team handoff](backend-team-handoff.md). Implementation and Astra fixes: `50bfab1`. Setup, frontend contract, actual AI examples, validation evidence and next integration tasks are linked there.
+
 Backend Astra follow-up: [expanded validation and fixes](backend-astra-review.md), [actual agenda/report/score examples](backend-ai-examples.md). Three Astra reviewers; 25 tests, real browser reconnects, real reasoning and audio pipeline exercised. Read documented ASR/scoring limits. Tracked spend $0.47338150, conditional remainder $149.52661850, unknown 0; no deployment or frontend change.
 
-Backend delivery: merged and pushed to remote `main` (`098c134`), including concurrent frontend main changes. [Backend checkpoint](backend-implementation-status.md) has setup, tests, demo accounts, cost evidence and limitations.
+Initial backend delivery: merged with concurrent frontend changes at `098c134`; subsequent Astra fixes are on `main` at `50bfab1`. [Backend checkpoint](backend-implementation-status.md) has setup, tests, demo accounts, cost evidence and limitations.
 
 Backend MVP implemented: [status and validation](backend-implementation-status.md), [frontend API contract](backend-api.md), [AI processing diagram](ai-processing.md), [setup](../apps/rally-api/README.md). Real two-way browser audio and Muse end-to-end smoke passed. Frontend wiring and deployment remain separate; existing private Site is unchanged.
 
-# Rally handoff — current checkpoint
+
 
 **Morning update:** [Speech reliability fixes and isolated audio measurement](morning-reliability-2026-10-29.md) · [rehearsal checklist](morning-rehearsal.md). The app is version 12; live browser-call and Teams speech validation are pending.
 

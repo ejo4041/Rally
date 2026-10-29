@@ -16,7 +16,7 @@ October 29, 2026. Implemented in `apps/rally-api/` on `rally-backend-mvp`, fresh
 
 ## Validation
 
-- Eight deterministic HTTP/lifecycle/provider tests passed; TypeScript check passed.
+- 25 automated tests pass, including expanded HTTP/lifecycle/accounting, audio adapter and quality checks; TypeScript checking passes. See the [Astra review](backend-astra-review.md) for current evidence.
 - Real browser → LiveKit → backend PCM and backend PCM → browser playback passed: 131,200 incoming bytes, detected incoming signal, outgoing RMS 0.174, JSON event received. Synthetic oscillator audio; physical microphones and frontend integration were not tested.
 - Real Muse integration passed with licensed reference speech: agenda preparation, three transcript turns with one speaker label, live assessment/intervention and final report. Four billable operations cost an estimated $0.03199; no unknown cost. [Ledger](research/muse-cost-ledger.md) has usage IDs and cumulative totals.
 - Automated fixtures prove app behavior; one reference-speech run does not establish real meeting scoring quality, multiple-speaker accuracy, or latency under load.
@@ -29,8 +29,12 @@ Voice agenda entry, provider-generated speech, and Teams/video remain follow-ups
 
 [Two-axis review](backend-review.md) completed: all four findings addressed, full suite and typecheck pass, production dependency audit reports zero vulnerabilities. Merge reconciliation is recorded in the current handoff.
 
-## Delivery checkpoint
+## Initial delivery checkpoint
 
 Merged remote main through `316eba9` without conflicts and pushed the integrated backend as `098c134`. All eight tests and typecheck passed on the merged tree. The original checkout is an unborn branch with untracked working files, so it was deliberately not reset; the complete tested checkout is `/srv/hackathon/rally-backend-mvp`, and remote `main` contains the result.
 
 Local demo accounts `demo` and `demo2` are seeded in this worktree database. Their generated password is stored only as `RALLY_DEMO_PASSWORD` in the shared ignored `.env.local` (mode 0600). `npm run dev` launched both services and `/api/health` returned `{"ok":true}`; both owned processes were then stopped. Paid processing remains opt-in. Node/npm are available under `/srv/hackathon/tools/node/bin`.
+
+## Final backend handoff
+
+Implementation plus reviewed fixes are committed and pushed to remote `main` at `50bfab1`. [Team handoff](backend-team-handoff.md) is the current entry point. No uncommitted backend work remains. Frontend integration, deployment and human meeting rehearsal remain separate, documented tasks.

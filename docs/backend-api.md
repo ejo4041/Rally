@@ -26,7 +26,7 @@ Use `credentials: 'include'` for fetch. Use the same hostname for frontend and A
 | `POST /meetings/:id/report/retry` | Explicit background retry. Unknown accounting blocks paid calls. |
 | `PATCH /meetings/:id/report` | `{note}` appends an attributed host correction to the completed summary. |
 | `GET /meetings/:id/export` | Download JSON meeting, report and finalized transcript. |
-| `DELETE /meetings/:id` | Stops capture and removes meeting/turns; returns 204. Busy preparation/report jobs must finish first. Accounting remains. |
+| `DELETE /meetings/:id` | Stops capture and removes meeting/turns; returns 204. Busy preparation/report jobs and final audio drain must finish first. Accounting remains. |
 | `GET /usage` | Current user's sanitized usage rows, including running reservations and unknown costs. |
 | `GET /health` | `{ok:true}` liveness; not a claim that providers are reachable. |
 
