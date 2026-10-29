@@ -72,3 +72,7 @@ A data notification is not durable storage. On connection/reconnection, fetch th
 Reports are AI interpretations. `reported_agreement` indicates explicit agreement found in speech, `proposal` indicates a suggestion, and `unresolved` indicates missing certainty. None means a host explicitly confirmed the item. Owners/dates may be null; ticket/meeting follow-ups are draft suggestions only.
 
 The overall score averages only assessable categories; `coverage` is the number out of five. Unknown speaker attribution and unavailable timing remain null. Host edits are preserved as a correction note, not silently attributed to the model.
+
+## Existing Teams runner bridge
+
+Authenticated `GET /teams/status`, `POST /teams/join`, `POST /teams/leave` and `POST /teams/save` reuse the bounded existing Teams transcription runner. Join accepts `{meetingUrl,consented:true,transcribe,transcriptionConsented}`. Leave/save accept the **local** owned connection `{id}`. Status never exposes another user's job. Save returns `{meetingId}` without a model request. The Teams service budget/usage is separate from the Node ledger. This is not LiveKit-based platform joining or live moderation. [Lifecycle, privacy and configuration](teams-integrated-ui.md).

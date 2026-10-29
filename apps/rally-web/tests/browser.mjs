@@ -10,10 +10,11 @@ import { once } from "node:events";
 const root = fileURLToPath(new URL("../", import.meta.url));
 const port = Number(process.env.RALLY_WEB_PORT || 5174),
   apiPort = Number(process.env.RALLY_TEST_API_PORT || 3101),
-  mediaPort = Number(process.env.RALLY_TEST_MEDIA_PORT || 17890),
+  mediaPort = Number(process.env.RALLY_TEST_MEDIA_PORT || 18890),
   base = `http://127.0.0.1:${port}`;
 const children = [];
 let browser;
+let debugPage;
 const errors = [];
 function run(command, args, env = {}) {
   const child = spawn(command, args, {
@@ -74,6 +75,7 @@ try {
       viewport: { width: 1440, height: 1100 },
     }),
     page = await context.newPage();
+  debugPage = page;
   page.setDefaultTimeout(15000);
   page.on("pageerror", (e) => errors.push(e.message));
   await page.addInitScript(() => {
@@ -139,6 +141,56 @@ try {
   await page.locator("#auth-submit").click();
   await page.locator("#workspace").waitFor({ state: "visible" });
   assert.equal(await page.locator("#logout").isEnabled(), true);
+  await page.locator("#teams-invite summary").click();
+  await page.waitForFunction(
+    () =>
+      document.querySelector("#teams-runner-status").textContent ===
+      "Teams runner online",
+  );
+  await page.locator("#teams-url").fill("https://evil.example/meet/fixture");
+  await page.locator("#teams-consent").check();
+  await page.locator("#teams-join").click();
+  await page.waitForFunction(() =>
+    document
+      .querySelector("#teams-error")
+      .textContent.includes("work/school Teams"),
+  );
+  await page
+    .locator("#teams-url")
+    .fill("https://teams.microsoft.com/meet/fixture");
+  await page.locator("#teams-transcribe").check();
+  await page.locator("#teams-join").click();
+  await page.waitForFunction(() =>
+    document.querySelector("#teams-message").textContent.includes("lobby"),
+  );
+  assert.equal(await page.locator("#teams-join").isDisabled(), true);
+  await mkdir(resolve(root, "test-results"), { recursive: true });
+  await page.screenshot({
+    path: resolve(root, "test-results/teams-invite-desktop.png"),
+    fullPage: true,
+  });
+  await page.locator("#teams-leave").click();
+  await page.locator("#teams-save").waitFor({ state: "visible" });
+  assert.match(
+    await page.locator("#teams-transcript").textContent(),
+    /Teams fixture finalized text/,
+  );
+  await page.locator("#teams-save").click();
+  await page.waitForFunction(
+    () =>
+      document.querySelector("#meeting-title").textContent ===
+      "Teams transcript",
+  );
+  assert.equal(await page.locator(".turn").count(), 1);
+  assert.equal(await page.locator("#report-status").textContent(), "None");
+  assert.ok(
+    !(await page.locator("#transcript").textContent()).includes(
+      "Do not save partial",
+    ),
+  );
+  await page.locator("#delete").click();
+  await page.locator("#confirm-delete").click();
+  await page.waitForFunction(() => !document.querySelector("#home").hidden);
   await page.locator("#new-meeting").click();
   await page.locator("[name=title]").fill("Release readiness");
   await page
@@ -573,6 +625,7 @@ try {
       "evidence links, host correction, reload and export",
       "cross-owner denial and deletion",
       "mobile layout",
+      "Teams invite validation, lobby, leave and finalized transcript import via injected bridge",
       "tab rejection/cancellation stops tracks before ASR",
       "capture gap stops audio; explicit restart uses new speaker session",
       "stopping tab sharing ends capture and finalizes the meeting",
@@ -583,6 +636,20 @@ try {
     JSON.stringify(report, null, 2) + "\n",
   );
   console.log(JSON.stringify(report, null, 2));
+} catch (error) {
+  console.log(
+    JSON.stringify(
+      await debugPage?.evaluate(() => ({
+        error: document.querySelector("#record-error")?.textContent,
+        status: document.querySelector("#connection-status")?.textContent,
+        toast: document.querySelector("#toast")?.textContent,
+        phase: document.querySelector("#phase")?.textContent,
+      })),
+      null,
+      2,
+    ),
+  );
+  throw error;
 } finally {
   await browser?.close();
   for (const child of children.reverse()) {

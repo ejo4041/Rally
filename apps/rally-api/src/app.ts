@@ -1,4 +1,9 @@
 import express from "express";
+import {
+  TeamsBridge,
+  configuredTeamsRequest,
+  type TeamsRequest,
+} from "./teams-bridge.ts";
 import { z } from "zod";
 import { defaults } from "./config.ts";
 import type { Configuration } from "./config.ts";
@@ -21,6 +26,7 @@ export function createApplication(
   options: Partial<Configuration> & {
     providers?: Partial<Providers>;
     media?: Media;
+    teamsRequest?: TeamsRequest;
   } = {},
 ) {
   const config = { ...defaults, ...options };
@@ -32,6 +38,11 @@ export function createApplication(
   const meetings = new Meetings(store, providers);
   const media: Media = options.media || new LiveKitMedia(config);
   const engine = new Engine(meetings, media, config);
+  const teams = new TeamsBridge(
+    store,
+    meetings,
+    options.teamsRequest || configuredTeamsRequest(),
+  );
   const app = express();
   app.disable("x-powered-by");
   app.use((req, res, next) => {
@@ -89,6 +100,30 @@ export function createApplication(
     res.sendStatus(204);
   });
   app.get("/api/auth/me", (req, res) => res.json(userForRequest(store, req)));
+  app.get("/api/teams/status", async (req, res) =>
+    res.json(await teams.status(userForRequest(store, req).id)),
+  );
+  app.post("/api/teams/join", async (req, res) =>
+    res
+      .status(201)
+      .json(await teams.join(userForRequest(store, req).id, req.body)),
+  );
+  app.post("/api/teams/leave", async (req, res) =>
+    res.json(
+      await teams.leave(
+        userForRequest(store, req).id,
+        z.string().uuid().parse(req.body?.id),
+      ),
+    ),
+  );
+  app.post("/api/teams/save", async (req, res) =>
+    res.json(
+      await teams.save(
+        userForRequest(store, req).id,
+        z.string().uuid().parse(req.body?.id),
+      ),
+    ),
+  );
   app.get("/api/usage", (req, res) => {
     const user = userForRequest(store, req);
     const rows = store.db

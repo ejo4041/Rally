@@ -1,5 +1,5 @@
 {
-  "testedAt": "2026-10-29T18:02:10.758Z",
+  "testedAt": "2026-10-29T23:32:41.239Z",
   "passed": true,
   "backend": "real Express/cookie auth/SQLite and LiveKit",
   "modelProviders": "injected deterministic fixtures",
@@ -19,6 +19,7 @@
     "evidence links, host correction, reload and export",
     "cross-owner denial and deletion",
     "mobile layout",
+    "Teams invite validation, lobby, leave and finalized transcript import via injected bridge",
     "tab rejection/cancellation stops tracks before ASR",
     "capture gap stops audio; explicit restart uses new speaker session",
     "stopping tab sharing ends capture and finalizes the meeting"

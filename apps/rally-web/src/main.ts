@@ -8,6 +8,7 @@ import {
   type Plan,
   type Connection,
 } from "./api.ts";
+import { setupTeams } from "./teams.ts";
 import { MeetingSession } from "./session.ts";
 import { MeetingMedia, acquireAudio, type AudioInput } from "./media.ts";
 const $ = <T extends HTMLElement = HTMLElement>(id: string) =>
@@ -42,6 +43,10 @@ const state = {
   pollBusy: false,
   ending: false,
 };
+const teams = setupTeams((id) => {
+  void loadHistory().catch(fail);
+  location.hash = `meeting/${id}`;
+}, fail);
 let toastTimer: ReturnType<typeof setTimeout>;
 function toast(message: string) {
   $("toast").textContent = message;
@@ -73,6 +78,7 @@ function showAuth() {
   $("workspace").hidden = true;
 }
 async function signOutLocal() {
+  teams.reset();
   showAuth();
   $("meeting").hidden = true;
   $("home").hidden = false;
@@ -128,6 +134,7 @@ async function signedIn(user: User) {
   $("current-user").textContent = user.username;
   input("password").value = "";
   await loadHistory();
+  await teams.refresh();
   await route();
 }
 async function loadHistory() {
@@ -892,3 +899,10 @@ void api<User>("/auth/me")
       $("auth-error").textContent =
         "Rally API is unavailable. Start the API and refresh.";
   });
+
+button("create-browser-meeting").onclick = () => {
+  openCreate();
+  input("audio-mode").value = "tab";
+  input("audio-mode").dispatchEvent(new Event("change"));
+};
+setInterval(() => teams.poll(), 3000);

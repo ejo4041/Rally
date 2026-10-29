@@ -913,3 +913,21 @@ dialog::backdrop {
     display: inline-block;
   }
 }
+
+#teams-invite {
+  padding: 20px 0 0;
+}
+#teams-invite summary {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+}
+#teams-invite input[type="url"] {
+  background: white;
+}
+#teams-transcript:empty {
+  display: none;
+}
+#teams-invite .actions {
+  margin-top: 12px;
+}

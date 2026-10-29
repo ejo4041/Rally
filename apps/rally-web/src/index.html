@@ -105,6 +105,83 @@
                 <p>Due-outs and a path back to the source.</p>
               </div>
             </div>
+            <section class="card setup" id="platform-setup">
+              <h2>How will Rally listen?</h2>
+              <p class="small muted">
+                For Zoom, WhatsApp, Meet or a Teams call you join yourself,
+                create a Rally meeting and choose
+                <strong>Meeting browser tab</strong>. Select the call tab and
+                enable Share tab audio when prompted. No meeting link is needed
+                for that mode.
+              </p>
+              <button id="create-browser-meeting" class="secondary">
+                Set up browser-tab capture
+              </button>
+              <details id="teams-invite">
+                <summary>Invite Rally to Teams using a meeting link</summary>
+                <p class="small muted">
+                  Rally joins a work/school Teams call as “Rally audio test.”
+                  Three-minute test including connection and lobby time. This
+                  path captures text; live guidance and spoken moderation are
+                  not run in the call.
+                </p>
+                <p id="teams-runner-status" role="status">Checking runner…</p>
+                <form id="teams-join-form">
+                  <label
+                    >Teams meeting link<input
+                      id="teams-url"
+                      type="url"
+                      maxlength="4000"
+                      autocomplete="off"
+                      placeholder="https://teams.microsoft.com/l/meetup-join/…"
+                      required
+                  /></label>
+                  <label class="check"
+                    ><input id="teams-consent" type="checkbox" required />The
+                    host and participants consent to Rally joining this audio
+                    test.</label
+                  >
+                  <label class="check"
+                    ><input id="teams-transcribe" type="checkbox" />Transcribe
+                    with Muse: participants consent to sending audio to Meta and
+                    saving the transcript.</label
+                  >
+                  <p class="small muted">
+                    Full three-minute transcription estimate: $0.009. This uses
+                    the existing Teams service budget; its usage is recorded
+                    separately from this app’s API usage.
+                  </p>
+                  <button
+                    id="teams-join"
+                    class="primary"
+                    type="submit"
+                    disabled
+                  >
+                    Invite Rally to Teams
+                  </button>
+                </form>
+                <div class="actions">
+                  <button id="teams-leave" class="danger" hidden>
+                    Leave Teams meeting</button
+                  ><button id="teams-refresh" class="text">
+                    Refresh status</button
+                  ><button id="teams-save" class="secondary" hidden>
+                    Save transcript to my history
+                  </button>
+                </div>
+                <p id="teams-message" role="status"></p>
+                <p id="teams-error" class="error" role="alert"></p>
+                <div id="teams-transcript" class="transcript"></div>
+                <p id="teams-partial" class="partial"></p>
+                <p class="small muted">
+                  Admit Rally from the Teams lobby when asked. Closing this page
+                  or signing out does not stop this server participant; use
+                  Leave. Verify departure in the Teams roster. Saved history
+                  contains only the finalized text and does not automatically
+                  request analysis.
+                </p>
+              </details>
+            </section>
             <div class="section-title">
               <div>
                 <h2>Your meetings</h2>
@@ -150,6 +227,11 @@
                   microphone</label
                 >
               </div>
+              <p class="small muted">
+                A call tab is host-side capture. To have Rally join from a Teams
+                link, use the Teams invite panel on the Meetings page.
+                Zoom/WhatsApp link-based joining is not available.
+              </p>
               <p id="tab-help" class="small muted" hidden>
                 Join your call in another tab, then choose it and enable Share
                 tab audio. Use headphones. Rally’s guidance stays in this

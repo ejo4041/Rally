@@ -1,5 +1,7 @@
 # Rally documentation
 
+**Teams invite UI:** [Meeting links, ownership, transcription-test limits and validation](teams-integrated-ui.md). The Meetings page now has a Teams link field plus a distinct browser-tab setup path for other calls.
+
 **Integrated deployment:** [Open and test the Node/LiveKit app](integrated-deployment.md) · [deployed verification](research/integrated-deployment-check.json).
 
 **Frontend integration:** [Node API frontend, validation and current limits](frontend-integration.md). Local workflow is implemented in `apps/rally-web`; use `node scripts/dev-rally.mjs` after setup. Remote deployment and human rehearsal remain pending; the restricted Site is unchanged.

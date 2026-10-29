@@ -24,7 +24,7 @@ const config = {
   dbPath: join(folder, "fixture.sqlite"),
   origins: [`http://127.0.0.1:${process.env.RALLY_WEB_PORT || 5174}`],
   assessmentMs: 60000,
-  livekitUrl: `ws://127.0.0.1:${process.env.RALLY_TEST_MEDIA_PORT || 17890}`,
+  livekitUrl: `ws://127.0.0.1:${process.env.RALLY_TEST_MEDIA_PORT || 18890}`,
 };
 const livekit = new LiveKitMedia(config),
   sessions = new Map<string, MediaSession>(),
@@ -161,7 +161,49 @@ function report(s: Snapshot) {
     },
   };
 }
+let teamsJob: any = null;
 const api = createApplication({
+  teamsRequest: async (action, data: any) => {
+    if (action === "status")
+      return {
+        online: true,
+        transport: "teams-web",
+        transcriptionReady: true,
+        job: teamsJob,
+      };
+    if (action === "join") {
+      teamsJob = {
+        id: crypto.randomUUID(),
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+        deadline: Date.now() + 180000,
+        state: "lobby",
+        message: "Admit Rally from the lobby.",
+        transcriptionState: "waiting",
+        transcribe: true,
+        transcript: [],
+      };
+      return { job: teamsJob };
+    }
+    if (action === "leave") {
+      teamsJob = {
+        ...teamsJob,
+        state: "left",
+        message: "Rally has left.",
+        transcriptionState: "stopped",
+        partial: "Do not save partial",
+        transcript: [
+          {
+            id: "fixture:0",
+            speaker: null,
+            text: "Teams fixture finalized text.",
+          },
+        ],
+      };
+      return { ok: true };
+    }
+    throw Error("Unexpected Teams operation");
+  },
   ...config,
   providers,
   media: {

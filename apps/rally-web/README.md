@@ -53,6 +53,10 @@ Tests start a real isolated Express API, SQLite database and LiveKit server, the
 
 The report fixture intentionally fails once to exercise explicit retry. Its outputs are labeled test evidence, not measured model quality. Unit tests additionally exercise stale snapshot/revision/control ordering. [Validation and limitations](../../docs/frontend-integration.md).
 
+## Teams meeting links
+
+The Meetings page includes the existing three-minute Teams transcription-test flow: paste an invite, consent, admit Rally, inspect lobby/live status, Leave and save finalized text to your own history. This is separate from live browser moderation. Other platforms use the clearly explained call-tab path. [Details and service configuration](../../docs/teams-integrated-ui.md).
+
 ## Remaining work
 
 Remote deployment, physical microphone/speaker behavior, real multi-person/room attribution and a complete human rehearsal remain unverified. Generated moderator speech is a subsequent backend integration; subscribing to an audio track does not provide TTS. Existing Sites features such as its free local audio meter, presenter view and WhatsApp sharing remain in that separate app. No final submission has been made.

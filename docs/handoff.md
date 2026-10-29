@@ -1,5 +1,7 @@
 # Rally handoff — current checkpoint
 
+**Teams invite UI:** [Meeting links, ownership, transcription-test limits and validation](teams-integrated-ui.md). The Meetings page now has a Teams link field plus a distinct browser-tab setup path for other calls.
+
 **Integrated app deployed:** [Private HTTPS URL, test steps and service operations](integrated-deployment.md). Frontend/API/LiveKit run on the existing host. Sign in or create an app account with Tailscale connected. Muse is enabled with existing budget gates; generated speech is still pending.
 
 **Frontend integration:** [Node API frontend, validation and current limits](frontend-integration.md). Local workflow is implemented in `apps/rally-web`; use `node scripts/dev-rally.mjs` after setup. Remote deployment and human rehearsal remain pending; the restricted Site is unchanged.
