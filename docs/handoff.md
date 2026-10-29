@@ -1,3 +1,5 @@
+Backend delivery: merged and pushed to remote `main` (`098c134`), including concurrent frontend main changes. [Backend checkpoint](backend-implementation-status.md) has setup, tests, demo accounts, cost evidence and limitations.
+
 Backend MVP implemented: [status and validation](backend-implementation-status.md), [frontend API contract](backend-api.md), [AI processing diagram](ai-processing.md), [setup](../apps/rally-api/README.md). Real two-way browser audio and Muse end-to-end smoke passed. Frontend wiring and deployment remain separate; existing private Site is unchanged.
 
 # Rally handoff — current checkpoint

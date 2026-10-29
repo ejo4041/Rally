@@ -9,7 +9,7 @@ npm run seed    # first set RALLY_DEMO_PASSWORD in shared local secrets
 npm run dev
 ```
 
-The default API is `http://127.0.0.1:3001`; LiveKit is `ws://127.0.0.1:7880`. `npm start` starts only the API when a media server already runs. Use Node 24 with npm on PATH. This host currently has a complete distribution under `/tmp/rally-node-download/node-v24.22.1-linux-x64/bin`; the API itself does not depend on that location.
+The default API is `http://127.0.0.1:3001`; LiveKit is `ws://127.0.0.1:7880`. `npm start` starts only the API when a media server already runs. Use Node 24 with npm on PATH. On this host, use `export PATH=/srv/hackathon/tools/node/bin:$PATH`; Node and npm are installed there. The API itself does not depend on that location.
 
 Secrets load from the primary Git checkout's ignored `.env.local`, found through the common Git directory. `RALLY_ENV_FILE` overrides the path. Process environment takes precedence. No secrets are copied into worktrees. For exported source without Git, explicitly supply that variable or environment values. The SQLite database defaults to this package's ignored `.data/rally.sqlite`.
 

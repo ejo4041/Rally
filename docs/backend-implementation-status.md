@@ -26,3 +26,9 @@ Frontend wiring and deployment are separate work. Existing private Sites product
 Voice agenda entry, provider-generated speech, and Teams/video remain follow-ups as agreed in [the plan](backend-plan.md). A bidirectional audio transport proof is present, not a completed TTS feature. No tickets or calendar events are created automatically. Final hackathon submission remains pending explicit instruction.
 
 [Two-axis review](backend-review.md) completed: all four findings addressed, full suite and typecheck pass, production dependency audit reports zero vulnerabilities. Merge reconciliation is recorded in the current handoff.
+
+## Delivery checkpoint
+
+Merged remote main through `316eba9` without conflicts and pushed the integrated backend as `098c134`. All eight tests and typecheck passed on the merged tree. The original checkout is an unborn branch with untracked working files, so it was deliberately not reset; the complete tested checkout is `/srv/hackathon/rally-backend-mvp`, and remote `main` contains the result.
+
+Local demo accounts `demo` and `demo2` are seeded in this worktree database. Their generated password is stored only as `RALLY_DEMO_PASSWORD` in the shared ignored `.env.local` (mode 0600). `npm run dev` launched both services and `/api/health` returned `{"ok":true}`; both owned processes were then stopped. Paid processing remains opt-in. Node/npm are available under `/srv/hackathon/tools/node/bin`.
