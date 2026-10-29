@@ -185,6 +185,7 @@ try {
   await publisher.disconnect();
   await session?.close();
   await dispose();
+  server.closeAllConnections();
   server.close();
   mediaProcess.kill("SIGTERM");
 }

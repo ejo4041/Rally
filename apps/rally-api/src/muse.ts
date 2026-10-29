@@ -54,9 +54,9 @@ const settingsSchema = z
     report: z
       .object({
         reasoningEffort: effort.default("max"),
-        maxOutputTokens: z.number().int().min(1024).max(32768).default(16384),
+        maxOutputTokens: z.number().int().min(1024).max(32768).default(32768),
       })
-      .default({ reasoningEffort: "max", maxOutputTokens: 16384 }),
+      .default({ reasoningEffort: "max", maxOutputTokens: 32768 }),
   })
   .strict();
 export function modelSettings(raw = process.env.RALLY_MODEL_CONFIG || "{}") {
@@ -216,6 +216,8 @@ export function createMuse(
       (Buffer.byteLength(encoded) * r.rates.input + max * r.rates.output) / 1e6;
     const id = ledger.reserve(m, projected, {
       kind,
+      reasoningEffort: body.reasoning_effort,
+      maxOutputTokens: body.max_tokens,
       model: r.model,
       adapter: r.adapter,
       pricing: r.rates,
@@ -251,6 +253,7 @@ export function createMuse(
         };
         choices?: { finish_reason: string; message: { content: string } }[];
       };
+      details.finishReason = data.choices?.[0]?.finish_reason ?? null;
       const u = data.usage;
       if (
         u &&

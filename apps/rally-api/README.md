@@ -45,6 +45,8 @@ npm run test:media  # local synthetic browser/Node audio; no model calls
 
 `test:media` uses Playwright Chromium. Override `PLAYWRIGHT_CHROMIUM` and, if required, `LD_LIBRARY_PATH` for another host. It launches its own temporary LiveKit server, tests real browser↔Node audio and data, and stops owned processes. It does not prove physical microphone/speaker behavior.
 
-`npm run test:muse` is separately gated by `RALLY_SMOKE_APPROVED=1`, uses a licensed PCM fixture via `RALLY_SMOKE_PCM`, and enforces a $0.15 batch cap in an isolated database. It is never run by `npm test`. Reconcile its `test-results/muse-*/usage.json` into the central ledger after each run.
+`npm run test:muse` is separately gated by `RALLY_SMOKE_APPROVED=1`, uses a licensed PCM fixture via `RALLY_SMOKE_PCM`, and enforces a $0.25 batch cap in an isolated database. It is never run by `npm test`. Reconcile its `test-results/muse-*/usage.json` into the central ledger after each run.
 
 See [API contract](../../docs/backend-api.md), [AI processing](../../docs/ai-processing.md), [plan](../../docs/backend-plan.md), and [implementation evidence](../../docs/backend-implementation-status.md).
+
+The final report uses maximum reasoning effort with a 32,768-token completion allowance, including reasoning tokens. A realistic 19-turn test exhausted the earlier 16,384 allowance; output truncation is a visible failed report, never accepted partial JSON. There is no automatic paid retry.

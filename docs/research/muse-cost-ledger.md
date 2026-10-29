@@ -6,7 +6,7 @@ The $150 remainder below assumes the full grant is applied and no other usage ex
 
 [Official pricing](https://dev.meta.ai/docs/pricing-rate-limits): Spark input $1.25/M, cached input $0.15/M, output $4.25/M; Voice Transcribe $0.18/hour.
 
-Known estimated spend: **$0.18462115**. Conditional $150 remainder: **$149.81537885**.
+Known estimated spend: **$0.47338150**. Conditional $150 remainder: **$149.52661850**.
 Calls/sessions with unknown cost: **0**. These are excluded from the known total; it is not a complete total if nonzero.
 
 | Time UTC | Test | Model | Seconds | Status | Estimated USD |
@@ -74,3 +74,23 @@ Run `2c04aeb9-b49a-42ac-9995-c292d93d7118`: one prepared agenda, one 35.2-second
 | transcription | 0.00175000 |
 | assess | 0.00460675 |
 | report | 0.02173050 |
+
+## User agenda examples — October 29
+
+Three actual Spark agenda preparations: terse Heimdall progress/requirements, daily standup, detailed milestone review. All returned valid plans. Batch **$0.01273585**, unknown **0**. Cumulative tracked **$0.19735700**, conditional $150 remainder **$149.80264300**; Billing unverified. Run `a0a8fdd8-7c70-4518-9b57-64dfac6a606b`; sanitized request usage is in the call log.
+
+## Detailed agenda closing-allocation retest
+
+The initial detailed agenda added an extra wrap-up despite an existing closing allocation. A narrow prompt correction reuses the supplied closing time. One actual preparation retest cost **$0.00386100**, unknown **0**. Cumulative **$0.20121800**, conditional remainder **$149.79878200**. Run `1b7965c6-6ccb-4d6f-91d0-8083fe583a06`; no automatic retry.
+
+## Astra realistic text-meeting evaluation
+
+Prepare and drift assessment completed. Maximum-effort report exhausted its 16,384 completion-token allowance (15,410 reasoning tokens), and was correctly marked failed rather than accepted as partial JSON. Three operations cost **$0.08482875**, including failed report **$0.07431700**; unknown **0**. Cumulative **$0.28604675**, conditional remainder **$149.71395325**. Run `2ff6d57e-c873-43f4-9b45-26495e60733c`. A separately accounted explicit report-only retry will use a larger output allowance; no automatic retry.
+
+## Full audio meeting pipeline with scheduled moderation
+
+Original 60.336-second synthetic single-voice meeting generated offline with Meta MMS passed through real LiveKit → Muse ASR → 10-second scheduled moderation → final max-effort report. Six transcript turns, one eligible intervention, ready report with overall 3.6. Muse split the single synthetic voice into two labels; do not interpret this as accurate multiple-speaker attribution. This run began before the report-token-limit fix and used the earlier 16,384 allowance successfully on this simpler content. Batch **$0.09776450**, unknown **0**. Cumulative **$0.38381125**, conditional remainder **$149.61618875**. Run `c2764a6e-c17e-490e-9f46-d1d6983674a7`.
+
+## Explicit realistic-report retry
+
+One report-only retry with maximum effort and 32,768 completion-token allowance completed, passed application evidence validation and the case-specific checks. No successful preparation/assessment was repeated. Cost **$0.08957025**, unknown **0**. Cumulative **$0.47338150**, conditional remainder **$149.52661850**. Run `report-retry-1793281702834`. The whole Astra follow-up spent **$0.28876035** across agenda examples, initial failed report, full audio test, and explicit successful retry.

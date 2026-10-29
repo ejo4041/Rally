@@ -53,17 +53,21 @@ export class Meetings {
     });
   }
   turns(id: string): Turn[] {
-    return (
+    const turns: Turn[] = (
       this.store.db
-        .prepare("SELECT body FROM turns WHERE meeting_id=?")
+        .prepare("SELECT body FROM turns WHERE meeting_id=? ORDER BY rowid")
         .all(id) as { body: string }[]
-    )
-      .map((r) => JSON.parse(r.body))
-      .sort(
-        (a, b) =>
-          (a.startMs ?? Infinity) - (b.startMs ?? Infinity) ||
-          a.id.localeCompare(b.id),
-      );
+    ).map((row) => JSON.parse(row.body));
+    // Source session/turn sequence is authoritative even when provider timing is absent.
+    const sessions = new Map<string, number>();
+    for (const turn of turns)
+      if (!sessions.has(turn.sessionId))
+        sessions.set(turn.sessionId, sessions.size);
+    return turns.sort(
+      (a, b) =>
+        sessions.get(a.sessionId)! - sessions.get(b.sessionId)! ||
+        a.turnId - b.turnId,
+    );
   }
   async create(userId: string, input: unknown) {
     const data = createMeetingSchema.parse(input);

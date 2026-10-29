@@ -1,0 +1,1119 @@
+{
+  "scope": "Actual Muse outputs from original synthetic inputs, not a real human meeting. Inputs and outputs are unchanged. Report timing is a controlled synthetic clock; original revision timestamps were wall-clock and have since been fixed in the harness.",
+  "agendas": [
+    {
+      "input": {
+        "title": "Heimdall progress and requirements",
+        "agenda": "Sync up with the team about progress on the Heimdall efforts. Collect requirements for next steps.",
+        "durationMinutes": 25
+      },
+      "elapsedMs": 2631,
+      "status": 201,
+      "phase": "ready",
+      "error": null,
+      "plan": {
+        "objective": "Sync up on Heimdall progress and collect requirements for next steps.",
+        "topics": [
+          {
+            "id": "heimdall-progress",
+            "title": "Heimdall progress sync",
+            "outcome": "Share current progress on Heimdall efforts",
+            "minutes": 12,
+            "status": "pending"
+          },
+          {
+            "id": "next-steps-reqs",
+            "title": "Requirements for next steps",
+            "outcome": "Collect requirements for next steps",
+            "minutes": 10,
+            "status": "pending"
+          }
+        ],
+        "durationMinutes": 25,
+        "wrapMinutes": 3
+      }
+    },
+    {
+      "input": {
+        "title": "Daily standup",
+        "agenda": "Hold our daily standup with the team, round the room for updates and blockers, final last call at the end for missed rounds.",
+        "durationMinutes": 15,
+        "participants": [
+          "Alice",
+          "Ben",
+          "Cara",
+          "Diego"
+        ]
+      },
+      "elapsedMs": 1658,
+      "status": 201,
+      "phase": "ready",
+      "error": null,
+      "plan": {
+        "objective": "Hold a 15-minute daily standup with round-robin updates and blockers, plus a final last call.",
+        "topics": [
+          {
+            "id": "alice-update",
+            "title": "Alice - update and blockers",
+            "outcome": "Hear Alice update and blockers",
+            "minutes": 3,
+            "status": "pending"
+          },
+          {
+            "id": "ben-update",
+            "title": "Ben - update and blockers",
+            "outcome": "Hear Ben update and blockers",
+            "minutes": 3,
+            "status": "pending"
+          },
+          {
+            "id": "cara-update",
+            "title": "Cara - update and blockers",
+            "outcome": "Hear Cara update and blockers",
+            "minutes": 3,
+            "status": "pending"
+          },
+          {
+            "id": "diego-update",
+            "title": "Diego - update and blockers",
+            "outcome": "Hear Diego update and blockers",
+            "minutes": 3,
+            "status": "pending"
+          },
+          {
+            "id": "last-call",
+            "title": "Last call for missed rounds",
+            "outcome": "Final last call for missed rounds",
+            "minutes": 1,
+            "status": "pending"
+          }
+        ],
+        "durationMinutes": 15,
+        "wrapMinutes": 2
+      }
+    },
+    {
+      "input": {
+        "title": "Heimdall milestone review",
+        "durationMinutes": 60,
+        "agenda": "Heimdall milestone review. Purpose: decide whether the next milestone is ready and agree requirements for the next sprint. Attendees: engineering, product, operations and security. 1. Opening and intended decisions (5 min). 2. Progress against the milestone: demo completed work, compare scope to commitments, call out unfinished work (15 min). 3. Engineering and operational readiness: reliability risks, deployment plan, rollback, support ownership (15 min). 4. Requirements for next sprint: collect product needs and security constraints, separate must-have from follow-up, identify unanswered questions (15 min). 5. Close: decide go/no-go or list evidence still needed; recap actions, owners and due dates (10 min). Constraints: do not assume a release date or assign someone work without discussion. Park deep architecture debates for a follow-up. Capture any requirement that needs a separate ticket."
+      },
+      "elapsedMs": 2674,
+      "status": 201,
+      "phase": "ready",
+      "error": null,
+      "plan": {
+        "objective": "Decide whether the Heimdall next milestone is ready (go/no-go or list evidence still needed) and agree requirements for the next sprint, including recap of actions, owners and due dates. Do not assume a release date or assign work without discussion. Park deep architecture debates for follow-up. Capture any requirement that needs a separate ticket.",
+        "topics": [
+          {
+            "id": "opening",
+            "title": "Opening and intended decisions",
+            "outcome": "Confirm intended decisions for milestone readiness and next-sprint requirements",
+            "minutes": 5,
+            "status": "pending"
+          },
+          {
+            "id": "progress",
+            "title": "Progress against the milestone",
+            "outcome": "Demo completed work, compare scope to commitments, and call out unfinished work",
+            "minutes": 15,
+            "status": "pending"
+          },
+          {
+            "id": "readiness",
+            "title": "Engineering and operational readiness",
+            "outcome": "Surface reliability risks, deployment plan, rollback, and support ownership",
+            "minutes": 15,
+            "status": "pending"
+          },
+          {
+            "id": "requirements",
+            "title": "Requirements for next sprint",
+            "outcome": "Collect product needs and security constraints, separate must-have from follow-up, identify unanswered questions",
+            "minutes": 15,
+            "status": "pending"
+          }
+        ],
+        "durationMinutes": 60,
+        "wrapMinutes": 10
+      }
+    }
+  ],
+  "initialDetailedAgendaBeforeFix": {
+    "input": {
+      "title": "Heimdall milestone review",
+      "durationMinutes": 60,
+      "agenda": "Heimdall milestone review. Purpose: decide whether the next milestone is ready and agree requirements for the next sprint. Attendees: engineering, product, operations and security. 1. Opening and intended decisions (5 min). 2. Progress against the milestone: demo completed work, compare scope to commitments, call out unfinished work (15 min). 3. Engineering and operational readiness: reliability risks, deployment plan, rollback, support ownership (15 min). 4. Requirements for next sprint: collect product needs and security constraints, separate must-have from follow-up, identify unanswered questions (15 min). 5. Close: decide go/no-go or list evidence still needed; recap actions, owners and due dates (10 min). Constraints: do not assume a release date or assign someone work without discussion. Park deep architecture debates for a follow-up. Capture any requirement that needs a separate ticket."
+    },
+    "elapsedMs": 6470,
+    "status": 201,
+    "phase": "ready",
+    "error": null,
+    "plan": {
+      "objective": "Decide whether the Heimdall milestone is ready and agree requirements for the next sprint. Constraints: do not assume a release date, do not assign work without discussion, park deep architecture debates for follow-up, capture requirements needing separate tickets. Note: supplied agenda totals 60 min, so topic budgets are trimmed slightly to reserve a 5-min wrap with no topic dropped.",
+      "topics": [
+        {
+          "id": "opening",
+          "title": "Opening and intended decisions",
+          "outcome": "Confirm intended go/no-go and next-sprint decisions, constraints, and timeboxes",
+          "minutes": 5,
+          "status": "pending"
+        },
+        {
+          "id": "progress",
+          "title": "Progress against the milestone",
+          "outcome": "Demo completed work, compare scope to commitments, list unfinished work",
+          "minutes": 14,
+          "status": "pending"
+        },
+        {
+          "id": "readiness",
+          "title": "Engineering and operational readiness",
+          "outcome": "Surface reliability risks, deployment plan, rollback, and support ownership",
+          "minutes": 13,
+          "status": "pending"
+        },
+        {
+          "id": "requirements",
+          "title": "Requirements for next sprint",
+          "outcome": "Collect product needs and security constraints, separate must-have from follow-up, list unanswered questions",
+          "minutes": 13,
+          "status": "pending"
+        },
+        {
+          "id": "close",
+          "title": "Close: decision and recap",
+          "outcome": "Record go/no-go or evidence still needed; recap discussed actions, owners and due dates",
+          "minutes": 10,
+          "status": "pending"
+        }
+      ],
+      "durationMinutes": 60,
+      "wrapMinutes": 5
+    }
+  },
+  "assessment": {
+    "health": 3,
+    "reason": "Core checks progressed to conditional decision, but meeting drifted to coffee-machine/cafe ranking with email owner still unassigned, putting on-time close at risk.",
+    "issues": [
+      "drift",
+      "missing_action_details"
+    ],
+    "evidence": [
+      "quality:0",
+      "quality:1",
+      "quality:2",
+      "quality:4",
+      "quality:5",
+      "quality:6",
+      "quality:8",
+      "quality:9",
+      "quality:10",
+      "quality:11"
+    ],
+    "progress": "Audit-export gap identified with fix by Thu 3pm and verification by Fri noon. Rollback rehearsal against failed-migration case due Fri 2pm. Conditional agreement: two-customer pilot Monday only if both pass, no GA commitment. Customer email owner/deadline still open.",
+    "intervention": {
+      "text": "Pause coffee / cafe ranking and return to pilot: assign customer email owner + deadline, then confirm blockers.",
+      "kind": "redirect",
+      "evidence": [
+        "quality:9",
+        "quality:10",
+        "quality:11"
+      ]
+    },
+    "plan": {
+      "objective": "Decide whether the Heimdall dashboard can enter a two-customer pilot on Monday, verifying audit-export and rollback requirements, assigning remaining checks and communications, and closing with blockers and owners.",
+      "topics": [
+        {
+          "id": "audit-export",
+          "title": "Audit-export requirement check",
+          "outcome": "Confirm whether audit-export requirement is met or what gap remains",
+          "minutes": 3,
+          "status": "done"
+        },
+        {
+          "id": "rollback",
+          "title": "Rollback requirement check",
+          "outcome": "Confirm whether rollback requirement is met or what gap remains",
+          "minutes": 3,
+          "status": "done"
+        },
+        {
+          "id": "pilot-decision",
+          "title": "Pilot decision and assignments",
+          "outcome": "Pilot go/no-go decision with owners assigned for remaining checks and communications",
+          "minutes": 3,
+          "status": "active"
+        }
+      ],
+      "durationMinutes": 10,
+      "wrapMinutes": 1
+    },
+    "planReason": "Audit-export and rollback checks have conditional owners/dates; remaining time should focus on open pilot-decision assignment (customer email owner/deadline) rather than off-topic discussion."
+  },
+  "reportInput": {
+    "meeting": {
+      "title": "Heimdall pilot readiness",
+      "agenda": "Decide whether the Heimdall dashboard can enter a two-customer pilot on Monday. Check the audit-export and rollback requirements, assign remaining checks and communications, and close with blockers and owners. Keep a minute for wrap-up.",
+      "durationMinutes": 10,
+      "participants": [
+        "Maya",
+        "Leo",
+        "Priya"
+      ],
+      "id": "9c8c8fad-968f-4499-8138-3c4b8587c752",
+      "userId": "a962cb87-00dc-4b83-a363-fffa52354e13",
+      "createdAt": 1793281369454,
+      "phase": "ended",
+      "plan": {
+        "objective": "Decide whether the Heimdall dashboard can enter a two-customer pilot on Monday, verifying audit-export and rollback requirements, assigning remaining checks and communications, and closing with blockers and owners.",
+        "topics": [
+          {
+            "id": "audit-export",
+            "title": "Audit-export requirement check",
+            "outcome": "Confirm whether audit-export requirement is met or what gap remains",
+            "minutes": 3,
+            "status": "done"
+          },
+          {
+            "id": "rollback",
+            "title": "Rollback requirement check",
+            "outcome": "Confirm whether rollback requirement is met or what gap remains",
+            "minutes": 3,
+            "status": "done"
+          },
+          {
+            "id": "pilot-decision",
+            "title": "Pilot decision and assignments",
+            "outcome": "Pilot go/no-go decision with owners assigned for remaining checks and communications",
+            "minutes": 3,
+            "status": "active"
+          }
+        ],
+        "durationMinutes": 10,
+        "wrapMinutes": 1
+      },
+      "originalPlan": {
+        "objective": "Decide whether the Heimdall dashboard can enter a two-customer pilot on Monday, verifying audit-export and rollback requirements, assigning remaining checks and communications, and closing with blockers and owners.",
+        "topics": [
+          {
+            "id": "audit-export",
+            "title": "Audit-export requirement check",
+            "outcome": "Confirm whether audit-export requirement is met or what gap remains",
+            "minutes": 3,
+            "status": "pending"
+          },
+          {
+            "id": "rollback",
+            "title": "Rollback requirement check",
+            "outcome": "Confirm whether rollback requirement is met or what gap remains",
+            "minutes": 3,
+            "status": "pending"
+          },
+          {
+            "id": "pilot-decision",
+            "title": "Pilot decision and assignments",
+            "outcome": "Pilot go/no-go decision with owners assigned for remaining checks and communications",
+            "minutes": 3,
+            "status": "pending"
+          }
+        ],
+        "durationMinutes": 10,
+        "wrapMinutes": 1
+      },
+      "revisions": [
+        {
+          "at": 1793281375765,
+          "reason": "Audit-export and rollback checks have conditional owners/dates; remaining time should focus on open pilot-decision assignment (customer email owner/deadline) rather than off-topic discussion.",
+          "plan": {
+            "objective": "Decide whether the Heimdall dashboard can enter a two-customer pilot on Monday, verifying audit-export and rollback requirements, assigning remaining checks and communications, and closing with blockers and owners.",
+            "topics": [
+              {
+                "id": "audit-export",
+                "title": "Audit-export requirement check",
+                "outcome": "Confirm whether audit-export requirement is met or what gap remains",
+                "minutes": 3,
+                "status": "done"
+              },
+              {
+                "id": "rollback",
+                "title": "Rollback requirement check",
+                "outcome": "Confirm whether rollback requirement is met or what gap remains",
+                "minutes": 3,
+                "status": "done"
+              },
+              {
+                "id": "pilot-decision",
+                "title": "Pilot decision and assignments",
+                "outcome": "Pilot go/no-go decision with owners assigned for remaining checks and communications",
+                "minutes": 3,
+                "status": "active"
+              }
+            ],
+            "durationMinutes": 10,
+            "wrapMinutes": 1
+          }
+        }
+      ],
+      "startedAt": 1793268000000,
+      "endedAt": 1793268625000,
+      "paused": false,
+      "epoch": 2,
+      "progress": "Audit-export gap identified with fix by Thu 3pm and verification by Fri noon. Rollback rehearsal against failed-migration case due Fri 2pm. Conditional agreement: two-customer pilot Monday only if both pass, no GA commitment. Customer email owner/deadline still open.",
+      "speakerNames": {
+        "quality:A": "Maya",
+        "quality:B": "Leo",
+        "quality:C": "Priya"
+      },
+      "assessment": {
+        "health": 3,
+        "reason": "Core checks progressed to conditional decision, but meeting drifted to coffee-machine/cafe ranking with email owner still unassigned, putting on-time close at risk.",
+        "issues": [
+          "drift",
+          "missing_action_details"
+        ],
+        "evidence": [
+          "quality:0",
+          "quality:1",
+          "quality:2",
+          "quality:4",
+          "quality:5",
+          "quality:6",
+          "quality:8",
+          "quality:9",
+          "quality:10",
+          "quality:11"
+        ],
+        "progress": "Audit-export gap identified with fix by Thu 3pm and verification by Fri noon. Rollback rehearsal against failed-migration case due Fri 2pm. Conditional agreement: two-customer pilot Monday only if both pass, no GA commitment. Customer email owner/deadline still open.",
+        "intervention": {
+          "text": "Pause coffee / cafe ranking and return to pilot: assign customer email owner + deadline, then confirm blockers.",
+          "kind": "redirect",
+          "evidence": [
+            "quality:9",
+            "quality:10",
+            "quality:11"
+          ]
+        },
+        "plan": {
+          "objective": "Decide whether the Heimdall dashboard can enter a two-customer pilot on Monday, verifying audit-export and rollback requirements, assigning remaining checks and communications, and closing with blockers and owners.",
+          "topics": [
+            {
+              "id": "audit-export",
+              "title": "Audit-export requirement check",
+              "outcome": "Confirm whether audit-export requirement is met or what gap remains",
+              "minutes": 3,
+              "status": "done"
+            },
+            {
+              "id": "rollback",
+              "title": "Rollback requirement check",
+              "outcome": "Confirm whether rollback requirement is met or what gap remains",
+              "minutes": 3,
+              "status": "done"
+            },
+            {
+              "id": "pilot-decision",
+              "title": "Pilot decision and assignments",
+              "outcome": "Pilot go/no-go decision with owners assigned for remaining checks and communications",
+              "minutes": 3,
+              "status": "active"
+            }
+          ],
+          "durationMinutes": 10,
+          "wrapMinutes": 1
+        },
+        "planReason": "Audit-export and rollback checks have conditional owners/dates; remaining time should focus on open pilot-decision assignment (customer email owner/deadline) rather than off-topic discussion."
+      },
+      "interventions": [
+        {
+          "id": "482daffb-f41c-459e-abce-7bce1aebc1b5",
+          "at": 1793268325000,
+          "text": "Pause coffee / cafe ranking and return to pilot: assign customer email owner + deadline, then confirm blockers.",
+          "kind": "redirect"
+        }
+      ],
+      "reportStatus": "processing",
+      "report": null,
+      "error": null,
+      "gaps": []
+    },
+    "turns": [
+      {
+        "id": "quality:0",
+        "sessionId": "quality",
+        "turnId": 0,
+        "revision": 1,
+        "text": "Maya here. We need a decision on Monday's two-customer Heimdall pilot, not general availability. Leo, then Priya, tell us what could block it.",
+        "speaker": "quality:A",
+        "startMs": 0,
+        "endMs": 18000
+      },
+      {
+        "id": "quality:1",
+        "sessionId": "quality",
+        "turnId": 1,
+        "revision": 1,
+        "text": "Leo: the dashboard is ready. Audit export has a timezone bug. I can fix it by Friday\u2014sorry, by Thursday at 3 pm. Friday is too late for QA.",
+        "speaker": "quality:B",
+        "startMs": 25000,
+        "endMs": 45000
+      },
+      {
+        "id": "quality:2",
+        "sessionId": "quality",
+        "turnId": 2,
+        "revision": 1,
+        "text": "Priya: I can verify the audit export after that fix, by Friday noon. The other requirement is a tested rollback. Leo, is that actually ready?",
+        "speaker": "quality:C",
+        "startMs": 50000,
+        "endMs": 72000
+      },
+      {
+        "id": "quality:3",
+        "sessionId": "quality",
+        "turnId": 3,
+        "revision": 1,
+        "text": "The old incident is relevant: a customer had an empty dashboard because a migration failed. We should test rollback against that migration, not just the happy path.",
+        "speaker": "quality:B",
+        "startMs": 80000,
+        "endMs": 103000
+      },
+      {
+        "id": "quality:4",
+        "sessionId": "quality",
+        "turnId": 4,
+        "revision": 1,
+        "text": "Yes, that incident explains the requirement. I will run the rollback rehearsal by Friday at 2 pm and report whether it passes.",
+        "speaker": "quality:C",
+        "startMs": 110000,
+        "endMs": 128000
+      },
+      {
+        "id": "quality:5",
+        "sessionId": "quality",
+        "turnId": 5,
+        "revision": 1,
+        "text": "Then our decision is a two-customer pilot on Monday only if audit export and rollback both pass. If either fails, we postpone; we are not committing to a full launch.",
+        "speaker": "quality:A",
+        "startMs": 135000,
+        "endMs": 155000
+      },
+      {
+        "id": "quality:6",
+        "sessionId": "quality",
+        "turnId": 6,
+        "revision": 1,
+        "text": "Agreed on the conditional pilot. No general availability announcement.",
+        "speaker": "quality:B",
+        "startMs": 162000,
+        "endMs": 174000
+      },
+      {
+        "id": "quality:7",
+        "sessionId": "quality",
+        "turnId": 7,
+        "revision": 1,
+        "text": "Agreed. Maya, could someone handle the customer email? I could maybe help after QA, but I am not committing to write it.",
+        "speaker": "quality:C",
+        "startMs": 180000,
+        "endMs": 197000
+      },
+      {
+        "id": "quality:8",
+        "sessionId": "quality",
+        "turnId": 8,
+        "revision": 1,
+        "text": "Let's leave the customer email owner and deadline open. We need to ask who can take it before we close.",
+        "speaker": "quality:A",
+        "startMs": 205000,
+        "endMs": 220000
+      },
+      {
+        "id": "quality:9",
+        "sessionId": "quality",
+        "turnId": 9,
+        "revision": 1,
+        "text": "While we are here, should the office coffee machine be replaced? I spent the weekend comparing grinders and there are six brands we could debate.",
+        "speaker": "quality:B",
+        "startMs": 230000,
+        "endMs": 255000
+      },
+      {
+        "id": "quality:10",
+        "sessionId": "quality",
+        "turnId": 10,
+        "revision": 1,
+        "text": "I bought a grinder last year. My holiday itinerary had three cafes, and I could explain how each brewed coffee. This has nothing to do with Heimdall.",
+        "speaker": "quality:A",
+        "startMs": 265000,
+        "endMs": 290000
+      },
+      {
+        "id": "quality:11",
+        "sessionId": "quality",
+        "turnId": 11,
+        "revision": 1,
+        "text": "Let's rank those cafes and coffee machines now. It will take a few more minutes before we return to the pilot.",
+        "speaker": "quality:B",
+        "startMs": 300000,
+        "endMs": 325000
+      },
+      {
+        "id": "quality:12",
+        "sessionId": "quality",
+        "turnId": 12,
+        "revision": 1,
+        "text": "Parking coffee. Back to the pilot: Priya owns both verification checks. Leo owns the timezone fix, due Thursday at 3 pm. The customer email still has no owner or date.",
+        "speaker": "quality:A",
+        "startMs": 365000,
+        "endMs": 389000
+      },
+      {
+        "id": "quality:13",
+        "sessionId": "quality",
+        "turnId": 13,
+        "revision": 1,
+        "text": "I can review the support checklist sometime next week, perhaps. Don't put my name against it yet.",
+        "speaker": null,
+        "startMs": 405000,
+        "endMs": 419000
+      },
+      {
+        "id": "quality:14",
+        "sessionId": "quality",
+        "turnId": 14,
+        "revision": 1,
+        "text": "One more blocker: accessibility sign-off is missing. We have not assigned that check or set its deadline. It must happen before the pilot.",
+        "speaker": "quality:C",
+        "startMs": 440000,
+        "endMs": 460000
+      },
+      {
+        "id": "quality:15",
+        "sessionId": "quality",
+        "turnId": 15,
+        "revision": 1,
+        "text": "Add accessibility sign-off as another condition. If audit export, rollback, or accessibility fails, postpone Monday's pilot. Leo and Priya, any objection?",
+        "speaker": "quality:A",
+        "startMs": 500000,
+        "endMs": 524000
+      },
+      {
+        "id": "quality:16",
+        "sessionId": "quality",
+        "turnId": 16,
+        "revision": 1,
+        "text": "No objection. My fix is Thursday at 3 pm, not Friday. I cannot own accessibility as well.",
+        "speaker": "quality:B",
+        "startMs": 550000,
+        "endMs": 568000
+      },
+      {
+        "id": "quality:17",
+        "sessionId": "quality",
+        "turnId": 17,
+        "revision": 1,
+        "text": "Agreed on all three conditions. Audit verification Friday noon, rollback rehearsal Friday at 2 pm; both are mine. I have no capacity for the email.",
+        "speaker": "quality:C",
+        "startMs": 580000,
+        "endMs": 599000
+      },
+      {
+        "id": "quality:18",
+        "sessionId": "quality",
+        "turnId": 18,
+        "revision": 1,
+        "text": "We are twenty-five seconds over. Close with the conditional pilot decision and those three assigned tasks. Email and accessibility ownership remain unresolved. Do not turn the tentative support-checklist offer into an assignment.",
+        "speaker": "quality:A",
+        "startMs": 610000,
+        "endMs": 625000
+      }
+    ],
+    "elapsedSeconds": 625
+  },
+  "reportOutput": {
+    "summary": "Meeting objective was to decide whether Heimdall dashboard can enter two-customer pilot on Monday, checking audit-export and rollback requirements, assigning remaining checks and communications, and closing with blockers and owners. Original 10-minute plan (audit-export 3, rollback 3, pilot-decision 3, wrap 1) was revised to same durations with audit-export and rollback marked done and pilot-decision active to focus on open email assignment. Transcript expresses audit-export timezone bug with fix by Leo due Thursday at 3 pm (corrected from Friday) and verification by Priya due Friday noon, and rollback rehearsal against failed-migration empty-dashboard case (not just happy path) by Priya due Friday at 2 pm with pass/fail report. Transcript expresses conditional agreement for two-customer pilot on Monday only if checks pass, otherwise postpone, with no general availability/full-launch commitment or announcement; initially two conditions (audit-export, rollback) then expanded to three conditions adding accessibility sign-off, with no objection and agreement expressed. Customer email owner and deadline were left open and remain unresolved with no owner/date; Priya stated tentative help was not a commitment and later no capacity. Accessibility sign-off was raised as required before pilot with no owner/deadline assigned; Leo stated cannot own as well. Support-checklist review was tentatively offered sometime next week by unknown speaker with explicit instruction not to assign yet. Mid-meeting coffee-machine/cafe ranking drift prompted a redirect at 325s to park coffee and assign email owner/deadline then confirm blockers; later speech parked coffee and returned to pilot but email remained unassigned and accessibility was added. Meeting closed 25 seconds over (625s total) with conditional decision and three assigned tasks, with email and accessibility ownership unresolved.",
+    "decisions": [
+      {
+        "text": "Enter two-customer Heimdall pilot on Monday only if audit-export, rollback rehearsal, and accessibility sign-off all pass; if any fails, postpone Monday's pilot.",
+        "owner": null,
+        "dueDate": "Monday",
+        "status": "reported_agreement",
+        "evidence": [
+          "quality:5",
+          "quality:6",
+          "quality:7",
+          "quality:15",
+          "quality:16",
+          "quality:17",
+          "quality:18"
+        ],
+        "followup": "none",
+        "followupPrompt": null
+      },
+      {
+        "text": "No general availability or full launch commitment; pilot only with no GA announcement.",
+        "owner": null,
+        "dueDate": null,
+        "status": "reported_agreement",
+        "evidence": [
+          "quality:5",
+          "quality:6"
+        ],
+        "followup": "none",
+        "followupPrompt": null
+      }
+    ],
+    "actions": [
+      {
+        "text": "Fix audit-export timezone bug",
+        "owner": "Leo",
+        "dueDate": "Thursday at 3 pm",
+        "status": "reported_agreement",
+        "evidence": [
+          "quality:1",
+          "quality:12",
+          "quality:16",
+          "quality:18"
+        ],
+        "followup": "none",
+        "followupPrompt": null
+      },
+      {
+        "text": "Verify audit-export after timezone fix",
+        "owner": "Priya",
+        "dueDate": "Friday noon",
+        "status": "reported_agreement",
+        "evidence": [
+          "quality:2",
+          "quality:12",
+          "quality:17",
+          "quality:18"
+        ],
+        "followup": "none",
+        "followupPrompt": null
+      },
+      {
+        "text": "Run rollback rehearsal against failed-migration case that caused empty dashboard (not just happy path) and report whether it passes",
+        "owner": "Priya",
+        "dueDate": "Friday at 2 pm",
+        "status": "reported_agreement",
+        "evidence": [
+          "quality:3",
+          "quality:4",
+          "quality:12",
+          "quality:17",
+          "quality:18"
+        ],
+        "followup": "none",
+        "followupPrompt": null
+      },
+      {
+        "text": "Assign owner and deadline for customer pilot email; currently no owner or date, Priya stated tentative help was not a commitment and later no capacity",
+        "owner": null,
+        "dueDate": null,
+        "status": "unresolved",
+        "evidence": [
+          "quality:7",
+          "quality:8",
+          "quality:12",
+          "quality:17",
+          "quality:18"
+        ],
+        "followup": "ticket",
+        "followupPrompt": "Draft ticket: Assign owner and deadline for two-customer pilot customer email before Monday; confirm content, sender, and timing. No owner assigned in meeting."
+      },
+      {
+        "text": "Complete accessibility sign-off before pilot; owner and deadline not assigned, Leo stated cannot own as well",
+        "owner": null,
+        "dueDate": null,
+        "status": "unresolved",
+        "evidence": [
+          "quality:14",
+          "quality:15",
+          "quality:16",
+          "quality:18"
+        ],
+        "followup": "ticket",
+        "followupPrompt": "Draft ticket: Assign owner and deadline for accessibility sign-off required before Monday pilot; define pass criteria and verification step."
+      },
+      {
+        "text": "Review support checklist sometime next week, perhaps (tentative offer from unknown speaker, explicitly not assigned yet; do not treat as commitment)",
+        "owner": null,
+        "dueDate": null,
+        "status": "proposal",
+        "evidence": [
+          "quality:13",
+          "quality:18"
+        ],
+        "followup": "none",
+        "followupPrompt": null
+      }
+    ],
+    "unresolved": [
+      "Customer pilot email owner and deadline remain unassigned; Priya stated tentative help was not a commitment and later no capacity for email.",
+      "Accessibility sign-off required before Monday pilot remains without assigned owner or deadline; Leo stated cannot own as well.",
+      "Support checklist review remains unassigned tentative proposal from unknown speaker for sometime next week, perhaps, with explicit instruction not to assign yet.",
+      "Final Monday pilot go/no-go remains pending results of audit-export verification, rollback rehearsal, and accessibility sign-off."
+    ],
+    "scores": [
+      {
+        "category": "goal_progress",
+        "score": 3,
+        "reason": "Conditional pilot decision with no GA was expressed and audit-export fix/verification and rollback rehearsal gained owners/dates, but customer email and accessibility sign-off owner/deadlines stayed open and final go remains pending verifications, so core objective partly met.",
+        "evidence": [
+          "quality:5",
+          "quality:6",
+          "quality:7",
+          "quality:12",
+          "quality:15",
+          "quality:16",
+          "quality:17",
+          "quality:18"
+        ]
+      },
+      {
+        "category": "focus",
+        "score": 3,
+        "reason": "Early turns stayed on audit-export, rollback and conditional pilot, then three turns drifted to coffee-machine/cafe ranking explicitly noted as unrelated to Heimdall. After redirect at 325s, later speech parked coffee and returned to pilot assignments and blockers, but email assignment part remained incomplete, showing mixed focus with recovery.",
+        "evidence": [
+          "quality:0",
+          "quality:5",
+          "quality:8",
+          "quality:9",
+          "quality:10",
+          "quality:11",
+          "quality:12",
+          "quality:14"
+        ]
+      },
+      {
+        "category": "pacing",
+        "score": 3,
+        "reason": "Original 10-minute plan (3+3+3 plus 1 wrap) and revised plan kept same durations with audit-export/rollback done and pilot-decision active. Actual time was 625s, 25s over as stated in close, with ~75s off-topic drift contributing to overrun and unresolved email/accessibility at wrap despite returning to pilot.",
+        "evidence": [
+          "quality:9",
+          "quality:10",
+          "quality:11",
+          "quality:12",
+          "quality:18"
+        ]
+      },
+      {
+        "category": "actionable_outcomes",
+        "score": 3,
+        "reason": "Three tasks have transcript-expressed owners/dates (Leo fix Thu 3pm, Priya verification Fri noon, Priya rollback Fri 2pm) and conditional pilot reported, but email and accessibility lack owners/dates and support-checklist tentative offer correctly remains unassigned with nulls preserved, so outcomes mixed.",
+        "evidence": [
+          "quality:1",
+          "quality:2",
+          "quality:4",
+          "quality:12",
+          "quality:13",
+          "quality:14",
+          "quality:17",
+          "quality:18"
+        ]
+      },
+      {
+        "category": "participation",
+        "score": 5,
+        "reason": "Maya invited Leo then Priya to state blockers and both responded, Priya questioned rollback readiness, Maya left email open asking who can take it, and Maya asked Leo and Priya for objections to three conditions with both responding no objection/agreed. Turn with null speaker has uncertain attribution and gaps alone are not evidence of exclusion.",
+        "evidence": [
+          "quality:0",
+          "quality:1",
+          "quality:2",
+          "quality:7",
+          "quality:8",
+          "quality:15",
+          "quality:16",
+          "quality:17"
+        ]
+      }
+    ],
+    "speakerTips": [
+      {
+        "speakerId": "quality:A",
+        "tips": [
+          {
+            "text": "When coffee or cafe talk starts, restate the open pilot assignment for email owner and deadline immediately instead of adding cafe examples.",
+            "evidence": [
+              "quality:8",
+              "quality:10"
+            ]
+          },
+          {
+            "text": "Continue closing by naming which ownerships remain unresolved and which tentative offers are not assignments.",
+            "evidence": [
+              "quality:18"
+            ]
+          }
+        ]
+      },
+      {
+        "speakerId": "quality:B",
+        "tips": [
+          {
+            "text": "State the corrected deadline once as Thursday at 3 pm not Friday and avoid repeating the superseded Friday date in later updates.",
+            "evidence": [
+              "quality:1",
+              "quality:16"
+            ]
+          },
+          {
+            "text": "Defer coffee-machine and cafe ranking to a separate thread to keep remaining minutes for pilot blockers.",
+            "evidence": [
+              "quality:9",
+              "quality:11"
+            ]
+          }
+        ]
+      },
+      {
+        "speakerId": "quality:C",
+        "tips": [
+          {
+            "text": "Continue stating capacity limits explicitly when declining email or extra checks so tentative help is not recorded as ownership.",
+            "evidence": [
+              "quality:7",
+              "quality:17"
+            ]
+          },
+          {
+            "text": "When raising a new blocker like accessibility sign-off, suggest candidate owners or deadline options to help close assignment before wrap.",
+            "evidence": [
+              "quality:14"
+            ]
+          }
+        ]
+      }
+    ],
+    "focusTime": {
+      "onTopicSeconds": 285,
+      "offTopicSeconds": 75,
+      "unknownSeconds": 265,
+      "note": "Approximate from turn start/end times with no overlap: on-topic ~285s from turns 0-8,12,14-18; off-topic ~75s from turns 9-11 including explicit unrelated-to-Heimdall statement; unknown ~265s includes ~251s gaps with no finalized speech and 14s turn 13 with null speaker. Gaps and unknown attribution remain uncertain."
+    },
+    "coverage": 5,
+    "overall": 3.4
+  },
+  "audioTest": {
+    "scope": "Real audio pipeline using one synthetic Meta MMS voice; ASR split it into two labels and misheard names. Not a human speaker accuracy test.",
+    "turns": [
+      {
+        "id": "voyager/duplex/4C134E9A545542AFA1C65170E8C96DAF:0",
+        "sessionId": "voyager/duplex/4C134E9A545542AFA1C65170E8C96DAF",
+        "turnId": 0,
+        "revision": 1,
+        "text": " Let's review hymn all our goal is to decide whether we are ready for the pilot and capture the remaining work. ",
+        "speaker": "voyager/duplex/4C134E9A545542AFA1C65170E8C96DAF:A",
+        "startMs": 1340,
+        "endMs": 10060
+      },
+      {
+        "id": "voyager/duplex/4C134E9A545542AFA1C65170E8C96DAF:1",
+        "sessionId": "voyager/duplex/4C134E9A545542AFA1C65170E8C96DAF",
+        "turnId": 1,
+        "revision": 1,
+        "text": " The core integration is complete. But the error dashboard is missing we should not launch until the rollback test passes. ",
+        "speaker": "voyager/duplex/4C134E9A545542AFA1C65170E8C96DAF:A",
+        "startMs": 10140,
+        "endMs": 20460
+      },
+      {
+        "id": "voyager/duplex/4C134E9A545542AFA1C65170E8C96DAF:2",
+        "sessionId": "voyager/duplex/4C134E9A545542AFA1C65170E8C96DAF",
+        "turnId": 2,
+        "revision": 1,
+        "text": " My name is Ellis I will implement the error dashboard by Thursday I own that action and will send the team the lane. ",
+        "speaker": "voyager/duplex/4C134E9A545542AFA1C65170E8C96DAF:A",
+        "startMs": 20700,
+        "endMs": 29740
+      },
+      {
+        "id": "voyager/duplex/4C134E9A545542AFA1C65170E8C96DAF:3",
+        "sessionId": "voyager/duplex/4C134E9A545542AFA1C65170E8C96DAF",
+        "turnId": 3,
+        "revision": 1,
+        "text": " Someone also needs to review the debt retention requirements we have not agreed an owner or a due date for that work yet. ",
+        "speaker": "voyager/duplex/4C134E9A545542AFA1C65170E8C96DAF:B",
+        "startMs": 29820,
+        "endMs": 38780
+      },
+      {
+        "id": "voyager/duplex/4C134E9A545542AFA1C65170E8C96DAF:4",
+        "sessionId": "voyager/duplex/4C134E9A545542AFA1C65170E8C96DAF",
+        "turnId": 4,
+        "revision": 1,
+        "text": " We are getting sidetracked talking about coffee machines let's park the coffee discussion and finish the pilot decision. ",
+        "speaker": "voyager/duplex/4C134E9A545542AFA1C65170E8C96DAF:B",
+        "startMs": 38940,
+        "endMs": 46620
+      },
+      {
+        "id": "voyager/duplex/4C134E9A545542AFA1C65170E8C96DAF:5",
+        "sessionId": "voyager/duplex/4C134E9A545542AFA1C65170E8C96DAF",
+        "turnId": 5,
+        "revision": 1,
+        "text": " Our decision is to run the pilot on Monday only if the rollback test passes Alyssa owns the dashboard by Thursday the retention review still needs an owner if rollback fails we need to follow up meeting. ",
+        "speaker": "voyager/duplex/4C134E9A545542AFA1C65170E8C96DAF:A",
+        "startMs": 47020,
+        "endMs": 60140
+      }
+    ],
+    "report": {
+      "summary": "Licensed audio integration check addressed Heimdall pilot readiness (turn 0 transcribes as 'hymn all') against original 5-minute plan (readiness 2 min, launch-conditions 1 min, next-steps 1 min, wrap 1 min) with no revisions; elapsed ~68 seconds with no overrun. Transcript states core integration complete but error dashboard missing and rollback test as launch gate (turn 1). Dashboard next step is conflicted on owner with consistent due date Thursday: speaker A stating name Ellis claimed 'I will implement...by Thursday I own that action' (turn 2, including unclear phrase 'lane'), later same speaker ID stated 'Alyssa owns the dashboard by Thursday' (turn 5). Retention requirements (transcribed as 'debt retention') was raised with explicitly no agreed owner/date (turn 3) and restated as still needing owner (turn 5). Coffee-machine sidetrack was noted and parked to finish pilot decision (turn 4), with next turn returning to decision. Closing transcript states reported decision to run pilot Monday only if rollback passes, with follow-up meeting needed if rollback fails (turn 5). Facilitator clarification on dashboard owner vs retention was issued ~67.9s after start; no finalized turns occur after it, so response cannot be assessed. Owners/dates preserved only where stated; conflicts and unknowns remain.",
+      "decisions": [
+        {
+          "text": "Run the pilot on Monday only if the rollback test passes",
+          "owner": null,
+          "dueDate": "Monday",
+          "status": "reported_agreement",
+          "evidence": [
+            "voyager/duplex/4C134E9A545542AFA1C65170E8C96DAF:1",
+            "voyager/duplex/4C134E9A545542AFA1C65170E8C96DAF:5"
+          ],
+          "followup": "meeting",
+          "followupPrompt": "Draft: If the rollback test fails, schedule a follow-up meeting to revisit the pilot decision. Confirm attendees and time."
+        }
+      ],
+      "actions": [
+        {
+          "text": "Implement the error dashboard by Thursday \u2014 owner conflicted: Ellis claimed ownership and Alyssa later stated as owner",
+          "owner": null,
+          "dueDate": "Thursday",
+          "status": "unresolved",
+          "evidence": [
+            "voyager/duplex/4C134E9A545542AFA1C65170E8C96DAF:2",
+            "voyager/duplex/4C134E9A545542AFA1C65170E8C96DAF:5"
+          ],
+          "followup": "ticket",
+          "followupPrompt": "Draft ticket: Confirm single owner for error dashboard due Thursday (Ellis vs Alyssa both stated) and confirm delivery. Do not assign without explicit confirmation."
+        },
+        {
+          "text": "Review the debt retention requirements \u2014 owner and due date not agreed",
+          "owner": null,
+          "dueDate": null,
+          "status": "unresolved",
+          "evidence": [
+            "voyager/duplex/4C134E9A545542AFA1C65170E8C96DAF:3",
+            "voyager/duplex/4C134E9A545542AFA1C65170E8C96DAF:5"
+          ],
+          "followup": "ticket",
+          "followupPrompt": "Draft ticket: Propose and confirm owner and due date for retention requirements review and clarify scope."
+        }
+      ],
+      "unresolved": [
+        "Dashboard owner unconfirmed: Ellis claimed ownership by Thursday and Alyssa was later stated as owner by Thursday; single owner remains unknown.",
+        "Retention requirements review has no stated owner or due date.",
+        "Rollback test has no stated owner, timing, or verification method; only stated as condition for Monday pilot.",
+        "Facilitator clarification on dashboard owner and retention assignment has no post-intervention speech to assess; resolution still pending."
+      ],
+      "scores": [
+        {
+          "category": "goal_progress",
+          "score": 3,
+          "reason": "Readiness status and gaps surfaced and launch condition stated as Monday only if rollback passes, but dashboard ownership conflicted between Ellis and Alyssa and retention remains without owner/date, leaving next-step objective only partly met.",
+          "evidence": [
+            "voyager/duplex/4C134E9A545542AFA1C65170E8C96DAF:1",
+            "voyager/duplex/4C134E9A545542AFA1C65170E8C96DAF:2",
+            "voyager/duplex/4C134E9A545542AFA1C65170E8C96DAF:3",
+            "voyager/duplex/4C134E9A545542AFA1C65170E8C96DAF:5"
+          ]
+        },
+        {
+          "category": "focus",
+          "score": 4,
+          "reason": "Meeting stayed on pilot readiness, launch conditions and next steps; brief coffee-machine sidetrack was explicitly noted and parked in turn 4 with next turn returning to pilot decision.",
+          "evidence": [
+            "voyager/duplex/4C134E9A545542AFA1C65170E8C96DAF:0",
+            "voyager/duplex/4C134E9A545542AFA1C65170E8C96DAF:1",
+            "voyager/duplex/4C134E9A545542AFA1C65170E8C96DAF:4",
+            "voyager/duplex/4C134E9A545542AFA1C65170E8C96DAF:5"
+          ]
+        },
+        {
+          "category": "pacing",
+          "score": 5,
+          "reason": "Original 5-minute plan (2+1+1+1) with no revisions was completed in ~68 seconds with no overrun; all topics and closing decision addressed efficiently.",
+          "evidence": [
+            "voyager/duplex/4C134E9A545542AFA1C65170E8C96DAF:0",
+            "voyager/duplex/4C134E9A545542AFA1C65170E8C96DAF:1",
+            "voyager/duplex/4C134E9A545542AFA1C65170E8C96DAF:2",
+            "voyager/duplex/4C134E9A545542AFA1C65170E8C96DAF:3",
+            "voyager/duplex/4C134E9A545542AFA1C65170E8C96DAF:4",
+            "voyager/duplex/4C134E9A545542AFA1C65170E8C96DAF:5"
+          ]
+        },
+        {
+          "category": "actionable_outcomes",
+          "score": 2,
+          "reason": "Launch condition is conditional but clear; dashboard has due Thursday but conflicted ownership, retention lacks owner/date, and rollback lacks stated owner, limiting immediately actionable clarity.",
+          "evidence": [
+            "voyager/duplex/4C134E9A545542AFA1C65170E8C96DAF:1",
+            "voyager/duplex/4C134E9A545542AFA1C65170E8C96DAF:2",
+            "voyager/duplex/4C134E9A545542AFA1C65170E8C96DAF:3",
+            "voyager/duplex/4C134E9A545542AFA1C65170E8C96DAF:5"
+          ]
+        },
+        {
+          "category": "participation",
+          "score": 4,
+          "reason": "Both session speaker IDs contributed substantively and responsively: A on readiness/dashboard/closing decision, B on retention gap and refocus; B's gap was acknowledged in closing with no evidence of exclusion, though roster missing limits full opportunity assessment.",
+          "evidence": [
+            "voyager/duplex/4C134E9A545542AFA1C65170E8C96DAF:0",
+            "voyager/duplex/4C134E9A545542AFA1C65170E8C96DAF:3",
+            "voyager/duplex/4C134E9A545542AFA1C65170E8C96DAF:4",
+            "voyager/duplex/4C134E9A545542AFA1C65170E8C96DAF:5"
+          ]
+        }
+      ],
+      "speakerTips": [
+        {
+          "speakerId": "voyager/duplex/4C134E9A545542AFA1C65170E8C96DAF:A",
+          "tips": [
+            {
+              "text": "Reconcile the conflicting dashboard ownership statements by restating a single confirmed owner and date (Ellis vs Alyssa by Thursday) and noting who confirmed it.",
+              "evidence": [
+                "voyager/duplex/4C134E9A545542AFA1C65170E8C96DAF:2",
+                "voyager/duplex/4C134E9A545542AFA1C65170E8C96DAF:5"
+              ]
+            },
+            {
+              "text": "Specify who will run and verify the rollback test and how the Monday go/no-go will be communicated, since the pilot is conditional on it.",
+              "evidence": [
+                "voyager/duplex/4C134E9A545542AFA1C65170E8C96DAF:1",
+                "voyager/duplex/4C134E9A545542AFA1C65170E8C96DAF:5"
+              ]
+            }
+          ]
+        },
+        {
+          "speakerId": "voyager/duplex/4C134E9A545542AFA1C65170E8C96DAF:B",
+          "tips": [
+            {
+              "text": "When flagging unowned work like the retention review, propose a candidate owner and date for confirmation to move the gap toward an assignable next step.",
+              "evidence": [
+                "voyager/duplex/4C134E9A545542AFA1C65170E8C96DAF:3"
+              ]
+            },
+            {
+              "text": "Continue using brief explicit redirects to park off-topic items and return to the decision, as done for the coffee discussion.",
+              "evidence": [
+                "voyager/duplex/4C134E9A545542AFA1C65170E8C96DAF:4"
+              ]
+            }
+          ]
+        }
+      ],
+      "focusTime": {
+        "onTopicSeconds": 57.84,
+        "offTopicSeconds": null,
+        "unknownSeconds": 10.21,
+        "note": "Approximate from timestamped turns: sum of captured speech ~57.84s counted as on-topic including turn 4 redirect. Off-topic coffee-machine sidetrack mentioned in turn 4 but no separate off-topic speech turns captured, so off-topic duration cannot be approximated and is left null. Remaining ~10.21s of 68.053s elapsed (gaps between turns) remains unknown with uncertain attribution and possible overlap."
+      },
+      "coverage": 5,
+      "overall": 3.6
+    }
+  },
+  "tuningBoundary": "Final coaching/scoring prompt clarifications were added after this captured report; those last wording edits have not received another paid evaluation."
+}

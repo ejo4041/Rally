@@ -31,7 +31,7 @@ flowchart TD
 | Live assessment | Current plan, elapsed time, cumulative progress, latest 40 finalized turns, previous interventions | 0–5 health, concerns, evidence, progress, optional intervention and complete revised plan | One request in flight. Default 10s cadence; no repeated calls on identical content except minute-level pacing milestones. 60s ordinary-intervention cooldown. Host controls invalidate stale results. |
 | Final review | Entire finalized transcript, original/revised plans, timing and speaker corrections | Summary, decisions/actions, unresolved questions, draft ticket/meeting follow-ups, five scores and speaker tips | Background Spark max effort; no last-N-turn truncation. Missing owners/dates stay null. Evidence required; nothing sends invitations or creates tickets. |
 
-LiveKit handles media. Muse handles interpretation. Application code owns timing, permission, budget, validation and persistence. Prompt outlines and JSON schemas are in `apps/rally-api/src/muse.ts` and `contracts.ts`.
+LiveKit handles media. Muse handles interpretation. Application code owns timing, permission, budget, validation and persistence. Prompt outlines and JSON schemas are in `apps/rally-api/src/prompts.ts` and `contracts.ts`.
 
 ## Live moderation policy
 
@@ -62,3 +62,5 @@ Research informs these categories, not a validated scoring instrument: [agenda a
 Tune the three prompt outlines and examples against saved, consented transcripts. Evaluate needless interventions, useful redirects, outcome omissions, incorrect attribution and score explanations. Keep model/effort/token settings and actual costs attached to runs. Spoken agenda, synthesized voice, Teams and video attach later without changing the core processing stages.
 
 Implementation tuning surface: [`src/prompts.ts`](../apps/rally-api/src/prompts.ts); output schemas: [`src/contracts.ts`](../apps/rally-api/src/contracts.ts).
+
+Tuning from actual examples: a supplied closing section consumes `wrapMinutes`, rather than creating a second wrap-up. Participation cannot be inferred from one captured speaker or absent responses alone. A redirect may only be judged ignored when later transcript evidence supports that interpretation. Maximum-effort final reports allow 32,768 completion tokens (reasoning included), with explicit failure/retry on truncation.

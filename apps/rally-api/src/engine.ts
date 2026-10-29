@@ -160,9 +160,12 @@ export class Engine {
       );
     if (this.starting.has(m.id) || this.active.has(m.id))
       throw new HttpError("Meeting already running", 409);
-    if (this.active.size >= this.config.capacity)
+    const capturing = [...this.active.keys()].filter(
+      (id) => this.meetings.get(id).phase === "live",
+    );
+    if (capturing.length >= this.config.capacity)
       throw new HttpError("Server meeting capacity reached", 409);
-    for (const id of this.active.keys())
+    for (const id of capturing)
       if (this.meetings.get(id).userId === m.userId)
         throw new HttpError("This host already has an active meeting", 409);
     this.starting.add(m.id);
@@ -176,6 +179,7 @@ export class Engine {
     };
     this.active.set(m.id, state);
     const previous = m.phase;
+    const previousStartedAt = m.startedAt;
     m.phase = "live";
     m.startedAt ??= Date.now();
     m.epoch++;
@@ -211,9 +215,11 @@ export class Engine {
       state.asr?.close();
       await state.media?.close();
       this.active.delete(m.id);
-      m.phase = previous;
-      m.error = "Could not start audio; retry explicitly.";
-      this.meetings.save(m);
+      const current = this.meetings.get(m.id);
+      current.phase = previous;
+      current.startedAt = previousStartedAt;
+      current.error = "Could not start audio; retry explicitly.";
+      this.meetings.save(current);
       throw error;
     } finally {
       this.starting.delete(m.id);
@@ -505,7 +511,8 @@ export class Engine {
     if (
       this.starting.has(m.id) ||
       this.reports.has(m.id) ||
-      this.meetings.preparing.has(m.id)
+      this.meetings.preparing.has(m.id) ||
+      this.active.get(m.id)?.ending
     )
       throw new HttpError("Wait for processing to finish before deleting", 409);
     const state = this.active.get(m.id);

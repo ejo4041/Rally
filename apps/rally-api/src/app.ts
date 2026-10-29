@@ -202,16 +202,14 @@ export function createApplication(
           : err instanceof z.ZodError
             ? 400
             : 500;
-      res
-        .status(status)
-        .json({
-          error:
-            err instanceof z.ZodError
-              ? "Invalid request or model output"
-              : err instanceof HttpError
-                ? err.message
-                : "Internal error",
-        });
+      res.status(status).json({
+        error:
+          err instanceof z.ZodError
+            ? "Invalid request or model output"
+            : err instanceof HttpError
+              ? err.message
+              : "Internal error",
+      });
     },
   );
   return {

@@ -18,7 +18,7 @@ import assert from "node:assert/strict";
 loadEnvironment();
 if (process.env.RALLY_SMOKE_APPROVED !== "1")
   throw new Error(
-    "Set RALLY_SMOKE_APPROVED=1 only for an explicitly budgeted test (at most $0.15).",
+    "Set RALLY_SMOKE_APPROVED=1 only for an explicitly budgeted test (at most $0.25).",
   );
 const fixture =
   process.env.RALLY_SMOKE_PCM || "/tmp/rally-public-audio/input.pcm";
@@ -26,7 +26,10 @@ if (!existsSync(fixture))
   throw new Error(
     "Provide a licensed mono PCM16/16kHz fixture in RALLY_SMOKE_PCM.",
   );
-const pcm = readFileSync(fixture).subarray(0, 30 * 32000);
+const seconds = Number(process.env.RALLY_SMOKE_SECONDS || 30);
+if (!Number.isFinite(seconds) || seconds < 1 || seconds > 120)
+  throw new Error("Smoke audio must be 1–120 seconds");
+const pcm = readFileSync(fixture).subarray(0, seconds * 32000);
 const run = randomUUID(),
   dir = resolve(`test-results/muse-${run}`);
 mkdirSync(dir, { recursive: true });
@@ -42,9 +45,9 @@ const config = {
   livekitUrl: "ws://127.0.0.1:17881",
   livekitKey: "devkey",
   livekitSecret: "secret",
-  buildBudget: 0.15,
-  meetingBudget: 0.15,
-  assessmentMs: 100000,
+  buildBudget: 0.25,
+  meetingBudget: 0.25,
+  assessmentMs: Number(process.env.RALLY_SMOKE_ASSESSMENT_MS || 100000),
 };
 const api = createApplication(config),
   server = api.app.listen(0, "127.0.0.1");
@@ -78,6 +81,7 @@ try {
   const created = await request("/meetings", "POST", {
     title: "Licensed audio integration check",
     agenda:
+      process.env.RALLY_SMOKE_AGENDA ||
       "Decide the software release date, identify remaining launch tasks, and allocate owners. Redirect unrelated reading or anecdotes.",
     durationMinutes: 5,
   });
@@ -165,6 +169,7 @@ try {
     run,
     at: new Date().toISOString(),
     fixture:
+      process.env.RALLY_SMOKE_PROVENANCE ||
       "Previously licensed LibriSpeech reference PCM; see public-audio-benchmark.md",
     failure,
     batchCost: usage.reduce((s, r) => s + (r.cost || 0), 0),
@@ -179,6 +184,7 @@ try {
       unknown: summary.unknown,
     }),
   );
+  server.closeAllConnections();
   server.close();
   media.kill("SIGTERM");
   await dispose();

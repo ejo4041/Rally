@@ -1,3 +1,5 @@
+Latest backend checkpoint: [Astra review](backend-astra-review.md) expands verification to 25 tests and real reconnect/full-audio/realistic-report runs, with seven defects or tuning issues addressed. [Actual AI examples](backend-ai-examples.md). Earlier delivery details below describe the first implementation checkpoint.
+
 # Backend implementation status
 
 October 29, 2026. Implemented in `apps/rally-api/` on `rally-backend-mvp`, fresh worktree `/srv/hackathon/rally-backend-mvp`, baseline main `510bb07e0c8da794c92eb2a9c489d026de5a04d6`.

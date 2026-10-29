@@ -9,6 +9,8 @@ import {
   AudioFrame,
   LocalAudioTrack,
   TrackPublishOptions,
+  type RemoteParticipant,
+  type RemoteTrackPublication,
 } from "@livekit/rtc-node";
 import type { Media, Meeting, MediaSession, LiveEvent } from "./contracts.ts";
 import type { Configuration } from "./config.ts";
@@ -45,7 +47,10 @@ export class LiveKitMedia implements Media {
       });
       return access.toJwt();
     };
-    room.on(RoomEvent.TrackPublished, (publication, participant) => {
+    const subscribe = (
+      publication: RemoteTrackPublication,
+      participant: RemoteParticipant,
+    ) => {
       if (
         participant.identity === host &&
         publication.kind === TrackKind.KIND_AUDIO &&
@@ -55,7 +60,8 @@ export class LiveKitMedia implements Media {
         trackId = publication.sid;
         publication.setSubscribed(true);
       }
-    });
+    };
+    room.on(RoomEvent.TrackPublished, subscribe);
     room.on(RoomEvent.TrackSubscribed, (track, publication, participant) => {
       if (participant.identity !== host || publication.sid !== trackId) return;
       void (async () => {
@@ -123,6 +129,11 @@ export class LiveKitMedia implements Media {
     } catch (error) {
       await room.disconnect();
       throw error;
+    }
+    // Existing publications are populated during connect without TrackPublished events.
+    for (const participant of room.remoteParticipants.values()) {
+      for (const publication of participant.trackPublications.values())
+        subscribe(publication, participant);
     }
     return {
       connection: async () => ({

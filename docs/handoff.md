@@ -1,3 +1,5 @@
+Backend Astra follow-up: [expanded validation and fixes](backend-astra-review.md), [actual agenda/report/score examples](backend-ai-examples.md). Three Astra reviewers; 25 tests, real browser reconnects, real reasoning and audio pipeline exercised. Read documented ASR/scoring limits. Tracked spend $0.47338150, conditional remainder $149.52661850, unknown 0; no deployment or frontend change.
+
 Backend delivery: merged and pushed to remote `main` (`098c134`), including concurrent frontend main changes. [Backend checkpoint](backend-implementation-status.md) has setup, tests, demo accounts, cost evidence and limitations.
 
 Backend MVP implemented: [status and validation](backend-implementation-status.md), [frontend API contract](backend-api.md), [AI processing diagram](ai-processing.md), [setup](../apps/rally-api/README.md). Real two-way browser audio and Muse end-to-end smoke passed. Frontend wiring and deployment remain separate; existing private Site is unchanged.
