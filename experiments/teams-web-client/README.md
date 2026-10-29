@@ -1,5 +1,7 @@
 # Normal Teams web client on the Rally server
 
+**Speech scope:** The eSpeak command below is a historical transport diagnostic used to check virtual-microphone routing. It is not the competition speech implementation. The current voice adapter uses [self-hosted Meta MMS](../meta-mms/README.md); its generation has been measured, while hosted/Teams playback remains pending.
+
 This is an isolated transport experiment using headed Chromium, Xvfb and private PulseAudio devices. It does not use the ACS Calling SDK or a custom Entra app registration. The existing `experiments/teams-audio` ACS runner and hosted Site controls remain separate.
 
 **Deployment update:** The [existing Site's version 7 controls](../../docs/research/teams-transcription-deployment-result.md) now use this normal queue runner and optional live transcription. `rally-teams-web-runner.service` is manually active; the old ACS runner is stopped/disabled. No automatic startup was enabled for the new POC. Integrated live queue→Teams→Muse validation is pending the user's fresh invite/consent. Historical standalone test instructions below must not be used to reopen the stored meeting link without authorization.

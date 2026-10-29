@@ -1,5 +1,7 @@
 # Rally browser audio implementation notes
 
+**Current speech requirement:** The organizer FAQ supplied on October 29 permits self-hosted Meta MMS and excludes third-party TTS models. Earlier browser/OpenAI speech proposals below are historical research, not the competition implementation. See [current model eligibility and execution evidence](submission-requirements-meta-audit-2026-10-29.md).
+
 Researched October 28, 2026 against browser documentation. No browser, physical device, microphone, speech service, or API was exercised in this task. No paid calls were made. This is an implementation recommendation, not measured compatibility. See [agreed scope](../planning-interview.md), [latency plan](../latency-test-plan.md), and [speech/Teams research](rally-speech-and-teams.md).
 
 ## Recommended first diagnostic

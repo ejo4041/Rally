@@ -1,5 +1,7 @@
 # Planning interview — Muse meeting moderator
 
+**Current speech requirement:** The organizer FAQ supplied on October 29 permits self-hosted Meta MMS and excludes third-party TTS models. Earlier browser/OpenAI speech proposals below are historical research, not the competition implementation. See [current model eligibility and execution evidence](research/submission-requirements-meta-audit-2026-10-29.md).
+
 ## Status
 
 Rounds 1–4 answered and scope agreed. User answered “yes to all” Round 4 proposals. One-week roadmap: [rally-roadmap.md](rally-roadmap.md). Feasibility research kicked off; application implementation has not started.

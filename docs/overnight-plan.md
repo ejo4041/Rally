@@ -1,5 +1,7 @@
 # Rally overnight work queue
 
+**Current speech requirement:** The organizer FAQ supplied on October 29 permits self-hosted Meta MMS and excludes third-party TTS models. Earlier browser/OpenAI speech proposals below are historical research, not the competition implementation. See [current model eligibility and execution evidence](research/submission-requirements-meta-audit-2026-10-29.md).
+
 Prepared October 28, 2026 at the user's request. The user authorizes working through this list without further input and wants reviewable Markdown results and a morning handoff. Execute while the current session runs; no persistent scheduler has been configured and work after session shutdown is not guaranteed. Do not keep a session alive merely to wait for morning: complete useful work and leave a checkpoint.
 
 ## Review list

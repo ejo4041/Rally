@@ -1,5 +1,7 @@
 # Rally speech output and Teams invite research
 
+**Current speech requirement:** The organizer FAQ supplied on October 29 permits self-hosted Meta MMS and excludes third-party TTS models. Earlier browser/OpenAI speech proposals below are historical research, not the competition implementation. See [current model eligibility and execution evidence](submission-requirements-meta-audit-2026-10-29.md).
+
 Research date: October 28, 2026. Follow-up to [initial feasibility research](rally-feasibility.md). No API calls, provisioning, or implementation performed.
 
 ## Updated user constraints
