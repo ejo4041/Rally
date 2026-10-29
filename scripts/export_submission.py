@@ -6,7 +6,7 @@ from pathlib import Path
 import zipfile
 
 ROOT=Path(__file__).resolve().parents[1]
-EXCLUDED={'.git','node_modules','__pycache__','.data','.venv','dist','test-results','.cache'}
+EXCLUDED={'.git','node_modules','__pycache__','.data','.venv','dist','test-results','.cache','state','profile','.wrangler'}
 
 def export(out):
     out=out.resolve()

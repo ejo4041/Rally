@@ -10,6 +10,8 @@ The record reloads through the existing meeting API/UI, exports Markdown, and ca
 
 Failure states are preserved, speaker identities remain unknown unless supplied by ASR, no outcomes are invented, and the UI/export explicitly say moderation was not performed. The original POC did not retain speech timestamps: the record discloses job-window timing and labels turn times as unavailable. Invite URLs and access tokens are excluded from the saved record.
 
+The submission exporter previously included the ignored Teams browser `state/profile` directory. It now excludes browser state/profile and Wrangler runtime data, with a synthetic credential/cache fixture regression test. The source archive and local checkpoint were rebuilt after that correction; no archive was uploaded.
+
 The original inline transcript/download remains available. Save a completed test before starting another so it is easy to find in history. Earlier source jobs are retained in D1; this batch does not bulk-import real user transcripts.
 
 ## Verification
@@ -18,6 +20,7 @@ The original inline transcript/download remains available. Save a completed test
 - Mocked Teams browser test passes: consent, transcript XSS handling, download, mobile layout, Leave, save button gating, history navigation and honest saved-record rendering.
 - Existing full browser walkthrough regression passes: setup, consent, confirmation, pause/resume, wrap-up clock, reload, export and deletion, zero paid use.
 - Worker build and ESM validation pass.
+- Python source-export tests pass: browser/runtime state, credentials, dependencies, databases and symlinks are excluded; source and attribution remain; hosting project identity is stripped; output inside the source tree is refused.
 - Existing four adapter/pacing regressions pass (run separately against server experiment).
 
 These checks are offline proof of application behavior, not proof of live Teams reliability or speech output. The deployed Site is still version 7; the new history UI/API is local and requires the owning Sites session to publish.
