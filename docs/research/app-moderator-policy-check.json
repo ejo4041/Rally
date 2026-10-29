@@ -1,0 +1,36 @@
+{
+  "decision": {
+    "evidence_turn_ids": [
+      "voyager/duplex/14D6E894FFEF4E6AAD352F013AED33DC:0",
+      "voyager/duplex/14D6E894FFEF4E6AAD352F013AED33DC:1",
+      "voyager/duplex/14D6E894FFEF4E6AAD352F013AED33DC:2"
+    ],
+    "intervene": true,
+    "kind": "redirect",
+    "outcomes": [],
+    "spoken_text": "Could we bring it back to the Friday software release decision?"
+  },
+  "usage": [
+    {
+      "id": "c69811c6-1b97-4786-a61a-ebd9bc54b85f",
+      "meetingId": "e84e1b9c-772f-4f9a-8057-50ab35e5c21d",
+      "createdAt": "2026-10-28T05:00:12.283Z",
+      "model": "muse-spark-1.3",
+      "status": "200",
+      "estimatedCost": 0.0021625,
+      "requestId": "870efffc-34c6-45bd-9abe-ebbe9b1ebe41",
+      "usage": {
+        "inputTokens": 642,
+        "cachedTokens": 0,
+        "outputTokens": 320,
+        "reasoningTokens": 184
+      },
+      "decisionSummary": {
+        "intervene": true,
+        "kind": "redirect",
+        "outcomeCount": 0
+      },
+      "durationMs": 1761
+    }
+  ]
+}

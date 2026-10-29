@@ -1,0 +1,1848 @@
+{
+  "fixture": "AMI ES2002a mixed headset, four speakers",
+  "source": {
+    "corpus": "https://groups.inf.ed.ac.uk/ami/",
+    "overview": "https://groups.inf.ed.ac.uk/ami/corpus/overview.shtml",
+    "download_and_license": "https://groups.inf.ed.ac.uk/ami/download/",
+    "wav_url": "https://groups.inf.ed.ac.uk/ami/AMICorpusMirror/amicorpus/ES2002a/audio/ES2002a.Mix-Headset.wav",
+    "wav_total_bytes": 40724524,
+    "wav_header_sha256": "0ac438f0643f2fb6eccdaa879058b7dd9bbbb7da15263ae0785934f88df13674",
+    "annotation_zip_url": "https://groups.inf.ed.ac.uk/ami/AMICorpusAnnotations/ami_public_manual_1.6.2.zip",
+    "annotation_zip_total_bytes": 22887865,
+    "annotation_entries": {
+      "A": {
+        "sha256": "03e7f37c4b3519ee78396779bbc90e2778b7b7ccd7a7388f7fa3a22cb31f7044",
+        "zip_entry": "words/ES2002a.A.words.xml",
+        "crc32": "b0aa759f"
+      },
+      "B": {
+        "sha256": "a51156e0b3f1b05d9d1a631206d523c5247d2d6fd851ecfe826317ab261cc17a",
+        "zip_entry": "words/ES2002a.B.words.xml",
+        "crc32": "701da8a1"
+      },
+      "C": {
+        "sha256": "c539fca7b7183a2b56be43f2362432a91a4552512ed03df8c4ce96aee75f3330",
+        "zip_entry": "words/ES2002a.C.words.xml",
+        "crc32": "756af286"
+      },
+      "D": {
+        "sha256": "d4f8b66e53de583c839424323f0e05d038a1426e5628042d03dcd2ee72e68b05",
+        "zip_entry": "words/ES2002a.D.words.xml",
+        "crc32": "3cca0423"
+      }
+    }
+  },
+  "attribution": "AMI Meeting Corpus / AMI Consortium; Jean Carletta (2006), Announcing the AMI Meeting Corpus. Excerpted mixed-headset audio and manual words annotations.",
+  "license": "CC BY 4.0",
+  "license_url": "https://creativecommons.org/licenses/by/4.0/",
+  "changes": "Audio excerpt only; PCM payload copied without resampling, channel changes, silence insertion or speed change. Reference removes punctuation annotation nodes, preserves lexical text and normalized tokens.",
+  "audio": {
+    "path": "/tmp/rally-ami/input.pcm",
+    "encoding": "PCM_16KHZ",
+    "sample_rate": 16000,
+    "channels": 1,
+    "sample_width_bytes": 2,
+    "source_start_seconds": 267.0,
+    "source_end_seconds": 317.0,
+    "duration_seconds": 50.0,
+    "source_data_offset_bytes": 44,
+    "http_byte_range_inclusive": [
+      8544044,
+      10144043
+    ],
+    "bytes": 1600000,
+    "sha256_pcm_excerpt": "b7ea93f18c550154dc51c6d07ff9be3d2309825520c5558d248191993918777c",
+    "boundary_gaps": {
+      "start": {
+        "source_gap_start_seconds": 257.26,
+        "source_gap_end_seconds": 268.0,
+        "cut_seconds": 267.0,
+        "kind": "lexical_annotation_gap_not_verified_acoustic_silence"
+      },
+      "end": {
+        "source_gap_start_seconds": 315.13,
+        "source_gap_end_seconds": 318.58,
+        "cut_seconds": 317.0,
+        "kind": "lexical_annotation_gap_not_verified_acoustic_silence"
+      }
+    }
+  },
+  "reference": {
+    "merged_text": "Then they're small cute and furry and uh when planet of the apes becomes real I'm gonna be up there with them Right Cool There's too much gear You can take as long over this as you like because we haven't got an awful lot to discuss Ok oh we do we do Don't feel like you're in a rush anyway Okay I coulda told you a whole lot more about beagles Ach Boy let me tell why not you We might have to get you up again then I don't know what mine is I'm gonna have to think on the spot now Impressionist Can't draw Is Um that a whale Yeah",
+    "merge_convention": "Only lexical w nodes (not punc=true) fully contained in [start,end], normalized via lowercase ASCII alphanumerics with internal apostrophes. Merge by source start time, then speaker code, then end time, then NXT word ID for ties; speaker codes are annotation identities, not recognized names.",
+    "timing_convention": "Times are manual orthographic annotations with forced-aligned word timings, rebased to excerpt start; not perfect acoustic boundary ground truth.",
+    "lexical_annotation_count": 113,
+    "normalized_token_count": 113,
+    "per_speaker": {
+      "A": {
+        "lexical_annotation_count": 10,
+        "normalized_token_count": 10,
+        "reference_text": "Cool There's too much gear Okay Can't draw Um Yeah"
+      },
+      "B": {
+        "lexical_annotation_count": 65,
+        "normalized_token_count": 65,
+        "reference_text": "Right You can take as long over this as you like because we haven't got an awful lot to discuss Ok oh we do we do Don't feel like you're in a rush anyway Ach why not We might have to get you up again then I don't know what mine is I'm gonna have to think on the spot now Is that a whale"
+      },
+      "C": {
+        "lexical_annotation_count": 22,
+        "normalized_token_count": 22,
+        "reference_text": "Then they're small cute and furry and uh when planet of the apes becomes real I'm gonna be up there with them"
+      },
+      "D": {
+        "lexical_annotation_count": 16,
+        "normalized_token_count": 16,
+        "reference_text": "I coulda told you a whole lot more about beagles Boy let me tell you Impressionist"
+      }
+    },
+    "boundary_crossing_words_excluded": [],
+    "words": [
+      {
+        "id": "ES2002a.C.words22",
+        "speaker": "C",
+        "text": "Then",
+        "source_start_seconds": 268.0,
+        "source_end_seconds": 268.83,
+        "normalized_tokens": [
+          "then"
+        ],
+        "start_seconds": 1.0,
+        "end_seconds": 1.83,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.C.words23",
+        "speaker": "C",
+        "text": "they're",
+        "source_start_seconds": 268.83,
+        "source_end_seconds": 268.95,
+        "normalized_tokens": [
+          "they're"
+        ],
+        "start_seconds": 1.83,
+        "end_seconds": 1.95,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.C.words24",
+        "speaker": "C",
+        "text": "small",
+        "source_start_seconds": 268.95,
+        "source_end_seconds": 269.25,
+        "normalized_tokens": [
+          "small"
+        ],
+        "start_seconds": 1.95,
+        "end_seconds": 2.25,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.C.words25",
+        "speaker": "C",
+        "text": "cute",
+        "source_start_seconds": 269.25,
+        "source_end_seconds": 269.49,
+        "normalized_tokens": [
+          "cute"
+        ],
+        "start_seconds": 2.25,
+        "end_seconds": 2.49,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.C.words26",
+        "speaker": "C",
+        "text": "and",
+        "source_start_seconds": 269.49,
+        "source_end_seconds": 269.61,
+        "normalized_tokens": [
+          "and"
+        ],
+        "start_seconds": 2.49,
+        "end_seconds": 2.61,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.C.words27",
+        "speaker": "C",
+        "text": "furry",
+        "source_start_seconds": 269.61,
+        "source_end_seconds": 270.01,
+        "normalized_tokens": [
+          "furry"
+        ],
+        "start_seconds": 2.61,
+        "end_seconds": 3.01,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.C.words29",
+        "speaker": "C",
+        "text": "and",
+        "source_start_seconds": 270.01,
+        "source_end_seconds": 270.32,
+        "normalized_tokens": [
+          "and"
+        ],
+        "start_seconds": 3.01,
+        "end_seconds": 3.32,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.C.words30",
+        "speaker": "C",
+        "text": "uh",
+        "source_start_seconds": 270.32,
+        "source_end_seconds": 270.53,
+        "normalized_tokens": [
+          "uh"
+        ],
+        "start_seconds": 3.32,
+        "end_seconds": 3.53,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.C.words31",
+        "speaker": "C",
+        "text": "when",
+        "source_start_seconds": 270.53,
+        "source_end_seconds": 270.67,
+        "normalized_tokens": [
+          "when"
+        ],
+        "start_seconds": 3.53,
+        "end_seconds": 3.67,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.C.words32",
+        "speaker": "C",
+        "text": "planet",
+        "source_start_seconds": 270.67,
+        "source_end_seconds": 270.91,
+        "normalized_tokens": [
+          "planet"
+        ],
+        "start_seconds": 3.67,
+        "end_seconds": 3.91,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.C.words33",
+        "speaker": "C",
+        "text": "of",
+        "source_start_seconds": 270.91,
+        "source_end_seconds": 270.97,
+        "normalized_tokens": [
+          "of"
+        ],
+        "start_seconds": 3.91,
+        "end_seconds": 3.97,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.C.words34",
+        "speaker": "C",
+        "text": "the",
+        "source_start_seconds": 270.97,
+        "source_end_seconds": 271.03,
+        "normalized_tokens": [
+          "the"
+        ],
+        "start_seconds": 3.97,
+        "end_seconds": 4.03,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.C.words35",
+        "speaker": "C",
+        "text": "apes",
+        "source_start_seconds": 271.03,
+        "source_end_seconds": 271.2,
+        "normalized_tokens": [
+          "apes"
+        ],
+        "start_seconds": 4.03,
+        "end_seconds": 4.2,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.C.words36",
+        "speaker": "C",
+        "text": "becomes",
+        "source_start_seconds": 271.2,
+        "source_end_seconds": 271.48,
+        "normalized_tokens": [
+          "becomes"
+        ],
+        "start_seconds": 4.2,
+        "end_seconds": 4.48,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.C.words37",
+        "speaker": "C",
+        "text": "real",
+        "source_start_seconds": 271.48,
+        "source_end_seconds": 272.57,
+        "normalized_tokens": [
+          "real"
+        ],
+        "start_seconds": 4.48,
+        "end_seconds": 5.57,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.C.words40",
+        "speaker": "C",
+        "text": "I'm",
+        "source_start_seconds": 272.57,
+        "source_end_seconds": 272.72,
+        "normalized_tokens": [
+          "i'm"
+        ],
+        "start_seconds": 5.57,
+        "end_seconds": 5.72,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.C.words41",
+        "speaker": "C",
+        "text": "gonna",
+        "source_start_seconds": 272.72,
+        "source_end_seconds": 272.88,
+        "normalized_tokens": [
+          "gonna"
+        ],
+        "start_seconds": 5.72,
+        "end_seconds": 5.88,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.C.words42",
+        "speaker": "C",
+        "text": "be",
+        "source_start_seconds": 272.88,
+        "source_end_seconds": 272.94,
+        "normalized_tokens": [
+          "be"
+        ],
+        "start_seconds": 5.88,
+        "end_seconds": 5.94,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.C.words43",
+        "speaker": "C",
+        "text": "up",
+        "source_start_seconds": 272.94,
+        "source_end_seconds": 273.04,
+        "normalized_tokens": [
+          "up"
+        ],
+        "start_seconds": 5.94,
+        "end_seconds": 6.04,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.C.words44",
+        "speaker": "C",
+        "text": "there",
+        "source_start_seconds": 273.04,
+        "source_end_seconds": 273.13,
+        "normalized_tokens": [
+          "there"
+        ],
+        "start_seconds": 6.04,
+        "end_seconds": 6.13,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.C.words45",
+        "speaker": "C",
+        "text": "with",
+        "source_start_seconds": 273.13,
+        "source_end_seconds": 273.29,
+        "normalized_tokens": [
+          "with"
+        ],
+        "start_seconds": 6.13,
+        "end_seconds": 6.29,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.C.words46",
+        "speaker": "C",
+        "text": "them",
+        "source_start_seconds": 273.29,
+        "source_end_seconds": 273.99,
+        "normalized_tokens": [
+          "them"
+        ],
+        "start_seconds": 6.29,
+        "end_seconds": 6.99,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.B.words286",
+        "speaker": "B",
+        "text": "Right",
+        "source_start_seconds": 275.67,
+        "source_end_seconds": 276.02,
+        "normalized_tokens": [
+          "right"
+        ],
+        "start_seconds": 8.67,
+        "end_seconds": 9.02,
+        "overlaps_other_speaker": true
+      },
+      {
+        "id": "ES2002a.A.words51",
+        "speaker": "A",
+        "text": "Cool",
+        "source_start_seconds": 275.83,
+        "source_end_seconds": 276.15,
+        "normalized_tokens": [
+          "cool"
+        ],
+        "start_seconds": 8.83,
+        "end_seconds": 9.15,
+        "overlaps_other_speaker": true
+      },
+      {
+        "id": "ES2002a.A.words53",
+        "speaker": "A",
+        "text": "There's",
+        "source_start_seconds": 280.75,
+        "source_end_seconds": 280.88,
+        "normalized_tokens": [
+          "there's"
+        ],
+        "start_seconds": 13.75,
+        "end_seconds": 13.88,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.A.words54",
+        "speaker": "A",
+        "text": "too",
+        "source_start_seconds": 280.88,
+        "source_end_seconds": 281.02,
+        "normalized_tokens": [
+          "too"
+        ],
+        "start_seconds": 13.88,
+        "end_seconds": 14.02,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.A.words55",
+        "speaker": "A",
+        "text": "much",
+        "source_start_seconds": 281.02,
+        "source_end_seconds": 281.24,
+        "normalized_tokens": [
+          "much"
+        ],
+        "start_seconds": 14.02,
+        "end_seconds": 14.24,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.A.words56",
+        "speaker": "A",
+        "text": "gear",
+        "source_start_seconds": 281.24,
+        "source_end_seconds": 282.65,
+        "normalized_tokens": [
+          "gear"
+        ],
+        "start_seconds": 14.24,
+        "end_seconds": 15.65,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.B.words288",
+        "speaker": "B",
+        "text": "You",
+        "source_start_seconds": 285.96,
+        "source_end_seconds": 286.07,
+        "normalized_tokens": [
+          "you"
+        ],
+        "start_seconds": 18.96,
+        "end_seconds": 19.07,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.B.words289",
+        "speaker": "B",
+        "text": "can",
+        "source_start_seconds": 286.07,
+        "source_end_seconds": 286.23,
+        "normalized_tokens": [
+          "can"
+        ],
+        "start_seconds": 19.07,
+        "end_seconds": 19.23,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.B.words290",
+        "speaker": "B",
+        "text": "take",
+        "source_start_seconds": 286.23,
+        "source_end_seconds": 286.46,
+        "normalized_tokens": [
+          "take"
+        ],
+        "start_seconds": 19.23,
+        "end_seconds": 19.46,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.B.words291",
+        "speaker": "B",
+        "text": "as",
+        "source_start_seconds": 286.46,
+        "source_end_seconds": 286.58,
+        "normalized_tokens": [
+          "as"
+        ],
+        "start_seconds": 19.46,
+        "end_seconds": 19.58,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.B.words292",
+        "speaker": "B",
+        "text": "long",
+        "source_start_seconds": 286.58,
+        "source_end_seconds": 286.89,
+        "normalized_tokens": [
+          "long"
+        ],
+        "start_seconds": 19.58,
+        "end_seconds": 19.89,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.B.words293",
+        "speaker": "B",
+        "text": "over",
+        "source_start_seconds": 286.89,
+        "source_end_seconds": 287.08,
+        "normalized_tokens": [
+          "over"
+        ],
+        "start_seconds": 19.89,
+        "end_seconds": 20.08,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.B.words294",
+        "speaker": "B",
+        "text": "this",
+        "source_start_seconds": 287.08,
+        "source_end_seconds": 287.28,
+        "normalized_tokens": [
+          "this"
+        ],
+        "start_seconds": 20.08,
+        "end_seconds": 20.28,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.B.words295",
+        "speaker": "B",
+        "text": "as",
+        "source_start_seconds": 287.28,
+        "source_end_seconds": 287.38,
+        "normalized_tokens": [
+          "as"
+        ],
+        "start_seconds": 20.28,
+        "end_seconds": 20.38,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.B.words296",
+        "speaker": "B",
+        "text": "you",
+        "source_start_seconds": 287.38,
+        "source_end_seconds": 287.48,
+        "normalized_tokens": [
+          "you"
+        ],
+        "start_seconds": 20.38,
+        "end_seconds": 20.48,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.B.words297",
+        "speaker": "B",
+        "text": "like",
+        "source_start_seconds": 287.48,
+        "source_end_seconds": 287.73,
+        "normalized_tokens": [
+          "like"
+        ],
+        "start_seconds": 20.48,
+        "end_seconds": 20.73,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.B.words299",
+        "speaker": "B",
+        "text": "because",
+        "source_start_seconds": 287.73,
+        "source_end_seconds": 288.0,
+        "normalized_tokens": [
+          "because"
+        ],
+        "start_seconds": 20.73,
+        "end_seconds": 21.0,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.B.words300",
+        "speaker": "B",
+        "text": "we",
+        "source_start_seconds": 288.0,
+        "source_end_seconds": 288.1,
+        "normalized_tokens": [
+          "we"
+        ],
+        "start_seconds": 21.0,
+        "end_seconds": 21.1,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.B.words301",
+        "speaker": "B",
+        "text": "haven't",
+        "source_start_seconds": 288.1,
+        "source_end_seconds": 288.35,
+        "normalized_tokens": [
+          "haven't"
+        ],
+        "start_seconds": 21.1,
+        "end_seconds": 21.35,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.B.words302",
+        "speaker": "B",
+        "text": "got",
+        "source_start_seconds": 288.35,
+        "source_end_seconds": 289.08,
+        "normalized_tokens": [
+          "got"
+        ],
+        "start_seconds": 21.35,
+        "end_seconds": 22.08,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.B.words303",
+        "speaker": "B",
+        "text": "an",
+        "source_start_seconds": 289.08,
+        "source_end_seconds": 289.23,
+        "normalized_tokens": [
+          "an"
+        ],
+        "start_seconds": 22.08,
+        "end_seconds": 22.23,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.B.words304",
+        "speaker": "B",
+        "text": "awful",
+        "source_start_seconds": 289.23,
+        "source_end_seconds": 289.59,
+        "normalized_tokens": [
+          "awful"
+        ],
+        "start_seconds": 22.23,
+        "end_seconds": 22.59,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.B.words305",
+        "speaker": "B",
+        "text": "lot",
+        "source_start_seconds": 289.59,
+        "source_end_seconds": 289.79,
+        "normalized_tokens": [
+          "lot"
+        ],
+        "start_seconds": 22.59,
+        "end_seconds": 22.79,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.B.words306",
+        "speaker": "B",
+        "text": "to",
+        "source_start_seconds": 289.79,
+        "source_end_seconds": 289.89,
+        "normalized_tokens": [
+          "to"
+        ],
+        "start_seconds": 22.79,
+        "end_seconds": 22.89,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.B.words307",
+        "speaker": "B",
+        "text": "discuss",
+        "source_start_seconds": 289.89,
+        "source_end_seconds": 290.31,
+        "normalized_tokens": [
+          "discuss"
+        ],
+        "start_seconds": 22.89,
+        "end_seconds": 23.31,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.B.words309",
+        "speaker": "B",
+        "text": "Ok",
+        "source_start_seconds": 290.31,
+        "source_end_seconds": 290.45,
+        "normalized_tokens": [
+          "ok"
+        ],
+        "start_seconds": 23.31,
+        "end_seconds": 23.45,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.B.words310",
+        "speaker": "B",
+        "text": "oh",
+        "source_start_seconds": 290.45,
+        "source_end_seconds": 290.59,
+        "normalized_tokens": [
+          "oh"
+        ],
+        "start_seconds": 23.45,
+        "end_seconds": 23.59,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.B.words311",
+        "speaker": "B",
+        "text": "we",
+        "source_start_seconds": 290.59,
+        "source_end_seconds": 290.7,
+        "normalized_tokens": [
+          "we"
+        ],
+        "start_seconds": 23.59,
+        "end_seconds": 23.7,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.B.words312",
+        "speaker": "B",
+        "text": "do",
+        "source_start_seconds": 290.7,
+        "source_end_seconds": 290.94,
+        "normalized_tokens": [
+          "do"
+        ],
+        "start_seconds": 23.7,
+        "end_seconds": 23.94,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.B.words313",
+        "speaker": "B",
+        "text": "we",
+        "source_start_seconds": 290.94,
+        "source_end_seconds": 291.01,
+        "normalized_tokens": [
+          "we"
+        ],
+        "start_seconds": 23.94,
+        "end_seconds": 24.01,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.B.words314",
+        "speaker": "B",
+        "text": "do",
+        "source_start_seconds": 291.01,
+        "source_end_seconds": 291.76,
+        "normalized_tokens": [
+          "do"
+        ],
+        "start_seconds": 24.01,
+        "end_seconds": 24.76,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.B.words316",
+        "speaker": "B",
+        "text": "Don't",
+        "source_start_seconds": 291.76,
+        "source_end_seconds": 291.96,
+        "normalized_tokens": [
+          "don't"
+        ],
+        "start_seconds": 24.76,
+        "end_seconds": 24.96,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.B.words317",
+        "speaker": "B",
+        "text": "feel",
+        "source_start_seconds": 291.96,
+        "source_end_seconds": 292.17,
+        "normalized_tokens": [
+          "feel"
+        ],
+        "start_seconds": 24.96,
+        "end_seconds": 25.17,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.B.words318",
+        "speaker": "B",
+        "text": "like",
+        "source_start_seconds": 292.17,
+        "source_end_seconds": 292.32,
+        "normalized_tokens": [
+          "like"
+        ],
+        "start_seconds": 25.17,
+        "end_seconds": 25.32,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.B.words319",
+        "speaker": "B",
+        "text": "you're",
+        "source_start_seconds": 292.32,
+        "source_end_seconds": 292.46,
+        "normalized_tokens": [
+          "you're"
+        ],
+        "start_seconds": 25.32,
+        "end_seconds": 25.46,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.B.words320",
+        "speaker": "B",
+        "text": "in",
+        "source_start_seconds": 292.46,
+        "source_end_seconds": 292.55,
+        "normalized_tokens": [
+          "in"
+        ],
+        "start_seconds": 25.46,
+        "end_seconds": 25.55,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.B.words321",
+        "speaker": "B",
+        "text": "a",
+        "source_start_seconds": 292.55,
+        "source_end_seconds": 292.59,
+        "normalized_tokens": [
+          "a"
+        ],
+        "start_seconds": 25.55,
+        "end_seconds": 25.59,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.B.words322",
+        "speaker": "B",
+        "text": "rush",
+        "source_start_seconds": 292.59,
+        "source_end_seconds": 292.94,
+        "normalized_tokens": [
+          "rush"
+        ],
+        "start_seconds": 25.59,
+        "end_seconds": 25.94,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.B.words324",
+        "speaker": "B",
+        "text": "anyway",
+        "source_start_seconds": 292.94,
+        "source_end_seconds": 293.37,
+        "normalized_tokens": [
+          "anyway"
+        ],
+        "start_seconds": 25.94,
+        "end_seconds": 26.37,
+        "overlaps_other_speaker": true
+      },
+      {
+        "id": "ES2002a.A.words60",
+        "speaker": "A",
+        "text": "Okay",
+        "source_start_seconds": 293.26,
+        "source_end_seconds": 294.25,
+        "normalized_tokens": [
+          "okay"
+        ],
+        "start_seconds": 26.26,
+        "end_seconds": 27.25,
+        "overlaps_other_speaker": true
+      },
+      {
+        "id": "ES2002a.D.words137",
+        "speaker": "D",
+        "text": "I",
+        "source_start_seconds": 296.02,
+        "source_end_seconds": 296.08,
+        "normalized_tokens": [
+          "i"
+        ],
+        "start_seconds": 29.02,
+        "end_seconds": 29.08,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.D.words138",
+        "speaker": "D",
+        "text": "coulda",
+        "source_start_seconds": 296.08,
+        "source_end_seconds": 296.24,
+        "normalized_tokens": [
+          "coulda"
+        ],
+        "start_seconds": 29.08,
+        "end_seconds": 29.24,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.D.words139",
+        "speaker": "D",
+        "text": "told",
+        "source_start_seconds": 296.24,
+        "source_end_seconds": 296.43,
+        "normalized_tokens": [
+          "told"
+        ],
+        "start_seconds": 29.24,
+        "end_seconds": 29.43,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.D.words140",
+        "speaker": "D",
+        "text": "you",
+        "source_start_seconds": 296.43,
+        "source_end_seconds": 296.5,
+        "normalized_tokens": [
+          "you"
+        ],
+        "start_seconds": 29.43,
+        "end_seconds": 29.5,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.D.words141",
+        "speaker": "D",
+        "text": "a",
+        "source_start_seconds": 296.5,
+        "source_end_seconds": 296.53,
+        "normalized_tokens": [
+          "a"
+        ],
+        "start_seconds": 29.5,
+        "end_seconds": 29.53,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.D.words142",
+        "speaker": "D",
+        "text": "whole",
+        "source_start_seconds": 296.53,
+        "source_end_seconds": 296.64,
+        "normalized_tokens": [
+          "whole"
+        ],
+        "start_seconds": 29.53,
+        "end_seconds": 29.64,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.D.words143",
+        "speaker": "D",
+        "text": "lot",
+        "source_start_seconds": 296.64,
+        "source_end_seconds": 296.8,
+        "normalized_tokens": [
+          "lot"
+        ],
+        "start_seconds": 29.64,
+        "end_seconds": 29.8,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.D.words144",
+        "speaker": "D",
+        "text": "more",
+        "source_start_seconds": 296.8,
+        "source_end_seconds": 297.01,
+        "normalized_tokens": [
+          "more"
+        ],
+        "start_seconds": 29.8,
+        "end_seconds": 30.01,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.D.words145",
+        "speaker": "D",
+        "text": "about",
+        "source_start_seconds": 297.01,
+        "source_end_seconds": 297.43,
+        "normalized_tokens": [
+          "about"
+        ],
+        "start_seconds": 30.01,
+        "end_seconds": 30.43,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.D.words146",
+        "speaker": "D",
+        "text": "beagles",
+        "source_start_seconds": 297.43,
+        "source_end_seconds": 298.03,
+        "normalized_tokens": [
+          "beagles"
+        ],
+        "start_seconds": 30.43,
+        "end_seconds": 31.03,
+        "overlaps_other_speaker": true
+      },
+      {
+        "id": "ES2002a.B.words326",
+        "speaker": "B",
+        "text": "Ach",
+        "source_start_seconds": 297.94,
+        "source_end_seconds": 298.7,
+        "normalized_tokens": [
+          "ach"
+        ],
+        "start_seconds": 30.94,
+        "end_seconds": 31.7,
+        "overlaps_other_speaker": true
+      },
+      {
+        "id": "ES2002a.D.words148",
+        "speaker": "D",
+        "text": "Boy",
+        "source_start_seconds": 298.03,
+        "source_end_seconds": 298.14,
+        "normalized_tokens": [
+          "boy"
+        ],
+        "start_seconds": 31.03,
+        "end_seconds": 31.14,
+        "overlaps_other_speaker": true
+      },
+      {
+        "id": "ES2002a.D.words150",
+        "speaker": "D",
+        "text": "let",
+        "source_start_seconds": 298.14,
+        "source_end_seconds": 298.55,
+        "normalized_tokens": [
+          "let"
+        ],
+        "start_seconds": 31.14,
+        "end_seconds": 31.55,
+        "overlaps_other_speaker": true
+      },
+      {
+        "id": "ES2002a.D.words151",
+        "speaker": "D",
+        "text": "me",
+        "source_start_seconds": 298.55,
+        "source_end_seconds": 298.67,
+        "normalized_tokens": [
+          "me"
+        ],
+        "start_seconds": 31.55,
+        "end_seconds": 31.67,
+        "overlaps_other_speaker": true
+      },
+      {
+        "id": "ES2002a.D.words152",
+        "speaker": "D",
+        "text": "tell",
+        "source_start_seconds": 298.67,
+        "source_end_seconds": 298.88,
+        "normalized_tokens": [
+          "tell"
+        ],
+        "start_seconds": 31.67,
+        "end_seconds": 31.88,
+        "overlaps_other_speaker": true
+      },
+      {
+        "id": "ES2002a.B.words328",
+        "speaker": "B",
+        "text": "why",
+        "source_start_seconds": 298.7,
+        "source_end_seconds": 298.82,
+        "normalized_tokens": [
+          "why"
+        ],
+        "start_seconds": 31.7,
+        "end_seconds": 31.82,
+        "overlaps_other_speaker": true
+      },
+      {
+        "id": "ES2002a.B.words329",
+        "speaker": "B",
+        "text": "not",
+        "source_start_seconds": 298.82,
+        "source_end_seconds": 298.97,
+        "normalized_tokens": [
+          "not"
+        ],
+        "start_seconds": 31.82,
+        "end_seconds": 31.97,
+        "overlaps_other_speaker": true
+      },
+      {
+        "id": "ES2002a.D.words153",
+        "speaker": "D",
+        "text": "you",
+        "source_start_seconds": 298.88,
+        "source_end_seconds": 300.92,
+        "normalized_tokens": [
+          "you"
+        ],
+        "start_seconds": 31.88,
+        "end_seconds": 33.92,
+        "overlaps_other_speaker": true
+      },
+      {
+        "id": "ES2002a.B.words331",
+        "speaker": "B",
+        "text": "We",
+        "source_start_seconds": 298.97,
+        "source_end_seconds": 299.03,
+        "normalized_tokens": [
+          "we"
+        ],
+        "start_seconds": 31.97,
+        "end_seconds": 32.03,
+        "overlaps_other_speaker": true
+      },
+      {
+        "id": "ES2002a.B.words332",
+        "speaker": "B",
+        "text": "might",
+        "source_start_seconds": 299.03,
+        "source_end_seconds": 299.26,
+        "normalized_tokens": [
+          "might"
+        ],
+        "start_seconds": 32.03,
+        "end_seconds": 32.26,
+        "overlaps_other_speaker": true
+      },
+      {
+        "id": "ES2002a.B.words333",
+        "speaker": "B",
+        "text": "have",
+        "source_start_seconds": 299.26,
+        "source_end_seconds": 299.44,
+        "normalized_tokens": [
+          "have"
+        ],
+        "start_seconds": 32.26,
+        "end_seconds": 32.44,
+        "overlaps_other_speaker": true
+      },
+      {
+        "id": "ES2002a.B.words334",
+        "speaker": "B",
+        "text": "to",
+        "source_start_seconds": 299.44,
+        "source_end_seconds": 299.51,
+        "normalized_tokens": [
+          "to"
+        ],
+        "start_seconds": 32.44,
+        "end_seconds": 32.51,
+        "overlaps_other_speaker": true
+      },
+      {
+        "id": "ES2002a.B.words335",
+        "speaker": "B",
+        "text": "get",
+        "source_start_seconds": 299.51,
+        "source_end_seconds": 299.65,
+        "normalized_tokens": [
+          "get"
+        ],
+        "start_seconds": 32.51,
+        "end_seconds": 32.65,
+        "overlaps_other_speaker": true
+      },
+      {
+        "id": "ES2002a.B.words336",
+        "speaker": "B",
+        "text": "you",
+        "source_start_seconds": 299.65,
+        "source_end_seconds": 299.76,
+        "normalized_tokens": [
+          "you"
+        ],
+        "start_seconds": 32.65,
+        "end_seconds": 32.76,
+        "overlaps_other_speaker": true
+      },
+      {
+        "id": "ES2002a.B.words337",
+        "speaker": "B",
+        "text": "up",
+        "source_start_seconds": 299.76,
+        "source_end_seconds": 299.9,
+        "normalized_tokens": [
+          "up"
+        ],
+        "start_seconds": 32.76,
+        "end_seconds": 32.9,
+        "overlaps_other_speaker": true
+      },
+      {
+        "id": "ES2002a.B.words338",
+        "speaker": "B",
+        "text": "again",
+        "source_start_seconds": 299.9,
+        "source_end_seconds": 300.2,
+        "normalized_tokens": [
+          "again"
+        ],
+        "start_seconds": 32.9,
+        "end_seconds": 33.2,
+        "overlaps_other_speaker": true
+      },
+      {
+        "id": "ES2002a.B.words339",
+        "speaker": "B",
+        "text": "then",
+        "source_start_seconds": 300.2,
+        "source_end_seconds": 300.43,
+        "normalized_tokens": [
+          "then"
+        ],
+        "start_seconds": 33.2,
+        "end_seconds": 33.43,
+        "overlaps_other_speaker": true
+      },
+      {
+        "id": "ES2002a.B.words341",
+        "speaker": "B",
+        "text": "I",
+        "source_start_seconds": 301.14,
+        "source_end_seconds": 301.36,
+        "normalized_tokens": [
+          "i"
+        ],
+        "start_seconds": 34.14,
+        "end_seconds": 34.36,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.B.words342",
+        "speaker": "B",
+        "text": "don't",
+        "source_start_seconds": 301.36,
+        "source_end_seconds": 301.53,
+        "normalized_tokens": [
+          "don't"
+        ],
+        "start_seconds": 34.36,
+        "end_seconds": 34.53,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.B.words343",
+        "speaker": "B",
+        "text": "know",
+        "source_start_seconds": 301.53,
+        "source_end_seconds": 301.63,
+        "normalized_tokens": [
+          "know"
+        ],
+        "start_seconds": 34.53,
+        "end_seconds": 34.63,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.B.words344",
+        "speaker": "B",
+        "text": "what",
+        "source_start_seconds": 301.63,
+        "source_end_seconds": 301.74,
+        "normalized_tokens": [
+          "what"
+        ],
+        "start_seconds": 34.63,
+        "end_seconds": 34.74,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.B.words345",
+        "speaker": "B",
+        "text": "mine",
+        "source_start_seconds": 301.74,
+        "source_end_seconds": 301.94,
+        "normalized_tokens": [
+          "mine"
+        ],
+        "start_seconds": 34.74,
+        "end_seconds": 34.94,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.B.words346",
+        "speaker": "B",
+        "text": "is",
+        "source_start_seconds": 301.94,
+        "source_end_seconds": 302.11,
+        "normalized_tokens": [
+          "is"
+        ],
+        "start_seconds": 34.94,
+        "end_seconds": 35.11,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.B.words348",
+        "speaker": "B",
+        "text": "I'm",
+        "source_start_seconds": 302.11,
+        "source_end_seconds": 302.2,
+        "normalized_tokens": [
+          "i'm"
+        ],
+        "start_seconds": 35.11,
+        "end_seconds": 35.2,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.B.words349",
+        "speaker": "B",
+        "text": "gonna",
+        "source_start_seconds": 302.2,
+        "source_end_seconds": 302.33,
+        "normalized_tokens": [
+          "gonna"
+        ],
+        "start_seconds": 35.2,
+        "end_seconds": 35.33,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.B.words350",
+        "speaker": "B",
+        "text": "have",
+        "source_start_seconds": 302.33,
+        "source_end_seconds": 302.43,
+        "normalized_tokens": [
+          "have"
+        ],
+        "start_seconds": 35.33,
+        "end_seconds": 35.43,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.B.words351",
+        "speaker": "B",
+        "text": "to",
+        "source_start_seconds": 302.43,
+        "source_end_seconds": 302.49,
+        "normalized_tokens": [
+          "to"
+        ],
+        "start_seconds": 35.43,
+        "end_seconds": 35.49,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.B.words352",
+        "speaker": "B",
+        "text": "think",
+        "source_start_seconds": 302.49,
+        "source_end_seconds": 302.72,
+        "normalized_tokens": [
+          "think"
+        ],
+        "start_seconds": 35.49,
+        "end_seconds": 35.72,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.B.words353",
+        "speaker": "B",
+        "text": "on",
+        "source_start_seconds": 302.72,
+        "source_end_seconds": 302.82,
+        "normalized_tokens": [
+          "on"
+        ],
+        "start_seconds": 35.72,
+        "end_seconds": 35.82,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.B.words354",
+        "speaker": "B",
+        "text": "the",
+        "source_start_seconds": 302.82,
+        "source_end_seconds": 302.9,
+        "normalized_tokens": [
+          "the"
+        ],
+        "start_seconds": 35.82,
+        "end_seconds": 35.9,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.B.words355",
+        "speaker": "B",
+        "text": "spot",
+        "source_start_seconds": 302.9,
+        "source_end_seconds": 303.25,
+        "normalized_tokens": [
+          "spot"
+        ],
+        "start_seconds": 35.9,
+        "end_seconds": 36.25,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.B.words356",
+        "speaker": "B",
+        "text": "now",
+        "source_start_seconds": 303.25,
+        "source_end_seconds": 303.58,
+        "normalized_tokens": [
+          "now"
+        ],
+        "start_seconds": 36.25,
+        "end_seconds": 36.58,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.D.words156",
+        "speaker": "D",
+        "text": "Impressionist",
+        "source_start_seconds": 307.06,
+        "source_end_seconds": 307.9,
+        "normalized_tokens": [
+          "impressionist"
+        ],
+        "start_seconds": 40.06,
+        "end_seconds": 40.9,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.A.words62",
+        "speaker": "A",
+        "text": "Can't",
+        "source_start_seconds": 309.38,
+        "source_end_seconds": 309.56,
+        "normalized_tokens": [
+          "can't"
+        ],
+        "start_seconds": 42.38,
+        "end_seconds": 42.56,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.A.words63",
+        "speaker": "A",
+        "text": "draw",
+        "source_start_seconds": 309.56,
+        "source_end_seconds": 310.85,
+        "normalized_tokens": [
+          "draw"
+        ],
+        "start_seconds": 42.56,
+        "end_seconds": 43.85,
+        "overlaps_other_speaker": false
+      },
+      {
+        "id": "ES2002a.B.words359",
+        "speaker": "B",
+        "text": "Is",
+        "source_start_seconds": 312.05,
+        "source_end_seconds": 312.14,
+        "normalized_tokens": [
+          "is"
+        ],
+        "start_seconds": 45.05,
+        "end_seconds": 45.14,
+        "overlaps_other_speaker": true
+      },
+      {
+        "id": "ES2002a.A.words66",
+        "speaker": "A",
+        "text": "Um",
+        "source_start_seconds": 312.06,
+        "source_end_seconds": 312.84,
+        "normalized_tokens": [
+          "um"
+        ],
+        "start_seconds": 45.06,
+        "end_seconds": 45.84,
+        "overlaps_other_speaker": true
+      },
+      {
+        "id": "ES2002a.B.words360",
+        "speaker": "B",
+        "text": "that",
+        "source_start_seconds": 312.14,
+        "source_end_seconds": 312.26,
+        "normalized_tokens": [
+          "that"
+        ],
+        "start_seconds": 45.14,
+        "end_seconds": 45.26,
+        "overlaps_other_speaker": true
+      },
+      {
+        "id": "ES2002a.B.words361",
+        "speaker": "B",
+        "text": "a",
+        "source_start_seconds": 312.26,
+        "source_end_seconds": 312.33,
+        "normalized_tokens": [
+          "a"
+        ],
+        "start_seconds": 45.26,
+        "end_seconds": 45.33,
+        "overlaps_other_speaker": true
+      },
+      {
+        "id": "ES2002a.B.words362",
+        "speaker": "B",
+        "text": "whale",
+        "source_start_seconds": 312.33,
+        "source_end_seconds": 315.13,
+        "normalized_tokens": [
+          "whale"
+        ],
+        "start_seconds": 45.33,
+        "end_seconds": 48.13,
+        "overlaps_other_speaker": true
+      },
+      {
+        "id": "ES2002a.A.words68",
+        "speaker": "A",
+        "text": "Yeah",
+        "source_start_seconds": 313.09,
+        "source_end_seconds": 313.52,
+        "normalized_tokens": [
+          "yeah"
+        ],
+        "start_seconds": 46.09,
+        "end_seconds": 46.52,
+        "overlaps_other_speaker": true
+      }
+    ],
+    "segments": [
+      {
+        "speaker": "C",
+        "start_seconds": 1.0,
+        "end_seconds": 6.99,
+        "word_ids": [
+          "ES2002a.C.words22",
+          "ES2002a.C.words23",
+          "ES2002a.C.words24",
+          "ES2002a.C.words25",
+          "ES2002a.C.words26",
+          "ES2002a.C.words27",
+          "ES2002a.C.words29",
+          "ES2002a.C.words30",
+          "ES2002a.C.words31",
+          "ES2002a.C.words32",
+          "ES2002a.C.words33",
+          "ES2002a.C.words34",
+          "ES2002a.C.words35",
+          "ES2002a.C.words36",
+          "ES2002a.C.words37",
+          "ES2002a.C.words40",
+          "ES2002a.C.words41",
+          "ES2002a.C.words42",
+          "ES2002a.C.words43",
+          "ES2002a.C.words44",
+          "ES2002a.C.words45",
+          "ES2002a.C.words46"
+        ],
+        "text": "Then they're small cute and furry and uh when planet of the apes becomes real I'm gonna be up there with them"
+      },
+      {
+        "speaker": "B",
+        "start_seconds": 8.67,
+        "end_seconds": 9.02,
+        "word_ids": [
+          "ES2002a.B.words286"
+        ],
+        "text": "Right"
+      },
+      {
+        "speaker": "A",
+        "start_seconds": 8.83,
+        "end_seconds": 9.15,
+        "word_ids": [
+          "ES2002a.A.words51"
+        ],
+        "text": "Cool"
+      },
+      {
+        "speaker": "A",
+        "start_seconds": 13.75,
+        "end_seconds": 15.65,
+        "word_ids": [
+          "ES2002a.A.words53",
+          "ES2002a.A.words54",
+          "ES2002a.A.words55",
+          "ES2002a.A.words56"
+        ],
+        "text": "There's too much gear"
+      },
+      {
+        "speaker": "B",
+        "start_seconds": 18.96,
+        "end_seconds": 26.37,
+        "word_ids": [
+          "ES2002a.B.words288",
+          "ES2002a.B.words289",
+          "ES2002a.B.words290",
+          "ES2002a.B.words291",
+          "ES2002a.B.words292",
+          "ES2002a.B.words293",
+          "ES2002a.B.words294",
+          "ES2002a.B.words295",
+          "ES2002a.B.words296",
+          "ES2002a.B.words297",
+          "ES2002a.B.words299",
+          "ES2002a.B.words300",
+          "ES2002a.B.words301",
+          "ES2002a.B.words302",
+          "ES2002a.B.words303",
+          "ES2002a.B.words304",
+          "ES2002a.B.words305",
+          "ES2002a.B.words306",
+          "ES2002a.B.words307",
+          "ES2002a.B.words309",
+          "ES2002a.B.words310",
+          "ES2002a.B.words311",
+          "ES2002a.B.words312",
+          "ES2002a.B.words313",
+          "ES2002a.B.words314",
+          "ES2002a.B.words316",
+          "ES2002a.B.words317",
+          "ES2002a.B.words318",
+          "ES2002a.B.words319",
+          "ES2002a.B.words320",
+          "ES2002a.B.words321",
+          "ES2002a.B.words322",
+          "ES2002a.B.words324"
+        ],
+        "text": "You can take as long over this as you like because we haven't got an awful lot to discuss Ok oh we do we do Don't feel like you're in a rush anyway"
+      },
+      {
+        "speaker": "A",
+        "start_seconds": 26.26,
+        "end_seconds": 27.25,
+        "word_ids": [
+          "ES2002a.A.words60"
+        ],
+        "text": "Okay"
+      },
+      {
+        "speaker": "D",
+        "start_seconds": 29.02,
+        "end_seconds": 33.92,
+        "word_ids": [
+          "ES2002a.D.words137",
+          "ES2002a.D.words138",
+          "ES2002a.D.words139",
+          "ES2002a.D.words140",
+          "ES2002a.D.words141",
+          "ES2002a.D.words142",
+          "ES2002a.D.words143",
+          "ES2002a.D.words144",
+          "ES2002a.D.words145",
+          "ES2002a.D.words146",
+          "ES2002a.D.words148",
+          "ES2002a.D.words150",
+          "ES2002a.D.words151",
+          "ES2002a.D.words152",
+          "ES2002a.D.words153"
+        ],
+        "text": "I coulda told you a whole lot more about beagles Boy let me tell you"
+      },
+      {
+        "speaker": "B",
+        "start_seconds": 30.94,
+        "end_seconds": 33.43,
+        "word_ids": [
+          "ES2002a.B.words326",
+          "ES2002a.B.words328",
+          "ES2002a.B.words329",
+          "ES2002a.B.words331",
+          "ES2002a.B.words332",
+          "ES2002a.B.words333",
+          "ES2002a.B.words334",
+          "ES2002a.B.words335",
+          "ES2002a.B.words336",
+          "ES2002a.B.words337",
+          "ES2002a.B.words338",
+          "ES2002a.B.words339"
+        ],
+        "text": "Ach why not We might have to get you up again then"
+      },
+      {
+        "speaker": "B",
+        "start_seconds": 34.14,
+        "end_seconds": 36.58,
+        "word_ids": [
+          "ES2002a.B.words341",
+          "ES2002a.B.words342",
+          "ES2002a.B.words343",
+          "ES2002a.B.words344",
+          "ES2002a.B.words345",
+          "ES2002a.B.words346",
+          "ES2002a.B.words348",
+          "ES2002a.B.words349",
+          "ES2002a.B.words350",
+          "ES2002a.B.words351",
+          "ES2002a.B.words352",
+          "ES2002a.B.words353",
+          "ES2002a.B.words354",
+          "ES2002a.B.words355",
+          "ES2002a.B.words356"
+        ],
+        "text": "I don't know what mine is I'm gonna have to think on the spot now"
+      },
+      {
+        "speaker": "D",
+        "start_seconds": 40.06,
+        "end_seconds": 40.9,
+        "word_ids": [
+          "ES2002a.D.words156"
+        ],
+        "text": "Impressionist"
+      },
+      {
+        "speaker": "A",
+        "start_seconds": 42.38,
+        "end_seconds": 43.85,
+        "word_ids": [
+          "ES2002a.A.words62",
+          "ES2002a.A.words63"
+        ],
+        "text": "Can't draw"
+      },
+      {
+        "speaker": "B",
+        "start_seconds": 45.05,
+        "end_seconds": 48.13,
+        "word_ids": [
+          "ES2002a.B.words359",
+          "ES2002a.B.words360",
+          "ES2002a.B.words361",
+          "ES2002a.B.words362"
+        ],
+        "text": "Is that a whale"
+      },
+      {
+        "speaker": "A",
+        "start_seconds": 45.06,
+        "end_seconds": 46.52,
+        "word_ids": [
+          "ES2002a.A.words66",
+          "ES2002a.A.words68"
+        ],
+        "text": "Um Yeah"
+      }
+    ],
+    "segment_convention": "Same-speaker consecutive lexical words merged across gaps <=0.25s; segments can overlap across speakers and are a convenience view, not annotated utterance boundaries."
+  },
+  "overlap": {
+    "definition": "Positive-duration intersection of word timing spans from at least two distinct speakers. Punctuation and zero-duration lexical tokens do not create intervals. This is a word-timing overlap proxy, not exhaustive acoustic speaker activity.",
+    "regions": [
+      {
+        "start_seconds": 8.83,
+        "end_seconds": 9.02,
+        "speakers": [
+          "A",
+          "B"
+        ],
+        "duration_seconds": 0.19
+      },
+      {
+        "start_seconds": 26.26,
+        "end_seconds": 26.37,
+        "speakers": [
+          "A",
+          "B"
+        ],
+        "duration_seconds": 0.11
+      },
+      {
+        "start_seconds": 30.94,
+        "end_seconds": 33.43,
+        "speakers": [
+          "B",
+          "D"
+        ],
+        "duration_seconds": 2.49
+      },
+      {
+        "start_seconds": 45.06,
+        "end_seconds": 45.84,
+        "speakers": [
+          "A",
+          "B"
+        ],
+        "duration_seconds": 0.78
+      },
+      {
+        "start_seconds": 46.09,
+        "end_seconds": 46.52,
+        "speakers": [
+          "A",
+          "B"
+        ],
+        "duration_seconds": 0.43
+      }
+    ],
+    "total_union_seconds": 4.0,
+    "lexical_annotations_touching_overlap": 28,
+    "normalized_tokens_touching_overlap": 28,
+    "nonoverlap_lexical_annotation_count": 85
+  },
+  "scoring_warning": "Global chronological WER is order-sensitive during overlapping speech and may penalize an intelligible alternative ordering. Report overlap intervals separately; use timestamp-aware or speaker-aware scoring before claiming diarization accuracy. Do not delete reference overlap words and compare against the full mixed ASR hypothesis.",
+  "tokenization_caveats": "This reference is a diagnostic, not the canonical AMI scoring pipeline. XML can split contractions/possessives differently from ASR (e.g. one spoken contraction may occupy multiple annotation nodes). Our normalization preserves only internal apostrophes, so separate clitics may differ from joined ASR forms. Fillers, backchannels, repetitions and truncated/disfluent words are retained when represented as lexical w nodes, but a model may normalize or omit them. Hyphenated forms split into multiple normalized tokens. These conventions can raise raw WER without an equivalent meaning error. Report the exact normalization, inspect high-error regions and distinguish lexical node counts from normalized tokens; do not silently tune scoring after seeing a hypothesis.",
+  "inference_status": "No model calls made during fixture preparation."
+}

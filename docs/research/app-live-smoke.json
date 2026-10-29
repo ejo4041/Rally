@@ -1,0 +1,118 @@
+{
+  "at": "2026-10-28T05:01:43.303Z",
+  "scenario": "Known licensed audiobook input under artificial release agenda; no physical microphone or audible output.",
+  "turns": [
+    {
+      "id": "voyager/duplex/20C015B13AA049ABA68619969DA251C6:0",
+      "sessionId": "voyager/duplex/20C015B13AA049ABA68619969DA251C6",
+      "turnId": 0,
+      "text": "Mister Quilter is the apostle of the middle classes and we are glad to welcome his gospel",
+      "speaker": null,
+      "revision": 1,
+      "source": "asr",
+      "receivedAt": "2026-10-28T05:01:18.908Z",
+      "echoRisk": false
+    },
+    {
+      "id": "voyager/duplex/20C015B13AA049ABA68619969DA251C6:1",
+      "sessionId": "voyager/duplex/20C015B13AA049ABA68619969DA251C6",
+      "turnId": 1,
+      "text": "nor is mister quilter's manner less interesting than his matter",
+      "speaker": null,
+      "revision": 1,
+      "source": "asr",
+      "receivedAt": "2026-10-28T05:01:25.718Z",
+      "echoRisk": false
+    },
+    {
+      "id": "voyager/duplex/20C015B13AA049ABA68619969DA251C6:2",
+      "sessionId": "voyager/duplex/20C015B13AA049ABA68619969DA251C6",
+      "turnId": 2,
+      "text": "he tells us that at this festive season of the year with christmas and roast beef looming before us similes drawn from eating and its results occur most readily to the mind",
+      "speaker": null,
+      "revision": 1,
+      "source": "asr",
+      "receivedAt": "2026-10-28T05:01:40.022Z",
+      "echoRisk": false
+    }
+  ],
+  "interventions": [
+    {
+      "id": "72c59cfc-bb9d-4428-8727-dd74df506838",
+      "text": "Let’s make this time count. We’re here to decide friday software release. I’ll help keep us on track and ask us to confirm decisions, owners, and dates. You can pause me at any time.",
+      "kind": "opening",
+      "epoch": 0,
+      "state": "completed",
+      "createdAt": "2026-10-28T05:01:13.000Z",
+      "presentation": "visible_only"
+    },
+    {
+      "id": "84153b31-5c40-4e23-8006-eccf2b4250e0",
+      "text": "Could we refocus on the Friday release decision please?",
+      "kind": "redirect",
+      "epoch": 0,
+      "state": "completed",
+      "createdAt": "2026-10-28T05:01:27.754Z",
+      "presentation": "visible_only"
+    }
+  ],
+  "notices": [],
+  "usage": [
+    {
+      "id": "5868f038-3a34-4dbf-816a-c182803489ec",
+      "meetingId": "ec3b8927-910b-49a4-86dc-bc3485ccf058",
+      "createdAt": "2026-10-28T05:01:25.761Z",
+      "model": "muse-spark-1.3",
+      "status": "200",
+      "estimatedCost": 0.00211825,
+      "requestId": "4eb0852b-1633-423a-a52d-f37bbcbdb7bc",
+      "usage": {
+        "inputTokens": 576,
+        "cachedTokens": 0,
+        "outputTokens": 329,
+        "reasoningTokens": 231
+      },
+      "decisionSummary": {
+        "intervene": true,
+        "kind": "redirect",
+        "outcomeCount": 0
+      },
+      "durationMs": 1981
+    },
+    {
+      "id": "e1049591-5b65-4fef-8dbe-cc0e4b98f686",
+      "meetingId": "ec3b8927-910b-49a4-86dc-bc3485ccf058",
+      "createdAt": "2026-10-28T05:01:40.064Z",
+      "model": "muse-spark-1.3",
+      "status": "200",
+      "estimatedCost": 0.00213825,
+      "requestId": "291313bd-2983-4195-9862-0c210ceb558a",
+      "usage": {
+        "inputTokens": 643,
+        "cachedTokens": 0,
+        "outputTokens": 314,
+        "reasoningTokens": 189
+      },
+      "decisionSummary": {
+        "intervene": true,
+        "kind": "redirect",
+        "outcomeCount": 0
+      },
+      "durationMs": 1877
+    },
+    {
+      "id": "dd3f2fda-636c-43c4-bb4a-73161a731d65",
+      "meetingId": "ec3b8927-910b-49a4-86dc-bc3485ccf058",
+      "createdAt": "2026-10-28T05:01:43.246Z",
+      "model": "muse-voice-transcribe-1.0",
+      "status": "closed",
+      "estimatedCost": 0.00145,
+      "usage": {
+        "audioSentSeconds": 29.155,
+        "audioProcessedMs": 29200
+      },
+      "costBasis": "reported_processed_seconds",
+      "sessionId": "voyager/duplex/20C015B13AA049ABA68619969DA251C6"
+    }
+  ]
+}

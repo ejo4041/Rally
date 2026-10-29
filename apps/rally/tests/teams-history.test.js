@@ -1,0 +1,28 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+import {Miniflare} from 'miniflare';
+test('Teams history retains final words, failure status and costs; retries and deletion are safe',async t=>{
+ const mf=new Miniflare({modules:true,scriptPath:'dist/server/index.js',compatibilityDate:'2026-07-01',d1Databases:{DB:'history-test'}});t.after(()=>mf.dispose());const db=await mf.getD1Database('DB');
+ for(const name of ['0000_rally','0001_teams','0002_teams_transcription'])for(const sql of (await readFile(`drizzle/${name}.sql`,'utf8')).split(';').map(s=>s.replaceAll('--> statement-breakpoint','').trim()).filter(Boolean))await db.prepare(sql).run();
+ const id='history-job',now=Date.now();
+ await db.prepare("INSERT INTO teams_jobs(id,created_at,updated_at,deadline,meeting_url,state,message,transcribe,transcription_state,transcript) VALUES(?,?,?,?,?,'connected','',1,'listening',?)").bind(id,now-180000,now-27000,now,'https://teams.microsoft.com/meet/private',JSON.stringify([{id:'provider:session:2',text:'Final words drained.',speaker:null},{id:'provider:session:1',text:'<img src=x onerror="window.pwned=true">',speaker:'speaker-1'}])).run();
+ const request=(p,o={})=>mf.dispatchFetch('http://localhost'+p,o),save=()=>request('/api/teams/save',{method:'POST',body:JSON.stringify({id})});
+ assert.equal((await save()).status,409);
+ await db.prepare("UPDATE teams_jobs SET state='failed',transcription_state='failed' WHERE id=?").bind(id).run();
+ const event={id:'history-usage',meetingId:id,estimatedCost:null};
+ await db.prepare("INSERT INTO usage_events(id,meeting_id,created_at,model,status,payload) VALUES(?,?,?,'asr','failed',?)").bind(event.id,id,new Date(now).toISOString(),JSON.stringify(event)).run();
+ assert.equal((await save()).status,200);assert.equal((await save()).status,200);
+ assert.equal((await db.prepare('SELECT COUNT(*) n FROM meetings').first()).n,1);
+ const m=(await(await request(`/api/meetings/${id}`)).json()).meeting;
+ assert.equal(m.kind,'teams');assert.equal(m.phase,'ended');assert.equal(m.source.state,'failed');assert.equal(m.outcomes.length,0);
+ assert.deepEqual(m.turns.map(t=>t.id),['provider:session:1','provider:session:2']);assert.equal(m.turns[1].speaker,null);assert.ok(!JSON.stringify(m).includes('/meet/private'));
+ await db.prepare("UPDATE meetings SET title='Edited' WHERE id=?").bind(id).run();await save();assert.equal((await db.prepare('SELECT title FROM meetings WHERE id=?').bind(id).first()).title,'Edited');
+ const exported=await(await request(`/api/meetings/${id}/export`)).text();assert.match(exported,/Teams transcript — no moderation performed/);assert.match(exported,/transcription: failed/);assert.match(exported,/individual speech times were not recorded/);assert.match(exported,/Final words drained/);
+ assert.equal((await request(`/api/meetings/${id}/connect`,{headers:{Upgrade:'websocket'}})).status,409);
+ assert.equal((await(await request('/api/meetings')).json()).meetings[0].kind,'teams');
+ assert.equal((await(await request('/api/costs')).json()).unknown,1);
+ assert.equal((await request(`/api/meetings/${id}`,{method:'DELETE'})).status,200);assert.equal((await request(`/api/meetings/${id}`)).status,404);
+ assert.equal((await db.prepare('SELECT transcript FROM teams_jobs WHERE id=?').bind(id).first()).transcript,'[]');assert.equal((await save()).status,409);
+ assert.equal((await(await request('/api/costs')).json()).unknown,1);assert.equal((await db.prepare('SELECT COUNT(*) n FROM usage_events').first()).n,1);
+});

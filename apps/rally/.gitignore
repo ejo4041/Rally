@@ -1,0 +1,8 @@
+dist/
+site.tar.gz
+node_modules/
+dist/
+.dev.vars
+.env*
+.data/
+test-results/

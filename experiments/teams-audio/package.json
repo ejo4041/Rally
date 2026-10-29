@@ -1,0 +1,26 @@
+{
+  "name": "rally-teams-audio-spike",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "test": "node probe.mjs",
+    "test:auth": "node --test auth.test.mjs"
+  },
+  "dependencies": {
+    "@azure/communication-calling": "2.0.0",
+    "@azure/communication-common": "2.5.0",
+    "@azure/communication-identity": "2.0.0",
+    "@azure/identity": "4.13.0"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2",
+    "playwright": "1.64.1"
+  },
+  "overrides": {
+    "@azure/msal-node": {
+      "uuid": "11.1.1"
+    }
+  }
+}

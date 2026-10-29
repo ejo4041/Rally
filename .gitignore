@@ -1,0 +1,16 @@
+.env
+.env.*
+!.env.example
+__pycache__/
+*.py[cod]
+.venv/
+
+node_modules/
+dist/
+.data/
+test-results/
+.dev.vars
+site.tar.gz
+*.sqlite
+*.sqlite3
+*.db

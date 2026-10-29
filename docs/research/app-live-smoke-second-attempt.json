@@ -1,0 +1,105 @@
+{
+  "at": "2026-10-28T04:58:23.513Z",
+  "scenario": "Known licensed audiobook input under artificial release agenda; no physical microphone or audible output.",
+  "turns": [
+    {
+      "id": "voyager/duplex/14D6E894FFEF4E6AAD352F013AED33DC:0",
+      "sessionId": "voyager/duplex/14D6E894FFEF4E6AAD352F013AED33DC",
+      "turnId": 0,
+      "text": "mr quilter is the apostle of the middle classes and we are glad to welcome his gospel",
+      "speaker": null,
+      "revision": 1,
+      "source": "asr",
+      "receivedAt": "2026-10-28T04:57:59.130Z",
+      "echoRisk": false
+    },
+    {
+      "id": "voyager/duplex/14D6E894FFEF4E6AAD352F013AED33DC:1",
+      "sessionId": "voyager/duplex/14D6E894FFEF4E6AAD352F013AED33DC",
+      "turnId": 1,
+      "text": "nor is mister quilter's manner less interesting than his matter",
+      "speaker": null,
+      "revision": 1,
+      "source": "asr",
+      "receivedAt": "2026-10-28T04:58:05.932Z",
+      "echoRisk": false
+    },
+    {
+      "id": "voyager/duplex/14D6E894FFEF4E6AAD352F013AED33DC:2",
+      "sessionId": "voyager/duplex/14D6E894FFEF4E6AAD352F013AED33DC",
+      "turnId": 2,
+      "text": "he tells us that at this festive season of the year with christmas and roast beef looming before us similes drawn from eating and its results occur most readily to the mind",
+      "speaker": null,
+      "revision": 1,
+      "source": "asr",
+      "receivedAt": "2026-10-28T04:58:20.101Z",
+      "echoRisk": false
+    }
+  ],
+  "interventions": [
+    {
+      "id": "2d4e7d06-1787-4abf-8204-70b71564c7b2",
+      "text": "Let\u2019s make this time count. We\u2019re here to decide friday software release. I\u2019ll help keep us on track and ask us to confirm decisions, owners, and dates. You can pause me at any time.",
+      "kind": "opening",
+      "epoch": 0,
+      "state": "completed",
+      "createdAt": "2026-10-28T04:57:53.247Z",
+      "presentation": "visible_only"
+    }
+  ],
+  "notices": [
+    {
+      "type": "notice",
+      "message": "Transcription connection was interrupted.",
+      "code": "error"
+    }
+  ],
+  "usage": [
+    {
+      "id": "b4f08e40-fd2a-4c09-a410-bb769e03b3d3",
+      "meetingId": "5407aebf-44b2-4467-a0fa-cc6903c5620c",
+      "createdAt": "2026-10-28T04:58:05.959Z",
+      "model": "muse-spark-1.3",
+      "status": "200",
+      "estimatedCost": 0.00172775,
+      "requestId": "f4534f84-c932-4b65-8f80-29e8121418e0",
+      "usage": {
+        "inputTokens": 522,
+        "cachedTokens": 0,
+        "outputTokens": 253,
+        "reasoningTokens": 223
+      },
+      "durationMs": 1712
+    },
+    {
+      "id": "7f7dc96d-3f56-4c89-83b9-fcf53d706ad2",
+      "meetingId": "5407aebf-44b2-4467-a0fa-cc6903c5620c",
+      "createdAt": "2026-10-28T04:58:20.127Z",
+      "model": "muse-spark-1.3",
+      "status": "200",
+      "estimatedCost": 0.00151475,
+      "requestId": "a36e49c0-f216-4b30-9b34-4b9b01824257",
+      "usage": {
+        "inputTokens": 593,
+        "cachedTokens": 0,
+        "outputTokens": 182,
+        "reasoningTokens": 152
+      },
+      "durationMs": 1570
+    },
+    {
+      "id": "eccd8cf0-e282-4ffd-8513-9428e3735e88",
+      "meetingId": "5407aebf-44b2-4467-a0fa-cc6903c5620c",
+      "createdAt": "2026-10-28T04:58:23.461Z",
+      "model": "muse-voice-transcribe-1.0",
+      "status": "closed",
+      "estimatedCost": 0.00145,
+      "usage": {
+        "audioSentSeconds": 29.155,
+        "audioProcessedMs": 29200
+      },
+      "costBasis": "reported_processed_seconds",
+      "sessionId": "voyager/duplex/14D6E894FFEF4E6AAD352F013AED33DC"
+    }
+  ]
+}

@@ -1,0 +1,318 @@
+--- a/src/teams.js
++++ b/src/teams.js
+@@ -1,10 +1,11 @@
+ import { AppError } from './core.js';
++import {transcriptJob,transcriptApi} from './teams-transcript.js';
+ 
+ const ACTIVE = ['queued', 'joining', 'lobby', 'connected', 'leaving'];
+ const STATES = new Set([...ACTIVE, 'left', 'failed']);
+ const FRESH_MS = 30_000;
+ const publicJob = row => row && ({
+-  id: row.id, createdAt: row.created_at, updatedAt: row.updated_at,
++  ...transcriptJob(row), id: row.id, createdAt: row.created_at, updatedAt: row.updated_at,
+   deadline: row.deadline, state: row.state, message: row.message,
+   leaveRequested: !!row.leave_requested, inputLevel: row.input_level,
+ });
+@@ -52,7 +53,7 @@
+   if (path === '/api/teams/status' && request.method === 'GET') {
+     const job = await db.prepare('SELECT * FROM teams_jobs ORDER BY created_at DESC,rowid DESC LIMIT 1').first();
+     return { enabled: !!env.RALLY_TEAMS_BRIDGE_SECRET, online: !!runner && runner.heartbeat >= now-FRESH_MS,
+-      credentialsConfigured: !!runner?.credentials_configured, job: publicJob(job), testMinutes: 3 };
++      transport: runner?.transport || 'acs', transcriptionReady: !!runner?.transcription_ready && env.RALLY_PAID_ENABLED === '1' && !!env.MODEL_API_KEY, credentialsConfigured: !!runner?.credentials_configured, job: publicJob(job), testMinutes: 3 };
+   }
+   if (path === '/api/teams/join' && request.method === 'POST') {
+     if (!env.RALLY_TEAMS_BRIDGE_SECRET || !runner || runner.heartbeat < now-FRESH_MS) throw new AppError('The Teams runner is offline. No join was attempted.', 503);
+@@ -60,13 +61,16 @@
+     const meetingUrl = teamsMeetingUrl(data.meetingUrl);
+     const token = String(data.token || '').trim();
+     if (token.length > 12000) throw new AppError('Access token is too long.');
+-    if (!runner.credentials_configured && !token) throw new AppError('Azure calling is not configured. Add a short-lived ACS VoIP token in connection setup.');
++    if (data.transcribe === true && (runner.transport !== 'teams-web' || !runner.transcription_ready || env.RALLY_PAID_ENABLED !== '1' || !env.MODEL_API_KEY)) throw new AppError('The transcription runner is not ready.',503);
++    if (data.transcribe === true && data.transcriptionConsented !== true) throw new AppError('Consent to sending meeting audio to Meta and saving its transcript is required.');
++    if (runner.transport !== 'teams-web' && !runner.credentials_configured && !token) throw new AppError('Azure calling is not configured. Add a short-lived ACS VoIP token in connection setup.');
+     const id = crypto.randomUUID();
+     const cipher = token ? await seal(token, env.RALLY_TEAMS_BRIDGE_SECRET, id) : null;
+     const row = await db.prepare("INSERT OR IGNORE INTO teams_jobs(id,slot,created_at,updated_at,deadline,meeting_url,token_cipher,state,message) VALUES(?,1,?,?,?,?,?,'queued','Waiting for the server to start the Teams client.') RETURNING *")
+       .bind(id,now,now,now+180_000,meetingUrl,cipher).first();
+     if (!row) throw new AppError('Rally already has an active Teams connection test. Leave it before joining another.', 409);
+-    return { job: publicJob(row) };
++    if(data.transcribe === true) await db.prepare("UPDATE teams_jobs SET transcribe=1,transcription_state='waiting' WHERE id=?").bind(id).run();
++    return { job: publicJob({...row,transcribe:data.transcribe===true?1:0}) };
+   }
+   if (path === '/api/teams/leave' && request.method === 'POST') {
+     const row = await db.prepare('SELECT * FROM teams_jobs WHERE id=?').bind(String(data.id || '')).first();
+@@ -79,11 +83,13 @@
+   if (request.method !== 'POST') throw new AppError('POST required.',405);
+   const runnerId = String(data.runnerId || '');
+   if (!/^[a-zA-Z0-9-]{8,80}$/.test(runnerId)) throw new AppError('Invalid runner identity.');
++  if (/\/transcription(?:-start|-finish)?$/.test(path)) return transcriptApi(path,data,env,runnerId,now);
+   if (path === '/api/teams/runner/poll') {
+     if (runner && runner.runner_id !== runnerId && runner.heartbeat >= now-FRESH_MS) throw new AppError('Another Teams runner is already online.',409);
+     const heartbeat = await db.prepare('INSERT INTO teams_runner(id,runner_id,heartbeat,credentials_configured) VALUES(1,?,?,?) ON CONFLICT(id) DO UPDATE SET runner_id=excluded.runner_id,heartbeat=excluded.heartbeat,credentials_configured=excluded.credentials_configured WHERE teams_runner.runner_id=excluded.runner_id OR teams_runner.heartbeat<? RETURNING id')
+       .bind(runnerId, now, data.credentialsConfigured === true ? 1 : 0, now-FRESH_MS).first();
+     if (!heartbeat) throw new AppError('Another Teams runner is already online.',409);
++    await db.prepare('UPDATE teams_runner SET transport=?,transcription_ready=? WHERE id=1 AND runner_id=?').bind(data.transport==='teams-web'?'teams-web':'acs',data.transcriptionReady===true?1:0,runnerId).run();
+     const existing = await db.prepare('SELECT * FROM teams_jobs WHERE slot=1').first();
+     if (!existing) return { job: null };
+     if (existing.state !== 'queued') return { job: existing.runner_id === runnerId ? publicJob(existing) : null };
+@@ -104,7 +110,7 @@
+   if (path === '/api/teams/runner/update') {
+     if (!STATES.has(data.state) || data.state === 'queued') throw new AppError('Invalid connection state.');
+     const terminal = ['failed','left'].includes(data.state);
+-    const messages = { joining:'Rally is connecting to Teams.', lobby:'Rally is waiting in the Teams lobby. Admit it from the meeting.', connected:'Rally is connected. Incoming audio level is shown below.', leaving:'Rally is leaving the meeting.', left:'Rally has left the meeting.', failed:'Teams connection failed. Check the calling credentials, meeting policy and lobby. Verify the meeting roster.' };
++    const messages = { joining:'Rally is connecting to Teams.', lobby:'Rally is waiting in the Teams lobby. Admit it from the meeting.', connected:'Rally is connected. Incoming audio level is shown below.', leaving:'Rally is leaving the meeting.', left:'Rally has left the meeting.', failed:'Teams test failed. Check the meeting policy, lobby and server. Verify Rally has left in the meeting roster.' };
+     const level = Math.max(0,Math.min(1,Number(data.inputLevel)||0));
+     await db.prepare('UPDATE teams_jobs SET state=?,message=?,updated_at=?,input_level=?,slot=CASE WHEN ?=1 THEN NULL ELSE slot END,token_cipher=NULL WHERE id=? AND runner_id=? AND slot=1')
+       .bind(data.state,messages[data.state],now,level,terminal?1:0,String(data.id||''),runnerId).run();
+--- /dev/null
++++ b/src/teams-transcript.js
+@@ -0,0 +1,56 @@
++import {AppError} from './core.js';
++const MAX_COST = .009;
++export const transcriptJob = row => ({
++  transcribe: !!row.transcribe, transcriptionState: row.transcription_state || 'off',
++  transcript: JSON.parse(row.transcript || '[]'), partial: row.partial || '',
++});
++export async function transcriptApi(path, data, env, runnerId, now) {
++  const db = env.DB;
++  const row = await db.prepare('SELECT * FROM teams_jobs WHERE id=? AND runner_id=?').bind(String(data.id||''),runnerId).first();
++  if (!row || !row.transcribe) throw new AppError('Transcription session not found.',404);
++  if (path.endsWith('/transcription-start')) {
++    if (row.state !== 'connected' || row.leave_requested || row.deadline <= now || row.usage_id) throw new AppError('Transcription cannot start in this state.',409);
++    if (env.RALLY_PAID_ENABLED !== '1' || !env.MODEL_API_KEY) throw new AppError('Paid transcription is disabled.',503);
++    const id = `teams-asr-${row.id}`;
++    const event = {id,meetingId:row.id,createdAt:new Date(now).toISOString(),model:'muse-voice-transcribe-1.0',status:'teams_asr_reserved',estimatedCost:null,costBasis:'unreconciled_until_runner_finishes'};
++    const result = await db.prepare(`INSERT OR IGNORE INTO usage_events(id,meeting_id,created_at,model,status,estimated_cost,payload)
++      SELECT ?,?,?,?,?,NULL,? WHERE NOT EXISTS(SELECT 1 FROM usage_events WHERE estimated_cost IS NULL)
++      AND (SELECT COALESCE(SUM(estimated_cost),0) FROM usage_events)+?<=?
++      AND ?<=? AND NOT EXISTS(SELECT 1 FROM meetings WHERE json_extract(payload,'$.accountingWarning')=1) RETURNING id`)
++      .bind(id,row.id,event.createdAt,event.model,event.status,JSON.stringify(event),MAX_COST,Number(env.RALLY_BUILD_BUDGET||.5),MAX_COST,Number(env.RALLY_MEETING_BUDGET||.25)).first();
++    if (!result) throw new AppError('Transcription budget is exhausted or another charge needs reconciliation.',409);
++    await db.prepare("UPDATE teams_jobs SET usage_id=?,transcription_state='listening' WHERE id=?").bind(id,row.id).run();
++    return {ok:true,maxSeconds:Math.min(180,Math.max(0,Math.floor((row.deadline-now)/1000)))};
++  }
++  if (!row.usage_id) throw new AppError('Transcription was not started.',409);
++  if (path.endsWith('/transcription')) {
++    if (row.transcription_state !== 'listening') return {ok:true};
++    if (data.final ? now > row.deadline+5000 : (row.state !== 'connected' || row.leave_requested || row.deadline <= now)) throw new AppError('Meeting is no longer accepting audio.',409);
++    const turns = JSON.parse(row.transcript || '[]');
++    if (data.final) {
++      const f = data.final;
++      if (typeof f.sessionId !== 'string' || f.sessionId.length>200 || !Number.isSafeInteger(f.turnId) || f.turnId<0 || typeof f.text!=='string' || f.text.length>4000) throw new AppError('Invalid transcript turn.');
++      const id = `${f.sessionId}:${f.turnId}`, existing = turns.find(t=>t.id===id);
++      const turn = {id,text:f.text.trim(),speaker:typeof f.speaker==='string'?f.speaker.slice(0,40):null};
++      if (turn.text) { if (existing) Object.assign(existing,turn); else {if(turns.length>=200)throw new AppError('Transcript limit reached.',409);turns.push(turn);} }
++    }
++    const partial = typeof data.partial==='string'?data.partial.slice(0,4000):'';
++    await db.prepare('UPDATE teams_jobs SET transcript=?,partial=? WHERE id=? AND transcription_state=\'listening\'').bind(JSON.stringify(turns),partial,row.id).run();
++    return {ok:true};
++  }
++  if (path.endsWith('/transcription-finish')) {
++    if (row.transcription_state !== 'listening') return {ok:true};
++    const sent=Number(data.sentSeconds),processed=Number(data.processedMs);
++    if (!Number.isFinite(sent)||sent<0||sent>180||!Number.isFinite(processed)||processed<0||processed>181000) throw new AppError('Invalid audio usage.');
++    if(data.notOpened===true&&(sent!==0||processed!==0))throw new AppError('Unopened stream cannot report audio.');
++    const known = data.notOpened === true || data.sessionAcknowledged === true;
++    const cost = known ? Math.floor(Math.max(sent,processed/1000))*.18/3600 : null;
++    const event={id:row.usage_id,meetingId:row.id,createdAt:new Date(now).toISOString(),model:'muse-voice-transcribe-1.0',status:data.failed?'teams_asr_failed':'teams_asr_closed',estimatedCost:cost,usage:{audioSentSeconds:sent,audioProcessedMs:processed},costBasis:known?'conservative_max_sent_and_processed_seconds':'unknown_handshake'};
++    await db.batch([
++      db.prepare('UPDATE usage_events SET status=?,estimated_cost=?,payload=? WHERE id=? AND estimated_cost IS NULL').bind(event.status,cost,JSON.stringify(event),row.usage_id),
++      db.prepare("UPDATE teams_jobs SET transcription_state=?,partial='' WHERE id=? AND transcription_state='listening'").bind(data.failed?'failed':'stopped',row.id)
++    ]);
++    return {ok:true,estimatedCost:cost};
++  }
++  throw new AppError('Unknown transcription operation.',404);
++}
+--- a/web/index.html
++++ b/web/index.html
+@@ -7,10 +7,10 @@
+ <main id="home" class="page"><div class="home-heading"><div><div class="eyebrow"><span class="tiny-dot"></span>A LITTLE STRUCTURE. A LOT MORE PROGRESS.</div><h1>Make the time<br><span>together count.</span></h1><p class="intro">Meet your meeting’s new sense of direction.<br>Rally keeps the conversation moving toward what matters.</p><div class="hero-actions"><button class="button primary" data-action="new"><svg><use href="#i-plus"/></svg>Start a new meeting</button><button class="button quiet" id="try-demo"><svg><use href="#i-play"/></svg>Try a walkthrough</button></div></div><div class="focus-illustration" aria-hidden="true"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="float-label label-one"><span class="mini-check">✓</span> Decision made</div><div class="focus-disc"><span class="large-wave"><i></i><i></i><i></i><i></i><i></i></span></div><div class="float-label label-two"><span class="mini-check">✓</span> Next step owned</div><div class="illustration-caption">LESS DRIFT. MORE DIRECTION.</div></div></div>
+ <div class="benefit-row"><div><span class="number">01</span><div><h3>Start with intention</h3><p>An agenda and an outcome, before the first word.</p></div></div><div><span class="number">02</span><div><h3>Stay in the conversation</h3><p>A gentle nudge when it’s time to refocus.</p></div></div><div><span class="number">03</span><div><h3>Leave with a next step</h3><p>Confirmed decisions. Clear owners. Real deadlines.</p></div></div></div>
+ <section class="card teams-card" id="teams-connection"><div class="section-heading"><div><div class="eyebrow">JOIN THE CONVERSATION</div><h2>Invite Rally to Teams</h2><p>A server participant that joins from your meeting link.</p></div><span id="teams-runner" class="badge">Checking server…</span></div>
+-<p class="small muted">Connection preview · automatically leaves after three minutes. This test checks meeting audio; Muse transcription and moderator speech are not connected to Teams yet. Azure calling charges are separate from Meta credits.</p>
++<p class="small muted">Three-minute Teams test · joins from your link and leaves automatically. Turn on transcription to see live text here. A full three-minute transcript costs an estimated $0.009 in Meta API usage.</p>
+ <form id="teams-form"><label for="teams-link">Teams meeting link</label><input id="teams-link" type="url" autocomplete="off" maxlength="4000" placeholder="https://teams.microsoft.com/l/meetup-join/…" required>
+ <p id="teams-credential-note" class="small muted"></p><details id="teams-token-setup"><summary>Azure connection setup</summary><p class="small muted">Use a short-lived Azure Communication Services user token with VoIP scope. A Teams login or Muse key won’t work here. Your token is encrypted while waiting for the server and removed from the queue when claimed.</p><label for="teams-token">Temporary ACS calling token</label><input id="teams-token" type="password" autocomplete="off" maxlength="12000"><p class="small muted">For link-only joins, configure the server once with AZURE_COMMUNICATION_CONNECTION_STRING in its .env.local. See Azure’s <a href="https://learn.microsoft.com/en-us/azure/communication-services/quickstarts/create-communication-resource" target="_blank" rel="noopener noreferrer">resource setup</a>.</p></details>
+-<label class="consent"><input id="teams-consent" type="checkbox" required>The host and participants consent to Rally joining this audio test.</label><div id="teams-error" class="form-error" role="alert"></div><div class="teams-actions"><button id="teams-join" type="submit" class="button primary" disabled>Invite Rally</button><button id="teams-leave" type="button" class="button end-button" hidden>Leave meeting</button><button id="teams-refresh" type="button" class="text-button">Refresh status</button><span id="teams-state" class="badge">Ready</span></div></form><p id="teams-status" role="status">Checking server…</p><label class="small muted" for="teams-level">Incoming meeting audio</label><meter id="teams-level" min="0" max="1" value="0"></meter><p class="small muted">Admit “Rally audio test” from the Teams lobby if prompted. Closing this page does not stop the server participant; use Leave meeting.</p></section>
++<label class="consent"><input id="teams-consent" type="checkbox" required>The host and participants consent to Rally joining this audio test.</label><label class="consent"><input id="teams-transcribe" type="checkbox">Transcribe this test: participants consent to sending meeting audio to Meta and saving the transcript in Rally.</label><div id="teams-error" class="form-error" role="alert"></div><div class="teams-actions"><button id="teams-join" type="submit" class="button primary" disabled>Invite Rally</button><button id="teams-leave" type="button" class="button end-button" hidden>Leave meeting</button><button id="teams-refresh" type="button" class="text-button">Refresh status</button><span id="teams-state" class="badge">Ready</span></div></form><p id="teams-status" role="status">Checking server…</p><label class="small muted" for="teams-level">Incoming meeting audio</label><meter id="teams-level" min="0" max="1" value="0"></meter><section id="teams-transcript-panel" hidden><h3>Live transcript</h3><p id="teams-transcription-state" class="small muted" role="status"></p><div id="teams-transcript" role="log" aria-live="polite"></div><p id="teams-partial" class="muted"></p><button id="teams-export" type="button" class="text-button">Download transcript</button></section><p class="small muted">Admit “Rally audio test” from the Teams lobby if prompted. Closing this page does not stop the server participant; use Leave meeting.</p></section>
+ <section class="history-section"><div class="section-heading"><div><h2>Your meetings</h2><p>The conversation ends. The clarity stays.</p></div><span id="history-total" class="subtle-label">SAVED IN YOUR WORKSPACE</span></div><div id="history" class="history-list"><div class="loading-line">Loading your workspace…</div></div></section><footer class="home-footer"><span>Thoughtful meetings, powered by Meta Muse.</span><span>Rally · v0.1</span></footer></main>
+ <main id="meeting" class="page meeting-page" hidden><div class="meeting-heading"><div><button class="back-link" id="back-home">← All meetings</button><div class="meeting-title-line"><h1 id="meeting-title">Meeting</h1><span id="phase-badge" class="badge">Ready</span></div><p id="meeting-meta" class="muted"></p></div><div class="meeting-heading-actions"><button class="button secondary small-button" id="export"><svg><use href="#i-file"/></svg>Export</button><button class="icon-button delete-button" id="delete-meeting" aria-label="Delete meeting"><svg><use href="#i-trash"/></svg></button></div></div>
+ <div id="walkthrough-banner" class="banner walkthrough-banner" hidden><strong>Scripted walkthrough</strong><span>Example content · no microphone or API calls. This is not a live model demonstration.</span></div><div id="connection-banner" class="banner error-banner" hidden></div><div id="demo-clock-banner" class="banner" hidden><strong>Demo clock advanced.</strong> Presentation time is compressed; service latency measurements are not.</div>
+--- a/web/teams-client.js
++++ b/web/teams-client.js
+@@ -20,7 +20,14 @@
+     el('teams-leave').hidden = !active;
+     el('teams-leave').disabled = busy || !!value.job?.leaveRequested;
+     el('teams-credential-note').textContent = value.credentialsConfigured ? 'Azure calling is configured on the server. Only the meeting link is needed.' : 'One-time Azure calling setup is needed. You can use a short-lived ACS VoIP token below for this test.';
+-    el('teams-token-setup').hidden = !!value.credentialsConfigured;
++    el('teams-token-setup').hidden = value.transport === 'teams-web' || !!value.credentialsConfigured;
++    if (value.transport === 'teams-web') el('teams-credential-note').textContent='Paste your link and admit Rally from the lobby. The test ends automatically after three minutes.';
++    el('teams-transcribe').disabled = !value.transcriptionReady || !!active;
++    el('teams-transcript-panel').hidden = !value.job?.transcribe;
++    el('teams-transcription-state').textContent = ({waiting:'Waiting for admission. No audio has been sent for transcription.',listening:'Listening · meeting audio is sent to Meta',stopped:'Transcription stopped · transcript saved',failed:'Transcription failed · check server status'})[value.job?.transcriptionState] || '';
++    el('teams-transcript').replaceChildren(...(value.job?.transcript || []).map(turn=>{const p=document.createElement('p');p.textContent=(turn.speaker?turn.speaker+': ':'')+turn.text;return p;}));
++    el('teams-partial').textContent=value.job?.partial || '';
++    el('teams-export').disabled=!value.job?.transcript?.length;
+   }
+   async function refresh() {
+     try { render(await request('status')); }
+@@ -31,7 +38,7 @@
+     if (busy) return;
+     busy = true; el('teams-error').textContent=''; if(snapshot) render(snapshot);
+     try {
+-      await request('join',{meetingUrl:el('teams-link').value,consented:el('teams-consent').checked,token:el('teams-token').value});
++      await request('join',{meetingUrl:el('teams-link').value,consented:el('teams-consent').checked,token:el('teams-token').value,transcribe:el('teams-transcribe').checked,transcriptionConsented:el('teams-transcribe').checked});
+       el('teams-token').value='';
+     } catch(error) { el('teams-error').textContent=error.message; }
+     finally { busy=false;await refresh(); }
+@@ -43,6 +50,7 @@
+     catch(error) { el('teams-error').textContent=error.message; }
+     finally { busy=false;await refresh(); }
+   });
++  el('teams-export').addEventListener('click',()=>{const turns=snapshot?.job?.transcript||[];const blob=new Blob(['Rally Teams transcript\n\n'+turns.map(t=>(t.speaker?t.speaker+': ':'')+t.text).join('\n\n')],{type:'text/plain'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='rally-teams-transcript.txt';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);});
+   el('teams-refresh').addEventListener('click',refresh);
+   setInterval(()=>{if(!document.hidden)refresh();},3000);
+   refresh();
+--- a/web/style.css
++++ b/web/style.css
+@@ -3,3 +3,5 @@
+ .nav-scrim{position:fixed;inset:0;border:0;background:#23382b44;z-index:19}.nav-scrim[hidden]{display:none}@media(min-width:651px){.nav-scrim{display:none}}
+ 
+ .teams-card{margin:30px 0;padding:28px}.teams-card h2{margin:8px 0}.teams-card .section-heading{align-items:center;gap:15px;flex-wrap:wrap}.teams-card label:not(.consent){display:block;margin:15px 0 8px}.teams-card input:not([type=checkbox]){width:100%;box-sizing:border-box;min-width:0;border:1px solid var(--line,#dce2de);border-radius:10px;padding:12px;font:inherit;background:white}.teams-card details{margin:15px 0}.teams-card summary{cursor:pointer}.teams-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:18px}.teams-card meter{width:100%;height:14px}.teams-card p{line-height:1.6}.teams-card a{color:inherit;text-decoration:underline}
++
++#teams-transcript{max-height:20rem;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere}#teams-partial{white-space:pre-wrap;overflow-wrap:anywhere}#teams-transcript-panel{margin-top:1.5rem;border-top:1px solid var(--line,#d8ded8);padding-top:1rem}
+--- /dev/null
++++ b/drizzle/0002_teams_transcription.sql
+@@ -0,0 +1,13 @@
++ALTER TABLE teams_runner ADD COLUMN transport TEXT NOT NULL DEFAULT 'acs';
++--> statement-breakpoint
++ALTER TABLE teams_runner ADD COLUMN transcription_ready INTEGER NOT NULL DEFAULT 0;
++--> statement-breakpoint
++ALTER TABLE teams_jobs ADD COLUMN transcribe INTEGER NOT NULL DEFAULT 0;
++--> statement-breakpoint
++ALTER TABLE teams_jobs ADD COLUMN transcript TEXT NOT NULL DEFAULT '[]';
++--> statement-breakpoint
++ALTER TABLE teams_jobs ADD COLUMN partial TEXT NOT NULL DEFAULT '';
++--> statement-breakpoint
++ALTER TABLE teams_jobs ADD COLUMN transcription_state TEXT NOT NULL DEFAULT 'off';
++--> statement-breakpoint
++ALTER TABLE teams_jobs ADD COLUMN usage_id TEXT;
+--- a/drizzle/meta/_journal.json
++++ b/drizzle/meta/_journal.json
+@@ -1 +1 @@
+-{"version":"7","dialect":"sqlite","entries":[{"idx":0,"version":"6","when":1793162400000,"tag":"0000_rally","breakpoints":true},{"idx":1,"version":"6","when":1793210400000,"tag":"0001_teams","breakpoints":true}]}
++{"version": "7", "dialect": "sqlite", "entries": [{"idx": 0, "version": "6", "when": 1793162400000, "tag": "0000_rally", "breakpoints": true}, {"idx": 1, "version": "6", "when": 1793210400000, "tag": "0001_teams", "breakpoints": true}, {"idx": 2, "version": "6", "when": 1793210500000, "tag": "0002_teams_transcription", "breakpoints": true}]}
+--- a/scripts/dev.mjs
++++ b/scripts/dev.mjs
+@@ -14,6 +14,7 @@
+ const exists=await db.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='meetings'").first();
+ if(!exists){const sql=await readFile('drizzle/0000_rally.sql','utf8');for(const stmt of sql.split(';').map(s=>s.replaceAll('--> statement-breakpoint','').trim()).filter(Boolean))await db.prepare(stmt).run();}
+ if(!(await db.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='teams_jobs'").first())){const sql=await readFile('drizzle/0001_teams.sql','utf8');for(const stmt of sql.split(';').map(s=>s.replaceAll('--> statement-breakpoint','').trim()).filter(Boolean))await db.prepare(stmt).run();}
++if(!(await db.prepare('PRAGMA table_info(teams_jobs)').all()).results.some(c=>c.name==='transcribe')){for(const stmt of (await readFile('drizzle/0002_teams_transcription.sql','utf8')).split(';').map(s=>s.replaceAll('--> statement-breakpoint','').trim()).filter(Boolean))await db.prepare(stmt).run();}
+ console.log('Rally local preview:',(await mf.ready).href);
+ console.log('Paid Muse calls:',process.env.RALLY_PAID_ENABLED==='1'?'enabled (capped)':'disabled; use the labeled walkthrough');
+ for(const sig of ['SIGINT','SIGTERM'])process.on(sig,async()=>{await mf.dispose();process.exit(0)});
+--- a/tests/teams.test.js
++++ b/tests/teams.test.js
+@@ -12,7 +12,7 @@
+ test('Teams queue encrypts one-time tokens, claims once, enforces singleton and host departure, without model calls',async t=>{
+   const mf=new Miniflare({modules:true,script:'export default {fetch(){return new Response("ok")}}',d1Databases:{DB:'teams-test'}});t.after(()=>mf.dispose());
+   const db=await mf.getD1Database('DB');
+-  for(const sql of (await readFile('drizzle/0001_teams.sql','utf8')).split(';').map(s=>s.replaceAll('--> statement-breakpoint','').trim()).filter(Boolean))await db.prepare(sql).run();
++  for(const sql of (await Promise.all(['0000_rally','0001_teams','0002_teams_transcription'].map(n=>readFile('drizzle/'+n+'.sql','utf8')))).join('\n').split(';').map(s=>s.replaceAll('--> statement-breakpoint','').trim()).filter(Boolean))await db.prepare(sql).run();
+   const env={DB:db,RALLY_TEAMS_BRIDGE_SECRET:'local-test-secret'};
+   let now=100_000;
+   const call=(path,data={},secret)=>teamsApi(new Request('http://localhost/api/teams/'+path,{method:path==='status'?'GET':'POST',headers:secret?{'X-Rally-Bridge':secret}:{}}),env,data,now);
+--- /dev/null
++++ b/tests/teams-transcript.test.js
+@@ -0,0 +1,38 @@
++import test from 'node:test';
++import assert from 'node:assert/strict';
++import {readFile} from 'node:fs/promises';
++import {Miniflare} from 'miniflare';
++import {teamsApi} from '../src/teams.js';
++
++test('Browser Teams transcription requires consent and admission, deduplicates turns and records usage once',async t=>{
++ const mf=new Miniflare({modules:true,script:'export default {fetch(){return new Response("ok")}}',d1Databases:{DB:'transcript-test'}});t.after(()=>mf.dispose());const db=await mf.getD1Database('DB');
++ for(const name of ['0000_rally','0001_teams','0002_teams_transcription'])for(const sql of (await readFile(`drizzle/${name}.sql`,'utf8')).split(';').map(s=>s.replaceAll('--> statement-breakpoint','').trim()).filter(Boolean))await db.prepare(sql).run();
++ const env={DB:db,RALLY_TEAMS_BRIDGE_SECRET:'test-secret',RALLY_PAID_ENABLED:'1',MODEL_API_KEY:'test-not-used'};let now=100000;
++ const call=(p,d={},secret='test-secret')=>teamsApi(new Request('http://localhost/api/teams/'+p,{method:p==='status'?'GET':'POST',headers:{'X-Rally-Bridge':secret}}),env,d,now);
++ const runnerId='web-test-runner';const poll=()=>call('runner/poll',{runnerId,transport:'teams-web',credentialsConfigured:true,transcriptionReady:true});
++ await poll();const join={meetingUrl:'https://teams.microsoft.com/meet/123',consented:true,transcribe:true};
++ await assert.rejects(call('join',join),/Consent to sending/);
++ const {job}=await call('join',{...join,transcriptionConsented:true});await poll();
++ const data={runnerId,id:job.id};
++ await assert.rejects(call('runner/transcription-start',data),/cannot start/);
++ await call('runner/update',{...data,state:'connected'});
++ await assert.rejects(call('runner/transcription-start',data,'wrong'),/authentication/);
++ await call('runner/transcription-start',data);
++ await assert.rejects(call('runner/transcription-start',data),/cannot start/);
++ assert.equal((await db.prepare('SELECT COUNT(*) n FROM usage_events WHERE estimated_cost IS NULL').first()).n,1);
++ const turn={sessionId:'asr-test',turnId:1,text:'Andrew will send it Friday.'};
++ await call('runner/transcription',{...data,final:turn});await call('runner/transcription',{...data,final:turn});
++ let status=await call('status');assert.equal(status.transport,'teams-web');assert.equal(status.job.transcript.length,1);assert.equal(status.job.transcript[0].text,turn.text);
++ await call('runner/transcription',{...data,partial:'Next thought'});assert.equal((await call('status')).job.partial,'Next thought');
++ await assert.rejects(call('runner/transcription',{...data,final:{...turn,text:'a'.repeat(4001)}}),/Invalid transcript/);
++ await call('leave',{id:job.id});
++ await assert.rejects(call('runner/transcription',{...data,partial:'late partial'}),/no longer/);
++ await call('runner/transcription',{...data,final:{...turn,turnId:2,text:'Final words drained after Leave.'}});
++ const usage={...data,sentSeconds:7.78,processedMs:7840,sessionAcknowledged:true};
++ await call('runner/transcription-finish',usage);await call('runner/transcription-finish',{...usage,sentSeconds:179});
++ const u=await db.prepare('SELECT * FROM usage_events').first();assert.equal(u.estimated_cost,.00035);assert.equal((await db.prepare('SELECT COUNT(*) n FROM usage_events').first()).n,1);
++ await call('leave',{id:job.id});await call('runner/update',{...data,state:'left'});status=await call('status');assert.equal(status.job.transcriptionState,'stopped');assert.equal(status.job.partial,'');assert.equal(status.job.transcript.length,2);
++ // No further paid reservation when the build budget has insufficient headroom.
++ env.RALLY_BUILD_BUDGET='.001';await call('join',{...join,transcriptionConsented:true});const claimed=await poll();const next={runnerId,id:claimed.job.id};await call('runner/update',{...next,state:'connected'});
++ await assert.rejects(call('runner/transcription-start',next),/budget/);
++});
+--- a/tests/teams-browser.mjs
++++ b/tests/teams-browser.mjs
+@@ -1,33 +1,20 @@
+ import {chromium} from 'playwright';
+ import assert from 'node:assert/strict';
+ import {mkdir} from 'node:fs/promises';
+-const base=process.env.RALLY_TEST_URL||'http://127.0.0.1:8787';
+-const browser=await chromium.launch({headless:true});
+-const page=await browser.newPage({viewport:{width:1440,height:1080}});
+-page.setDefaultTimeout(15000);
+-const errors=[];page.on('pageerror',e=>errors.push(e.message));
+-try {
+-  await mkdir('test-results',{recursive:true});
+-  await page.goto(base);
+-  await page.waitForFunction(()=>document.querySelector('#teams-runner').textContent==='Server online');
+-  assert.match(await page.locator('#teams-credential-note').textContent(),/Azure calling setup/);
+-  await page.locator('#teams-link').fill('https://teams.microsoft.com/meet/local-transport-test');
+-  await page.locator('#teams-consent').check();
+-  await page.locator('#teams-join').click();
+-  await page.waitForFunction(()=>document.querySelector('#teams-error').textContent.includes('Azure calling'));
+-  await page.locator('#teams-token-setup summary').click();
+-  // Intentionally malformed, rejected by the real SDK credential constructor
+-  // before createCallAgent can contact ACS. Never use a real token in this test.
+-  await page.locator('#teams-token').fill('invalid-local-test-token');
+-  await page.locator('#teams-join').click();
+-  await page.waitForFunction(()=>document.querySelector('#teams-token').value==='');
+-  await page.waitForFunction(()=>document.querySelector('#teams-state').textContent==='failed',null,{timeout:20000});
+-  assert.match(await page.locator('#teams-status').textContent(),/connection failed/i);
+-  await page.screenshot({path:'test-results/teams-desktop.png',fullPage:true});
+-  await page.setViewportSize({width:390,height:844});
+-  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
+-  await page.screenshot({path:'test-results/teams-mobile.png',fullPage:true});
+-  const usage=await page.evaluate(()=>fetch('/api/usage').then(r=>r.json()));assert.equal(usage.events.length,0);
+-  assert.deepEqual(errors,[]);
+-  console.log('PASS: Site UI → durable queue → server runner → real SDK rejects invalid credential → failed status. No ACS auth/join, no Muse calls.');
++const browser=await chromium.launch({headless:true,executablePath:'/home/hack/.cache/ms-playwright/chromium-1248/chrome-linux64/chrome',args:['--no-sandbox']});
++const page=await browser.newPage({viewport:{width:1440,height:1080},acceptDownloads:true});const errors=[];page.on('pageerror',e=>errors.push(e.message));
++let joined,leave=false;let status={enabled:true,online:true,transport:'teams-web',credentialsConfigured:true,transcriptionReady:true,job:null,testMinutes:3};
++await page.route('**/api/teams/**',async route=>{const path=new URL(route.request().url()).pathname;let result=status;
++ if(path.endsWith('/join')){joined=route.request().postDataJSON();status.job={id:'browser-test',state:'connected',message:'Rally is connected.',transcribe:true,transcriptionState:'listening',transcript:[{id:'one',text:'Andrew will send the proposal Friday.'},{id:'two',text:'<img src=x onerror="window.pwned=true">'}],partial:'Next sentence',inputLevel:.2};result={job:status.job};}
++ if(path.endsWith('/leave')){leave=true;status.job.state='left';status.job.transcriptionState='stopped';result={ok:true};}
++ await route.fulfill({json:result});});
++try{
++ await page.goto('http://127.0.0.1:8792');await page.locator('#teams-join').waitFor({state:'visible'});await page.waitForFunction(()=>!document.querySelector('#teams-join').disabled);
++ assert.equal(await page.locator('#teams-token-setup').isVisible(),false);await page.locator('#teams-link').fill('https://teams.microsoft.com/meet/123');await page.locator('#teams-consent').check();await page.locator('#teams-transcribe').check();await page.locator('#teams-join').click();
++ await page.waitForFunction(()=>document.querySelector('#teams-transcript').textContent.includes('Andrew'));assert.equal(joined.transcriptionConsented,true);assert.equal(joined.transcribe,true);assert.equal(await page.evaluate(()=>window.pwned),undefined);assert.equal(await page.locator('#teams-transcript img').count(),0);
++ const download=page.waitForEvent('download');await page.locator('#teams-export').click();assert.equal((await download).suggestedFilename(),'rally-teams-transcript.txt');
++ await mkdir('test-results',{recursive:true});await page.screenshot({path:'test-results/teams-transcription-desktop.png',fullPage:true});
++ await page.setViewportSize({width:390,height:844});await page.waitForTimeout(350);await page.screenshot({path:'test-results/teams-transcription-mobile.png',fullPage:true});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
++ await page.locator('#teams-leave').click();await page.waitForFunction(()=>document.querySelector('#teams-state').textContent==='left');assert.ok(leave);assert.equal(await page.locator('#teams-transcript').getByText('Andrew will send the proposal Friday.').count(),1);assert.deepEqual(errors,[]);
++ console.log('Teams UI passed: link, consent, live text, safe rendering, download, mobile layout, leave, retained transcript. Mocked queue; no meeting or paid calls.');
+ }finally{await browser.close();}

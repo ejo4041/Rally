@@ -1,0 +1,2668 @@
+[
+  {
+    "test": "ami-four-speaker/ENDPOINTING",
+    "model": "muse-voice-transcribe-1.0",
+    "estimated_cost_usd": 0.0026,
+    "mode": "ENDPOINTING",
+    "events": [
+      {
+        "type": "speechStart",
+        "audioProcessedMs": 780,
+        "turnId": 0,
+        "provider_fields": [
+          "audioProcessedMs",
+          "turnId",
+          "type"
+        ],
+        "received_seconds": 1.2435
+      },
+      {
+        "type": "transcript",
+        "transcript": "because",
+        "final": false,
+        "audioProcessedMs": 1760,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 1.7121
+      },
+      {
+        "type": "transcript",
+        "transcript": "because I'm",
+        "final": false,
+        "audioProcessedMs": 2240,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 2.1942
+      },
+      {
+        "type": "transcript",
+        "transcript": "because I'm the",
+        "final": false,
+        "audioProcessedMs": 2320,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 2.2837
+      },
+      {
+        "type": "transcript",
+        "transcript": "because I'm the small",
+        "final": false,
+        "audioProcessedMs": 3200,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 3.1558
+      },
+      {
+        "type": "transcript",
+        "transcript": "because I'm the small cute",
+        "final": false,
+        "audioProcessedMs": 3280,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 3.2408
+      },
+      {
+        "type": "transcript",
+        "transcript": "because I'm the small cute and furry",
+        "final": false,
+        "audioProcessedMs": 3520,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 3.4828
+      },
+      {
+        "type": "transcript",
+        "transcript": "because I'm the small cute and furry and",
+        "final": false,
+        "audioProcessedMs": 4000,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 3.9604
+      },
+      {
+        "type": "transcript",
+        "transcript": "because I'm the small cute and furry and when",
+        "final": false,
+        "audioProcessedMs": 4240,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 4.1991
+      },
+      {
+        "type": "transcript",
+        "transcript": "because I'm the small cute and furry and when Planet the",
+        "final": false,
+        "audioProcessedMs": 4720,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 4.6912
+      },
+      {
+        "type": "transcript",
+        "transcript": "because I'm the small cute and furry and when Planet the Apes becomes",
+        "final": false,
+        "audioProcessedMs": 4960,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 4.9535
+      },
+      {
+        "type": "transcript",
+        "transcript": "because I'm the small cute and furry and when Planet the Apes becomes real,",
+        "final": false,
+        "audioProcessedMs": 5360,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 5.3295
+      },
+      {
+        "type": "transcript",
+        "transcript": "because I'm the small cute and furry and when Planet the Apes becomes real, I'm",
+        "final": false,
+        "audioProcessedMs": 6240,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 6.1981
+      },
+      {
+        "type": "transcript",
+        "transcript": "because I'm the small cute and furry and when Planet the Apes becomes real, I'm going to be up",
+        "final": false,
+        "audioProcessedMs": 6640,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 6.6201
+      },
+      {
+        "type": "transcript",
+        "transcript": "because I'm the small cute and furry and when Planet the Apes becomes real, I'm going to be up there with",
+        "final": false,
+        "audioProcessedMs": 6720,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 6.6865
+      },
+      {
+        "type": "transcript",
+        "transcript": "because I'm the small cute and furry and when Planet the Apes becomes real, I'm going to be up there with them.",
+        "final": false,
+        "audioProcessedMs": 6800,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 6.769
+      },
+      {
+        "type": "speechEnd",
+        "audioProcessedMs": 6300,
+        "turnId": 0,
+        "provider_fields": [
+          "audioProcessedMs",
+          "turnId",
+          "type"
+        ],
+        "received_seconds": 6.7691
+      },
+      {
+        "type": "speechComplete",
+        "audioProcessedMs": 6300,
+        "turnId": 0,
+        "transcript": "because I'm the small cute and furry and when Planet the Apes becomes real, I'm going to be up there with them.",
+        "provider_fields": [
+          "audioProcessedMs",
+          "transcript",
+          "turnId",
+          "type"
+        ],
+        "received_seconds": 6.7691
+      },
+      {
+        "type": "speechStart",
+        "audioProcessedMs": 8380,
+        "turnId": 1,
+        "provider_fields": [
+          "audioProcessedMs",
+          "turnId",
+          "type"
+        ],
+        "received_seconds": 8.8415
+      },
+      {
+        "type": "transcript",
+        "transcript": "Right",
+        "final": false,
+        "audioProcessedMs": 9360,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 9.3321
+      },
+      {
+        "type": "speechEnd",
+        "audioProcessedMs": 8860,
+        "turnId": 1,
+        "provider_fields": [
+          "audioProcessedMs",
+          "turnId",
+          "type"
+        ],
+        "received_seconds": 9.3322
+      },
+      {
+        "type": "speechComplete",
+        "audioProcessedMs": 8860,
+        "turnId": 1,
+        "transcript": "Right",
+        "provider_fields": [
+          "audioProcessedMs",
+          "transcript",
+          "turnId",
+          "type"
+        ],
+        "received_seconds": 9.3322
+      },
+      {
+        "type": "speechStart",
+        "audioProcessedMs": 13980,
+        "turnId": 2,
+        "provider_fields": [
+          "audioProcessedMs",
+          "turnId",
+          "type"
+        ],
+        "received_seconds": 14.445
+      },
+      {
+        "type": "transcript",
+        "transcript": "It's",
+        "final": false,
+        "audioProcessedMs": 14560,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 14.5326
+      },
+      {
+        "type": "transcript",
+        "transcript": "It's too much",
+        "final": false,
+        "audioProcessedMs": 14800,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 14.7803
+      },
+      {
+        "type": "transcript",
+        "transcript": "It's too much gear",
+        "final": false,
+        "audioProcessedMs": 15120,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 15.0913
+      },
+      {
+        "type": "speechEnd",
+        "audioProcessedMs": 14620,
+        "turnId": 2,
+        "provider_fields": [
+          "audioProcessedMs",
+          "turnId",
+          "type"
+        ],
+        "received_seconds": 15.0913
+      },
+      {
+        "type": "speechComplete",
+        "audioProcessedMs": 14620,
+        "turnId": 2,
+        "transcript": "It's too much gear",
+        "provider_fields": [
+          "audioProcessedMs",
+          "transcript",
+          "turnId",
+          "type"
+        ],
+        "received_seconds": 15.0913
+      },
+      {
+        "type": "speechStart",
+        "audioProcessedMs": 18540,
+        "turnId": 3,
+        "provider_fields": [
+          "audioProcessedMs",
+          "turnId",
+          "type"
+        ],
+        "received_seconds": 19.0011
+      },
+      {
+        "type": "transcript",
+        "transcript": "You",
+        "final": false,
+        "audioProcessedMs": 19360,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 19.3164
+      },
+      {
+        "type": "transcript",
+        "transcript": "You can",
+        "final": false,
+        "audioProcessedMs": 19840,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 19.8034
+      },
+      {
+        "type": "transcript",
+        "transcript": "You can take as",
+        "final": false,
+        "audioProcessedMs": 20160,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 20.129
+      },
+      {
+        "type": "transcript",
+        "transcript": "You can take as long over",
+        "final": false,
+        "audioProcessedMs": 20640,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 20.6131
+      },
+      {
+        "type": "transcript",
+        "transcript": "You can take as long over this as",
+        "final": false,
+        "audioProcessedMs": 20880,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 20.8693
+      },
+      {
+        "type": "transcript",
+        "transcript": "You can take as long over this as you like",
+        "final": false,
+        "audioProcessedMs": 21280,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 21.2615
+      },
+      {
+        "type": "transcript",
+        "transcript": "You can take as long over this as you like because we",
+        "final": false,
+        "audioProcessedMs": 21440,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 21.4235
+      },
+      {
+        "type": "transcript",
+        "transcript": "You can take as long over this as you like because we haven't got",
+        "final": false,
+        "audioProcessedMs": 22080,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 22.0615
+      },
+      {
+        "type": "transcript",
+        "transcript": "You can take as long over this as you like because we haven't got an",
+        "final": false,
+        "audioProcessedMs": 22720,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 22.6832
+      },
+      {
+        "type": "transcript",
+        "transcript": "You can take as long over this as you like because we haven't got an awful",
+        "final": false,
+        "audioProcessedMs": 23280,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 23.2411
+      },
+      {
+        "type": "transcript",
+        "transcript": "You can take as long over this as you like because we haven't got an awful lot",
+        "final": false,
+        "audioProcessedMs": 23440,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 23.4017
+      },
+      {
+        "type": "transcript",
+        "transcript": "You can take as long over this as you like because we haven't got an awful lot to",
+        "final": false,
+        "audioProcessedMs": 23520,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 23.4734
+      },
+      {
+        "type": "transcript",
+        "transcript": "You can take as long over this as you like because we haven't got an awful lot to discuss. Oh",
+        "final": false,
+        "audioProcessedMs": 24000,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 23.9809
+      },
+      {
+        "type": "transcript",
+        "transcript": "You can take as long over this as you like because we haven't got an awful lot to discuss. Oh cool we do",
+        "final": false,
+        "audioProcessedMs": 24320,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 24.3036
+      },
+      {
+        "type": "transcript",
+        "transcript": "You can take as long over this as you like because we haven't got an awful lot to discuss. Oh cool we do we",
+        "final": false,
+        "audioProcessedMs": 24480,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 24.4469
+      },
+      {
+        "type": "transcript",
+        "transcript": "You can take as long over this as you like because we haven't got an awful lot to discuss. Oh cool we do we do.",
+        "final": false,
+        "audioProcessedMs": 24880,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 24.8583
+      },
+      {
+        "type": "transcript",
+        "transcript": "You can take as long over this as you like because we haven't got an awful lot to discuss. Oh cool we do we do. Don't",
+        "final": false,
+        "audioProcessedMs": 25440,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 25.4003
+      },
+      {
+        "type": "transcript",
+        "transcript": "You can take as long over this as you like because we haven't got an awful lot to discuss. Oh cool we do we do. Don't feel",
+        "final": false,
+        "audioProcessedMs": 25680,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 25.6409
+      },
+      {
+        "type": "transcript",
+        "transcript": "You can take as long over this as you like because we haven't got an awful lot to discuss. Oh cool we do we do. Don't feel like you're",
+        "final": false,
+        "audioProcessedMs": 26080,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 26.0586
+      },
+      {
+        "type": "transcript",
+        "transcript": "You can take as long over this as you like because we haven't got an awful lot to discuss. Oh cool we do we do. Don't feel like you're in a",
+        "final": false,
+        "audioProcessedMs": 26240,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 26.2178
+      },
+      {
+        "type": "transcript",
+        "transcript": "You can take as long over this as you like because we haven't got an awful lot to discuss. Oh cool we do we do. Don't feel like you're in a rush",
+        "final": false,
+        "audioProcessedMs": 26320,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 26.2889
+      },
+      {
+        "type": "transcript",
+        "transcript": "You can take as long over this as you like because we haven't got an awful lot to discuss. Oh cool we do we do. Don't feel like you're in a rush anyway.",
+        "final": false,
+        "audioProcessedMs": 26800,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 26.7643
+      },
+      {
+        "type": "speechEnd",
+        "audioProcessedMs": 26460,
+        "turnId": 3,
+        "provider_fields": [
+          "audioProcessedMs",
+          "turnId",
+          "type"
+        ],
+        "received_seconds": 26.9269
+      },
+      {
+        "type": "speechComplete",
+        "audioProcessedMs": 26460,
+        "turnId": 3,
+        "transcript": "You can take as long over this as you like because we haven't got an awful lot to discuss. Oh cool we do we do. Don't feel like you're in a rush anyway.",
+        "provider_fields": [
+          "audioProcessedMs",
+          "transcript",
+          "turnId",
+          "type"
+        ],
+        "received_seconds": 26.9269
+      },
+      {
+        "type": "speechStart",
+        "audioProcessedMs": 29100,
+        "turnId": 4,
+        "provider_fields": [
+          "audioProcessedMs",
+          "turnId",
+          "type"
+        ],
+        "received_seconds": 29.5646
+      },
+      {
+        "type": "transcript",
+        "transcript": "actually told",
+        "final": false,
+        "audioProcessedMs": 29920,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 29.8949
+      },
+      {
+        "type": "transcript",
+        "transcript": "actually told you",
+        "final": false,
+        "audioProcessedMs": 30080,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 30.0354
+      },
+      {
+        "type": "transcript",
+        "transcript": "actually told you a",
+        "final": false,
+        "audioProcessedMs": 30240,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 30.2003
+      },
+      {
+        "type": "transcript",
+        "transcript": "actually told you a whole lot more",
+        "final": false,
+        "audioProcessedMs": 30400,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 30.3803
+      },
+      {
+        "type": "transcript",
+        "transcript": "actually told you a whole lot more about",
+        "final": false,
+        "audioProcessedMs": 30720,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 30.6868
+      },
+      {
+        "type": "transcript",
+        "transcript": "actually told you a whole lot more about beagles",
+        "final": false,
+        "audioProcessedMs": 31360,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 31.341
+      },
+      {
+        "type": "speechEnd",
+        "audioProcessedMs": 30860,
+        "turnId": 4,
+        "provider_fields": [
+          "audioProcessedMs",
+          "turnId",
+          "type"
+        ],
+        "received_seconds": 31.341
+      },
+      {
+        "type": "speechComplete",
+        "audioProcessedMs": 30860,
+        "turnId": 4,
+        "transcript": "actually told you a whole lot more about beagles",
+        "provider_fields": [
+          "audioProcessedMs",
+          "transcript",
+          "turnId",
+          "type"
+        ],
+        "received_seconds": 31.341
+      },
+      {
+        "type": "speechStart",
+        "audioProcessedMs": 31020,
+        "turnId": 5,
+        "provider_fields": [
+          "audioProcessedMs",
+          "turnId",
+          "type"
+        ],
+        "received_seconds": 31.4901
+      },
+      {
+        "type": "transcript",
+        "transcript": " we'd",
+        "final": false,
+        "audioProcessedMs": 32880,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 32.8441
+      },
+      {
+        "type": "transcript",
+        "transcript": " we'd have",
+        "final": false,
+        "audioProcessedMs": 32960,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 32.9264
+      },
+      {
+        "type": "transcript",
+        "transcript": " we'd have to get",
+        "final": false,
+        "audioProcessedMs": 33200,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 33.1847
+      },
+      {
+        "type": "transcript",
+        "transcript": " we'd have to get you up",
+        "final": false,
+        "audioProcessedMs": 33520,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 33.4889
+      },
+      {
+        "type": "transcript",
+        "transcript": " we'd have to get you up again",
+        "final": false,
+        "audioProcessedMs": 33760,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 33.7214
+      },
+      {
+        "type": "speechEnd",
+        "audioProcessedMs": 33340,
+        "turnId": 5,
+        "provider_fields": [
+          "audioProcessedMs",
+          "turnId",
+          "type"
+        ],
+        "received_seconds": 33.8077
+      },
+      {
+        "type": "speechComplete",
+        "audioProcessedMs": 33340,
+        "turnId": 5,
+        "transcript": " we'd have to get you up again",
+        "provider_fields": [
+          "audioProcessedMs",
+          "transcript",
+          "turnId",
+          "type"
+        ],
+        "received_seconds": 33.8077
+      },
+      {
+        "type": "speechStart",
+        "audioProcessedMs": 33900,
+        "turnId": 6,
+        "provider_fields": [
+          "audioProcessedMs",
+          "turnId",
+          "type"
+        ],
+        "received_seconds": 34.3677
+      },
+      {
+        "type": "transcript",
+        "transcript": "i",
+        "final": false,
+        "audioProcessedMs": 34800,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 34.7666
+      },
+      {
+        "type": "transcript",
+        "transcript": "i don't",
+        "final": false,
+        "audioProcessedMs": 34960,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 34.9211
+      },
+      {
+        "type": "transcript",
+        "transcript": "i don't know what mine",
+        "final": false,
+        "audioProcessedMs": 35360,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 35.3455
+      },
+      {
+        "type": "transcript",
+        "transcript": "i don't know what mine is i'm",
+        "final": false,
+        "audioProcessedMs": 35600,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 35.5778
+      },
+      {
+        "type": "transcript",
+        "transcript": "i don't know what mine is i'm going to",
+        "final": false,
+        "audioProcessedMs": 36000,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 35.9662
+      },
+      {
+        "type": "transcript",
+        "transcript": "i don't know what mine is i'm going to have to",
+        "final": false,
+        "audioProcessedMs": 36240,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 36.2123
+      },
+      {
+        "type": "transcript",
+        "transcript": "i don't know what mine is i'm going to have to think",
+        "final": false,
+        "audioProcessedMs": 36400,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 36.3579
+      },
+      {
+        "type": "transcript",
+        "transcript": "i don't know what mine is i'm going to have to think on the spot",
+        "final": false,
+        "audioProcessedMs": 36640,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 36.6275
+      },
+      {
+        "type": "transcript",
+        "transcript": "i don't know what mine is i'm going to have to think on the spot now",
+        "final": false,
+        "audioProcessedMs": 36880,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 36.842
+      },
+      {
+        "type": "speechEnd",
+        "audioProcessedMs": 36780,
+        "turnId": 6,
+        "provider_fields": [
+          "audioProcessedMs",
+          "turnId",
+          "type"
+        ],
+        "received_seconds": 37.2522
+      },
+      {
+        "type": "speechComplete",
+        "audioProcessedMs": 36780,
+        "turnId": 6,
+        "transcript": "i don't know what mine is i'm going to have to think on the spot now",
+        "provider_fields": [
+          "audioProcessedMs",
+          "transcript",
+          "turnId",
+          "type"
+        ],
+        "received_seconds": 37.2522
+      },
+      {
+        "type": "speechStart",
+        "audioProcessedMs": 39740,
+        "turnId": 7,
+        "provider_fields": [
+          "audioProcessedMs",
+          "turnId",
+          "type"
+        ],
+        "received_seconds": 40.1952
+      },
+      {
+        "type": "transcript",
+        "transcript": "impressionist.",
+        "final": false,
+        "audioProcessedMs": 41520,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 41.5022
+      },
+      {
+        "type": "speechEnd",
+        "audioProcessedMs": 41180,
+        "turnId": 7,
+        "provider_fields": [
+          "audioProcessedMs",
+          "turnId",
+          "type"
+        ],
+        "received_seconds": 41.6352
+      },
+      {
+        "type": "speechComplete",
+        "audioProcessedMs": 41180,
+        "turnId": 7,
+        "transcript": "impressionist.",
+        "provider_fields": [
+          "audioProcessedMs",
+          "transcript",
+          "turnId",
+          "type"
+        ],
+        "received_seconds": 41.6352
+      },
+      {
+        "type": "speechStart",
+        "audioProcessedMs": 44780,
+        "turnId": 8,
+        "provider_fields": [
+          "audioProcessedMs",
+          "turnId",
+          "type"
+        ],
+        "received_seconds": 45.2377
+      },
+      {
+        "type": "transcript",
+        "transcript": "Is",
+        "final": false,
+        "audioProcessedMs": 45600,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 45.5545
+      },
+      {
+        "type": "transcript",
+        "transcript": "Is that a",
+        "final": false,
+        "audioProcessedMs": 45920,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 45.8882
+      },
+      {
+        "type": "transcript",
+        "transcript": "Is that a whale?",
+        "final": false,
+        "audioProcessedMs": 46400,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 46.3604
+      },
+      {
+        "type": "transcript",
+        "transcript": "Is that a whale? Yeah!",
+        "final": false,
+        "audioProcessedMs": 47040,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 47.0024
+      },
+      {
+        "type": "transcript",
+        "transcript": "Is that a whale? Yeah! Yeah!",
+        "final": false,
+        "audioProcessedMs": 47440,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 47.4189
+      },
+      {
+        "type": "speechEnd",
+        "audioProcessedMs": 46940,
+        "turnId": 8,
+        "provider_fields": [
+          "audioProcessedMs",
+          "turnId",
+          "type"
+        ],
+        "received_seconds": 47.4189
+      },
+      {
+        "type": "speechComplete",
+        "audioProcessedMs": 46940,
+        "turnId": 8,
+        "transcript": "Is that a whale? Yeah! Yeah!",
+        "provider_fields": [
+          "audioProcessedMs",
+          "transcript",
+          "turnId",
+          "type"
+        ],
+        "received_seconds": 47.4189
+      },
+      {
+        "type": "transcript",
+        "transcript": "",
+        "final": true,
+        "audioProcessedMs": 52000,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 52.0498
+      }
+    ],
+    "session_id": "voyager/duplex/E2676CC4FF2A41A7B68489959D72E892",
+    "handshake_seconds": 0.406,
+    "end_stream_sent_seconds": 52.0005,
+    "status": "session_completed",
+    "seconds": 52.456,
+    "audio_sent_seconds": 52.0,
+    "audio_processed_ms": 52000,
+    "cost_basis": "reported_processed_whole_seconds",
+    "reference_words": 113,
+    "word_errors": 31,
+    "wer": 0.2743362831858407,
+    "hypothesis": "because I'm the small cute and furry and when Planet the Apes becomes real, I'm going to be up there with them. Right It's too much gear You can take as long over this as you like because we haven't got an awful lot to discuss. Oh cool we do we do. Don't feel like you're in a rush anyway. actually told you a whole lot more about beagles  we'd have to get you up again i don't know what mine is i'm going to have to think on the spot now impressionist. Is that a whale? Yeah! Yeah!",
+    "scoring_note": "Diagnostic chronological WER only; overlaps, fillers and contraction tokenization can affect alignment. Not diarization error rate."
+  },
+  {
+    "test": "ami-four-speaker/DIARIZATION",
+    "model": "muse-voice-transcribe-1.0",
+    "estimated_cost_usd": 0.0026,
+    "mode": "DIARIZATION",
+    "events": [
+      {
+        "type": "speechStart",
+        "audioProcessedMs": 1020,
+        "turnId": 0,
+        "provider_fields": [
+          "audioProcessedMs",
+          "turnId",
+          "type"
+        ],
+        "received_seconds": 1.4826
+      },
+      {
+        "type": "transcript",
+        "transcript": " the",
+        "final": false,
+        "audioProcessedMs": 2480,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 2.4344
+      },
+      {
+        "type": "transcript",
+        "transcript": " the small, cute",
+        "final": false,
+        "audioProcessedMs": 3040,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 3.0126
+      },
+      {
+        "type": "transcript",
+        "transcript": " the small, cute and furry",
+        "final": false,
+        "audioProcessedMs": 3360,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 3.3269
+      },
+      {
+        "type": "transcript",
+        "transcript": " the small, cute and furry and",
+        "final": false,
+        "audioProcessedMs": 3840,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 3.8033
+      },
+      {
+        "type": "transcript",
+        "transcript": " the small, cute and furry and when",
+        "final": false,
+        "audioProcessedMs": 4320,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 4.2805
+      },
+      {
+        "type": "transcript",
+        "transcript": " the small, cute and furry and when Planet",
+        "final": false,
+        "audioProcessedMs": 4640,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 4.5965
+      },
+      {
+        "type": "transcript",
+        "transcript": " the small, cute and furry and when Planet the",
+        "final": false,
+        "audioProcessedMs": 4800,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 4.7545
+      },
+      {
+        "type": "transcript",
+        "transcript": " the small, cute and furry and when Planet the Apes becomes",
+        "final": false,
+        "audioProcessedMs": 5040,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 5.008
+      },
+      {
+        "type": "transcript",
+        "transcript": " the small, cute and furry and when Planet the Apes becomes real,",
+        "final": false,
+        "audioProcessedMs": 5440,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 5.4085
+      },
+      {
+        "type": "transcript",
+        "transcript": " the small, cute and furry and when Planet the Apes becomes real, I'm",
+        "final": false,
+        "audioProcessedMs": 6000,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 5.9565
+      },
+      {
+        "type": "transcript",
+        "transcript": " the small, cute and furry and when Planet the Apes becomes real, I'm going to be up",
+        "final": false,
+        "audioProcessedMs": 6560,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 6.5431
+      },
+      {
+        "type": "transcript",
+        "transcript": " the small, cute and furry and when Planet the Apes becomes real, I'm going to be up there with them.",
+        "final": false,
+        "audioProcessedMs": 6800,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 6.7827
+      },
+      {
+        "type": "transcript",
+        "transcript": " the small, cute and furry and when Planet the Apes becomes real, I'm going to be up there with them. ",
+        "final": false,
+        "audioProcessedMs": 9200,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 9.198
+      },
+      {
+        "type": "speechEnd",
+        "audioProcessedMs": 8700,
+        "turnId": 0,
+        "provider_fields": [
+          "audioProcessedMs",
+          "turnId",
+          "type"
+        ],
+        "received_seconds": 9.1981
+      },
+      {
+        "type": "speechComplete",
+        "audioProcessedMs": 8700,
+        "turnId": 0,
+        "transcript": " the small, cute and furry and when Planet the Apes becomes real, I'm going to be up there with them. ",
+        "provider_fields": [
+          "audioProcessedMs",
+          "transcript",
+          "turnId",
+          "type"
+        ],
+        "received_seconds": 9.1981
+      },
+      {
+        "type": "speechStart",
+        "audioProcessedMs": 9020,
+        "turnId": 1,
+        "provider_fields": [
+          "audioProcessedMs",
+          "turnId",
+          "type"
+        ],
+        "received_seconds": 9.4826
+      },
+      {
+        "type": "transcript",
+        "transcript": " Right.",
+        "final": false,
+        "audioProcessedMs": 9760,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 9.7207
+      },
+      {
+        "type": "transcript",
+        "transcript": " Right. ",
+        "final": false,
+        "audioProcessedMs": 14720,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 14.7666
+      },
+      {
+        "type": "speechEnd",
+        "audioProcessedMs": 14220,
+        "turnId": 1,
+        "provider_fields": [
+          "audioProcessedMs",
+          "turnId",
+          "type"
+        ],
+        "received_seconds": 14.7666
+      },
+      {
+        "type": "speechComplete",
+        "audioProcessedMs": 14220,
+        "turnId": 1,
+        "transcript": " Right. ",
+        "provider_fields": [
+          "audioProcessedMs",
+          "transcript",
+          "turnId",
+          "type"
+        ],
+        "received_seconds": 14.7666
+      },
+      {
+        "type": "speechStart",
+        "audioProcessedMs": 14220,
+        "turnId": 2,
+        "provider_fields": [
+          "audioProcessedMs",
+          "turnId",
+          "type"
+        ],
+        "received_seconds": 14.7666
+      },
+      {
+        "type": "transcript",
+        "transcript": " There's too",
+        "final": false,
+        "audioProcessedMs": 15120,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 15.0867
+      },
+      {
+        "type": "transcript",
+        "transcript": " There's too much gear.",
+        "final": false,
+        "audioProcessedMs": 15200,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 15.1721
+      },
+      {
+        "type": "transcript",
+        "transcript": " There's too much gear. ",
+        "final": false,
+        "audioProcessedMs": 19200,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 19.1934
+      },
+      {
+        "type": "speechEnd",
+        "audioProcessedMs": 18700,
+        "turnId": 2,
+        "provider_fields": [
+          "audioProcessedMs",
+          "turnId",
+          "type"
+        ],
+        "received_seconds": 19.1934
+      },
+      {
+        "type": "speechComplete",
+        "audioProcessedMs": 18700,
+        "turnId": 2,
+        "transcript": " There's too much gear. ",
+        "provider_fields": [
+          "audioProcessedMs",
+          "transcript",
+          "turnId",
+          "type"
+        ],
+        "received_seconds": 19.1934
+      },
+      {
+        "type": "speechStart",
+        "audioProcessedMs": 19020,
+        "turnId": 3,
+        "provider_fields": [
+          "audioProcessedMs",
+          "turnId",
+          "type"
+        ],
+        "received_seconds": 19.4917
+      },
+      {
+        "type": "transcript",
+        "transcript": " You",
+        "final": false,
+        "audioProcessedMs": 19520,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 19.4917
+      },
+      {
+        "type": "transcript",
+        "transcript": " You can",
+        "final": false,
+        "audioProcessedMs": 19600,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 19.5609
+      },
+      {
+        "type": "transcript",
+        "transcript": " You can take",
+        "final": false,
+        "audioProcessedMs": 19680,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 19.6347
+      },
+      {
+        "type": "transcript",
+        "transcript": " You can take as",
+        "final": false,
+        "audioProcessedMs": 20080,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 20.0294
+      },
+      {
+        "type": "transcript",
+        "transcript": " You can take as long",
+        "final": false,
+        "audioProcessedMs": 20480,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 20.434
+      },
+      {
+        "type": "transcript",
+        "transcript": " You can take as long over",
+        "final": false,
+        "audioProcessedMs": 20640,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 20.5968
+      },
+      {
+        "type": "transcript",
+        "transcript": " You can take as long over this as you like",
+        "final": false,
+        "audioProcessedMs": 21040,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 21.0286
+      },
+      {
+        "type": "transcript",
+        "transcript": " You can take as long over this as you like because we",
+        "final": false,
+        "audioProcessedMs": 21600,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 21.5611
+      },
+      {
+        "type": "transcript",
+        "transcript": " You can take as long over this as you like because we haven't",
+        "final": false,
+        "audioProcessedMs": 22000,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 21.9545
+      },
+      {
+        "type": "transcript",
+        "transcript": " You can take as long over this as you like because we haven't got",
+        "final": false,
+        "audioProcessedMs": 22240,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 22.2003
+      },
+      {
+        "type": "transcript",
+        "transcript": " You can take as long over this as you like because we haven't got an",
+        "final": false,
+        "audioProcessedMs": 22960,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 22.9197
+      },
+      {
+        "type": "transcript",
+        "transcript": " You can take as long over this as you like because we haven't got an awful",
+        "final": false,
+        "audioProcessedMs": 23120,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 23.0731
+      },
+      {
+        "type": "transcript",
+        "transcript": " You can take as long over this as you like because we haven't got an awful lot to",
+        "final": false,
+        "audioProcessedMs": 23600,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 23.5703
+      },
+      {
+        "type": "transcript",
+        "transcript": " You can take as long over this as you like because we haven't got an awful lot to discuss.",
+        "final": false,
+        "audioProcessedMs": 24000,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 23.9695
+      },
+      {
+        "type": "transcript",
+        "transcript": " You can take as long over this as you like because we haven't got an awful lot to discuss. Oh cool we do",
+        "final": false,
+        "audioProcessedMs": 24160,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 24.1456
+      },
+      {
+        "type": "transcript",
+        "transcript": " You can take as long over this as you like because we haven't got an awful lot to discuss. Oh cool we do we do",
+        "final": false,
+        "audioProcessedMs": 24400,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 24.3711
+      },
+      {
+        "type": "transcript",
+        "transcript": " You can take as long over this as you like because we haven't got an awful lot to discuss. Oh cool we do we do don't",
+        "final": false,
+        "audioProcessedMs": 25440,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 25.3952
+      },
+      {
+        "type": "transcript",
+        "transcript": " You can take as long over this as you like because we haven't got an awful lot to discuss. Oh cool we do we do don't feel",
+        "final": false,
+        "audioProcessedMs": 25520,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 25.4765
+      },
+      {
+        "type": "transcript",
+        "transcript": " You can take as long over this as you like because we haven't got an awful lot to discuss. Oh cool we do we do don't feel like",
+        "final": false,
+        "audioProcessedMs": 25680,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 25.6348
+      },
+      {
+        "type": "transcript",
+        "transcript": " You can take as long over this as you like because we haven't got an awful lot to discuss. Oh cool we do we do don't feel like you're",
+        "final": false,
+        "audioProcessedMs": 25760,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 25.7282
+      },
+      {
+        "type": "transcript",
+        "transcript": " You can take as long over this as you like because we haven't got an awful lot to discuss. Oh cool we do we do don't feel like you're in",
+        "final": false,
+        "audioProcessedMs": 25920,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 25.8811
+      },
+      {
+        "type": "transcript",
+        "transcript": " You can take as long over this as you like because we haven't got an awful lot to discuss. Oh cool we do we do don't feel like you're in a rush",
+        "final": false,
+        "audioProcessedMs": 26160,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 26.12
+      },
+      {
+        "type": "transcript",
+        "transcript": " You can take as long over this as you like because we haven't got an awful lot to discuss. Oh cool we do we do don't feel like you're in a rush anyway.",
+        "final": false,
+        "audioProcessedMs": 26640,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 26.6058
+      },
+      {
+        "type": "transcript",
+        "transcript": " You can take as long over this as you like because we haven't got an awful lot to discuss. Oh cool we do we do don't feel like you're in a rush anyway. ",
+        "final": false,
+        "audioProcessedMs": 26800,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 26.8169
+      },
+      {
+        "type": "speechEnd",
+        "audioProcessedMs": 26300,
+        "turnId": 3,
+        "provider_fields": [
+          "audioProcessedMs",
+          "turnId",
+          "type"
+        ],
+        "received_seconds": 26.8169
+      },
+      {
+        "type": "speechComplete",
+        "audioProcessedMs": 26300,
+        "turnId": 3,
+        "transcript": " You can take as long over this as you like because we haven't got an awful lot to discuss. Oh cool we do we do don't feel like you're in a rush anyway. ",
+        "provider_fields": [
+          "audioProcessedMs",
+          "transcript",
+          "turnId",
+          "type"
+        ],
+        "received_seconds": 26.8169
+      },
+      {
+        "type": "speechStart",
+        "audioProcessedMs": 26300,
+        "turnId": 4,
+        "provider_fields": [
+          "audioProcessedMs",
+          "turnId",
+          "type"
+        ],
+        "received_seconds": 26.817
+      },
+      {
+        "type": "transcript",
+        "transcript": " Okay.",
+        "final": false,
+        "audioProcessedMs": 27040,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 27.0124
+      },
+      {
+        "type": "transcript",
+        "transcript": " Okay. ",
+        "final": false,
+        "audioProcessedMs": 29280,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 29.2798
+      },
+      {
+        "type": "speechEnd",
+        "audioProcessedMs": 28780,
+        "turnId": 4,
+        "provider_fields": [
+          "audioProcessedMs",
+          "turnId",
+          "type"
+        ],
+        "received_seconds": 29.2798
+      },
+      {
+        "type": "speechComplete",
+        "audioProcessedMs": 28780,
+        "turnId": 4,
+        "transcript": " Okay. ",
+        "provider_fields": [
+          "audioProcessedMs",
+          "transcript",
+          "turnId",
+          "type"
+        ],
+        "received_seconds": 29.2798
+      },
+      {
+        "type": "speechStart",
+        "audioProcessedMs": 29100,
+        "turnId": 5,
+        "provider_fields": [
+          "audioProcessedMs",
+          "turnId",
+          "type"
+        ],
+        "received_seconds": 29.569
+      },
+      {
+        "type": "transcript",
+        "transcript": " I",
+        "final": false,
+        "audioProcessedMs": 29760,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 29.7124
+      },
+      {
+        "type": "transcript",
+        "transcript": " I actually",
+        "final": false,
+        "audioProcessedMs": 30080,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 30.0458
+      },
+      {
+        "type": "transcript",
+        "transcript": " I actually told you a",
+        "final": false,
+        "audioProcessedMs": 30320,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 30.3072
+      },
+      {
+        "type": "transcript",
+        "transcript": " I actually told you a whole lot",
+        "final": false,
+        "audioProcessedMs": 30480,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 30.4396
+      },
+      {
+        "type": "transcript",
+        "transcript": " I actually told you a whole lot more",
+        "final": false,
+        "audioProcessedMs": 30800,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 30.7592
+      },
+      {
+        "type": "transcript",
+        "transcript": " I actually told you a whole lot more about",
+        "final": false,
+        "audioProcessedMs": 31040,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 30.9911
+      },
+      {
+        "type": "transcript",
+        "transcript": " I actually told you a whole lot more about beagles ",
+        "final": false,
+        "audioProcessedMs": 31520,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 31.5607
+      },
+      {
+        "type": "speechEnd",
+        "audioProcessedMs": 31020,
+        "turnId": 5,
+        "provider_fields": [
+          "audioProcessedMs",
+          "turnId",
+          "type"
+        ],
+        "received_seconds": 31.5607
+      },
+      {
+        "type": "speechComplete",
+        "audioProcessedMs": 31020,
+        "turnId": 5,
+        "transcript": " I actually told you a whole lot more about beagles ",
+        "provider_fields": [
+          "audioProcessedMs",
+          "transcript",
+          "turnId",
+          "type"
+        ],
+        "received_seconds": 31.5607
+      },
+      {
+        "type": "speechStart",
+        "audioProcessedMs": 31020,
+        "turnId": 6,
+        "provider_fields": [
+          "audioProcessedMs",
+          "turnId",
+          "type"
+        ],
+        "received_seconds": 31.5607
+      },
+      {
+        "type": "transcript",
+        "transcript": " I",
+        "final": false,
+        "audioProcessedMs": 31920,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 31.8866
+      },
+      {
+        "type": "transcript",
+        "transcript": " I could",
+        "final": false,
+        "audioProcessedMs": 32160,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 32.1158
+      },
+      {
+        "type": "transcript",
+        "transcript": " I could we",
+        "final": false,
+        "audioProcessedMs": 32880,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 32.8403
+      },
+      {
+        "type": "transcript",
+        "transcript": " I could we might have to",
+        "final": false,
+        "audioProcessedMs": 32960,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 32.9418
+      },
+      {
+        "type": "transcript",
+        "transcript": " I could we might have to get you",
+        "final": false,
+        "audioProcessedMs": 33040,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 33.0068
+      },
+      {
+        "type": "transcript",
+        "transcript": " I could we might have to get you up",
+        "final": false,
+        "audioProcessedMs": 33200,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 33.1728
+      },
+      {
+        "type": "transcript",
+        "transcript": " I could we might have to get you up again",
+        "final": false,
+        "audioProcessedMs": 33440,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 33.4022
+      },
+      {
+        "type": "transcript",
+        "transcript": " I could we might have to get you up again then",
+        "final": false,
+        "audioProcessedMs": 34240,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 34.1976
+      },
+      {
+        "type": "transcript",
+        "transcript": " I could we might have to get you up again then I don't",
+        "final": false,
+        "audioProcessedMs": 34880,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 34.8464
+      },
+      {
+        "type": "transcript",
+        "transcript": " I could we might have to get you up again then I don't know",
+        "final": false,
+        "audioProcessedMs": 34960,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 34.9215
+      },
+      {
+        "type": "transcript",
+        "transcript": " I could we might have to get you up again then I don't know what mine",
+        "final": false,
+        "audioProcessedMs": 35440,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 35.4147
+      },
+      {
+        "type": "transcript",
+        "transcript": " I could we might have to get you up again then I don't know what mine is I'm",
+        "final": false,
+        "audioProcessedMs": 35680,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 35.6496
+      },
+      {
+        "type": "transcript",
+        "transcript": " I could we might have to get you up again then I don't know what mine is I'm going to",
+        "final": false,
+        "audioProcessedMs": 35920,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 35.8855
+      },
+      {
+        "type": "transcript",
+        "transcript": " I could we might have to get you up again then I don't know what mine is I'm going to have",
+        "final": false,
+        "audioProcessedMs": 36160,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 36.1166
+      },
+      {
+        "type": "transcript",
+        "transcript": " I could we might have to get you up again then I don't know what mine is I'm going to have to",
+        "final": false,
+        "audioProcessedMs": 36240,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 36.202
+      },
+      {
+        "type": "transcript",
+        "transcript": " I could we might have to get you up again then I don't know what mine is I'm going to have to think on",
+        "final": false,
+        "audioProcessedMs": 36480,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 36.4474
+      },
+      {
+        "type": "transcript",
+        "transcript": " I could we might have to get you up again then I don't know what mine is I'm going to have to think on the",
+        "final": false,
+        "audioProcessedMs": 36560,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 36.5214
+      },
+      {
+        "type": "transcript",
+        "transcript": " I could we might have to get you up again then I don't know what mine is I'm going to have to think on the spot now",
+        "final": false,
+        "audioProcessedMs": 36880,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 36.8439
+      },
+      {
+        "type": "transcript",
+        "transcript": " I could we might have to get you up again then I don't know what mine is I'm going to have to think on the spot now ",
+        "final": false,
+        "audioProcessedMs": 38640,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 38.6333
+      },
+      {
+        "type": "speechEnd",
+        "audioProcessedMs": 38140,
+        "turnId": 6,
+        "provider_fields": [
+          "audioProcessedMs",
+          "turnId",
+          "type"
+        ],
+        "received_seconds": 38.6334
+      },
+      {
+        "type": "speechComplete",
+        "audioProcessedMs": 38140,
+        "turnId": 6,
+        "transcript": " I could we might have to get you up again then I don't know what mine is I'm going to have to think on the spot now ",
+        "provider_fields": [
+          "audioProcessedMs",
+          "transcript",
+          "turnId",
+          "type"
+        ],
+        "received_seconds": 38.6334
+      },
+      {
+        "type": "speechStart",
+        "audioProcessedMs": 40220,
+        "turnId": 7,
+        "provider_fields": [
+          "audioProcessedMs",
+          "turnId",
+          "type"
+        ],
+        "received_seconds": 40.6904
+      },
+      {
+        "type": "transcript",
+        "transcript": " Impressionist.",
+        "final": false,
+        "audioProcessedMs": 41600,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 41.6011
+      },
+      {
+        "type": "transcript",
+        "transcript": " Impressionist. ",
+        "final": false,
+        "audioProcessedMs": 43280,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 43.2738
+      },
+      {
+        "type": "speechEnd",
+        "audioProcessedMs": 42780,
+        "turnId": 7,
+        "provider_fields": [
+          "audioProcessedMs",
+          "turnId",
+          "type"
+        ],
+        "received_seconds": 43.2738
+      },
+      {
+        "type": "speechComplete",
+        "audioProcessedMs": 42780,
+        "turnId": 7,
+        "transcript": " Impressionist. ",
+        "provider_fields": [
+          "audioProcessedMs",
+          "transcript",
+          "turnId",
+          "type"
+        ],
+        "received_seconds": 43.2738
+      },
+      {
+        "type": "speechStart",
+        "audioProcessedMs": 45020,
+        "turnId": 8,
+        "provider_fields": [
+          "audioProcessedMs",
+          "turnId",
+          "type"
+        ],
+        "received_seconds": 45.487
+      },
+      {
+        "type": "transcript",
+        "transcript": " Is that a",
+        "final": false,
+        "audioProcessedMs": 45920,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 45.9025
+      },
+      {
+        "type": "transcript",
+        "transcript": " Is that a whale?",
+        "final": false,
+        "audioProcessedMs": 46080,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 46.0445
+      },
+      {
+        "type": "transcript",
+        "transcript": " Is that a whale? ",
+        "final": false,
+        "audioProcessedMs": 46800,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 46.8202
+      },
+      {
+        "type": "speechEnd",
+        "audioProcessedMs": 46300,
+        "turnId": 8,
+        "provider_fields": [
+          "audioProcessedMs",
+          "turnId",
+          "type"
+        ],
+        "received_seconds": 46.8202
+      },
+      {
+        "type": "speechComplete",
+        "audioProcessedMs": 46300,
+        "turnId": 8,
+        "transcript": " Is that a whale? ",
+        "provider_fields": [
+          "audioProcessedMs",
+          "transcript",
+          "turnId",
+          "type"
+        ],
+        "received_seconds": 46.8202
+      },
+      {
+        "type": "speechStart",
+        "audioProcessedMs": 46300,
+        "turnId": 9,
+        "provider_fields": [
+          "audioProcessedMs",
+          "turnId",
+          "type"
+        ],
+        "received_seconds": 46.8202
+      },
+      {
+        "type": "transcript",
+        "transcript": " Yeah?",
+        "final": false,
+        "audioProcessedMs": 47040,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 47.0001
+      },
+      {
+        "type": "transcript",
+        "transcript": " Yeah? ",
+        "final": false,
+        "audioProcessedMs": 47360,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 47.3732
+      },
+      {
+        "type": "speechEnd",
+        "audioProcessedMs": 46860,
+        "turnId": 9,
+        "provider_fields": [
+          "audioProcessedMs",
+          "turnId",
+          "type"
+        ],
+        "received_seconds": 47.3732
+      },
+      {
+        "type": "speechComplete",
+        "audioProcessedMs": 46860,
+        "turnId": 9,
+        "transcript": " Yeah? ",
+        "provider_fields": [
+          "audioProcessedMs",
+          "transcript",
+          "turnId",
+          "type"
+        ],
+        "received_seconds": 47.3733
+      },
+      {
+        "type": "speechStart",
+        "audioProcessedMs": 46860,
+        "turnId": 10,
+        "provider_fields": [
+          "audioProcessedMs",
+          "turnId",
+          "type"
+        ],
+        "received_seconds": 47.3733
+      },
+      {
+        "type": "transcript",
+        "transcript": " Yeah.",
+        "final": false,
+        "audioProcessedMs": 47600,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 47.5763
+      },
+      {
+        "type": "transcript",
+        "transcript": " Yeah. ",
+        "final": false,
+        "audioProcessedMs": 50080,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 50.081
+      },
+      {
+        "type": "speechEnd",
+        "audioProcessedMs": 49580,
+        "turnId": 10,
+        "provider_fields": [
+          "audioProcessedMs",
+          "turnId",
+          "type"
+        ],
+        "received_seconds": 50.081
+      },
+      {
+        "type": "speechComplete",
+        "audioProcessedMs": 49580,
+        "turnId": 10,
+        "transcript": " Yeah. ",
+        "provider_fields": [
+          "audioProcessedMs",
+          "transcript",
+          "turnId",
+          "type"
+        ],
+        "received_seconds": 50.081
+      },
+      {
+        "type": "transcript",
+        "transcript": "",
+        "final": true,
+        "audioProcessedMs": 52000,
+        "provider_fields": [
+          "audioProcessedMs",
+          "final",
+          "transcript",
+          "type"
+        ],
+        "received_seconds": 52.0469
+      }
+    ],
+    "session_id": "voyager/duplex/766B894526FE42B69C801A2CDE2AA83E",
+    "handshake_seconds": 0.354,
+    "end_stream_sent_seconds": 52.0003,
+    "status": "session_completed",
+    "seconds": 52.402,
+    "audio_sent_seconds": 52.0,
+    "audio_processed_ms": 52000,
+    "cost_basis": "reported_processed_whole_seconds",
+    "reference_words": 113,
+    "word_errors": 24,
+    "wer": 0.21238938053097345,
+    "hypothesis": " the small, cute and furry and when Planet the Apes becomes real, I'm going to be up there with them.   Right.   There's too much gear.   You can take as long over this as you like because we haven't got an awful lot to discuss. Oh cool we do we do don't feel like you're in a rush anyway.   Okay.   I actually told you a whole lot more about beagles   I could we might have to get you up again then I don't know what mine is I'm going to have to think on the spot now   Impressionist.   Is that a whale?   Yeah?   Yeah. ",
+    "scoring_note": "Diagnostic chronological WER only; overlaps, fillers and contraction tokenization can affect alignment. Not diarization error rate."
+  }
+]

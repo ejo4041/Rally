@@ -1,0 +1,59 @@
+{
+  "results": [
+    {
+      "name": "owned-action-is-proposed-not-confirmed",
+      "decision": {
+        "evidence_turn_ids": [],
+        "intervene": false,
+        "kind": "none",
+        "outcomes": [
+          {
+            "due_date": "Thursday at 3 PM",
+            "evidence_turn_ids": [
+              "contract:0",
+              "contract:1",
+              "contract:2"
+            ],
+            "owner": "Priya",
+            "text": "run rollback validation",
+            "type": "action"
+          }
+        ],
+        "spoken_text": ""
+      },
+      "passed": true,
+      "proposals": [
+        {
+          "type": "action",
+          "text": "run rollback validation",
+          "owner": "Priya",
+          "dueDate": "Thursday at 3 PM",
+          "status": "proposed"
+        }
+      ]
+    }
+  ],
+  "usage": [
+    {
+      "id": "ecb6284d-2e01-4b7d-9a86-df255e41139c",
+      "meetingId": "4d598d1a-c59b-472a-a549-74f1f4ce8825",
+      "createdAt": "2026-10-28T05:09:02.521Z",
+      "model": "muse-spark-1.3",
+      "status": "200",
+      "estimatedCost": 0.003404,
+      "requestId": "88cf327e-7f7f-4384-9a94-8166d223488f",
+      "usage": {
+        "inputTokens": 690,
+        "cachedTokens": 0,
+        "outputTokens": 598,
+        "reasoningTokens": 528
+      },
+      "decisionSummary": {
+        "intervene": false,
+        "kind": "none",
+        "outcomeCount": 1
+      },
+      "durationMs": 3736
+    }
+  ]
+}

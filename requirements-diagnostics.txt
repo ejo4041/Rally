@@ -1,0 +1,2 @@
+# Optional Python reference-audio/transport diagnostics, not the hosted app runtime.
+websockets==17.3

@@ -1,0 +1,29 @@
+{
+  "url": "https://rally-meeting-moderator.excavator3496.chatgpt.site",
+  "checks": [
+    "private HTML served",
+    "server-side Muse secret configured",
+    "hosted WebSocket walkthrough, proposals, confirmation and save",
+    "hosted Markdown export",
+    "QA meeting deleted"
+  ],
+  "paid": false,
+  "usage": [
+    {
+      "id": "f0b634eb-98de-4e8a-a6a8-235cb28b545f",
+      "meetingId": "d3efbc5d-7af3-4bdb-b077-4abea7b3885c",
+      "createdAt": "2026-10-28T05:10:26.816Z",
+      "model": "muse-voice-transcribe-1.0",
+      "status": "closed",
+      "estimatedCost": 9.999999999999999e-05,
+      "usage": {
+        "audioSentSeconds": 2,
+        "audioProcessedMs": 2000
+      },
+      "costBasis": "reported_processed_seconds",
+      "sessionId": "voyager/duplex/BC51CDC2ACF64B63B1803F297DBA8DC1"
+    }
+  ],
+  "newUsageEvents": [],
+  "passed": true
+}

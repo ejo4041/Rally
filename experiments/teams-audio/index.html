@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><title>Rally Teams audio spike</title>
+<style>body{font:18px system-ui;max-width:760px;margin:40px auto;padding:20px}label{display:block;margin:18px 0}input:not([type=checkbox]){display:block;width:95%;padding:8px}button{padding:10px;margin:8px}</style>
+<h1>Rally Teams audio spike</h1>
+<p>Isolated transport experiment. No Muse calls, transcription or recording. Joining uses Azure resources and may incur Azure charges. Automatically leaves after three minutes.</p>
+<label>Teams meeting URL<input id="meeting" autocomplete="off"></label>
+<label>Short-lived ACS user token (voip scope)<input id="token" type="password" autocomplete="off"></label>
+<label><input type="checkbox" id="consent"> The host and participants consent to this audio test.</label>
+<button id="join">Join test meeting</button><button id="leave">Leave now</button>
+<p id="status">SDK ready. No meeting joined.</p>
+<p>Incoming audio level: <meter id="level" min="0" max="1" value="0"></meter></p>
+<label>Short speech clip (up to 15 seconds)<input id="clip" type="file" accept="audio/*"></label>
+<button id="play">Send clip to meeting</button><button id="stop">Stop output now</button>
+<p>Browser speechSynthesis does not provide a capturable MediaStream. This test uses a decoded audio clip as the virtual microphone instead.</p>
+<script type="module" src="/browser.js"></script></html>

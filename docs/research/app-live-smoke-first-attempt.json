@@ -1,0 +1,25 @@
+{
+  "at": "2026-10-28T04:51:00.539Z",
+  "scenario": "Known licensed audiobook input under artificial release agenda; no physical microphone or audible output.",
+  "turnCount": 0,
+  "noticeSummary": {
+    "message": "Invalid control message.",
+    "count": 368
+  },
+  "usage": [
+    {
+      "id": "4d120256-1689-4205-b2f5-615649509338",
+      "meetingId": "cab542ed-e2a8-4621-89b4-02ee261c200b",
+      "createdAt": "2026-10-28T04:50:46.218Z",
+      "model": "muse-voice-transcribe-1.0",
+      "status": "closed",
+      "estimatedCost": 0,
+      "usage": {
+        "audioSentSeconds": 0,
+        "audioProcessedMs": 0
+      },
+      "costBasis": "reported_processed_seconds",
+      "sessionId": "voyager/duplex/87143FD121674E73AC593389337F5965"
+    }
+  ]
+}

@@ -1,0 +1,923 @@
+[
+  {
+    "test": "public-audio/ENDPOINTING",
+    "model": "muse-voice-transcribe-1.0",
+    "estimated_cost_usd": 0.00145,
+    "mode": "ENDPOINTING",
+    "events": [
+      {
+        "type": "speechStart",
+        "audioProcessedMs": 0,
+        "turnId": 0,
+        "received_seconds": 0.3332
+      },
+      {
+        "type": "transcript",
+        "transcript": "mister",
+        "final": false,
+        "audioProcessedMs": 1360,
+        "received_seconds": 1.3865
+      },
+      {
+        "type": "transcript",
+        "transcript": "mister quilter",
+        "final": false,
+        "audioProcessedMs": 2000,
+        "received_seconds": 2.017
+      },
+      {
+        "type": "transcript",
+        "transcript": "mister quilter is the",
+        "final": false,
+        "audioProcessedMs": 2240,
+        "received_seconds": 2.262
+      },
+      {
+        "type": "transcript",
+        "transcript": "mister quilter is the apostle",
+        "final": false,
+        "audioProcessedMs": 2640,
+        "received_seconds": 2.6475
+      },
+      {
+        "type": "transcript",
+        "transcript": "mister quilter is the apostle of",
+        "final": false,
+        "audioProcessedMs": 2720,
+        "received_seconds": 2.7233
+      },
+      {
+        "type": "transcript",
+        "transcript": "mister quilter is the apostle of the middle",
+        "final": false,
+        "audioProcessedMs": 3120,
+        "received_seconds": 3.132
+      },
+      {
+        "type": "transcript",
+        "transcript": "mister quilter is the apostle of the middle classes",
+        "final": false,
+        "audioProcessedMs": 3440,
+        "received_seconds": 3.438
+      },
+      {
+        "type": "transcript",
+        "transcript": "mister quilter is the apostle of the middle classes and",
+        "final": false,
+        "audioProcessedMs": 3760,
+        "received_seconds": 3.7631
+      },
+      {
+        "type": "transcript",
+        "transcript": "mister quilter is the apostle of the middle classes and we are",
+        "final": false,
+        "audioProcessedMs": 4000,
+        "received_seconds": 4.0123
+      },
+      {
+        "type": "transcript",
+        "transcript": "mister quilter is the apostle of the middle classes and we are glad to",
+        "final": false,
+        "audioProcessedMs": 4720,
+        "received_seconds": 4.7275
+      },
+      {
+        "type": "transcript",
+        "transcript": "mister quilter is the apostle of the middle classes and we are glad to welcome",
+        "final": false,
+        "audioProcessedMs": 4880,
+        "received_seconds": 4.882
+      },
+      {
+        "type": "transcript",
+        "transcript": "mister quilter is the apostle of the middle classes and we are glad to welcome his",
+        "final": false,
+        "audioProcessedMs": 5440,
+        "received_seconds": 5.439
+      },
+      {
+        "type": "transcript",
+        "transcript": "mister quilter is the apostle of the middle classes and we are glad to welcome his gospel",
+        "final": false,
+        "audioProcessedMs": 5920,
+        "received_seconds": 5.9352
+      },
+      {
+        "type": "speechEnd",
+        "audioProcessedMs": 5420,
+        "turnId": 0,
+        "received_seconds": 5.9352
+      },
+      {
+        "type": "speechComplete",
+        "audioProcessedMs": 5420,
+        "turnId": 0,
+        "transcript": "mister quilter is the apostle of the middle classes and we are glad to welcome his gospel",
+        "received_seconds": 5.9352
+      },
+      {
+        "type": "speechStart",
+        "audioProcessedMs": 8060,
+        "turnId": 1,
+        "received_seconds": 8.5685
+      },
+      {
+        "type": "transcript",
+        "transcript": "nor is",
+        "final": false,
+        "audioProcessedMs": 9120,
+        "received_seconds": 9.1338
+      },
+      {
+        "type": "transcript",
+        "transcript": "nor is mister",
+        "final": false,
+        "audioProcessedMs": 9520,
+        "received_seconds": 9.5164
+      },
+      {
+        "type": "transcript",
+        "transcript": "nor is mister quilter's",
+        "final": false,
+        "audioProcessedMs": 10080,
+        "received_seconds": 10.1034
+      },
+      {
+        "type": "transcript",
+        "transcript": "nor is mister quilter's manner",
+        "final": false,
+        "audioProcessedMs": 10400,
+        "received_seconds": 10.4099
+      },
+      {
+        "type": "transcript",
+        "transcript": "nor is mister quilter's manner less",
+        "final": false,
+        "audioProcessedMs": 10880,
+        "received_seconds": 10.882
+      },
+      {
+        "type": "transcript",
+        "transcript": "nor is mister quilter's manner less interesting",
+        "final": false,
+        "audioProcessedMs": 11600,
+        "received_seconds": 11.6102
+      },
+      {
+        "type": "transcript",
+        "transcript": "nor is mister quilter's manner less interesting than",
+        "final": false,
+        "audioProcessedMs": 12000,
+        "received_seconds": 12.0008
+      },
+      {
+        "type": "transcript",
+        "transcript": "nor is mister quilter's manner less interesting than his",
+        "final": false,
+        "audioProcessedMs": 12320,
+        "received_seconds": 12.3213
+      },
+      {
+        "type": "transcript",
+        "transcript": "nor is mister quilter's manner less interesting than his matter",
+        "final": false,
+        "audioProcessedMs": 12720,
+        "received_seconds": 12.7313
+      },
+      {
+        "type": "speechEnd",
+        "audioProcessedMs": 12220,
+        "turnId": 1,
+        "received_seconds": 12.7313
+      },
+      {
+        "type": "speechComplete",
+        "audioProcessedMs": 12220,
+        "turnId": 1,
+        "transcript": "nor is mister quilter's manner less interesting than his matter",
+        "received_seconds": 12.7313
+      },
+      {
+        "type": "speechStart",
+        "audioProcessedMs": 14860,
+        "turnId": 2,
+        "received_seconds": 15.3572
+      },
+      {
+        "type": "transcript",
+        "transcript": "he",
+        "final": false,
+        "audioProcessedMs": 15680,
+        "received_seconds": 15.6762
+      },
+      {
+        "type": "transcript",
+        "transcript": "he tells",
+        "final": false,
+        "audioProcessedMs": 16400,
+        "received_seconds": 16.4052
+      },
+      {
+        "type": "transcript",
+        "transcript": "he tells us",
+        "final": false,
+        "audioProcessedMs": 16560,
+        "received_seconds": 16.5598
+      },
+      {
+        "type": "transcript",
+        "transcript": "he tells us that",
+        "final": false,
+        "audioProcessedMs": 16800,
+        "received_seconds": 16.8115
+      },
+      {
+        "type": "transcript",
+        "transcript": "he tells us that at",
+        "final": false,
+        "audioProcessedMs": 17120,
+        "received_seconds": 17.1283
+      },
+      {
+        "type": "transcript",
+        "transcript": "he tells us that at this",
+        "final": false,
+        "audioProcessedMs": 17520,
+        "received_seconds": 17.5313
+      },
+      {
+        "type": "transcript",
+        "transcript": "he tells us that at this festive",
+        "final": false,
+        "audioProcessedMs": 17680,
+        "received_seconds": 17.6771
+      },
+      {
+        "type": "transcript",
+        "transcript": "he tells us that at this festive season of the",
+        "final": false,
+        "audioProcessedMs": 18320,
+        "received_seconds": 18.3465
+      },
+      {
+        "type": "transcript",
+        "transcript": "he tells us that at this festive season of the year",
+        "final": false,
+        "audioProcessedMs": 18640,
+        "received_seconds": 18.6425
+      },
+      {
+        "type": "transcript",
+        "transcript": "he tells us that at this festive season of the year with",
+        "final": false,
+        "audioProcessedMs": 19520,
+        "received_seconds": 19.5224
+      },
+      {
+        "type": "transcript",
+        "transcript": "he tells us that at this festive season of the year with christmas",
+        "final": false,
+        "audioProcessedMs": 20240,
+        "received_seconds": 20.25
+      },
+      {
+        "type": "transcript",
+        "transcript": "he tells us that at this festive season of the year with christmas and",
+        "final": false,
+        "audioProcessedMs": 20480,
+        "received_seconds": 20.484
+      },
+      {
+        "type": "transcript",
+        "transcript": "he tells us that at this festive season of the year with christmas and roast",
+        "final": false,
+        "audioProcessedMs": 20960,
+        "received_seconds": 20.961
+      },
+      {
+        "type": "transcript",
+        "transcript": "he tells us that at this festive season of the year with christmas and roast beef",
+        "final": false,
+        "audioProcessedMs": 21200,
+        "received_seconds": 21.2023
+      },
+      {
+        "type": "transcript",
+        "transcript": "he tells us that at this festive season of the year with christmas and roast beef looming",
+        "final": false,
+        "audioProcessedMs": 21440,
+        "received_seconds": 21.4442
+      },
+      {
+        "type": "transcript",
+        "transcript": "he tells us that at this festive season of the year with christmas and roast beef looming before us",
+        "final": false,
+        "audioProcessedMs": 22080,
+        "received_seconds": 22.0878
+      },
+      {
+        "type": "transcript",
+        "transcript": "he tells us that at this festive season of the year with christmas and roast beef looming before us similes",
+        "final": false,
+        "audioProcessedMs": 23280,
+        "received_seconds": 23.2929
+      },
+      {
+        "type": "transcript",
+        "transcript": "he tells us that at this festive season of the year with christmas and roast beef looming before us similes drawn from",
+        "final": false,
+        "audioProcessedMs": 23760,
+        "received_seconds": 23.7734
+      },
+      {
+        "type": "transcript",
+        "transcript": "he tells us that at this festive season of the year with christmas and roast beef looming before us similes drawn from eating",
+        "final": false,
+        "audioProcessedMs": 24320,
+        "received_seconds": 24.3232
+      },
+      {
+        "type": "transcript",
+        "transcript": "he tells us that at this festive season of the year with christmas and roast beef looming before us similes drawn from eating and its",
+        "final": false,
+        "audioProcessedMs": 24400,
+        "received_seconds": 24.4087
+      },
+      {
+        "type": "transcript",
+        "transcript": "he tells us that at this festive season of the year with christmas and roast beef looming before us similes drawn from eating and its results",
+        "final": false,
+        "audioProcessedMs": 25040,
+        "received_seconds": 25.044
+      },
+      {
+        "type": "transcript",
+        "transcript": "he tells us that at this festive season of the year with christmas and roast beef looming before us similes drawn from eating and its results occur",
+        "final": false,
+        "audioProcessedMs": 25520,
+        "received_seconds": 25.5195
+      },
+      {
+        "type": "transcript",
+        "transcript": "he tells us that at this festive season of the year with christmas and roast beef looming before us similes drawn from eating and its results occur most",
+        "final": false,
+        "audioProcessedMs": 26000,
+        "received_seconds": 25.9993
+      },
+      {
+        "type": "transcript",
+        "transcript": "he tells us that at this festive season of the year with christmas and roast beef looming before us similes drawn from eating and its results occur most readily",
+        "final": false,
+        "audioProcessedMs": 26400,
+        "received_seconds": 26.3987
+      },
+      {
+        "type": "transcript",
+        "transcript": "he tells us that at this festive season of the year with christmas and roast beef looming before us similes drawn from eating and its results occur most readily to the",
+        "final": false,
+        "audioProcessedMs": 26480,
+        "received_seconds": 26.4893
+      },
+      {
+        "type": "transcript",
+        "transcript": "he tells us that at this festive season of the year with christmas and roast beef looming before us similes drawn from eating and its results occur most readily to the mind",
+        "final": false,
+        "audioProcessedMs": 26960,
+        "received_seconds": 26.9651
+      },
+      {
+        "type": "speechEnd",
+        "audioProcessedMs": 26540,
+        "turnId": 2,
+        "received_seconds": 27.0414
+      },
+      {
+        "type": "speechComplete",
+        "audioProcessedMs": 26540,
+        "turnId": 2,
+        "transcript": "he tells us that at this festive season of the year with christmas and roast beef looming before us similes drawn from eating and its results occur most readily to the mind",
+        "received_seconds": 27.0414
+      },
+      {
+        "type": "transcript",
+        "transcript": "",
+        "final": true,
+        "audioProcessedMs": 29200,
+        "received_seconds": 29.2629
+      }
+    ],
+    "session_id": "voyager/duplex/BDC61C0D46B34DAEB00F2FBB2AF9E00A",
+    "handshake_seconds": 0.45,
+    "end_stream_sent_seconds": 29.1558,
+    "status": "session_completed",
+    "seconds": 29.713,
+    "audio_sent_seconds": 29.155,
+    "audio_processed_ms": 29200,
+    "cost_basis": "reported_processed_whole_seconds",
+    "reference_words": 59,
+    "word_errors": 0,
+    "wer": 0.0,
+    "hypothesis": "mister quilter is the apostle of the middle classes and we are glad to welcome his gospel nor is mister quilter's manner less interesting than his matter he tells us that at this festive season of the year with christmas and roast beef looming before us similes drawn from eating and its results occur most readily to the mind",
+    "clip_finalizations": [
+      {
+        "id": "1272-128104-0000",
+        "reference_prefix_words": 17,
+        "final_received_seconds": 5.9352,
+        "since_estimated_speech_end_seconds": 0.5352,
+        "alignment": "cumulative_word_count_proxy; validate against transcript and turn events"
+      },
+      {
+        "id": "1272-128104-0001",
+        "reference_prefix_words": 27,
+        "final_received_seconds": 12.7313,
+        "since_estimated_speech_end_seconds": 0.5163,
+        "alignment": "cumulative_word_count_proxy; validate against transcript and turn events"
+      },
+      {
+        "id": "1272-128104-0002",
+        "reference_prefix_words": 59,
+        "final_received_seconds": 27.0414,
+        "since_estimated_speech_end_seconds": 0.4314,
+        "alignment": "cumulative_word_count_proxy; validate against transcript and turn events"
+      }
+    ]
+  },
+  {
+    "test": "public-audio/DIARIZATION",
+    "model": "muse-voice-transcribe-1.0",
+    "estimated_cost_usd": 0.00145,
+    "mode": "DIARIZATION",
+    "events": [
+      {
+        "type": "speechStart",
+        "audioProcessedMs": 300,
+        "turnId": 0,
+        "received_seconds": 0.7626
+      },
+      {
+        "type": "transcript",
+        "transcript": " Mister",
+        "final": false,
+        "audioProcessedMs": 1440,
+        "received_seconds": 1.3998
+      },
+      {
+        "type": "transcript",
+        "transcript": " Mister Quilter",
+        "final": false,
+        "audioProcessedMs": 1600,
+        "received_seconds": 1.5766
+      },
+      {
+        "type": "transcript",
+        "transcript": " Mister Quilter is the",
+        "final": false,
+        "audioProcessedMs": 2000,
+        "received_seconds": 1.9782
+      },
+      {
+        "type": "transcript",
+        "transcript": " Mister Quilter is the apostle",
+        "final": false,
+        "audioProcessedMs": 2400,
+        "received_seconds": 2.3765
+      },
+      {
+        "type": "transcript",
+        "transcript": " Mister Quilter is the apostle of",
+        "final": false,
+        "audioProcessedMs": 2480,
+        "received_seconds": 2.4446
+      },
+      {
+        "type": "transcript",
+        "transcript": " Mister Quilter is the apostle of the",
+        "final": false,
+        "audioProcessedMs": 3120,
+        "received_seconds": 3.0782
+      },
+      {
+        "type": "transcript",
+        "transcript": " Mister Quilter is the apostle of the middle",
+        "final": false,
+        "audioProcessedMs": 3280,
+        "received_seconds": 3.2543
+      },
+      {
+        "type": "transcript",
+        "transcript": " Mister Quilter is the apostle of the middle classes",
+        "final": false,
+        "audioProcessedMs": 3440,
+        "received_seconds": 3.4075
+      },
+      {
+        "type": "transcript",
+        "transcript": " Mister Quilter is the apostle of the middle classes and",
+        "final": false,
+        "audioProcessedMs": 3840,
+        "received_seconds": 3.8061
+      },
+      {
+        "type": "transcript",
+        "transcript": " Mister Quilter is the apostle of the middle classes and we",
+        "final": false,
+        "audioProcessedMs": 4240,
+        "received_seconds": 4.2091
+      },
+      {
+        "type": "transcript",
+        "transcript": " Mister Quilter is the apostle of the middle classes and we are",
+        "final": false,
+        "audioProcessedMs": 4480,
+        "received_seconds": 4.4373
+      },
+      {
+        "type": "transcript",
+        "transcript": " Mister Quilter is the apostle of the middle classes and we are glad to",
+        "final": false,
+        "audioProcessedMs": 4560,
+        "received_seconds": 4.5318
+      },
+      {
+        "type": "transcript",
+        "transcript": " Mister Quilter is the apostle of the middle classes and we are glad to welcome",
+        "final": false,
+        "audioProcessedMs": 5360,
+        "received_seconds": 5.325
+      },
+      {
+        "type": "transcript",
+        "transcript": " Mister Quilter is the apostle of the middle classes and we are glad to welcome his",
+        "final": false,
+        "audioProcessedMs": 5440,
+        "received_seconds": 5.4141
+      },
+      {
+        "type": "transcript",
+        "transcript": " Mister Quilter is the apostle of the middle classes and we are glad to welcome his gospel",
+        "final": false,
+        "audioProcessedMs": 5680,
+        "received_seconds": 5.6479
+      },
+      {
+        "type": "transcript",
+        "transcript": " Mister Quilter is the apostle of the middle classes and we are glad to welcome his gospel ",
+        "final": false,
+        "audioProcessedMs": 5920,
+        "received_seconds": 5.9343
+      },
+      {
+        "type": "speechEnd",
+        "audioProcessedMs": 5420,
+        "turnId": 0,
+        "received_seconds": 5.9343
+      },
+      {
+        "type": "speechComplete",
+        "audioProcessedMs": 5420,
+        "turnId": 0,
+        "transcript": " Mister Quilter is the apostle of the middle classes and we are glad to welcome his gospel ",
+        "received_seconds": 5.9343
+      },
+      {
+        "type": "speechStart",
+        "audioProcessedMs": 8540,
+        "turnId": 1,
+        "received_seconds": 9.04
+      },
+      {
+        "type": "transcript",
+        "transcript": " nor",
+        "final": false,
+        "audioProcessedMs": 9120,
+        "received_seconds": 9.0955
+      },
+      {
+        "type": "transcript",
+        "transcript": " nor is",
+        "final": false,
+        "audioProcessedMs": 9680,
+        "received_seconds": 9.6463
+      },
+      {
+        "type": "transcript",
+        "transcript": " nor is mister",
+        "final": false,
+        "audioProcessedMs": 10000,
+        "received_seconds": 9.9635
+      },
+      {
+        "type": "transcript",
+        "transcript": " nor is mister quilter's",
+        "final": false,
+        "audioProcessedMs": 10080,
+        "received_seconds": 10.0598
+      },
+      {
+        "type": "transcript",
+        "transcript": " nor is mister quilter's manner",
+        "final": false,
+        "audioProcessedMs": 10640,
+        "received_seconds": 10.6073
+      },
+      {
+        "type": "transcript",
+        "transcript": " nor is mister quilter's manner less",
+        "final": false,
+        "audioProcessedMs": 10880,
+        "received_seconds": 10.8393
+      },
+      {
+        "type": "transcript",
+        "transcript": " nor is mister quilter's manner less interesting",
+        "final": false,
+        "audioProcessedMs": 11520,
+        "received_seconds": 11.4881
+      },
+      {
+        "type": "transcript",
+        "transcript": " nor is mister quilter's manner less interesting than",
+        "final": false,
+        "audioProcessedMs": 12160,
+        "received_seconds": 12.1173
+      },
+      {
+        "type": "transcript",
+        "transcript": " nor is mister quilter's manner less interesting than his",
+        "final": false,
+        "audioProcessedMs": 12320,
+        "received_seconds": 12.2901
+      },
+      {
+        "type": "transcript",
+        "transcript": " nor is mister quilter's manner less interesting than his matter",
+        "final": false,
+        "audioProcessedMs": 12560,
+        "received_seconds": 12.5203
+      },
+      {
+        "type": "transcript",
+        "transcript": " nor is mister quilter's manner less interesting than his matter ",
+        "final": false,
+        "audioProcessedMs": 13120,
+        "received_seconds": 13.1328
+      },
+      {
+        "type": "speechEnd",
+        "audioProcessedMs": 12620,
+        "turnId": 1,
+        "received_seconds": 13.1328
+      },
+      {
+        "type": "speechComplete",
+        "audioProcessedMs": 12620,
+        "turnId": 1,
+        "transcript": " nor is mister quilter's manner less interesting than his matter ",
+        "received_seconds": 13.1328
+      },
+      {
+        "type": "speechStart",
+        "audioProcessedMs": 15420,
+        "turnId": 2,
+        "received_seconds": 15.9104
+      },
+      {
+        "type": "transcript",
+        "transcript": " he",
+        "final": false,
+        "audioProcessedMs": 15920,
+        "received_seconds": 15.9104
+      },
+      {
+        "type": "transcript",
+        "transcript": " he tells",
+        "final": false,
+        "audioProcessedMs": 16000,
+        "received_seconds": 15.9562
+      },
+      {
+        "type": "transcript",
+        "transcript": " he tells us",
+        "final": false,
+        "audioProcessedMs": 16480,
+        "received_seconds": 16.4341
+      },
+      {
+        "type": "transcript",
+        "transcript": " he tells us that at",
+        "final": false,
+        "audioProcessedMs": 16960,
+        "received_seconds": 16.9376
+      },
+      {
+        "type": "transcript",
+        "transcript": " he tells us that at this",
+        "final": false,
+        "audioProcessedMs": 17040,
+        "received_seconds": 16.9948
+      },
+      {
+        "type": "transcript",
+        "transcript": " he tells us that at this festive",
+        "final": false,
+        "audioProcessedMs": 17920,
+        "received_seconds": 17.8776
+      },
+      {
+        "type": "transcript",
+        "transcript": " he tells us that at this festive season",
+        "final": false,
+        "audioProcessedMs": 18240,
+        "received_seconds": 18.2077
+      },
+      {
+        "type": "transcript",
+        "transcript": " he tells us that at this festive season of",
+        "final": false,
+        "audioProcessedMs": 18320,
+        "received_seconds": 18.2778
+      },
+      {
+        "type": "transcript",
+        "transcript": " he tells us that at this festive season of the",
+        "final": false,
+        "audioProcessedMs": 18480,
+        "received_seconds": 18.4423
+      },
+      {
+        "type": "transcript",
+        "transcript": " he tells us that at this festive season of the year",
+        "final": false,
+        "audioProcessedMs": 18640,
+        "received_seconds": 18.6017
+      },
+      {
+        "type": "transcript",
+        "transcript": " he tells us that at this festive season of the year with",
+        "final": false,
+        "audioProcessedMs": 19600,
+        "received_seconds": 19.5596
+      },
+      {
+        "type": "transcript",
+        "transcript": " he tells us that at this festive season of the year with christmas and",
+        "final": false,
+        "audioProcessedMs": 20240,
+        "received_seconds": 20.2187
+      },
+      {
+        "type": "transcript",
+        "transcript": " he tells us that at this festive season of the year with christmas and roast",
+        "final": false,
+        "audioProcessedMs": 20800,
+        "received_seconds": 20.7665
+      },
+      {
+        "type": "transcript",
+        "transcript": " he tells us that at this festive season of the year with christmas and roast beef",
+        "final": false,
+        "audioProcessedMs": 21040,
+        "received_seconds": 21.0061
+      },
+      {
+        "type": "transcript",
+        "transcript": " he tells us that at this festive season of the year with christmas and roast beef looming",
+        "final": false,
+        "audioProcessedMs": 21680,
+        "received_seconds": 21.6366
+      },
+      {
+        "type": "transcript",
+        "transcript": " he tells us that at this festive season of the year with christmas and roast beef looming before",
+        "final": false,
+        "audioProcessedMs": 21840,
+        "received_seconds": 21.8016
+      },
+      {
+        "type": "transcript",
+        "transcript": " he tells us that at this festive season of the year with christmas and roast beef looming before us",
+        "final": false,
+        "audioProcessedMs": 21920,
+        "received_seconds": 21.8737
+      },
+      {
+        "type": "transcript",
+        "transcript": " he tells us that at this festive season of the year with christmas and roast beef looming before us similes drawn from",
+        "final": false,
+        "audioProcessedMs": 23680,
+        "received_seconds": 23.6845
+      },
+      {
+        "type": "transcript",
+        "transcript": " he tells us that at this festive season of the year with christmas and roast beef looming before us similes drawn from eating",
+        "final": false,
+        "audioProcessedMs": 24320,
+        "received_seconds": 24.2858
+      },
+      {
+        "type": "transcript",
+        "transcript": " he tells us that at this festive season of the year with christmas and roast beef looming before us similes drawn from eating and its",
+        "final": false,
+        "audioProcessedMs": 24720,
+        "received_seconds": 24.6911
+      },
+      {
+        "type": "transcript",
+        "transcript": " he tells us that at this festive season of the year with christmas and roast beef looming before us similes drawn from eating and its results",
+        "final": false,
+        "audioProcessedMs": 25120,
+        "received_seconds": 25.0765
+      },
+      {
+        "type": "transcript",
+        "transcript": " he tells us that at this festive season of the year with christmas and roast beef looming before us similes drawn from eating and its results occur",
+        "final": false,
+        "audioProcessedMs": 25520,
+        "received_seconds": 25.4842
+      },
+      {
+        "type": "transcript",
+        "transcript": " he tells us that at this festive season of the year with christmas and roast beef looming before us similes drawn from eating and its results occur most",
+        "final": false,
+        "audioProcessedMs": 25840,
+        "received_seconds": 25.8028
+      },
+      {
+        "type": "transcript",
+        "transcript": " he tells us that at this festive season of the year with christmas and roast beef looming before us similes drawn from eating and its results occur most readily to",
+        "final": false,
+        "audioProcessedMs": 26640,
+        "received_seconds": 26.6152
+      },
+      {
+        "type": "transcript",
+        "transcript": " he tells us that at this festive season of the year with christmas and roast beef looming before us similes drawn from eating and its results occur most readily to the",
+        "final": false,
+        "audioProcessedMs": 26720,
+        "received_seconds": 26.6858
+      },
+      {
+        "type": "transcript",
+        "transcript": " he tells us that at this festive season of the year with christmas and roast beef looming before us similes drawn from eating and its results occur most readily to the mind ",
+        "final": false,
+        "audioProcessedMs": 27280,
+        "received_seconds": 27.3041
+      },
+      {
+        "type": "speechEnd",
+        "audioProcessedMs": 26780,
+        "turnId": 2,
+        "received_seconds": 27.3041
+      },
+      {
+        "type": "speechComplete",
+        "audioProcessedMs": 26780,
+        "turnId": 2,
+        "transcript": " he tells us that at this festive season of the year with christmas and roast beef looming before us similes drawn from eating and its results occur most readily to the mind ",
+        "received_seconds": 27.3041
+      },
+      {
+        "type": "transcript",
+        "transcript": "",
+        "final": true,
+        "audioProcessedMs": 29200,
+        "received_seconds": 29.2446
+      }
+    ],
+    "session_id": "voyager/duplex/C3322FDAAE684260ABD8E7FD93FE7C7C",
+    "handshake_seconds": 0.341,
+    "end_stream_sent_seconds": 29.156,
+    "status": "session_completed",
+    "seconds": 29.586,
+    "audio_sent_seconds": 29.155,
+    "audio_processed_ms": 29200,
+    "cost_basis": "reported_processed_whole_seconds",
+    "reference_words": 59,
+    "word_errors": 0,
+    "wer": 0.0,
+    "hypothesis": " Mister Quilter is the apostle of the middle classes and we are glad to welcome his gospel   nor is mister quilter's manner less interesting than his matter   he tells us that at this festive season of the year with christmas and roast beef looming before us similes drawn from eating and its results occur most readily to the mind ",
+    "clip_finalizations": [
+      {
+        "id": "1272-128104-0000",
+        "reference_prefix_words": 17,
+        "final_received_seconds": 5.9343,
+        "since_estimated_speech_end_seconds": 0.5343,
+        "alignment": "cumulative_word_count_proxy; validate against transcript and turn events"
+      },
+      {
+        "id": "1272-128104-0001",
+        "reference_prefix_words": 27,
+        "final_received_seconds": 13.1328,
+        "since_estimated_speech_end_seconds": 0.9178,
+        "alignment": "cumulative_word_count_proxy; validate against transcript and turn events"
+      },
+      {
+        "id": "1272-128104-0002",
+        "reference_prefix_words": 59,
+        "final_received_seconds": 27.3041,
+        "since_estimated_speech_end_seconds": 0.6941,
+        "alignment": "cumulative_word_count_proxy; validate against transcript and turn events"
+      }
+    ]
+  }
+]

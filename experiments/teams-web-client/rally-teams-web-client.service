@@ -1,0 +1,16 @@
+[Unit]
+Description=Isolated Rally normal Teams web client experiment
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/srv/hackathon/repo/experiments/teams-web-client
+Environment=XDG_RUNTIME_DIR=/run/user/1000
+Environment=LD_LIBRARY_PATH=/srv/hackathon/tools/browser-libs
+ExecStart=/srv/hackathon/tools/node/bin/node session.mjs
+Restart=no
+RuntimeMaxSec=7200
+TimeoutStopSec=15
+KillMode=control-group
+UMask=0077

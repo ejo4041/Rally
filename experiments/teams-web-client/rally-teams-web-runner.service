@@ -1,0 +1,17 @@
+[Unit]
+Description=Rally normal Teams queue and transcription runner
+After=network-online.target
+Wants=network-online.target
+[Service]
+Type=simple
+WorkingDirectory=/srv/hackathon/repo/experiments/teams-web-client
+Environment=XDG_RUNTIME_DIR=/run/user/1000
+Environment=LD_LIBRARY_PATH=/srv/hackathon/tools/browser-libs
+ExecStart=/srv/hackathon/tools/node/bin/node runner.mjs
+Restart=on-failure
+RestartSec=10
+TimeoutStopSec=25
+KillMode=control-group
+UMask=0077
+[Install]
+WantedBy=default.target
