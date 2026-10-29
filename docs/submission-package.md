@@ -1,5 +1,7 @@
 # Rally submission package — working draft
 
+**Submission status:** Draft preparation only. The user has explicitly put final submission on hold; a separate instruction is required before submitting an entry.
+
 Prepared October 29, 2026. [Submission requirements and Meta eligibility review](research/submission-requirements-meta-audit-2026-10-29.md) is the source of requirements and unresolved access questions. This is a draft, not a submitted entry. Verify the actual authenticated form before copying fields.
 
 ## Submission path and deadlines

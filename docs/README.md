@@ -34,6 +34,7 @@ First implementation is built and privately deployed: [build verification](build
 - [Ordered build backlog](implementation-backlog.md): small implementation tasks, dependencies, acceptance criteria and estimates.
 - [Reliability and cost model](reliability-and-cost-model.md): failure/recovery behavior and transparent per-meeting forecasts.
 - [Latency test plan](latency-test-plan.md): performance acceptance spike; no measured results yet.
+- [Demo script draft](demo-script.md): three-minute presenter/participant script, future-platform closing and longer show-and-tell outline. Final submission remains on hold.
 - [Demonstration walkthrough](demo-walkthrough.md): three-minute walkthrough and validation checklist.
 - [API budget](api-budget.md) and [cost ledger](research/muse-cost-ledger.md): conservative limits, tracked costs, and conditional credit remainder.
 
