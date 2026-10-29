@@ -6,7 +6,7 @@ The $150 remainder below assumes the full grant is applied and no other usage ex
 
 [Official pricing](https://dev.meta.ai/docs/pricing-rate-limits): Spark input $1.25/M, cached input $0.15/M, output $4.25/M; Voice Transcribe $0.18/hour.
 
-Known estimated spend: **$0.15263115**. Conditional $150 remainder: **$149.84736885**.
+Known estimated spend: **$0.18462115**. Conditional $150 remainder: **$149.81537885**.
 Calls/sessions with unknown cost: **0**. These are excluded from the known total; it is not a complete total if nonzero.
 
 | Time UTC | Test | Model | Seconds | Status | Estimated USD |
@@ -63,3 +63,14 @@ Hosted usage was reconciled by stable usage/request/session IDs. The appended ho
 ## First live Teams transcription incident
 
 User-initiated test: 128.62 seconds sent, 128.64 seconds reported processed, estimated $0.00640000. Session ended early and was marked failed. No additional paid call was made while investigating or applying the server pacing fix.
+
+## Backend MVP real-provider smoke — October 29
+
+Run `2c04aeb9-b49a-42ac-9995-c292d93d7118`: one prepared agenda, one 35.2-second diarized ASR session, one live assessment, one final report. Licensed reference speech was unrelated to the test agenda; low relevance scores are expected. All four operations completed; three final turns, one speaker label, one intervention, completed report. This tests the integration, not meeting-quality accuracy. Batch estimate **$0.03199000**, unknown costs **0**. Cumulative known estimate **$0.18462115**, conditional $150 remainder **$149.81537885**. Billing balance and grant remain unverified.
+
+| Operation | Estimated USD |
+| --- | --- |
+| prepare | 0.00390275 |
+| transcription | 0.00175000 |
+| assess | 0.00460675 |
+| report | 0.02173050 |

@@ -68,3 +68,7 @@ The queue accepts only an existing current moderator utterance or a fixed diagno
 Configuration selection, canonical event mapping, pricing propagation and session pricing snapshots are covered by offline tests. Changed model IDs in those tests are synthetic identifiers and are not claims of available models. No additional Muse transcription/reasoning request was made for these tests. Live Teams pacing and real-device audio checks remain pending; the currently running Teams queue process must load the changed adapter code at an idle restart before testing it.
 
 New paid-provider adapters must reserve and reconcile usage through the same accounting boundary before production use. The current speech adapter runs MMS locally and makes no billed speech-provider request; adding an API-billed speech adapter requires explicit pricing and accounting support rather than inheriting the local adapter’s zero provider-call cost.
+
+## Separate Node backend MVP
+
+The Node service in `apps/rally-api/` implements the same provider capability boundary with a separate full-report stage and session-scoped diarization. See [AI processing](ai-processing.md) and [API contract](backend-api.md). It does not replace or alter the private Sites Worker. Model changes require an explicit adapter and price configuration; paid calls are disabled by default. The backend output distinguishes reported agreement, proposals and unresolved items; these remain AI interpretations until reviewed by the host.

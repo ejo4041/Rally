@@ -1,0 +1,15 @@
+import {createHash} from 'node:crypto';
+import {mkdir,writeFile,chmod,rm} from 'node:fs/promises';
+import {execFileSync} from 'node:child_process';
+import {resolve} from 'node:path';
+const version='1.13.11';
+if(process.platform!=='linux'||process.arch!=='x64')throw new Error('Install livekit-server for your OS and set LIVEKIT_BINARY; automatic setup currently supports Linux x64.');
+const name=`livekit_${version}_linux_amd64.tar.gz`,base=`https://github.com/livekit/livekit/releases/download/v${version}`;
+const [archiveResponse,checksumsResponse]=await Promise.all([fetch(`${base}/${name}`),fetch(`${base}/checksums.txt`)]);
+if(!archiveResponse.ok||!checksumsResponse.ok)throw new Error('LiveKit download failed');
+const archive=Buffer.from(await archiveResponse.arrayBuffer());const checksums=await checksumsResponse.text();
+const expected=checksums.split('\n').find(line=>line.trim().endsWith(name))?.split(/\s+/)[0];
+if(!expected||createHash('sha256').update(archive).digest('hex')!==expected)throw new Error('LiveKit checksum mismatch');
+const dir=resolve('.data/bin');await mkdir(dir,{recursive:true});const file=resolve(dir,name);await writeFile(file,archive);
+execFileSync('tar',['-xzf',file,'-C',dir,'livekit-server']);await chmod(resolve(dir,'livekit-server'),0o755);await rm(file);
+console.log(`Installed verified LiveKit ${version} at ${dir}/livekit-server`);

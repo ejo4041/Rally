@@ -1,0 +1,11 @@
+import {spawn} from 'node:child_process';
+import {existsSync} from 'node:fs';
+import {resolve} from 'node:path';
+import {loadEnvironment} from '../src/config.ts';
+loadEnvironment();
+const binary=process.env.LIVEKIT_BINARY||resolve('.data/bin/livekit-server');
+if(!existsSync(binary))throw new Error('Run npm run setup:media first, or set LIVEKIT_BINARY.');
+const media=spawn(binary,['--dev','--bind','127.0.0.1','--port',process.env.LIVEKIT_PORT||'7880'],{stdio:'inherit'});
+const api=spawn(process.execPath,['src/server.ts'],{stdio:'inherit',env:{...process.env,LIVEKIT_URL:process.env.LIVEKIT_URL||`ws://127.0.0.1:${process.env.LIVEKIT_PORT||7880}`}});
+let stopped=false;const stop=()=>{if(stopped)return;stopped=true;media.kill('SIGTERM');api.kill('SIGTERM');};
+for(const child of [media,api]){child.on('error',stop);child.on('exit',stop);}process.on('SIGINT',stop);process.on('SIGTERM',stop);

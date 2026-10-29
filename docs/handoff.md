@@ -1,4 +1,4 @@
-Backend worktree checkpoint: [implementation status](backend-implementation-status.md) and [agreed plan](backend-plan.md). Backend code remains pending.
+Backend MVP implemented: [status and validation](backend-implementation-status.md), [frontend API contract](backend-api.md), [AI processing diagram](ai-processing.md), [setup](../apps/rally-api/README.md). Real two-way browser audio and Muse end-to-end smoke passed. Frontend wiring and deployment remain separate; existing private Site is unchanged.
 
 # Rally handoff — current checkpoint
 
