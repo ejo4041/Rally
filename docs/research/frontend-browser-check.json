@@ -1,0 +1,26 @@
+{
+  "testedAt": "2026-10-29T18:02:10.758Z",
+  "passed": true,
+  "backend": "real Express/cookie auth/SQLite and LiveKit",
+  "modelProviders": "injected deterministic fixtures",
+  "syntheticAudio": true,
+  "paidModelCalls": 0,
+  "checks": [
+    "signup/login/logout, cookie expiry and private UI cleanup",
+    "agenda edit and failed preparation retry",
+    "actual browser audio reaches backend",
+    "reload reconnects without duplicating ASR sessions",
+    "canonical final revisions and manual session-scoped speaker name",
+    "approved intervention only, pause/dismiss and mute",
+    "end stops tracks and drains final turn into complete report",
+    "visible report failure and explicit retry",
+    "leave and reopen a processing report",
+    "nullable scores and assessed coverage",
+    "evidence links, host correction, reload and export",
+    "cross-owner denial and deletion",
+    "mobile layout",
+    "tab rejection/cancellation stops tracks before ASR",
+    "capture gap stops audio; explicit restart uses new speaker session",
+    "stopping tab sharing ends capture and finalizes the meeting"
+  ]
+}

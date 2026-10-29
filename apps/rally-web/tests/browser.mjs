@@ -1,0 +1,598 @@
+// Real HTTP/session/database/LiveKit integration; synthetic audio and injected
+// model providers only. Does not load shared credentials or contact Meta.
+import { chromium } from "playwright";
+import assert from "node:assert/strict";
+import { spawn } from "node:child_process";
+import { mkdir, writeFile } from "node:fs/promises";
+import { fileURLToPath } from "node:url";
+import { resolve } from "node:path";
+import { once } from "node:events";
+const root = fileURLToPath(new URL("../", import.meta.url));
+const port = Number(process.env.RALLY_WEB_PORT || 5174),
+  apiPort = Number(process.env.RALLY_TEST_API_PORT || 3101),
+  mediaPort = Number(process.env.RALLY_TEST_MEDIA_PORT || 17890),
+  base = `http://127.0.0.1:${port}`;
+const children = [];
+let browser;
+const errors = [];
+function run(command, args, env = {}) {
+  const child = spawn(command, args, {
+    cwd: root,
+    env: { ...process.env, ...env },
+    stdio: ["ignore", "pipe", "pipe"],
+  });
+  children.push(child);
+  let tail = "";
+  for (const stream of [child.stdout, child.stderr])
+    stream.on("data", (b) => (tail = (tail + b).slice(-3000)));
+  child.once("error", () => {});
+  child.diagnostics = () => tail;
+  return child;
+}
+async function ready(url, child) {
+  for (let n = 0; n < 80; n++) {
+    if (child.exitCode !== null) throw new Error(child.diagnostics());
+    try {
+      const response = await fetch(url);
+      if (response.ok) return;
+    } catch {}
+    await new Promise((r) => setTimeout(r, 100));
+  }
+  throw new Error("Fixture did not start: " + child.diagnostics());
+}
+try {
+  const media = run(
+    process.env.RALLY_TEST_LIVEKIT_BINARY ||
+      resolve(root, "../rally-api/.data/bin/livekit-server"),
+    [
+      "--dev",
+      "--bind",
+      "127.0.0.1",
+      "--port",
+      String(mediaPort),
+      "--node-ip",
+      "127.0.0.1",
+    ],
+  );
+  await ready(`http://127.0.0.1:${mediaPort}`, media);
+  const server = run(process.execPath, ["tests/fixture.ts"], {
+    RALLY_WEB_PORT: String(port),
+    RALLY_TEST_API_PORT: String(apiPort),
+    RALLY_TEST_MEDIA_PORT: String(mediaPort),
+  });
+  await ready(`http://127.0.0.1:${apiPort}/api/health`, server);
+  const frontend = run(process.execPath, ["scripts/dev.mjs"], {
+    RALLY_WEB_PORT: String(port),
+    RALLY_API_URL: `http://127.0.0.1:${apiPort}`,
+  });
+  await ready(base, frontend);
+  browser = await chromium.launch({
+    headless: true,
+    args: ["--no-sandbox", "--autoplay-policy=no-user-gesture-required"],
+  });
+  const context = await browser.newContext({
+      viewport: { width: 1440, height: 1100 },
+    }),
+    page = await context.newPage();
+  page.setDefaultTimeout(15000);
+  page.on("pageerror", (e) => errors.push(e.message));
+  await page.addInitScript(() => {
+    window.fixtureAudio = {
+      streams: [],
+      contexts: [],
+      displayMode: "no-audio",
+    };
+    Object.defineProperty(navigator.mediaDevices, "getUserMedia", {
+      value: async () => {
+        const c = new AudioContext();
+        fixtureAudio.contexts.push(c);
+        const o = c.createOscillator(),
+          g = c.createGain(),
+          d = c.createMediaStreamDestination();
+        o.frequency.value = 440;
+        g.gain.value = 0.2;
+        o.connect(g).connect(d);
+        o.start();
+        await c.resume();
+        fixtureAudio.streams.push(d.stream);
+        return d.stream;
+      },
+    });
+    Object.defineProperty(navigator.mediaDevices, "getDisplayMedia", {
+      value: async () => {
+        const canvas = document.createElement("canvas");
+        canvas.width = 16;
+        canvas.height = 16;
+        canvas.getContext("2d").fillRect(0, 0, 16, 16);
+        const stream = canvas.captureStream(2),
+          video = stream.getVideoTracks()[0];
+        Object.defineProperty(video, "getSettings", {
+          value: () => ({
+            displaySurface:
+              fixtureAudio.displayMode === "screen" ? "monitor" : "browser",
+          }),
+        });
+        if (fixtureAudio.displayMode !== "no-audio")
+          for (const track of (
+            await navigator.mediaDevices.getUserMedia({ audio: true })
+          ).getAudioTracks())
+            stream.addTrack(track);
+        fixtureAudio.streams.push(stream);
+        if (fixtureAudio.displayMode === "pending")
+          return new Promise(
+            (resolve) => (fixtureAudio.resolveDisplay = () => resolve(stream)),
+          );
+        return stream;
+      },
+    });
+  });
+  await page.goto(base);
+  await page.locator("#auth-toggle").click();
+  await page.locator("#username").fill("frontend_test");
+  await page.locator("#password").fill("fixture-password-only");
+  await page.locator("#auth-submit").click();
+  await page.locator("#workspace").waitFor({ state: "visible" });
+  await page.locator("#logout").click();
+  await page.locator("#auth-screen").waitFor({ state: "visible" });
+  await page.locator("#username").fill("frontend_test");
+  await page.locator("#password").fill("fixture-password-only");
+  await page.locator("#auth-submit").click();
+  await page.locator("#workspace").waitFor({ state: "visible" });
+  assert.equal(await page.locator("#logout").isEnabled(), true);
+  await page.locator("#new-meeting").click();
+  await page.locator("[name=title]").fill("Release readiness");
+  await page
+    .locator("[name=agenda]")
+    .fill("Decide release readiness and rollback ownership.");
+  await page.locator("[name=durationMinutes]").fill("10");
+  await page.locator("[name=participants]").fill("Priya, Alex");
+  await page.locator("#create-submit").click();
+  await page.waitForFunction(
+    () =>
+      document.querySelector("#meeting-title").textContent ===
+      "Release readiness",
+  );
+  const id = await page.evaluate(() => location.hash.split("/")[1]);
+  assert.equal(await page.locator("#phase").textContent(), "Ready");
+  assert.equal(await page.locator("#start").isDisabled(), true);
+  await page.locator("#edit-plan").click();
+  await page
+    .locator("#plan-objective")
+    .fill("Choose release scope and confirm rollback ownership");
+  await page.locator("#plan-form [type=submit]").click();
+  await page.locator("#plan-dialog").waitFor({ state: "hidden" });
+  assert.match(
+    await page.locator("#plan").textContent(),
+    /Choose release scope/,
+  );
+  await page.locator("#consent").check();
+  await page.locator("#start").click();
+  await page.waitForFunction(() =>
+    document.querySelector("#capture-label").textContent.includes("Listening"),
+  );
+  await page.waitForFunction(
+    () => document.querySelectorAll(".turn").length === 1,
+  );
+  const transport = await (
+    await page.request.get(base + "/api/test/state")
+  ).json();
+  assert.ok(transport.totalBytes >= 16000);
+  assert.ok(transport.energy > 1000000);
+  assert.match(await page.locator("#transcript").textContent(), /Speaker A/);
+  assert.equal(await page.locator("#partial").textContent(), "");
+  await page.locator("#speakers [data-speaker]").first().click();
+  await page.locator("#speaker-name").fill("Priya");
+  await page.locator("#speaker-form [type=submit]").click();
+  await page.locator("#speaker-dialog").waitFor({ state: "hidden" });
+  assert.match(
+    await page.locator(".turn-meta strong").first().textContent(),
+    /Priya/,
+  );
+  const snapshot = await (
+    await page.request.get(base + `/api/meetings/${id}`)
+  ).json();
+  const sessionId = snapshot.turns[0].sessionId;
+  await page.request.post(base + "/api/test/revision", {
+    data: { meetingId: id, sessionId },
+  });
+  await page.waitForFunction(() =>
+    document
+      .querySelector("#transcript")
+      .textContent.includes("Friday at noon"),
+  );
+  assert.equal(await page.locator(".turn").count(), 1);
+  const emit = async (type, data) =>
+    page.request.post(base + "/api/test/event", {
+      data: { meetingId: id, type, data },
+    });
+  await emit("assessment", {
+    intervention: { text: "Unapproved recommendation" },
+  });
+  await page.waitForTimeout(200);
+  assert.ok(
+    !(await page.locator("#guidance").textContent()).includes("Unapproved"),
+  );
+  await page.locator("#request-guidance").click();
+  await page.waitForFunction(
+    () =>
+      document.querySelector("#guidance").textContent ===
+      "Who owns the accessibility check?",
+  );
+  await page.locator("#dismiss").click();
+  await page.waitForFunction(
+    () => !document.querySelector("#guidance").textContent.includes("Who owns"),
+  );
+  await page.locator("#pause").click();
+  await page.waitForFunction(
+    () => document.querySelector("#pause").textContent === "Resume Rally",
+  );
+  await emit("intervention", {
+    id: "late",
+    text: "A late prompt while paused",
+    kind: "redirect",
+  });
+  await page.waitForTimeout(100);
+  assert.ok(
+    !(await page.locator("#guidance").textContent()).includes("late prompt"),
+  );
+  await page.locator("#pause").click();
+  await page.locator("#mute").click();
+  assert.equal(
+    await page.evaluate(
+      () => fixtureAudio.streams[0].getAudioTracks()[0].enabled,
+    ),
+    false,
+  );
+  await page.locator("#mute").click();
+  assert.equal(
+    await page.evaluate(
+      () => fixtureAudio.streams[0].getAudioTracks()[0].enabled,
+    ),
+    true,
+  );
+  await mkdir(resolve(root, "test-results"), { recursive: true });
+  await page.screenshot({
+    path: resolve(root, "test-results/live-desktop.png"),
+    fullPage: true,
+  });
+  // Reload releases local tracks; attaching to the existing room must not start another ASR session.
+  const sessionsBeforeReload = (
+    await (await page.request.get(base + "/api/test/state")).json()
+  ).speechSessions;
+  await page.reload();
+  await page.waitForFunction(
+    () => document.querySelector("#phase").textContent === "Live",
+  );
+  assert.equal(await page.locator("#start").textContent(), "Reconnect audio");
+  await page.locator("#consent").check();
+  await page.locator("#start").click();
+  await page.waitForFunction(() =>
+    document.querySelector("#capture-label").textContent.includes("Listening"),
+  );
+  assert.equal(
+    (await (await page.request.get(base + "/api/test/state")).json())
+      .speechSessions,
+    sessionsBeforeReload,
+  );
+  await page.locator("#end").click();
+  await page.waitForFunction(
+    () => document.querySelector("#report-status").textContent === "Processing",
+  );
+  await page.locator("#back").click();
+  await page.waitForFunction(() => !document.querySelector("#home").hidden);
+  await page.locator(`#history [data-meeting="${id}"]`).click();
+  await page.waitForFunction(
+    () => document.querySelector("#report-status").textContent === "Failed",
+  );
+  assert.equal(
+    await page.evaluate(() =>
+      fixtureAudio.streams.every((s) =>
+        s.getTracks().every((t) => t.readyState === "ended"),
+      ),
+    ),
+    true,
+  );
+  assert.equal(
+    (await (await page.request.get(base + "/api/test/state")).json())
+      .reportAttempts,
+    1,
+  );
+  await page.locator("#retry-report").click();
+  await page.waitForFunction(
+    () => document.querySelector("#report-status").textContent === "Ready",
+  );
+  assert.match(
+    await page.locator("#report-body").textContent(),
+    /4\/5 categories assessed/,
+  );
+  assert.match(await page.locator("#report-body").textContent(), /Unknown/);
+  assert.match(
+    await page.locator("#report-body").textContent(),
+    /Reported agreement/,
+  );
+  assert.ok(
+    !(await page.locator("#report-body").textContent()).includes(
+      "Confirmed by host",
+    ),
+  );
+  await page.locator("#report-body [data-evidence]").first().click();
+  assert.match(await page.locator(".turn.highlight").textContent(), /Friday/);
+  assert.equal(
+    (await (await page.request.get(base + "/api/test/state")).json())
+      .reportedTurns,
+    2,
+    "final drain must reach full report",
+  );
+  await page
+    .locator("#correction-note")
+    .fill("Host verified the final deadline is Friday at noon.");
+  await page.locator("#correction-form [type=submit]").click();
+  await page.waitForFunction(() =>
+    document
+      .querySelector("#report-body")
+      .textContent.includes("Host correction:"),
+  );
+  await page.reload();
+  await page.waitForFunction(
+    () => document.querySelector("#report-status").textContent === "Ready",
+  );
+  assert.equal(await page.locator(".turn").count(), 2);
+  assert.match(await page.locator("#transcript").textContent(), /Priya/);
+  await page.setViewportSize({ width: 390, height: 844 });
+  assert.equal(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth > innerWidth,
+    ),
+    false,
+  );
+  await page.screenshot({
+    path: resolve(root, "test-results/report-mobile.png"),
+    fullPage: true,
+  });
+  await page.setViewportSize({ width: 1440, height: 1100 });
+  await page.screenshot({
+    path: resolve(root, "test-results/report-desktop.png"),
+    fullPage: true,
+  });
+  const exported = await (
+    await page.request.get(base + `/api/meetings/${id}/export`)
+  ).json();
+  assert.equal(exported.turns.length, 2);
+  assert.ok(exported.report.summary.includes("Host correction:"));
+  // A different real cookie session cannot retrieve this meeting.
+  const other = await browser.newContext();
+  const otherPage = await other.newPage();
+  await otherPage.goto(base);
+  await otherPage.locator("#auth-toggle").click();
+  await otherPage.locator("#username").fill("other_host");
+  await otherPage.locator("#password").fill("other-fixture-password");
+  await otherPage.locator("#auth-submit").click();
+  await otherPage.locator("#workspace").waitFor({ state: "visible" });
+  assert.equal(
+    (await otherPage.request.get(base + `/api/meetings/${id}`)).status(),
+    404,
+  );
+  await other.close();
+  await page.locator("#delete").click();
+  await page.locator("#confirm-delete").click();
+  await page.waitForFunction(() => !document.querySelector("#home").hidden);
+  assert.equal(
+    (await page.request.get(base + `/api/meetings/${id}`)).status(),
+    404,
+  );
+  // Preparation failure is a persisted draft; the UI never fabricates a plan.
+  await page.request.post(base + "/api/test/prepare-failure", {
+    data: { enabled: true },
+  });
+  await page.locator("#new-meeting").click();
+  await page.locator("[name=title]").fill("Failed preparation");
+  await page.locator("[name=agenda]").fill("Preparation failure check");
+  await page.locator("#create-submit").click();
+  await page.waitForFunction(
+    () =>
+      document.querySelector("#meeting-title").textContent ===
+      "Failed preparation",
+  );
+  assert.equal(await page.locator("#phase").textContent(), "Draft");
+  assert.equal(await page.locator("#start").isDisabled(), true);
+  assert.match(
+    await page.locator("#record-error").textContent(),
+    /Fixture agenda failure/,
+  );
+  await page.request.post(base + "/api/test/prepare-failure", {
+    data: { enabled: false },
+  });
+  await page.locator("#prepare").click();
+  await page.waitForFunction(
+    () => document.querySelector("#phase").textContent === "Ready",
+  );
+  // Invalid/canceled browser selections must not open a new ASR session.
+  await page.locator("#audio-mode").selectOption("tab");
+  await page.locator("#consent").check();
+  const beforeTab = (
+    await (await page.request.get(base + "/api/test/state")).json()
+  ).speechSessions;
+  await page.locator("#start").click();
+  await page.waitForFunction(() =>
+    document.querySelector("#toast").textContent.includes("No tab audio"),
+  );
+  assert.equal(
+    (await (await page.request.get(base + "/api/test/state")).json())
+      .speechSessions,
+    beforeTab,
+  );
+  await page.evaluate(() => (fixtureAudio.displayMode = "screen"));
+  await page.locator("#start").click();
+  await page.waitForFunction(() =>
+    document
+      .querySelector("#toast")
+      .textContent.includes("rather than a screen"),
+  );
+  assert.equal(
+    (await (await page.request.get(base + "/api/test/state")).json())
+      .speechSessions,
+    beforeTab,
+  );
+  await page.evaluate(() => (fixtureAudio.displayMode = "pending"));
+  await page.locator("#start").click();
+  await page.waitForFunction(
+    () => typeof fixtureAudio.resolveDisplay === "function",
+  );
+  await page.locator("#cancel-start").click();
+  await page.evaluate(() => fixtureAudio.resolveDisplay());
+  await page.waitForFunction(
+    () => document.querySelector("#cancel-start").hidden,
+  );
+  assert.equal(
+    await page.evaluate(() =>
+      fixtureAudio.streams.every((s) =>
+        s.getTracks().every((t) => t.readyState === "ended"),
+      ),
+    ),
+    true,
+  );
+  assert.equal(
+    (await (await page.request.get(base + "/api/test/state")).json())
+      .speechSessions,
+    beforeTab,
+  );
+  await page.evaluate(() => {
+    fixtureAudio.displayMode = "tab";
+    fixtureAudio.streams = [];
+  });
+  await page.locator("#start").click();
+  await page.waitForFunction(() =>
+    document.querySelector("#capture-label").textContent.includes("Listening"),
+  );
+  await page.waitForFunction(
+    () => document.querySelectorAll(".turn").length === 1,
+  );
+  const tabId = await page.evaluate(() => location.hash.split("/")[1]);
+  await page.request.post(base + "/api/test/event", {
+    data: {
+      meetingId: tabId,
+      type: "capture.gap",
+      data: { reason: "Fixture upstream transcription failure" },
+    },
+  });
+  await page.waitForFunction(
+    () => !document.querySelector("#start-panel").hidden,
+  );
+  assert.equal(await page.locator("#restart-session").isChecked(), true);
+  assert.equal(await page.locator("#consent").isChecked(), false);
+  assert.equal(
+    await page.evaluate(() =>
+      fixtureAudio.streams.every((s) =>
+        s.getTracks().every((t) => t.readyState === "ended"),
+      ),
+    ),
+    true,
+  );
+  const beforeRestart = (
+    await (await page.request.get(base + "/api/test/state")).json()
+  ).speechSessions;
+  await page.locator("#consent").check();
+  await page.locator("#start").click();
+  await page.waitForFunction(() =>
+    document.querySelector("#capture-label").textContent.includes("Listening"),
+  );
+  await page.waitForFunction(
+    () => document.querySelectorAll(".turn").length === 3,
+  );
+  assert.equal(
+    (await (await page.request.get(base + "/api/test/state")).json())
+      .speechSessions,
+    beforeRestart + 1,
+  );
+  assert.match(await page.locator("#speakers").textContent(), /Speaker A/);
+  assert.equal(
+    await page.locator("#speakers [data-speaker]").count(),
+    2,
+    "A labels remain distinct across ASR sessions",
+  );
+  await page.evaluate(() => {
+    for (const stream of fixtureAudio.streams) {
+      const video = stream.getVideoTracks()[0];
+      if (video && video.readyState === "live") {
+        video.dispatchEvent(new Event("ended"));
+        break;
+      }
+    }
+  });
+  await page.waitForFunction(
+    () => document.querySelector("#phase").textContent === "Ended",
+  );
+  assert.equal(
+    await page.evaluate(() =>
+      fixtureAudio.streams.every((s) =>
+        s.getTracks().every((t) => t.readyState === "ended"),
+      ),
+    ),
+    true,
+  );
+  await context.clearCookies();
+  await page.evaluate(() => document.querySelector("#usage-button").click());
+  await page.locator("#auth-screen").waitFor({ state: "visible" });
+  await page.waitForFunction(
+    () => document.querySelector("#meeting-title").textContent === "",
+  );
+  assert.equal(await page.locator("#transcript").textContent(), "");
+  assert.equal(await page.locator("#report-body").textContent(), "");
+  await page.locator("#username").fill("frontend_test");
+  await page.locator("#password").fill("fixture-password-only");
+  await page.locator("#auth-submit").click();
+  await page.locator("#workspace").waitFor({ state: "visible" });
+  await page.waitForFunction(
+    () => document.querySelector("#phase").textContent === "Ended",
+  );
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.locator("#mobile-logout").click();
+  await page.locator("#auth-screen").waitFor({ state: "visible" });
+  await page.reload();
+  await page.locator("#auth-screen").waitFor({ state: "visible" });
+  assert.equal((await page.request.get(base + "/api/auth/me")).status(), 401);
+  assert.deepEqual(errors, []);
+  const report = {
+    testedAt: new Date().toISOString(),
+    passed: true,
+    backend: "real Express/cookie auth/SQLite and LiveKit",
+    modelProviders: "injected deterministic fixtures",
+    syntheticAudio: true,
+    paidModelCalls: 0,
+    checks: [
+      "signup/login/logout, cookie expiry and private UI cleanup",
+      "agenda edit and failed preparation retry",
+      "actual browser audio reaches backend",
+      "reload reconnects without duplicating ASR sessions",
+      "canonical final revisions and manual session-scoped speaker name",
+      "approved intervention only, pause/dismiss and mute",
+      "end stops tracks and drains final turn into complete report",
+      "visible report failure and explicit retry",
+      "leave and reopen a processing report",
+      "nullable scores and assessed coverage",
+      "evidence links, host correction, reload and export",
+      "cross-owner denial and deletion",
+      "mobile layout",
+      "tab rejection/cancellation stops tracks before ASR",
+      "capture gap stops audio; explicit restart uses new speaker session",
+      "stopping tab sharing ends capture and finalizes the meeting",
+    ],
+  };
+  await writeFile(
+    resolve(root, "test-results/browser-check.json"),
+    JSON.stringify(report, null, 2) + "\n",
+  );
+  console.log(JSON.stringify(report, null, 2));
+} finally {
+  await browser?.close();
+  for (const child of children.reverse()) {
+    if (child.exitCode === null) {
+      child.kill("SIGTERM");
+      await Promise.race([
+        once(child, "exit"),
+        new Promise((r) => setTimeout(r, 4000)),
+      ]);
+      if (child.exitCode === null) child.kill("SIGKILL");
+    }
+  }
+}

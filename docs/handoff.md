@@ -1,5 +1,7 @@
 # Rally handoff — current checkpoint
 
+**Frontend integration:** [Node API frontend, validation and current limits](frontend-integration.md). Local workflow is implemented in `apps/rally-web`; use `node scripts/dev-rally.mjs` after setup. Remote deployment and human rehearsal remain pending; the restricted Site is unchanged.
+
 **Backend delivered on main:** [team handoff](backend-team-handoff.md). Implementation and Astra fixes: `50bfab1`. Setup, frontend contract, actual AI examples, validation evidence and next integration tasks are linked there.
 
 Backend Astra follow-up: [expanded validation and fixes](backend-astra-review.md), [actual agenda/report/score examples](backend-ai-examples.md). Three Astra reviewers; 25 tests, real browser reconnects, real reasoning and audio pipeline exercised. Read documented ASR/scoring limits. Tracked spend $0.47338150, conditional remainder $149.52661850, unknown 0; no deployment or frontend change.

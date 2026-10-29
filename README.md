@@ -1,5 +1,7 @@
 # Rally
 
+**Node API frontend:** [Local setup and integration](apps/rally-web/README.md) · [Validation and next steps](docs/frontend-integration.md). This is a separate integrated frontend for the new backend; the private Site below remains its earlier release.
+
 A meeting moderator that keeps a decision meeting moving and turns discussion into explicitly confirmed, transcript-evidenced follow-ups.
 
 **Current release: version 12.** Browser meeting input, a free local audio check and presenter view are available.

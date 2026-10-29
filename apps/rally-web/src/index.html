@@ -1,0 +1,420 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#f5f6f2" />
+    <title>Rally · Make meetings matter</title>
+    <link rel="stylesheet" href="/style.css" />
+    <script type="module" src="/app.js"></script>
+  </head>
+  <body>
+    <section id="auth-screen" class="auth-screen">
+      <a class="brand" href="/">▥ rally<span>.</span></a>
+      <div class="auth-card">
+        <div class="eyebrow">MAKE THE TIME TOGETHER COUNT</div>
+        <h1>A little focus.<br />A lot more progress.</h1>
+        <p class="muted">
+          An agenda before the conversation.<br />Clarity when it’s time to move
+          forward.
+        </p>
+        <form id="auth-form">
+          <h2 id="auth-title">Welcome back</h2>
+          <label
+            >Username<input
+              id="username"
+              autocomplete="username"
+              minlength="3"
+              maxlength="40"
+              pattern="[a-z0-9_-]{3,40}"
+              required /></label
+          ><label
+            >Password<input
+              id="password"
+              type="password"
+              autocomplete="current-password"
+              minlength="10"
+              maxlength="200"
+              required
+          /></label>
+          <p id="auth-error" class="error" role="alert"></p>
+          <button id="auth-submit" class="primary" type="submit">Sign in</button
+          ><button id="auth-toggle" class="text" type="button">
+            Create an account
+          </button>
+        </form>
+      </div>
+      <p class="small muted">
+        Your meetings and reports belong to your account.
+      </p>
+    </section>
+    <div id="workspace" hidden>
+      <aside class="sidebar">
+        <a class="brand" href="#" id="brand">▥ rally<span>.</span></a>
+        <div class="eyebrow">YOUR WORKSPACE</div>
+        <button id="home-nav" class="nav active">▤ Meetings</button
+        ><button id="new-nav" class="nav">＋ New meeting</button>
+        <div class="eyebrow recent-label">RECENT</div>
+        <div id="recent" class="recent"></div>
+        <div class="sidebar-foot">
+          <span id="current-user"></span
+          ><button id="logout" class="text">Sign out</button>
+        </div>
+      </aside>
+      <div class="shell">
+        <header class="topbar">
+          <button class="text" id="mobile-home">Meetings</button
+          ><span id="breadcrumb">Workspace / Meetings</span
+          ><button id="mobile-logout" class="text mobile-only">Sign out</button>
+          <button id="usage-button" class="pill">Usage</button>
+        </header>
+        <main>
+          <section id="home">
+            <div class="hero">
+              <div>
+                <div class="eyebrow">
+                  A LITTLE STRUCTURE. A LOT MORE PROGRESS.
+                </div>
+                <h1>Make the time<br /><span>together count.</span></h1>
+                <p class="muted">
+                  Your agenda, a clearer conversation,<br />and next steps
+                  grounded in what was said.
+                </p>
+                <button id="new-meeting" class="primary">
+                  ＋ Start a new meeting
+                </button>
+              </div>
+              <div class="hero-art" aria-hidden="true">
+                <div class="orbit"></div>
+                <div class="disc">▥</div>
+                <span class="float one">✓ Decision made</span
+                ><span class="float two">✓ Next step owned</span>
+              </div>
+            </div>
+            <div class="benefits">
+              <div>
+                <b>01</b><strong>Start with intention</strong>
+                <p>An editable plan before the first word.</p>
+              </div>
+              <div>
+                <b>02</b><strong>Stay in the conversation</strong>
+                <p>Useful guidance, with you in control.</p>
+              </div>
+              <div>
+                <b>03</b><strong>Leave with clarity</strong>
+                <p>Due-outs and a path back to the source.</p>
+              </div>
+            </div>
+            <div class="section-title">
+              <div>
+                <h2>Your meetings</h2>
+                <p class="muted small">
+                  The conversation ends. The clarity stays.
+                </p>
+              </div>
+              <button id="refresh-history" class="text">Refresh</button>
+            </div>
+            <div id="history" class="card"></div>
+          </section>
+          <section id="meeting" hidden>
+            <button id="back" class="text">← All meetings</button>
+            <div class="section-title meeting-heading">
+              <div>
+                <h1 id="meeting-title"></h1>
+                <p id="meeting-meta" class="muted small"></p>
+              </div>
+              <div class="actions">
+                <span id="phase" class="pill"></span
+                ><button id="export" class="secondary">Export</button
+                ><button id="delete" class="danger">Delete</button>
+              </div>
+            </div>
+            <p id="record-error" class="banner error" role="alert" hidden></p>
+            <p id="connection-status" class="banner" role="status" hidden></p>
+            <section class="card setup" id="start-panel">
+              <h2 id="start-title">Review the plan. Then bring everyone in.</h2>
+              <p class="small muted">
+                Agenda preparation, transcription, guidance and final analysis
+                use Muse and incur usage. Audio is processed transiently;
+                transcripts and reports are saved. Names and speaker labels can
+                need correction.
+              </p>
+              <div class="input-options">
+                <label
+                  >Audio source<select id="audio-mode">
+                    <option value="microphone">Room microphone</option>
+                    <option value="tab">Meeting browser tab</option>
+                  </select></label
+                ><label id="include-mic-label" class="check" hidden
+                  ><input id="include-mic" type="checkbox" checked />Include my
+                  microphone</label
+                >
+              </div>
+              <p id="tab-help" class="small muted" hidden>
+                Join your call in another tab, then choose it and enable Share
+                tab audio. Use headphones. Rally’s guidance stays in this
+                workspace.
+              </p>
+              <label class="check"
+                ><input id="consent" type="checkbox" />Everyone has been
+                informed and consents to sending audio to Meta and saving the
+                transcript.</label
+              ><label id="restart-session-label" class="check" hidden
+                ><input id="restart-session" type="checkbox" />Start a new
+                transcription session (speaker labels restart; uses Muse)</label
+              >
+              <div class="actions">
+                <button id="start" class="primary">Start meeting</button
+                ><button id="cancel-start" class="secondary" hidden>
+                  Cancel audio selection</button
+                ><button id="prepare" class="secondary">
+                  Retry agenda preparation
+                </button>
+              </div>
+            </section>
+            <div class="meeting-grid">
+              <div class="main-column">
+                <section class="rally-card" aria-live="polite">
+                  <div class="eyebrow">
+                    ▥ RALLY <span id="health" class="pill"></span>
+                  </div>
+                  <p id="guidance">
+                    You lead the meeting. Rally helps it move forward.
+                  </p>
+                  <p id="progress" class="small muted"></p>
+                  <p id="assessment-note" class="small muted"></p>
+                </section>
+                <section class="card">
+                  <div class="card-heading">
+                    <h2>Conversation</h2>
+                    <span class="small muted" id="transcript-label"
+                      >Finalized speech</span
+                    >
+                  </div>
+                  <div id="transcript" class="transcript"></div>
+                  <p id="partial" class="partial"></p>
+                </section>
+                <section id="report-panel" class="card report-panel">
+                  <div class="card-heading">
+                    <h2>Meeting report</h2>
+                    <span id="report-status" class="pill"></span>
+                  </div>
+                  <div id="report-body"></div>
+                  <div class="report-actions">
+                    <button id="retry-report" class="secondary" hidden>
+                      Retry analysis · uses Muse
+                    </button>
+                    <form id="correction-form" hidden>
+                      <label
+                        >Host correction note<textarea
+                          id="correction-note"
+                          maxlength="4000"
+                          rows="2"
+                          required
+                        ></textarea></label
+                      ><button class="secondary" type="submit">
+                        Add correction
+                      </button>
+                    </form>
+                  </div>
+                </section>
+              </div>
+              <aside class="meeting-aside">
+                <section class="card">
+                  <div class="card-heading">
+                    <h2>The plan</h2>
+                    <button id="edit-plan" class="text">Edit</button>
+                  </div>
+                  <div id="plan"></div>
+                  <details id="plan-history">
+                    <summary>Original plan & changes</summary>
+                    <div id="revisions"></div>
+                  </details>
+                </section>
+                <section class="card participants">
+                  <div class="card-heading"><h2>In the conversation</h2></div>
+                  <div id="speakers"></div>
+                  <p class="small muted">
+                    Labels describe voices within a transcription session. They
+                    do not verify a person’s identity or import names from your
+                    call.
+                  </p>
+                </section>
+              </aside>
+            </div>
+            <section id="controls" class="control-bar" hidden>
+              <span id="capture-label">Audio off</span>
+              <div class="actions">
+                <button id="mute" class="secondary">Mute audio</button
+                ><button id="pause" class="secondary">Pause Rally</button
+                ><button id="request-guidance" class="secondary">
+                  Ask Rally</button
+                ><button id="dismiss" class="secondary">Dismiss prompt</button
+                ><button id="end" class="danger">End meeting</button>
+              </div>
+            </section>
+          </section>
+        </main>
+        <footer>Thoughtful meetings, powered by Meta Muse.</footer>
+      </div>
+    </div>
+    <dialog id="create-dialog">
+      <form id="create-form">
+        <div class="section-title">
+          <h2>What are we here to do?</h2>
+          <button
+            type="button"
+            data-close="create-dialog"
+            class="text"
+            aria-label="Close"
+          >
+            ×
+          </button>
+        </div>
+        <label
+          >Meeting title<input
+            name="title"
+            maxlength="160"
+            required
+            placeholder="Friday release check-in" /></label
+        ><label
+          >Agenda or objective<textarea
+            name="agenda"
+            rows="5"
+            maxlength="20000"
+            required
+            placeholder="Decide release scope, review blockers and agree next steps."
+          ></textarea>
+        </label>
+        <div class="form-row">
+          <label
+            >Duration in minutes<input
+              name="durationMinutes"
+              type="number"
+              min="1"
+              max="240"
+              value="30"
+              required /></label
+          ><label
+            >Participants<input
+              name="participants"
+              maxlength="5000"
+              placeholder="Alex, Priya, Sam"
+          /></label>
+        </div>
+        <p class="small muted">
+          Muse prepares an editable plan. This is a paid model action; audio
+          starts separately after consent.
+        </p>
+        <p id="create-error" class="error" role="alert"></p>
+        <button id="create-submit" class="primary" type="submit">
+          Prepare with Muse
+        </button>
+      </form>
+    </dialog>
+    <dialog id="plan-dialog">
+      <form id="plan-form">
+        <div class="section-title">
+          <h2>Your meeting plan</h2>
+          <button
+            type="button"
+            class="text"
+            data-close="plan-dialog"
+            aria-label="Close"
+          >
+            ×
+          </button>
+        </div>
+        <label
+          >Objective<textarea
+            id="plan-objective"
+            maxlength="2000"
+            required
+            rows="2"
+          ></textarea>
+        </label>
+        <div id="plan-editor"></div>
+        <button type="button" id="add-topic" class="text">＋ Add topic</button>
+        <div class="form-row">
+          <label
+            >Total minutes<input
+              id="plan-duration"
+              type="number"
+              min="1"
+              max="480"
+              step="0.5"
+              required /></label
+          ><label
+            >Wrap-up minutes<input
+              id="plan-wrap"
+              type="number"
+              min="0"
+              max="30"
+              step="0.5"
+              required
+          /></label>
+        </div>
+        <p class="small muted">
+          Active topic budgets plus wrap-up must equal the total. Parked topics
+          do not consume time.
+        </p>
+        <p id="plan-error" class="error" role="alert"></p>
+        <button class="primary" type="submit">Save plan</button>
+      </form>
+    </dialog>
+    <dialog id="speaker-dialog">
+      <form id="speaker-form">
+        <div class="section-title">
+          <h2>Name this speaker</h2>
+          <button
+            type="button"
+            class="text"
+            data-close="speaker-dialog"
+            aria-label="Close"
+          >
+            ×
+          </button>
+        </div>
+        <p id="speaker-label" class="small muted"></p>
+        <label
+          >Verified name<input
+            id="speaker-name"
+            maxlength="100"
+            list="participant-names"
+            required /><datalist id="participant-names"></datalist
+        ></label>
+        <p class="small muted">
+          Only assign a name you can verify. Several people sharing one room
+          connection may have different voice labels.
+        </p>
+        <p id="speaker-error" class="error" role="alert"></p>
+        <button class="primary" type="submit">Save name</button>
+      </form>
+    </dialog>
+    <dialog id="delete-dialog">
+      <h2>Delete this meeting?</h2>
+      <p>
+        The transcript and report will be removed. Usage accounting remains.
+      </p>
+      <div class="actions">
+        <button data-close="delete-dialog" class="secondary">
+          Keep meeting</button
+        ><button id="confirm-delete" class="danger">Delete meeting</button>
+      </div>
+    </dialog>
+    <dialog id="usage-dialog">
+      <div class="section-title">
+        <h2>Recorded API usage</h2>
+        <button data-close="usage-dialog" class="text" aria-label="Close">
+          ×
+        </button>
+      </div>
+      <div id="usage"></div>
+      <p class="small muted">
+        Recorded estimates and reservations, not a verified Billing or credit
+        balance.
+      </p>
+    </dialog>
+    <div id="toast" role="status" class="toast" hidden></div>
+  </body>
+</html>

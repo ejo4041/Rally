@@ -26,6 +26,10 @@ From `apps/rally-api/`, follow the README to run `npm ci`, `npm run setup:media`
 - Real Muse calls exercised agenda generation, audio transcription, scheduled guidance and complete final reports.
 - Three Astra agents reviewed correctness, media behavior and AI quality. Concrete lifecycle/reconnect defects were reproduced, fixed and retested.
 
+## Frontend integration follow-up
+
+The [Node API frontend](frontend-integration.md) is now implemented separately in `apps/rally-web`, with authenticated HTTP/LiveKit wiring and isolated browser integration evidence. The existing Sites app remains unchanged. Deployment, generated speech and a consenting human meeting rehearsal remain open. The earlier next-work paragraph below records the backend handoff state.
+
 ## Next integration work
 
 Frontend wiring, deployment and a consenting human meeting rehearsal remain separate tasks. The existing private Site was not changed or redeployed by this backend work. Spoken agenda entry, generated moderator speech and Teams/video integration remain agreed follow-ups.
