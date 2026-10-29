@@ -5,7 +5,7 @@ Rally separates meeting transport, model adapters and application policy. The Te
 ```mermaid
 flowchart LR
   T[Teams incoming audio] --> A[Transcription adapter]
-  B[Browser microphone] --> A
+  B[Browser microphone or selected meeting tab] --> A
   A --> F[Canonical finalized turns]
   F --> M[Meeting state and evidence]
   M --> R[Reasoning adapter]
@@ -16,6 +16,8 @@ flowchart LR
   Q --> V[Local Meta MMS adapter]
   V --> O[Browser audio player]
 ```
+
+Browser capture uses `RallyAudioInput.acquire({mode, includeMicrophone, signal, onEnded})`, returning audio streams and a `close()` handle. Meeting-tab selection is explicit and browser-controlled; platform presets are metadata. The separate `check()` operation meters sources locally and never opens the ASR adapter. Cancellation closes current tracks and any late permission grant.
 
 The diagram describes the implemented boundaries. Connecting generated speech to the Teams virtual microphone remains a separate integration step; browser playback does not establish Teams spoken moderation.
 

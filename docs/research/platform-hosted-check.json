@@ -1,7 +1,7 @@
 {
-  "testedAt": "2026-10-29T11:39:37.310Z",
+  "testedAt": "2026-10-29T11:51:24.777Z",
   "passed": true,
-  "version": 10,
+  "version": 11,
   "checks": [
     "hosted tab-audio UI, module and permission policy",
     "WhatsApp capture settings persist without starting paid processing",

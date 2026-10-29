@@ -3,6 +3,21 @@ const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const icon=id=>`<svg aria-hidden="true"><use href="#i-${id}"/></svg>`;
 const state={m:null,ws:null,ready:false,config:null,history:[],voices:[],stream:null,captureInput:null,captureGeneration:0,context:null,worklet:null,muted:false,speech:null,speechGeneration:0,blockedEpoch:0,speechTimer:null,toastTimer:null,confirmId:null,turnCount:-1,connecting:false,reviewBusy:false};
 const emptyTranscript=$('transcript').innerHTML;
+let audioCheck;
+function stopAudioCheck(closeDialog=true){audioCheck?.abort();audioCheck=null;if(closeDialog)$('audio-check-dialog').close();}
+async function checkAudio(){
+  if(!$('consent').checked){notice('Confirm participant consent before checking meeting audio.',true);$('consent').focus();return;}
+  if(active()||state.connecting||state.m?.kind!=='live'||state.m.phase!=='draft')return;
+  stopAudioCheck();statusBanner('');const controller=new AbortController();audioCheck=controller;
+  const tab=state.m.capture?.mode==='meeting-tab';$('check-tab-row').hidden=!tab;$('check-mic-row').hidden=tab&&!state.m.capture.includeMicrophone;
+  for(const name of['tab','mic']){$(`check-${name}-level`).value=0;$(`check-${name}-result`).textContent='No signal detected yet.';}
+  $('audio-check-status').textContent='Choose the audio source when prompted.';$('stop-audio-check').disabled=false;$('audio-check-dialog').showModal();
+  try{
+    await RallyAudioInput.check({mode:state.m.capture?.mode||'microphone',includeMicrophone:!!state.m.capture?.includeMicrophone,signal:controller.signal,onLevel:({source,rms,peak})=>{if(audioCheck!==controller)return;const name=source==='tab'?'tab':'mic';$(`check-${name}-level`).value=Math.min(1,rms*5);$(`check-${name}-result`).textContent=peak>=.005?'Audio signal detected.':'No signal detected yet. Ask the relevant speaker to speak.';$('audio-check-status').textContent='Checking locally for up to 15 seconds. Nothing is being sent.';},onFinished:reason=>{if(audioCheck!==controller)return;$('stop-audio-check').disabled=true;$('audio-check-status').textContent=reason==='complete'?'Check complete. Audio capture is off.':reason==='sharing-ended'?'Sharing ended. Audio capture is off.':'Audio check stopped. Capture is off.';}});
+  }catch(error){if(audioCheck===controller){$('audio-check-status').textContent=error.name==='NotAllowedError'?'Audio sharing was not granted.':error.message;$('stop-audio-check').disabled=true;}}
+}
+$('audio-check-dialog').addEventListener('close',()=>stopAudioCheck(false));
+$('check-audio').onclick=checkAudio;$('stop-audio-check').onclick=()=>audioCheck?.abort();
 const mms=RallyMMS.create({request:async(path,body)=>{const response=await fetch(`/api/speech/${path}`,body?{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}:{});const value=await response.json();if(!response.ok)throw new Error(value.error||'Voice unavailable.');return value;}});
 const active=()=>state.m&&['live','wrapping'].includes(state.m.phase)&&state.ws?.readyState===1;
 function notice(message,error=false){$('toast').textContent=message;$('toast').className=`toast${error?' error':''}`;$('toast').hidden=false;clearTimeout(state.toastTimer);state.toastTimer=setTimeout(()=>$('toast').hidden=true,6500);}
@@ -20,12 +35,12 @@ async function refreshHistory(){
   $('history').innerHTML=state.history.length?state.history.map(m=>`<button class="history-row" data-meeting="${esc(m.id)}"><span class="history-icon">${icon(m.kind==='walkthrough'?'play':'file')}</span><span class="history-info"><strong>${esc(m.title)}</strong><small>${esc(dateLabel(m.createdAt))}${m.kind==='walkthrough'?' · Scripted walkthrough':m.kind==='teams'?' · Teams transcript':''}</small></span><span class="badge ${esc(m.phase)}">${esc(m.phase==='draft'?'Ready':m.phase)}</span>${icon('arrow')}</button>`).join(''):`<div class="empty-history"><span class="history-icon">${icon('file')}</span><div><h3>A fresh start for better meetings.</h3><p>Create your first meeting, or explore the clearly labeled walkthrough.<br>No microphone or API calls start until you choose to begin.</p></div></div>`;
   $('recent-nav').innerHTML=state.history.length?state.history.slice(0,7).map(m=>`<button class="${m.id===state.m?.id?'current':''}" data-meeting="${esc(m.id)}">${esc(m.title)}</button>`).join(''):'<p class="muted small">Your next good meeting starts here.</p>';
 }
-function showHome(){$('home').hidden=false;$('meeting').hidden=true;$('breadcrumb').textContent='Meetings';closeNav();refreshHistory().catch(e=>notice(e.message,true));}
+function showHome(){stopAudioCheck();$('home').hidden=false;$('meeting').hidden=true;$('breadcrumb').textContent='Meetings';closeNav();refreshHistory().catch(e=>notice(e.message,true));}
 async function openMeeting(id){
   if(state.connecting){notice('Finish selecting audio before opening another meeting.');location.hash=`meeting/${state.m.id}`;return;}
   if(active()&&id!==state.m.id){notice('End the current meeting before opening another.');location.hash=`meeting/${state.m.id}`;return;}
   if(active()&&id===state.m.id)return;
-  stopAudio();cancelSpeech(false);state.ready=false;state.ending=false;state.blockedEpoch=0;state.turnCount=-1;$('partial').textContent='';state.m=(await api(`/api/meetings/${id}`)).meeting;
+  stopAudioCheck();stopAudio();cancelSpeech(false);state.ready=false;state.ending=false;state.blockedEpoch=0;state.turnCount=-1;$('partial').textContent='';state.m=(await api(`/api/meetings/${id}`)).meeting;
   $('home').hidden=true;$('meeting').hidden=false;$('breadcrumb').textContent='Meeting room';closeNav();$('consent').checked=false;$('review-consent').checked=false;$('voice-enabled').checked=state.m.capture?.mode!=='meeting-tab';statusBanner('');render();
   if(['live','wrapping'].includes(state.m.phase))statusBanner('This saved session is no longer connected here. Capture is off. Use End meeting to finalize it after its session lease expires.');
   refreshHistory().catch(()=>{});
@@ -34,6 +49,7 @@ function render(){
   const m=state.m;if(!m)return;
   $('meeting-title').textContent=m.title;$('phase-badge').textContent=m.paused&&m.phase!=='ended'?'Rally paused':({draft:'Ready',live:'In progress',wrapping:'Wrapping up',ended:'Saved'})[m.phase];$('phase-badge').className=`badge ${m.phase}`;
   $('share-followup').disabled=m.phase!=='ended'||!m.outcomes.some(o=>o.status==='confirmed');
+  $('check-audio').hidden=m.kind!=='live';$('check-audio').disabled=state.connecting;
   const tabCapture=m.capture?.mode==='meeting-tab';$('capture-source-note').hidden=!tabCapture;$('capture-source-note').textContent=tabCapture?`Capture ${({'whatsapp':'WhatsApp Web','zoom':'Zoom Web','meet':'Google Meet','jitsi':'Jitsi Meet','other':'meeting tab'})[m.capture.platform]||'meeting tab'} audio${m.capture.includeMicrophone?' and your microphone':''}. Choose the meeting tab and enable Share tab audio when prompted. Rally prompts are host-side. Stop sharing or End to finish.`:'';
   $('meeting-meta').textContent=m.kind==='teams'?`Teams transcript · ${m.review?'reviewed after the meeting':'no moderation performed'} · timing includes lobby`:`${m.participants.length} participants · ${m.minutes} minutes · wrap-up ${m.wrapMinutes} minutes before the end`;
   $('walkthrough-banner').hidden=m.kind!=='walkthrough';$('demo-clock-banner').hidden=!m.demoClockUsed;$('start-panel').hidden=m.phase!=='draft';$('start-meeting').textContent=state.connecting?'Connecting…':m.kind==='walkthrough'?'Start walkthrough':'Start meeting';$('start-meeting').disabled=state.connecting;
@@ -130,6 +146,7 @@ function speak(u,test=false){
 async function startMeeting(){
   if(!$('consent').checked){notice('Confirm that everyone consents before starting.',true);$('consent').focus();return;}
   if(state.connecting||active())return;
+  stopAudioCheck();
   const isLive=state.m.kind==='live';if(isLive&&!state.config.liveAvailable){statusBanner('Live calls are disabled for this environment. Use the walkthrough, or enable the server’s configured Muse integration.');return;}
   state.connecting=true;render();statusBanner('');
   try{

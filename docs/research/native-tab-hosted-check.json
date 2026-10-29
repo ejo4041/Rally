@@ -1,0 +1,16 @@
+{
+  "testedAt": "2026-10-29T11:53:39.542Z",
+  "passed": true,
+  "target": "restricted deployed Site",
+  "scope": "local audio check only; hosted PCM worklet/model session not exercised",
+  "localAudioCheck": {
+    "nativeTabSignalDetected": true,
+    "stopClosedTracks": true,
+    "modelConnections": 0
+  },
+  "surface": "browser",
+  "audioTracks": 1,
+  "realPlatformCall": false,
+  "paidModelCalls": 0,
+  "usageUnchanged": true
+}

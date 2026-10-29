@@ -13,8 +13,8 @@ async function call(path,body,method){const response=await fetch(origin+path,{he
 let id,liveId,socket;const checks=[];
 try{
  const before=(await(await call('/api/usage')).json()).events.map(e=>e.id).sort();
- const home=await call('/');assert.match(home.headers.get('permissions-policy'),/display-capture=\(self\)/);assert.match(await home.text(),/Meeting browser tab/);
- assert.match(await(await call('/audio-input.js')).text(),/getDisplayMedia/);checks.push('hosted tab-audio UI, module and permission policy');
+ const home=await call('/');assert.match(home.headers.get('permissions-policy'),/display-capture=\(self\)/);const html=await home.text();assert.match(html,/Meeting browser tab/);assert.match(html,/Check audio · free/);
+ const captureModule=await(await call('/audio-input.js')).text();assert.match(captureModule,/getDisplayMedia/);assert.match(captureModule,/async check/);checks.push('hosted tab-audio UI, module and permission policy');
  const draft=(await(await call('/api/meetings',{title:'Hosted platform metadata check',agenda:['Check setup'],minutes:3,wrapMinutes:.5,captureMode:'meeting-tab',platform:'whatsapp',includeMicrophone:true})).json()).meeting;liveId=draft.id;
  assert.deepEqual(draft.capture,{mode:'meeting-tab',platform:'whatsapp',includeMicrophone:true});checks.push('WhatsApp capture settings persist without starting paid processing');
  const meeting=(await(await call('/api/meetings',{kind:'walkthrough',title:'Hosted sharing walkthrough',minutes:2,wrapMinutes:.5})).json()).meeting;id=meeting.id;
@@ -29,5 +29,5 @@ try{
  const followup=await(await call(`/api/meetings/${id}/followup`,{})).json();assert.equal(followup.confirmedCount,1);assert.match(followup.text,/Priya/);assert.ok(!followup.text.includes('Release only after'));assert.ok(!followup.text.includes('mountain bikes'));checks.push('hosted confirmed follow-up excludes proposed outcomes and transcript');
  await call(`/api/meetings/${id}`,undefined,'DELETE');id=null;await call(`/api/meetings/${liveId}`,undefined,'DELETE');liveId=null;
  const after=(await(await call('/api/usage')).json()).events.map(e=>e.id).sort();assert.deepEqual(after,before);checks.push('test records removed and Muse usage unchanged');
- const report={testedAt:new Date().toISOString(),passed:true,version:10,checks,paidModelCalls:0,realPlatformCall:false,externalMessagesSent:0};await writeFile(new URL('../docs/research/platform-hosted-check.json',import.meta.url),JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report,null,2));
+ const report={testedAt:new Date().toISOString(),passed:true,version:11,checks,paidModelCalls:0,realPlatformCall:false,externalMessagesSent:0};await writeFile(new URL('../docs/research/platform-hosted-check.json',import.meta.url),JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report,null,2));
 }finally{socket?.close();for(const key of[id,liveId])if(key)await call(`/api/meetings/${key}`,undefined,'DELETE');}

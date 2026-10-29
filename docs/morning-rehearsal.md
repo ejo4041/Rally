@@ -1,6 +1,6 @@
 # Morning rehearsal — October 29
 
-The deployed app is version 10. [Browser meeting inputs and WhatsApp follow-up](browser-meetings.md) are available; actual call/device validation is pending. Self-hosted Meta MMS browser output is available; the latest server runner also includes the morning cancellation/race fixes. The Teams participant receives audio and streams it to Muse Voice Transcribe. The new local virtual-microphone output controller has passed an isolated audio test; live Teams speech moderation is still being connected.
+The deployed app is version 11. [Browser meeting inputs and WhatsApp follow-up](browser-meetings.md) are available; actual call/device validation is pending. Use Check audio first to verify local input levels without a model charge. Self-hosted Meta MMS browser output is available; the latest server runner also includes the morning cancellation/race fixes. The Teams participant receives audio and streams it to Muse Voice Transcribe. The new local virtual-microphone output controller has passed an isolated audio test; live Teams speech moderation is still being connected.
 
 ## Short first check
 

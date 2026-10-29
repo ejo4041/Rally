@@ -9,3 +9,5 @@
 .saved-review{padding:24px;margin-bottom:24px}.saved-review fieldset{border:0;padding:0;margin:0;min-width:0}.saved-review label:not(.consent){display:block;margin:14px 0}.saved-review input:not([type=checkbox]),.saved-review textarea{display:block;box-sizing:border-box;width:100%;min-width:0;border:1px solid var(--line,#dce2de);border-radius:8px;padding:10px;font:inherit;background:white}.saved-review .consent{margin:18px 0}.saved-review p{overflow-wrap:anywhere}
 
 #tab-audio-setup{padding:10px 16px;background:#f5f7ed;border-radius:8px}#capture-source-note{line-height:1.8}.meeting-heading-actions{flex-wrap:wrap}#followup-text{min-height:200px}@media(max-width:650px){.meeting-heading-actions{justify-content:flex-end}.meeting-heading-actions .button{white-space:normal;max-width:130px}}
+
+.start-actions{display:flex;flex-direction:column;gap:12px;align-items:center}#audio-check-dialog meter{display:block;width:100%;height:20px}#audio-check-dialog label{display:block;margin-top:20px}#audio-check-dialog p{line-height:1.6}

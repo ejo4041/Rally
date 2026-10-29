@@ -1,12 +1,12 @@
 # Rally demonstration script — draft
 
-Draft prepared October 29, 2026. No recording or final submission has been made. This version reserves the final 30 seconds for the longer-term product vision. [Demonstration requirements](demo-walkthrough.md) and [current release](releases/2026-10-29-v9.md) determine what can be recorded as working behavior.
+Draft prepared October 29, 2026. No recording or final submission has been made. This version reserves the final 30 seconds for the longer-term product vision. [Demonstration requirements](demo-walkthrough.md) and [current release](releases/2026-10-29-v11.md) determine what can be recorded as working behavior.
 
 ## Narrative
 
 Show a complete useful interaction, then explain the broader problem it suggests. The near-term product helps a small software team make and confirm a decision inside its existing meeting. The longer-term concept is a meeting workspace with preparation, facilitation and follow-through built into the experience. That platform is a future direction, not an implemented release or an expansion of this week's committed scope.
 
-Use the Meta services that support each job. Current execution evidence covers Muse transcription, Spark reasoning and hosted MMS browser playback. Other ideas, including Wonder review, multimodal agenda capture and WhatsApp follow-through, remain separate proposed integrations. Present those roles as possibilities rather than promising every Meta service in one product.
+Use the Meta services that support each job. Current execution evidence covers Muse transcription, Spark reasoning and hosted MMS browser playback. WhatsApp follow-through is implemented as a host-reviewed draft: the host chooses the recipient and sends manually. Other ideas, including Wonder review and multimodal agenda capture, remain proposed integrations. Present those roles as possibilities rather than promising every Meta service in one product.
 
 ## Three-minute version
 
@@ -39,3 +39,11 @@ For a separate six-to-eight-minute talk, allow time for discussion:
 5. Remaining time: feedback about the workflow and the audience's own meeting problems.
 
 The longer talk is distinct from the three-minute submission video. Keep future features visibly labeled and separate product feedback from claims about adoption, revenue or measured time savings, which have not been established.
+
+## Browser meeting variant
+
+After a consenting device rehearsal, use WhatsApp Web as the Meta meeting surface, or Zoom Web/Meet/Jitsi when the team already uses it. Before recording, run the free local audio check and verify remote and host audio separately. The platform label is a preset for browser capture; Rally does not join these calls as a bot. Muse produces the transcript from captured audio, with no native platform transcript feed.
+
+For the three-minute edit, replace part of the 2:05–2:30 export narration with: “Here are the outcomes I confirmed, without the rest of the transcript. I can review them and open a WhatsApp draft.” Show the actual preview. Sending a message is optional and requires an intended recipient; previewing it is enough to demonstrate the feature. If using the scripted walkthrough, retain its visible label and describe these as example outcomes.
+
+In the closing future-platform pitch, the present-day bridge is concrete: work inside existing calls, help the host reach a decision, and carry confirmed next steps into their existing chat. Building the meeting platform itself remains the future direction.

@@ -25,3 +25,13 @@ test('a tab that ends during the microphone prompt is refused and every track is
  const v=track('video',{displaySurface:'browser'}),a=track('audio'),mic=track('audio');
  await assert.rejects(RallyAudioInput.acquire({mode:'meeting-tab',devices:{async getDisplayMedia(){return stream([v,a]);},async getUserMedia(){v.readyState='ended';return stream([mic]);}}}),/ended during setup/);assert.equal(a.stops,1);assert.equal(mic.stops,1);
 });
+test('canceling a pending tab picker releases its late grant without requesting microphone access',async()=>{
+ const controller=new AbortController(),v=track('video',{displaySurface:'browser'}),a=track('audio');let resolveDisplay,micRequests=0;
+ const request=RallyAudioInput.acquire({mode:'meeting-tab',signal:controller.signal,devices:{getDisplayMedia(){return new Promise(resolve=>resolveDisplay=resolve);},getUserMedia(){micRequests++;}}});
+ controller.abort();resolveDisplay(stream([v,a]));await assert.rejects(request,{name:'AbortError'});assert.equal(micRequests,0);assert.equal(v.stops,1);assert.equal(a.stops,1);
+});
+test('canceling a pending microphone prompt immediately stops tab capture and closes the late microphone',async()=>{
+ const controller=new AbortController(),v=track('video',{displaySurface:'browser'}),a=track('audio'),mic=track('audio');let resolveMic;
+ const request=RallyAudioInput.acquire({mode:'meeting-tab',signal:controller.signal,devices:{async getDisplayMedia(){return stream([v,a]);},getUserMedia(){return new Promise(resolve=>resolveMic=resolve);}}});
+ await Promise.resolve();controller.abort();assert.equal(a.readyState,'ended');resolveMic(stream([mic]));await assert.rejects(request,{name:'AbortError'});assert.equal(a.stops,1);assert.equal(mic.stops,1);
+});

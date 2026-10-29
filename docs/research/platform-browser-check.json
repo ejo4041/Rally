@@ -1,11 +1,18 @@
 {
-  "testedAt": "2026-10-29T11:32:44.704Z",
+  "testedAt": "2026-10-29T11:46:34.019Z",
   "passed": true,
   "source": "synthetic tab and microphone tracks through real AudioContext/PCM worklet",
+  "localAudioCheck": {
+    "bothSourcesDetected": true,
+    "manualStopClosedTracks": true,
+    "pendingPickerCancelClosedTracks": true,
+    "automatic15SecondStopClosedTracks": true,
+    "modelConnections": 0
+  },
   "frames": 8,
   "frameBytes": 2560,
-  "remoteAmplitude": 0.09512074935282967,
-  "microphoneAmplitude": 0.09317889242331662,
+  "remoteAmplitude": 0.07114126965475702,
+  "microphoneAmplitude": 0.09319419584113833,
   "options": {
     "video": {
       "displaySurface": "browser"

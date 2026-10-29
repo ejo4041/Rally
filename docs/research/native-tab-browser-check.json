@@ -1,0 +1,17 @@
+{
+  "testedAt": "2026-10-29T11:47:39.295Z",
+  "passed": true,
+  "localAudioCheck": {
+    "nativeTabSignalDetected": true,
+    "stopClosedTracks": true,
+    "modelConnections": 0
+  },
+  "surface": "browser",
+  "audioTracks": 1,
+  "frames": 13,
+  "signalAmplitude": 0.2141982374298987,
+  "capture": "real Chromium getDisplayMedia selecting a synthetic local audio tab",
+  "provider": "mocked WebSocket; no model request",
+  "realPlatformCall": false,
+  "paidModelCalls": 0
+}
