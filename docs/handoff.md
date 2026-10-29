@@ -1,3 +1,5 @@
+Backend worktree checkpoint: [implementation status](backend-implementation-status.md) and [agreed plan](backend-plan.md). Backend code remains pending.
+
 # Rally handoff — current checkpoint
 
 **Morning update:** [Speech reliability fixes and isolated audio measurement](morning-reliability-2026-10-29.md) · [rehearsal checklist](morning-rehearsal.md). The app is version 11; live browser-call and Teams speech validation are pending.
