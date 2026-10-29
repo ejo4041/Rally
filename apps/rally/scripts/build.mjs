@@ -3,7 +3,7 @@ import { mkdir, readFile, copyFile } from 'node:fs/promises';
 await mkdir('dist/server', {recursive:true});
 await mkdir('dist/.openai', {recursive:true});
 const define = {};
-for (const [name, path] of Object.entries({__HTML__:'web/index.html',__CSS__:'web/style.css',__CLIENT__:'web/client.js',__WORKLET__:'web/pcm-worklet.js',__TEAMS_CLIENT__:'web/teams-client.js',__MMS_CLIENT__:'web/mms-speech.js'})) {
+for (const [name, path] of Object.entries({__HTML__:'web/index.html',__CSS__:'web/style.css',__CLIENT__:'web/client.js',__WORKLET__:'web/pcm-worklet.js',__TEAMS_CLIENT__:'web/teams-client.js',__MMS_CLIENT__:'web/mms-speech.js',__AUDIO_INPUT__:'web/audio-input.js'})) {
   define[name] = JSON.stringify(await readFile(path,'utf8'));
 }
 await build({entryPoints:['src/worker.js'],outfile:'dist/server/index.js',bundle:true,format:'esm',platform:'browser',target:'es2022',define,legalComments:'none'});

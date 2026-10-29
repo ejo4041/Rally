@@ -1,7 +1,7 @@
 const $=id=>document.getElementById(id);
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const icon=id=>`<svg aria-hidden="true"><use href="#i-${id}"/></svg>`;
-const state={m:null,ws:null,ready:false,config:null,history:[],voices:[],stream:null,context:null,worklet:null,muted:false,speech:null,speechGeneration:0,blockedEpoch:0,speechTimer:null,toastTimer:null,confirmId:null,turnCount:-1,connecting:false,reviewBusy:false};
+const state={m:null,ws:null,ready:false,config:null,history:[],voices:[],stream:null,captureInput:null,captureGeneration:0,context:null,worklet:null,muted:false,speech:null,speechGeneration:0,blockedEpoch:0,speechTimer:null,toastTimer:null,confirmId:null,turnCount:-1,connecting:false,reviewBusy:false};
 const emptyTranscript=$('transcript').innerHTML;
 const mms=RallyMMS.create({request:async(path,body)=>{const response=await fetch(`/api/speech/${path}`,body?{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}:{});const value=await response.json();if(!response.ok)throw new Error(value.error||'Voice unavailable.');return value;}});
 const active=()=>state.m&&['live','wrapping'].includes(state.m.phase)&&state.ws?.readyState===1;
@@ -14,7 +14,7 @@ function dateLabel(v){return new Date(v).toLocaleDateString(undefined,{month:'sh
 function elapsed(){const m=state.m;if(!m?.startedAt)return 0;return Math.max(0,(m.endedAt?Date.parse(m.endedAt):Date.now())-Date.parse(m.startedAt)+(m.demoOffsetMs||0));}
 function speakerName(t){return state.m.speakerNames[`turn:${t.id}`]||state.m.speakerNames[t.speaker]||t.speaker||'Unknown speaker';}
 function closeNav(){$('sidebar').classList.remove('open');$('nav-scrim').hidden=true;}
-function navigateHome(){if(active()){notice('End the current meeting before leaving. Your microphone is still active.');return;}location.hash='';showHome();}
+function navigateHome(){if(state.connecting){notice('Finish selecting audio before leaving.');return;}if(active()){notice('End the current meeting before leaving. Your microphone is still active.');return;}location.hash='';showHome();}
 async function refreshHistory(){
   const data=await api('/api/meetings');state.history=data.meetings;$('nav-count').textContent=state.history.length;$('history-total').textContent=`${state.history.length} SAVED ${state.history.length===1?'MEETING':'MEETINGS'}`;
   $('history').innerHTML=state.history.length?state.history.map(m=>`<button class="history-row" data-meeting="${esc(m.id)}"><span class="history-icon">${icon(m.kind==='walkthrough'?'play':'file')}</span><span class="history-info"><strong>${esc(m.title)}</strong><small>${esc(dateLabel(m.createdAt))}${m.kind==='walkthrough'?' · Scripted walkthrough':m.kind==='teams'?' · Teams transcript':''}</small></span><span class="badge ${esc(m.phase)}">${esc(m.phase==='draft'?'Ready':m.phase)}</span>${icon('arrow')}</button>`).join(''):`<div class="empty-history"><span class="history-icon">${icon('file')}</span><div><h3>A fresh start for better meetings.</h3><p>Create your first meeting, or explore the clearly labeled walkthrough.<br>No microphone or API calls start until you choose to begin.</p></div></div>`;
@@ -22,16 +22,19 @@ async function refreshHistory(){
 }
 function showHome(){$('home').hidden=false;$('meeting').hidden=true;$('breadcrumb').textContent='Meetings';closeNav();refreshHistory().catch(e=>notice(e.message,true));}
 async function openMeeting(id){
+  if(state.connecting){notice('Finish selecting audio before opening another meeting.');location.hash=`meeting/${state.m.id}`;return;}
   if(active()&&id!==state.m.id){notice('End the current meeting before opening another.');location.hash=`meeting/${state.m.id}`;return;}
   if(active()&&id===state.m.id)return;
   stopAudio();cancelSpeech(false);state.ready=false;state.ending=false;state.blockedEpoch=0;state.turnCount=-1;$('partial').textContent='';state.m=(await api(`/api/meetings/${id}`)).meeting;
-  $('home').hidden=true;$('meeting').hidden=false;$('breadcrumb').textContent='Meeting room';closeNav();$('consent').checked=false;$('review-consent').checked=false;statusBanner('');render();
+  $('home').hidden=true;$('meeting').hidden=false;$('breadcrumb').textContent='Meeting room';closeNav();$('consent').checked=false;$('review-consent').checked=false;$('voice-enabled').checked=state.m.capture?.mode!=='meeting-tab';statusBanner('');render();
   if(['live','wrapping'].includes(state.m.phase))statusBanner('This saved session is no longer connected here. Capture is off. Use End meeting to finalize it after its session lease expires.');
   refreshHistory().catch(()=>{});
 }
 function render(){
   const m=state.m;if(!m)return;
   $('meeting-title').textContent=m.title;$('phase-badge').textContent=m.paused&&m.phase!=='ended'?'Rally paused':({draft:'Ready',live:'In progress',wrapping:'Wrapping up',ended:'Saved'})[m.phase];$('phase-badge').className=`badge ${m.phase}`;
+  $('share-followup').disabled=m.phase!=='ended'||!m.outcomes.some(o=>o.status==='confirmed');
+  const tabCapture=m.capture?.mode==='meeting-tab';$('capture-source-note').hidden=!tabCapture;$('capture-source-note').textContent=tabCapture?`Capture ${({'whatsapp':'WhatsApp Web','zoom':'Zoom Web','meet':'Google Meet','jitsi':'Jitsi Meet','other':'meeting tab'})[m.capture.platform]||'meeting tab'} audio${m.capture.includeMicrophone?' and your microphone':''}. Choose the meeting tab and enable Share tab audio when prompted. Rally prompts are host-side. Stop sharing or End to finish.`:'';
   $('meeting-meta').textContent=m.kind==='teams'?`Teams transcript · ${m.review?'reviewed after the meeting':'no moderation performed'} · timing includes lobby`:`${m.participants.length} participants · ${m.minutes} minutes · wrap-up ${m.wrapMinutes} minutes before the end`;
   $('walkthrough-banner').hidden=m.kind!=='walkthrough';$('demo-clock-banner').hidden=!m.demoClockUsed;$('start-panel').hidden=m.phase!=='draft';$('start-meeting').textContent=state.connecting?'Connecting…':m.kind==='walkthrough'?'Start walkthrough':'Start meeting';$('start-meeting').disabled=state.connecting;
   const running=['live','wrapping'].includes(m.phase);$('control-bar').hidden=!running;$('walkthrough-controls').hidden=m.kind!=='walkthrough'||!running;$('next-turn').disabled=!state.ready||m.turns.length>=6;
@@ -39,9 +42,9 @@ function render(){
   $('pause-moderator').innerHTML=icon(m.paused?'play':'pause')+`<span>${m.paused?'Resume Rally':'Pause Rally'}</span>`;
   $('record-indicator').className=`record-indicator${running&&state.ready?' active':''}`;$('record-label').textContent=m.kind==='walkthrough'?'Example transcript':state.ready&&running?'Transcribing live':m.phase==='ended'?'Transcript saved':'Not recording';
   $('rally-state').textContent=m.paused?'Moderator paused':m.phase==='ended'?'Meeting complete':state.speech?'Speaking':running?'Listening for the next useful step':'Ready to help';
-  $('capture-label').textContent=m.kind==='walkthrough'?'Scripted example':state.speech?'Rally is speaking':state.muted?'Microphone muted':state.ready?'Listening':'Capture off';
-  $('capture-detail').textContent=m.kind==='teams'?'Saved transcript; no audio capture or moderation is running.':state.speech?'Mic audio shielded · Stop speaking to return the floor':m.paused?'Transcription continues; automatic prompts are paused.':'Your microphone stays in your control.';
-  $('mute-mic').disabled=m.kind==='walkthrough'||!state.ready;$('mute-mic').textContent=state.muted?'Unmute mic':'Mute mic';$('ask-rally').disabled=!state.ready||m.paused;$('pause-moderator').disabled=!state.ready;
+  $('capture-label').textContent=m.kind==='walkthrough'?'Scripted example':state.speech?.preparing?'Preparing speech':state.speech?'Rally is speaking':state.muted?'Audio capture muted':state.ready?'Listening':'Capture off';
+  $('capture-detail').textContent=m.kind==='teams'?'Saved transcript; no audio capture or moderation is running.':state.speech?.preparing?'Listening while speech is prepared':state.speech?'Audio shielded · Stop speaking to return the floor':m.paused?'Transcription continues; automatic prompts are paused.':'Your microphone stays in your control.';
+  $('mute-mic').disabled=m.kind==='walkthrough'||!state.ready;$('mute-mic').textContent=tabCapture?(state.muted?'Unmute audio':'Mute audio'):(state.muted?'Unmute mic':'Mute mic');$('ask-rally').disabled=!state.ready||m.paused;$('pause-moderator').disabled=!state.ready;
   $('agenda-list').innerHTML=m.agenda.map((v,i)=>`<button class="agenda-item${i===m.currentAgenda?' active':''}" data-agenda="${i}" ${!state.ready?'disabled':''}><span>${String(i+1).padStart(2,'0')}</span><span>${esc(v)}</span></button>`).join('');
   $('desired-outcome').textContent=m.desiredOutcome||'Clear decisions and an owner for every next step.';$('participant-count').textContent=m.participants.length;
   $('participants').innerHTML=m.participants.length?m.participants.map(v=>`<div class="participant"><span>${esc(v.slice(0,2).toUpperCase())}</span><span>${esc(v)}</span></div>`).join(''):'<p class="small muted">No participant names entered.</p>';
@@ -64,21 +67,24 @@ function renderOutcomes(){
 function tick(){if(!state.m)return;const seconds=Math.floor(elapsed()/1000),remain=Math.max(0,state.m.minutes*60-seconds);$('meeting-timer').textContent=`${String(Math.floor(seconds/60)).padStart(2,'0')}:${String(seconds%60).padStart(2,'0')}`;$('remaining').textContent=state.m.phase==='draft'?`${state.m.minutes} minutes reserved`:state.m.phase==='ended'?'Meeting record saved':`${Math.floor(remain/60)}m ${remain%60}s remaining${state.m.demoClockUsed?' · demo clock':''}`;$('time-progress').style.width=`${Math.min(100,seconds/(state.m.minutes*60)*100)}%`;}
 function gate(){state.worklet?.port.postMessage({type:'gate',value:state.muted||!!(state.speech&&!state.speech.preparing)});}
 async function startAudio(){
-  if(!navigator.mediaDevices?.getUserMedia)throw new Error('Microphone capture needs HTTPS (or localhost) and a supported browser.');
+  const generation=++state.captureGeneration;
   try{
-    state.stream=await navigator.mediaDevices.getUserMedia({audio:{channelCount:1,echoCancellation:true,noiseSuppression:true,autoGainControl:true}});
+    const capture=await RallyAudioInput.acquire({mode:state.m.capture?.mode||'microphone',includeMicrophone:!!state.m.capture?.includeMicrophone,onEnded:()=>{if(generation!==state.captureGeneration)return;statusBanner('Audio sharing ended. Capture has stopped.');if(state.ws?.readyState===1)send({type:'end'});stopAudio();}});
+    if(generation!==state.captureGeneration){capture.close();throw new Error('Audio selection canceled.');}
+    state.captureInput=capture;state.stream=capture.streams[0];
     state.context=new AudioContext();await state.context.resume();await state.context.audioWorklet.addModule('/pcm-worklet.js');
+    if(generation!==state.captureGeneration)throw new Error('Audio selection canceled.');
     state.worklet=new AudioWorkletNode(state.context,'rally-pcm',{numberOfInputs:1,numberOfOutputs:1,outputChannelCount:[1]});
-    const source=state.context.createMediaStreamSource(state.stream),zero=state.context.createGain();zero.gain.value=0;source.connect(state.worklet);state.worklet.connect(zero);zero.connect(state.context.destination);
+    for(const stream of capture.streams){const source=state.context.createMediaStreamSource(new MediaStream(stream.getAudioTracks())),gain=state.context.createGain();gain.gain.value=1/capture.streams.length;source.connect(gain).connect(state.worklet);}
+    const zero=state.context.createGain();zero.gain.value=0;state.worklet.connect(zero).connect(state.context.destination);
     state.worklet.port.onmessage=e=>{
       if(e.data.type==='pcm'&&state.ready&&state.ws?.readyState===1){if(state.ws.bufferedAmount>16000){statusBanner('Audio connection fell behind. Capture stopped instead of replaying an old backlog.');send({type:'end'});stopAudio();return;}state.ws.send(e.data.buffer);}
       if(e.data.type==='level')$('input-level').style.height=`${Math.min(100,e.data.value*500)}%`;
-    };
-    for(const track of state.stream.getTracks())track.onended=()=>{if(state.ready){statusBanner('Microphone disconnected. Ending capture.');send({type:'end'});stopAudio();}};
-    gate();
-  }catch(e){stopAudio();throw new Error(e.name==='NotAllowedError'?'Microphone permission was not granted. No meeting audio was sent.':e.message||'Microphone could not start.');}
+    };gate();
+  }catch(e){if(generation===state.captureGeneration)stopAudio();throw new Error(e.name==='NotAllowedError'?'Audio sharing was not granted. No meeting audio was sent.':e.message||'Audio could not start.');}
 }
-function stopAudio(){state.ready=false;const stream=state.stream;state.stream=null;if(stream)for(const t of stream.getTracks()){t.onended=null;t.stop();}state.worklet?.disconnect();state.worklet=null;const context=state.context;state.context=null;if(context&&context.state!=='closed')context.close().catch(()=>{});$('input-level').style.height='0%';}
+function stopAudio(){state.captureGeneration++;state.ready=false;state.captureInput?.close();state.captureInput=null;state.stream=null;state.worklet?.disconnect();state.worklet=null;const context=state.context;state.context=null;if(context&&context.state!=='closed')context.close().catch(()=>{});$('input-level').style.height='0%';}
+
 function voices(){
   $('test-voice').disabled=!state.config?.deviceVoiceAvailable&&!state.config?.mmsAvailable;
   $('voice-select').hidden=!state.config?.deviceVoiceAvailable;
@@ -157,7 +163,7 @@ async function createWalkthrough(){
   if(active()){notice('End the current meeting before starting a walkthrough.');return;}
   try{const r=await api('/api/meetings',{method:'POST',body:JSON.stringify({kind:'walkthrough',minutes:30,wrapMinutes:5,desiredOutcome:'A clear release decision and an owner and deadline for rollback validation.'})});location.hash=`meeting/${r.meeting.id}`;}catch(e){notice(e.message,true);}
 }
-function newDialog(){if(active()){notice('End the current meeting before creating another.');return;}$('setup-error').textContent='';$('setup-dialog').showModal();$('setup-title').focus();}
+function newDialog(){if(state.connecting){notice('Finish selecting audio before creating another meeting.');return;}if(active()){notice('End the current meeting before creating another.');return;}$('setup-error').textContent='';$('setup-dialog').showModal();$('setup-title').focus();}
 async function confirmOpen(id){
   const o=state.m.outcomes.find(x=>x.id===id);if(!o)return;state.confirmId=id;$('confirm-text').textContent=o.text;$('action-fields').hidden=o.type!=='action';$('confirm-owner').innerHTML='<option value="">Choose a participant</option>'+state.m.participants.map(p=>`<option value="${esc(p)}">${esc(p)}</option>`).join('');$('confirm-owner').value=o.owner||'';$('confirm-date').value=o.dueDate||'';$('confirm-check').checked=false;$('confirm-error').textContent='';$('confirm-evidence').innerHTML=o.evidence.map(e=>`<p>${esc(e.quote)}</p>`).join('');$('confirm-dialog').showModal();
 }
@@ -212,6 +218,11 @@ $('review-teams').onclick=async()=>{
   finally{state.reviewBusy=false;if(state.m?.id===id){$('review-consent').checked=false;renderTeamsReview();}}
 };
 $('setup-form').addEventListener('submit',async e=>{e.preventDefault();const form=e.target;const button=form.querySelector('[type=submit]');button.disabled=true;try{const data=Object.fromEntries(new FormData(form));data.minutes=Number(data.minutes);data.wrapMinutes=Number(data.wrapMinutes);const r=await api('/api/meetings',{method:'POST',body:JSON.stringify(data)});$('setup-dialog').close();location.hash=`meeting/${r.meeting.id}`;}catch(err){$('setup-error').textContent=err.message;}finally{button.disabled=false;}});
+
+$('setup-capture').onchange=()=>{$('tab-audio-setup').hidden=$('setup-capture').value!=='meeting-tab';};
+$('share-followup').onclick=async()=>{try{const result=await api(`/api/meetings/${state.m.id}/followup`,{method:'POST',body:'{}'});$('followup-text').value=result.text;$('followup-count').textContent=`${result.confirmedCount} confirmed outcomes. ${result.excludedCount} unconfirmed or unavailable outcomes excluded.`;$('followup-dialog').showModal();}catch(error){notice(error.message,true);}};
+$('copy-followup').onclick=async()=>{try{await navigator.clipboard.writeText($('followup-text').value);notice('Follow-up copied.');}catch{notice('Select the draft and copy it manually.',true);}};
+$('whatsapp-followup').onclick=()=>{if(!$('followup-text').value)return;window.open('https://wa.me/?text='+encodeURIComponent($('followup-text').value),'_blank','noopener,noreferrer');};
 $('setup-minutes').addEventListener('change',()=>{if(Number($('setup-wrap').value)>=Number($('setup-minutes').value))$('setup-wrap').value=Math.max(.5,Math.min(5,Number($('setup-minutes').value)/2));});
 $('confirm-form').addEventListener('submit',async e=>{e.preventDefault();if(!$('confirm-check').checked)return;const o=state.m.outcomes.find(o=>o.id===state.confirmId),owner=$('confirm-owner').value,dueDate=$('confirm-date').value.trim();if(o.type==='action'&&(!owner||!dueDate)){$('confirm-error').textContent='An action needs an owner and an agreed deadline.';return;}try{const command={id:o.id,...(state.m.kind==='teams'?{version:state.m.version}:{}),...(o.type==='action'?{owner,dueDate}:{})};if(state.ready)send({type:'confirm',...command});else{state.m=(await api(`/api/meetings/${state.m.id}/confirm`,{method:'POST',body:JSON.stringify(command)})).meeting;render();}$('confirm-dialog').close();}catch(err){$('confirm-error').textContent=err.message;}});
 $('start-meeting').onclick=startMeeting;$('try-demo').onclick=createWalkthrough;$('back-home').onclick=navigateHome;$('home-nav').onclick=navigateHome;
@@ -229,6 +240,6 @@ $('confirm-delete').onclick=async()=>{try{await api(`/api/meetings/${state.m.id}
 window.addEventListener('hashchange',()=>route().catch(e=>notice(e.message,true)));
 window.addEventListener('beforeunload',e=>{if(active()){e.preventDefault();e.returnValue='';}});
 window.speechSynthesis?.addEventListener('voiceschanged',voices);
-async function route(){const match=location.hash.match(/^#meeting\/([a-zA-Z0-9-]+)$/);if(match)return openMeeting(match[1]);if(active()){location.hash=`meeting/${state.m.id}`;notice('End the current meeting before leaving.');return;}showHome();}
+async function route(){const match=location.hash.match(/^#meeting\/([a-zA-Z0-9-]+)$/);if(match)return openMeeting(match[1]);if(state.connecting){location.hash=`meeting/${state.m.id}`;return;}if(active()){location.hash=`meeting/${state.m.id}`;notice('End the current meeting before leaving.');return;}showHome();}
 async function boot(){try{state.config=await api('/api/config');await refreshHistory();updateCost(await api('/api/costs'));voices();await route();}catch(e){$('history').textContent='The workspace could not load. Refresh to retry.';notice(e.message,true);}}
 setInterval(tick,1000);boot();

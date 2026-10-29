@@ -14,6 +14,10 @@ Tests stop after three minutes including preparation/lobby time. Version 9 inclu
 
 [Deployment result, verification and rollback](docs/research/teams-transcription-deployment-result.md) · [Current handoff](docs/handoff.md). Deployment incurred **$0** in Muse calls. Current tracked estimate **$0.15263115**, conditional remaining credit **$149.84736885** if the full $150 grant is applied and no other usage exists; actual Billing remains unverified.
 
+## Browser meeting inputs
+
+Choose **Meeting browser tab** when creating a meeting to capture a user-selected WhatsApp Web, Zoom Web, Google Meet, Jitsi or other browser call, with an optional host microphone. Prompts stay with the host; this route does not add Rally as a call participant. **Share confirmed outcomes** prepares a manual WhatsApp draft after the meeting. No additional connector subscription is used; real Muse calls retain their existing costs. [Instructions and validation limits](docs/browser-meetings.md).
+
 ## Meta model use and competition voice
 
 Runtime transcription uses **Muse Voice Transcribe** and reasoning uses **Muse Spark 1.3** via Meta Model API. The additional voice adapter uses **Meta MMS English `facebook/mms-tts-eng`**, pinned to `c71de0fe7204c83f1c10820a7d696d0b450048ba`, **self-hosted on the Rally Ubuntu CPU host**. Its weights are **CC BY-NC 4.0**; model files stay outside this repository. [Adapter, attribution and reproduction](experiments/meta-mms/README.md) · [actual CPU measurements](docs/research/mms-cpu-benchmark.json).

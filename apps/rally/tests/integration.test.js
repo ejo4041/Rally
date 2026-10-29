@@ -29,6 +29,7 @@ test('private-workspace API and WebSocket walkthrough persist, confirm, export a
   command({type:'demo_clock'});await until(m=>m.type==='state'&&m.meeting.demoClockUsed);
   command({type:'end'});await until(m=>m.type==='state'&&m.meeting.phase==='ended');ws.close();
   const saved=(await(await request(`/api/meetings/${meeting.id}`)).json()).meeting;assert.equal(saved.turns.length,6);assert.equal(saved.outcomes.find(o=>o.id===action.id).status,'confirmed');
+  const followup=await request(`/api/meetings/${meeting.id}/followup`,{method:'POST',body:'{}'});assert.equal(followup.status,200);const draft=await followup.json();assert.equal(draft.confirmedCount,1);assert.match(draft.text,/rollback/i);assert.ok(!draft.text.includes('mountain bikes'));
   const exported=await(await request(`/api/meetings/${meeting.id}/export`)).text();assert.match(exported,/SCRIPTED WALKTHROUGH/);assert.match(exported,/explicitly confirmed by/);assert.match(exported,/compressed/);
   assert.equal((await(await request('/api/usage')).json()).events.length,0);
   // Release happens immediately after state emission; allow queued cleanup to settle.

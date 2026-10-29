@@ -1,0 +1,23 @@
+{
+  "testedAt": "2026-10-29T11:32:44.704Z",
+  "passed": true,
+  "source": "synthetic tab and microphone tracks through real AudioContext/PCM worklet",
+  "frames": 8,
+  "frameBytes": 2560,
+  "remoteAmplitude": 0.09512074935282967,
+  "microphoneAmplitude": 0.09317889242331662,
+  "options": {
+    "video": {
+      "displaySurface": "browser"
+    },
+    "audio": {
+      "suppressLocalAudioPlayback": false
+    },
+    "systemAudio": "exclude",
+    "selfBrowserSurface": "exclude",
+    "surfaceSwitching": "exclude",
+    "monitorTypeSurfaces": "exclude"
+  },
+  "paidModelCalls": 0,
+  "realPlatformCall": false
+}

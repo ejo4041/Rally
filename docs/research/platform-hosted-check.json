@@ -1,0 +1,14 @@
+{
+  "testedAt": "2026-10-29T11:39:37.310Z",
+  "passed": true,
+  "version": 10,
+  "checks": [
+    "hosted tab-audio UI, module and permission policy",
+    "WhatsApp capture settings persist without starting paid processing",
+    "hosted confirmed follow-up excludes proposed outcomes and transcript",
+    "test records removed and Muse usage unchanged"
+  ],
+  "paidModelCalls": 0,
+  "realPlatformCall": false,
+  "externalMessagesSent": 0
+}

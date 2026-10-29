@@ -1,4 +1,5 @@
 import {AppError,confirmOutcome,createMeeting,markdown,scorecard} from './core.js';
+import {confirmedFollowup} from './followup.js';
 import {repo} from './store.js';
 import {attachSession} from './live.js';
 import {modelConfig,publicModels} from './models.js';
@@ -12,9 +13,10 @@ function sameOrigin(request){const origin=request.headers.get('Origin');if(origi
 export default {async fetch(request,env,ctx){
   try{
     const url=new URL(request.url),path=url.pathname;
-    if(path==='/'&&request.method==='GET')return new Response(__HTML__,{headers:{...security,'Content-Type':'text/html; charset=utf-8','Content-Security-Policy':"default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; worker-src 'self'; media-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self'",'Permissions-Policy':'microphone=(self)'}});
+    if(path==='/'&&request.method==='GET')return new Response(__HTML__,{headers:{...security,'Content-Type':'text/html; charset=utf-8','Content-Security-Policy':"default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; worker-src 'self'; media-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self'",'Permissions-Policy':'microphone=(self), display-capture=(self)'}});
     if(path==='/style.css')return new Response(__CSS__,{headers:{...security,'Content-Type':'text/css; charset=utf-8'}});
     if(path==='/client.js')return new Response(__CLIENT__,{headers:{...security,'Content-Type':'text/javascript; charset=utf-8'}});
+    if(path==='/audio-input.js')return new Response(__AUDIO_INPUT__,{headers:{...security,'Content-Type':'text/javascript; charset=utf-8'}});
     if(path==='/mms-speech.js')return new Response(__MMS_CLIENT__,{headers:{...security,'Content-Type':'text/javascript; charset=utf-8'}});
     if(path==='/teams-client.js')return new Response(__TEAMS_CLIENT__,{headers:{...security,'Content-Type':'text/javascript; charset=utf-8'}});
     if(path==='/pcm-worklet.js')return new Response(__WORKLET__,{headers:{...security,'Content-Type':'text/javascript; charset=utf-8'}});
@@ -36,9 +38,10 @@ export default {async fetch(request,env,ctx){
       if(data.kind==='walkthrough'){data.participants=['Alex','Priya','Sam'];data.agenda=['Decide Friday release scope','Confirm rollback owner and deadline'];data.title=data.title||'Friday release · walkthrough';}
       return json({meeting:await r.create(createMeeting(data))},201);
     }
-    const match=path.match(/^\/api\/meetings\/([a-zA-Z0-9-]+)(?:\/(export|connect|confirm|record|review))?$/);
+    const match=path.match(/^\/api\/meetings\/([a-zA-Z0-9-]+)(?:\/(export|connect|confirm|record|review|followup))?$/);
     if(!match)return json({error:'Not found'},404);
     const [,id,action]=match,m=await r.get(id);if(!m)throw new AppError('Meeting not found.',404);
+    if(action==='followup'&&request.method==='POST')return json(confirmedFollowup(m));
     if(action==='record'&&request.method==='POST')return json(await editTeamsRecord(r,id,await input(request)));
     if(action==='review'&&request.method==='POST')return json(await reviewTeamsRecord(env,r,id,await input(request)));
     if(action==='connect'){
