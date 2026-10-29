@@ -1,11 +1,12 @@
 {
-  "testedAt": "2026-10-29T11:51:24.777Z",
+  "testedAt": "2026-10-29T12:36:25.462Z",
   "passed": true,
-  "version": 11,
+  "version": 12,
   "checks": [
     "hosted tab-audio UI, module and permission policy",
     "WhatsApp capture settings persist without starting paid processing",
     "hosted confirmed follow-up excludes proposed outcomes and transcript",
+    "deployed presenter hides private panels, restores on reload and blocks cross-meeting navigation",
     "test records removed and Muse usage unchanged"
   ],
   "paidModelCalls": 0,

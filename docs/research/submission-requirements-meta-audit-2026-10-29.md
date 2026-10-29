@@ -1,5 +1,7 @@
 # Rally submission requirements and Meta integration review
 
+**Current release:** [Version 12](../releases/2026-10-29-v12.md) adds browser-call inputs, a free local audio check, presenter view and manual WhatsApp follow-up drafts. MMS browser playback and saved review are deployed. The initial research below records earlier implementation status; use the current release and [submission draft](../submission-package.md) for current behavior. Real calls/device rehearsal and final submission remain pending.
+
 **Implementation update later the same night:** [Saved review and the measured local MMS CPU spike](../overnight-build-2026-10-29.md) are now completed locally. MMS generated four synthetic phrases; hosted/Teams playback and live validation remain pending. The research findings below distinguish eligibility from runtime proof.
 
 Researched October 29, 2026 against first-party event/model documentation and the existing implementation. No production changes, account setup, messages or model requests were made. This report is an evidence audit and recommendation, not organizer approval or a claim that optional integrations work.

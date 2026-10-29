@@ -1,0 +1,31 @@
+{
+  "testedAt": "2026-10-29T12:51:14.874Z",
+  "passed": true,
+  "target": "local background capture soak",
+  "localAudioCheck": {
+    "nativeTabSignalDetected": true,
+    "stopClosedTracks": true,
+    "modelConnections": 0
+  },
+  "surface": "browser",
+  "audioTracks": 1,
+  "frames": 12,
+  "signalAmplitude": 0.23037925308432625,
+  "soak": {
+    "durationMs": 2700005,
+    "frames": 33751,
+    "bytes": 86402560,
+    "expectedFrames": 33750.0625,
+    "maxGapMs": 94.70000000298023,
+    "backgroundSamples": 270,
+    "playwrightDefaultsDisabled": true,
+    "backgroundMode": "Rally window minimized",
+    "muteSilenceVerified": true,
+    "unmuteResumedSignal": true,
+    "rawAudioSaved": false
+  },
+  "capture": "real Chromium getDisplayMedia selecting a synthetic local audio tab",
+  "provider": "mocked WebSocket; no model request",
+  "realPlatformCall": false,
+  "paidModelCalls": 0
+}

@@ -3,6 +3,15 @@ const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const icon=id=>`<svg aria-hidden="true"><use href="#i-${id}"/></svg>`;
 const state={m:null,ws:null,ready:false,config:null,history:[],voices:[],stream:null,captureInput:null,captureGeneration:0,context:null,worklet:null,muted:false,speech:null,speechGeneration:0,blockedEpoch:0,speechTimer:null,toastTimer:null,confirmId:null,turnCount:-1,connecting:false,reviewBusy:false};
 const emptyTranscript=$('transcript').innerHTML;
+let presenterId=null;
+try{const saved=sessionStorage.getItem('rallyPresenterMeeting');if(saved&&/^[a-zA-Z0-9-]+$/.test(saved))presenterId=saved;}catch{}
+document.body.classList.toggle('presenting',!!presenterId);
+function presenterView(enabled){
+  presenterId=enabled?state.m?.id:null;if(enabled&&!presenterId)return;
+  try{if(presenterId)sessionStorage.setItem('rallyPresenterMeeting',presenterId);else sessionStorage.removeItem('rallyPresenterMeeting');}catch{}
+  document.body.classList.toggle('presenting',!!presenterId);closeNav();if(state.m)render();else if(!presenterId)showHome();
+}
+$('present-meeting').onclick=()=>presenterView(true);$('exit-presenter').onclick=()=>presenterView(false);
 let audioCheck;
 function stopAudioCheck(closeDialog=true){audioCheck?.abort();audioCheck=null;if(closeDialog)$('audio-check-dialog').close();}
 async function checkAudio(){
@@ -35,8 +44,9 @@ async function refreshHistory(){
   $('history').innerHTML=state.history.length?state.history.map(m=>`<button class="history-row" data-meeting="${esc(m.id)}"><span class="history-icon">${icon(m.kind==='walkthrough'?'play':'file')}</span><span class="history-info"><strong>${esc(m.title)}</strong><small>${esc(dateLabel(m.createdAt))}${m.kind==='walkthrough'?' · Scripted walkthrough':m.kind==='teams'?' · Teams transcript':''}</small></span><span class="badge ${esc(m.phase)}">${esc(m.phase==='draft'?'Ready':m.phase)}</span>${icon('arrow')}</button>`).join(''):`<div class="empty-history"><span class="history-icon">${icon('file')}</span><div><h3>A fresh start for better meetings.</h3><p>Create your first meeting, or explore the clearly labeled walkthrough.<br>No microphone or API calls start until you choose to begin.</p></div></div>`;
   $('recent-nav').innerHTML=state.history.length?state.history.slice(0,7).map(m=>`<button class="${m.id===state.m?.id?'current':''}" data-meeting="${esc(m.id)}">${esc(m.title)}</button>`).join(''):'<p class="muted small">Your next good meeting starts here.</p>';
 }
-function showHome(){stopAudioCheck();$('home').hidden=false;$('meeting').hidden=true;$('breadcrumb').textContent='Meetings';closeNav();refreshHistory().catch(e=>notice(e.message,true));}
+function showHome(){if(presenterId){location.hash=`meeting/${presenterId}`;return;}stopAudioCheck();$('home').hidden=false;$('meeting').hidden=true;$('breadcrumb').textContent='Meetings';closeNav();refreshHistory().catch(e=>notice(e.message,true));}
 async function openMeeting(id){
+  if(presenterId&&id!==presenterId){location.hash=`meeting/${presenterId}`;return;}
   if(state.connecting){notice('Finish selecting audio before opening another meeting.');location.hash=`meeting/${state.m.id}`;return;}
   if(active()&&id!==state.m.id){notice('End the current meeting before opening another.');location.hash=`meeting/${state.m.id}`;return;}
   if(active()&&id===state.m.id)return;
@@ -49,6 +59,9 @@ function render(){
   const m=state.m;if(!m)return;
   $('meeting-title').textContent=m.title;$('phase-badge').textContent=m.paused&&m.phase!=='ended'?'Rally paused':({draft:'Ready',live:'In progress',wrapping:'Wrapping up',ended:'Saved'})[m.phase];$('phase-badge').className=`badge ${m.phase}`;
   $('share-followup').disabled=m.phase!=='ended'||!m.outcomes.some(o=>o.status==='confirmed');
+  $('present-meeting').disabled=m.phase==='draft';
+  const confirmed=m.outcomes.filter(o=>o.status==='confirmed'&&o.confirmation?.source==='host_explicit');
+  $('presenter-outcome-list').innerHTML=confirmed.length?confirmed.slice(-3).map(o=>`<p><strong>${esc(o.type==='action'?'Action':'Decision')}: ${esc(o.text)}</strong>${o.type==='action'?`${esc(o.owner)} · ${esc(o.dueDate)}`:''}</p>`).join('')+(confirmed.length>3?`<p class="small muted">Showing the latest 3 of ${confirmed.length} host-confirmed outcomes.</p>`:''):'<p class="muted">No outcomes confirmed yet. The host reviews each proposal before it appears here.</p>';
   $('check-audio').hidden=m.kind!=='live';$('check-audio').disabled=state.connecting;
   const tabCapture=m.capture?.mode==='meeting-tab';$('capture-source-note').hidden=!tabCapture;$('capture-source-note').textContent=tabCapture?`Capture ${({'whatsapp':'WhatsApp Web','zoom':'Zoom Web','meet':'Google Meet','jitsi':'Jitsi Meet','other':'meeting tab'})[m.capture.platform]||'meeting tab'} audio${m.capture.includeMicrophone?' and your microphone':''}. Choose the meeting tab and enable Share tab audio when prompted. Rally prompts are host-side. Stop sharing or End to finish.`:'';
   $('meeting-meta').textContent=m.kind==='teams'?`Teams transcript · ${m.review?'reviewed after the meeting':'no moderation performed'} · timing includes lobby`:`${m.participants.length} participants · ${m.minutes} minutes · wrap-up ${m.wrapMinutes} minutes before the end`;
@@ -180,7 +193,7 @@ async function createWalkthrough(){
   if(active()){notice('End the current meeting before starting a walkthrough.');return;}
   try{const r=await api('/api/meetings',{method:'POST',body:JSON.stringify({kind:'walkthrough',minutes:30,wrapMinutes:5,desiredOutcome:'A clear release decision and an owner and deadline for rollback validation.'})});location.hash=`meeting/${r.meeting.id}`;}catch(e){notice(e.message,true);}
 }
-function newDialog(){if(state.connecting){notice('Finish selecting audio before creating another meeting.');return;}if(active()){notice('End the current meeting before creating another.');return;}$('setup-error').textContent='';$('setup-dialog').showModal();$('setup-title').focus();}
+function newDialog(){if(presenterId){notice('Return to the workspace before creating another meeting.');return;}if(state.connecting){notice('Finish selecting audio before creating another meeting.');return;}if(active()){notice('End the current meeting before creating another.');return;}$('setup-error').textContent='';$('setup-dialog').showModal();$('setup-title').focus();}
 async function confirmOpen(id){
   const o=state.m.outcomes.find(x=>x.id===id);if(!o)return;state.confirmId=id;$('confirm-text').textContent=o.text;$('action-fields').hidden=o.type!=='action';$('confirm-owner').innerHTML='<option value="">Choose a participant</option>'+state.m.participants.map(p=>`<option value="${esc(p)}">${esc(p)}</option>`).join('');$('confirm-owner').value=o.owner||'';$('confirm-date').value=o.dueDate||'';$('confirm-check').checked=false;$('confirm-error').textContent='';$('confirm-evidence').innerHTML=o.evidence.map(e=>`<p>${esc(e.quote)}</p>`).join('');$('confirm-dialog').showModal();
 }
@@ -258,5 +271,5 @@ window.addEventListener('hashchange',()=>route().catch(e=>notice(e.message,true)
 window.addEventListener('beforeunload',e=>{if(active()){e.preventDefault();e.returnValue='';}});
 window.speechSynthesis?.addEventListener('voiceschanged',voices);
 async function route(){const match=location.hash.match(/^#meeting\/([a-zA-Z0-9-]+)$/);if(match)return openMeeting(match[1]);if(state.connecting){location.hash=`meeting/${state.m.id}`;return;}if(active()){location.hash=`meeting/${state.m.id}`;notice('End the current meeting before leaving.');return;}showHome();}
-async function boot(){try{state.config=await api('/api/config');await refreshHistory();updateCost(await api('/api/costs'));voices();await route();}catch(e){$('history').textContent='The workspace could not load. Refresh to retry.';notice(e.message,true);}}
+async function boot(){try{state.config=await api('/api/config');await refreshHistory();updateCost(await api('/api/costs'));voices();if(presenterId)location.hash=`meeting/${presenterId}`;await route();}catch(e){$('history').textContent='The workspace could not load. Refresh to retry.';notice(e.message,true);}}
 setInterval(tick,1000);boot();

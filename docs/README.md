@@ -4,9 +4,11 @@ Backend worktree checkpoint: [implementation status](backend-implementation-stat
 
 # Rally documentation
 
-**Morning update:** [Speech reliability fixes and isolated audio measurement](morning-reliability-2026-10-29.md) · [rehearsal checklist](morning-rehearsal.md). The app is version 11; live browser-call and Teams speech validation are pending.
+**Browser platform handoff:** [Current features, evidence and first call checks](platform-progress-2026-10-29.md).
 
-**Current release:** [Version 11 — browser meetings, a free audio check and WhatsApp follow-up](releases/2026-10-29-v11.md) is live on the existing restricted Site. WhatsApp Web, Zoom Web, Meet and Jitsi presets use host-selected tab audio; real call compatibility remains unverified. Earlier version-7/local-only entries below are historical. Teams spoken output and fresh live pacing retry remain pending; final submission is on hold.
+**Morning update:** [Speech reliability fixes and isolated audio measurement](morning-reliability-2026-10-29.md) · [rehearsal checklist](morning-rehearsal.md). The app is version 12; live browser-call and Teams speech validation are pending.
+
+**Current release:** [Version 12 — browser meetings, a free audio check, presenter view and WhatsApp follow-up](releases/2026-10-29-v12.md) is live on the existing restricted Site. WhatsApp Web, Zoom Web, Meet and Jitsi presets use host-selected tab audio; real call compatibility remains unverified. Earlier version-7/local-only entries below are historical. Teams spoken output and fresh live pacing retry remain pending; final submission is on hold.
 
 **Earlier October 29 build:** [Retrospective Teams review, measured Meta MMS speech, and submission audit](overnight-build-2026-10-29.md). Source changes are tested locally; deployed Site is still version 7. Live Teams/MMS playback validation remains pending.
 
@@ -76,6 +78,7 @@ Research documentation is not proof of actual account access or runtime performa
 
 ## Browser meeting inputs
 
+- [Presenter view](presenter-view.md): a clean call display, retained host controls and manual audio-sharing research.
 - [Use Rally with browser meetings](browser-meetings.md): meeting-tab audio, optional microphone and WhatsApp follow-up drafts.
 - [Free platform research](research/free-platform-options-2026-10-29.md): primary sources, chosen paths and real-call validation limits.
 - [Capture verification](research/browser-capture-reliability.md): native browser evidence, protected local metering, lifecycle tests and long-duration fixture.

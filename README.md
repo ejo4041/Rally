@@ -2,7 +2,7 @@
 
 A meeting moderator that keeps a decision meeting moving and turns discussion into explicitly confirmed, transcript-evidenced follow-ups.
 
-**Current release: version 11.** Browser meeting input and a free local audio check are available.
+**Current release: version 12.** Browser meeting input, a free local audio check and presenter view are available.
 
 **Private preview:** https://rally-meeting-moderator.excavator3496.chatgpt.site — sign in with the account used for this workspace.
 
@@ -18,7 +18,7 @@ Tests stop after three minutes including preparation/lobby time. Version 9 inclu
 
 ## Browser meeting inputs
 
-Choose **Meeting browser tab** when creating a meeting to capture a user-selected WhatsApp Web, Zoom Web, Google Meet, Jitsi or other browser call, with an optional host microphone. Use **Check audio · free** to verify separate input levels locally before starting Muse transcription. Prompts stay with the host; this route does not add Rally as a call participant. **Share confirmed outcomes** prepares a manual WhatsApp draft after the meeting. No additional connector subscription is used; real Muse calls retain their existing costs. [Instructions and validation limits](docs/browser-meetings.md).
+Choose **Meeting browser tab** when creating a meeting to capture a user-selected WhatsApp Web, Zoom Web, Google Meet, Jitsi or other browser call, with an optional host microphone. Use **Check audio · free** to verify separate input levels locally before starting Muse transcription. Prompts stay with the host; this route does not add Rally as a call participant. [Presenter view](docs/presenter-view.md) provides a clean call display. **Share confirmed outcomes** prepares a manual WhatsApp draft after the meeting. No additional connector subscription is used; real Muse calls retain their existing costs. [Instructions and validation limits](docs/browser-meetings.md) · [Platform handoff](docs/platform-progress-2026-10-29.md).
 
 ## Meta model use and competition voice
 
@@ -26,7 +26,7 @@ Runtime transcription uses **Muse Voice Transcribe** and reasoning uses **Muse S
 
 The organizer FAQ supplied by the user permits self-hosted MMS and excludes third-party TTS models. No GPT/third-party TTS is used for the competition path. Legacy browser/OS voice diagnostics are disabled by default in the new app code; local voice execution alone is not proof of Meta model origin. MMS is connected to the deployed browser player in version 9. Protected hosted playback and Stop passed with synthetic text; physical listening and Teams audio output remain unverified.
 
-[Model interfaces and configuration](docs/model-interfaces.md) · [MMS playback](docs/mms-playback.md) · [Current release](docs/releases/2026-10-29-v11.md) · [Earlier build checkpoint](docs/overnight-build-2026-10-29.md) · [submission requirements and model eligibility review](docs/research/submission-requirements-meta-audit-2026-10-29.md) · [submission draft](docs/submission-package.md).
+[Model interfaces and configuration](docs/model-interfaces.md) · [MMS playback](docs/mms-playback.md) · [Current release](docs/releases/2026-10-29-v12.md) · [Earlier build checkpoint](docs/overnight-build-2026-10-29.md) · [submission requirements and model eligibility review](docs/research/submission-requirements-meta-audit-2026-10-29.md) · [submission draft](docs/submission-package.md).
 
 ## Run locally
 

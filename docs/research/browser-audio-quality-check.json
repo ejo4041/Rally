@@ -1,0 +1,132 @@
+{
+  "testedAt": "2026-10-29T12:15:37.815Z",
+  "passed": true,
+  "inputAmplitude": 0.2,
+  "source": "synthetic tones through the actual browser PCM worklet in OfflineAudioContext",
+  "cases": [
+    {
+      "inputRate": 16000,
+      "toneHz": 1000,
+      "outputHz": 1000,
+      "outputRate": 16000,
+      "frames": 25,
+      "frameSamples": 1280,
+      "sampleCount": 32000,
+      "amplitude": 0.2000021887473433,
+      "offlineRenderMs": 58.3999999910593
+    },
+    {
+      "inputRate": 16000,
+      "toneHz": 6000,
+      "outputHz": 6000,
+      "outputRate": 16000,
+      "frames": 25,
+      "frameSamples": 1280,
+      "sampleCount": 32000,
+      "amplitude": 0.19999642407282966,
+      "offlineRenderMs": 40.900000005960464
+    },
+    {
+      "inputRate": 44100,
+      "toneHz": 1000,
+      "outputHz": 1000,
+      "outputRate": 16000,
+      "frames": 25,
+      "frameSamples": 1280,
+      "sampleCount": 32000,
+      "amplitude": 0.19964215706949145,
+      "offlineRenderMs": 56.5
+    },
+    {
+      "inputRate": 44100,
+      "toneHz": 6000,
+      "outputHz": 6000,
+      "outputRate": 16000,
+      "frames": 25,
+      "frameSamples": 1280,
+      "sampleCount": 32000,
+      "amplitude": 0.18427647978523723,
+      "offlineRenderMs": 61.5
+    },
+    {
+      "inputRate": 44100,
+      "toneHz": 10000,
+      "outputHz": 6000,
+      "outputRate": 16000,
+      "frames": 25,
+      "frameSamples": 1280,
+      "sampleCount": 32000,
+      "amplitude": 0.00010452689193216245,
+      "offlineRenderMs": 58.5
+    },
+    {
+      "inputRate": 48000,
+      "toneHz": 1000,
+      "outputHz": 1000,
+      "outputRate": 16000,
+      "frames": 25,
+      "frameSamples": 1280,
+      "sampleCount": 32000,
+      "amplitude": 0.2000469756589249,
+      "offlineRenderMs": 72.5
+    },
+    {
+      "inputRate": 48000,
+      "toneHz": 6000,
+      "outputHz": 6000,
+      "outputRate": 16000,
+      "frames": 25,
+      "frameSamples": 1280,
+      "sampleCount": 32000,
+      "amplitude": 0.1930247521623793,
+      "offlineRenderMs": 70.29999999701977
+    },
+    {
+      "inputRate": 48000,
+      "toneHz": 10000,
+      "outputHz": 6000,
+      "outputRate": 16000,
+      "frames": 25,
+      "frameSamples": 1280,
+      "sampleCount": 32000,
+      "amplitude": 0.0001457632386296407,
+      "offlineRenderMs": 76.3999999910593
+    },
+    {
+      "inputRate": 96000,
+      "toneHz": 1000,
+      "outputHz": 1000,
+      "outputRate": 16000,
+      "frames": 25,
+      "frameSamples": 1280,
+      "sampleCount": 32000,
+      "amplitude": 0.2000395993900539,
+      "offlineRenderMs": 110.90000000596046
+    },
+    {
+      "inputRate": 96000,
+      "toneHz": 6000,
+      "outputHz": 6000,
+      "outputRate": 16000,
+      "frames": 25,
+      "frameSamples": 1280,
+      "sampleCount": 32000,
+      "amplitude": 0.15913191031364995,
+      "offlineRenderMs": 108.29999999701977
+    },
+    {
+      "inputRate": 96000,
+      "toneHz": 10000,
+      "outputHz": 6000,
+      "outputRate": 16000,
+      "frames": 25,
+      "frameSamples": 1280,
+      "sampleCount": 32000,
+      "amplitude": 0.0012347278223611335,
+      "offlineRenderMs": 107.20000000298023
+    }
+  ],
+  "paidModelCalls": 0,
+  "realPlatformCall": false,
+  "rawAudioSaved": false
+}
