@@ -1,18 +1,21 @@
 import {AppError,confirmOutcome,createMeeting,markdown,scorecard} from './core.js';
 import {repo} from './store.js';
 import {attachSession} from './live.js';
+import {modelConfig,publicModels} from './models.js';
+import {speechApi} from './speech.js';
 import {teamsApi} from './teams.js';
 import {editTeamsRecord,reviewTeamsRecord} from './teams-review.js';
 const security={'X-Content-Type-Options':'nosniff','Referrer-Policy':'same-origin','Cache-Control':'no-store'};
 const json=(value,status=200)=>new Response(JSON.stringify(value),{status,headers:{...security,'Content-Type':'application/json; charset=utf-8'}});
-async function input(request){const raw=await request.text();if(raw.length>20000)throw new AppError('Request too large.',413);try{return JSON.parse(raw);}catch{throw new AppError('Invalid JSON.');}}
+async function input(request,limit=20000){const raw=await request.text();if(raw.length>limit)throw new AppError('Request too large.',413);try{return JSON.parse(raw);}catch{throw new AppError('Invalid JSON.');}}
 function sameOrigin(request){const origin=request.headers.get('Origin');if(origin&&origin!==new URL(request.url).origin)throw new AppError('Cross-origin requests are not accepted.',403);if(request.headers.get('Sec-Fetch-Site')==='cross-site')throw new AppError('Cross-site requests are not accepted.',403);}
 export default {async fetch(request,env,ctx){
   try{
     const url=new URL(request.url),path=url.pathname;
-    if(path==='/'&&request.method==='GET')return new Response(__HTML__,{headers:{...security,'Content-Type':'text/html; charset=utf-8','Content-Security-Policy':"default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self'",'Permissions-Policy':'microphone=(self)'}});
+    if(path==='/'&&request.method==='GET')return new Response(__HTML__,{headers:{...security,'Content-Type':'text/html; charset=utf-8','Content-Security-Policy':"default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; worker-src 'self'; media-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self'",'Permissions-Policy':'microphone=(self)'}});
     if(path==='/style.css')return new Response(__CSS__,{headers:{...security,'Content-Type':'text/css; charset=utf-8'}});
     if(path==='/client.js')return new Response(__CLIENT__,{headers:{...security,'Content-Type':'text/javascript; charset=utf-8'}});
+    if(path==='/mms-speech.js')return new Response(__MMS_CLIENT__,{headers:{...security,'Content-Type':'text/javascript; charset=utf-8'}});
     if(path==='/teams-client.js')return new Response(__TEAMS_CLIENT__,{headers:{...security,'Content-Type':'text/javascript; charset=utf-8'}});
     if(path==='/pcm-worklet.js')return new Response(__WORKLET__,{headers:{...security,'Content-Type':'text/javascript; charset=utf-8'}});
     if(path==='/favicon.svg')return new Response('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><rect width="40" height="40" rx="12" fill="#efb543"/><path d="M12 25V15m6 14V11m6 14V15m6 7v-4" stroke="#172f38" stroke-width="3" stroke-linecap="round"/></svg>',{headers:{'Content-Type':'image/svg+xml'}});
@@ -21,9 +24,10 @@ export default {async fetch(request,env,ctx){
     // Hosted access is enforced by Sites' owner-private boundary. Local preview
     // binds loopback only. Do not deploy this shared workspace as an anonymous site.
     if(!env.DB)throw new AppError('Workspace storage is unavailable.',503);
+    if(path.startsWith('/api/speech/')){const result=await speechApi(request,env,request.method==='POST'?await input(request,path==='/api/speech/runner/finish'?1400000:20000):{});return result instanceof Response?result:json(result);}
     if(path.startsWith('/api/teams/'))return json(await teamsApi(request,env,request.method==='POST'?await input(request):{}));
     const r=repo(env.DB);
-    if(path==='/api/config'&&request.method==='GET')return json({liveAvailable:!!env.MODEL_API_KEY&&env.RALLY_PAID_ENABLED==='1',deviceVoiceAvailable:env.RALLY_DEVICE_VOICE_ENABLED==='1',baselineSpend:Number(env.RALLY_BASELINE_SPEND||.0517416),meetingBudget:Number(env.RALLY_MEETING_BUDGET||.25),buildBudget:Number(env.RALLY_BUILD_BUDGET||.5),model:'Muse Spark 1.3',asr:'Muse Voice Transcribe',maxMinutes:55});
+    if(path==='/api/config'&&request.method==='GET'){const models=modelConfig(env);return json({models:publicModels(models),liveAvailable:!!env.MODEL_API_KEY&&env.RALLY_PAID_ENABLED==='1',mmsAvailable:env.RALLY_MMS_ENABLED==='1',deviceVoiceAvailable:env.RALLY_DEVICE_VOICE_ENABLED==='1',baselineSpend:Number(env.RALLY_BASELINE_SPEND||.0517416),meetingBudget:Number(env.RALLY_MEETING_BUDGET||.25),buildBudget:Number(env.RALLY_BUILD_BUDGET||.5),model:models.reasoning.model,asr:models.transcription.model,maxMinutes:55});}
     if(path==='/api/costs'&&request.method==='GET'){const c=await r.costs();return json({...c,baseline:Number(env.RALLY_BASELINE_SPEND||.0517416),conditionalRemainder:150-Number(env.RALLY_BASELINE_SPEND||.0517416)-Number(c.total||0)});}
     if(path==='/api/usage'&&request.method==='GET')return json({events:await r.usageList()});
     if(path==='/api/meetings'&&request.method==='GET')return json({meetings:await r.list()});

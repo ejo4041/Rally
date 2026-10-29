@@ -1,0 +1,14 @@
+{
+  "testedAt": "2026-10-29T04:27:01.926Z",
+  "browser": "156.0.8078.4",
+  "model": "facebook/mms-tts-eng",
+  "revision": "c71de0fe7204c83f1c10820a7d696d0b450048ba",
+  "decodedPlaybackStartMs": 2168,
+  "approvedOpeningPlaybackMs": 3594,
+  "audioHttpStatus": 200,
+  "cancelButtonHiddenAfterStop": true,
+  "paidMuseCalls": 0,
+  "realMeetingJoined": false,
+  "physicalAudibilityVerified": false,
+  "notes": "Real local MMS generation through Worker/D1 queue into Chromium Audio playback. Headless browser audio was muted; onplaying establishes decoded playback, not physical sound or Teams transmission."
+}

@@ -1,5 +1,7 @@
 # Rally documentation
 
+**Current release:** [Version 9 — model interfaces and self-hosted Meta MMS browser playback](releases/2026-10-29-v9.md) is live on the existing restricted Site. Earlier version-7/local-only entries below are historical. Teams spoken output and fresh live pacing retry remain pending; final submission is on hold.
+
 **Latest October 29 build:** [Retrospective Teams review, measured Meta MMS speech, and submission audit](overnight-build-2026-10-29.md). Source changes are tested locally; deployed Site is still version 7. Live Teams/MMS playback validation remains pending.
 
 **October 29 offline checkpoint:** [Teams saved-history implementation, tests, documentation and Git state](offline-progress-2026-10-29.md). New history code is local, not deployed. Live pacing-fix retry remains pending; no live test or paid call was run tonight.
@@ -65,6 +67,11 @@ For the separate ACS runner: [app registration setup](teams-app-registration-set
 - [Build code review](research/build-code-review.md): independent Standards/Spec findings and fixes.
 
 Research documentation is not proof of actual account access or runtime performance. Record completed experiments and measurements separately.
+
+## Model boundaries
+
+- [Model interfaces and configuration](model-interfaces.md): Muse audio transcription, normalized adapter ports, configurable models and pricing.
+- [MMS speech queue and browser playback](mms-playback.md): approved text, cancellation, local measurement and deployment requirements.
 
 ## Repository tooling
 

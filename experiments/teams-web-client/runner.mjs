@@ -62,9 +62,9 @@ async function inspect(){
    const reservation=await api('transcription-start',{id:c.id});c.reserved=true;
    if(current!==c||closing){await api('transcription-finish',{id:c.id,sentSeconds:0,processedMs:0,notOpened:true});return;}
    const audioEnv={...process.env,...JSON.parse(await readFile('state/audio-env.json','utf8'))};
-   try{c.asrOpening=transcribe({key:env.MODEL_API_KEY,signal:c.abort.signal,seconds:Math.max(1,reservation.maxSeconds),source:()=>pulseSource(audioEnv),onLevel:n=>c.level=n,onEvent:(e,sessionId)=>{
-     if(e.type!=='transcript'&&e.type!=='speechComplete')return;
-     const data=e.type==='speechComplete'?{final:{sessionId,turnId:Number(e.turnId),text:e.transcript||'',speaker:e.speakerId?String(e.speakerId):null},partial:''}:{partial:e.transcript||''};
+   try{c.asrOpening=transcribe({key:env.MODEL_API_KEY,config:reservation.transcription,signal:c.abort.signal,seconds:Math.max(1,reservation.maxSeconds),source:()=>pulseSource(audioEnv),onLevel:n=>c.level=n,onEvent:e=>{
+     if(e.type!=='partial'&&e.type!=='final')return;
+     const data=e.type==='final'?{final:{sessionId:e.sessionId,turnId:Number(e.turnId),text:e.text||'',speaker:e.speaker||null},partial:''}:{partial:e.text||''};
      // Serialize final turns; partial updates are intentionally limited to 1/s.
      if(!data.final&&Date.now()-(c.lastPartial||0)<1000)return;c.lastPartial=Date.now();
      c.events=c.events.then(()=>api('transcription',{id:c.id,...data})).catch(()=>{void finish('failed','transcript_write_failed');});

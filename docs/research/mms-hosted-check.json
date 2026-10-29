@@ -1,0 +1,32 @@
+{
+  "testedAt": "2026-10-29T04:31:59.122Z",
+  "passed": true,
+  "model": "facebook/mms-tts-eng",
+  "revision": "c71de0fe7204c83f1c10820a7d696d0b450048ba",
+  "models": {
+    "reasoning": {
+      "adapter": "meta-chat-json",
+      "model": "muse-spark-1.3"
+    },
+    "transcription": {
+      "adapter": "meta-realtime-asr",
+      "model": "muse-voice-transcribe-1.0"
+    },
+    "speech": {
+      "adapter": "mms-local",
+      "model": "facebook/mms-tts-eng",
+      "revision": "c71de0fe7204c83f1c10820a7d696d0b450048ba"
+    }
+  },
+  "decodedPlaybackStartMs": 4102,
+  "audioHttpStatus": 200,
+  "hostStopPassed": true,
+  "teamsInviteBlank": true,
+  "consentInitiallyUnchecked": true,
+  "usageCountBefore": 18,
+  "usageCountAfter": 18,
+  "paidMuseCalls": 0,
+  "realMeetingJoined": false,
+  "physicalAudibilityVerified": false,
+  "notes": "Protected hosted UI to real self-hosted MMS queue and muted Chromium playback; no Teams join or participant audio. Native browser voice fallback disabled."
+}

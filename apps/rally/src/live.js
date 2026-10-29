@@ -1,7 +1,9 @@
 import {AppError,addFinal,applyDecision,canSpeak,confirmOutcome,control,elapsedMs,timeCheckpoint,utterance,wrapText} from './core.js';
-import {moderate,openASR} from './muse.js';
+import {modelConfig,audioCost} from './models.js';
+import {modelServices} from './model-services.js';
 export function attachSession(socket,m,repository,env,ctx,leaseId,services={}){
-  const runModeration=services.moderate||moderate,connectASR=services.openASR||openASR,throttleMs=services.throttleMs??4000;
+  const transcription=modelConfig(env).transcription;
+  const {moderate:runModeration,openASR:connectASR}=modelServices(env,services),throttleMs=services.throttleMs??4000;
   let asr=null,queue=Promise.resolve(),closed=false,ending=false,recordedAudio=false,modelBusy=false,modelWanted=false,speaking=false,budgetBlocked=false;
   let lastEvaluationAt=0,playbackUntil=0,modelGeneration=0,asrCloseResolve,evaluationTimer=null,pendingAnalysis=null,lastAnalyzedSource=null;
   const sourceSignature=()=>`${m.currentAgenda}:${JSON.stringify(m.speakerNames)}:${m.turns.map(t=>`${t.id}@${t.revision}`).join('|')}`;
@@ -11,10 +13,12 @@ export function attachSession(socket,m,repository,env,ctx,leaseId,services={}){
   const enqueue=fn=>{queue=queue.then(fn).catch(e=>{warn(e instanceof AppError?e.message:'An operation failed. Refresh if the connection does not recover.','error');});ctx.waitUntil(queue);return queue;};
   const save=async()=>{await repository.save(m);send('state',{meeting:m});};
   async function costs(){const [all,own]=await Promise.all([repository.costs(),repository.costs(m.id)]);send('cost',{appEstimate:Number(all.total||0),meetingEstimate:Number(own.total||0),unknown:Number(all.unknown||0),baseline:Number(env.RALLY_BASELINE_SPEND||.0517416),conditionalRemainder:150-Number(env.RALLY_BASELINE_SPEND||.0517416)-Number(all.total||0)});return{all,own};}
-  async function allowed(projected=0){const {all,own}=await costs();const pending=asr&&!recordedAudio?asr.sentSeconds*.18/3600:0;return !all.unknown&&Number(all.total)+pending+projected<=Number(env.RALLY_BUILD_BUDGET||.5)&&Number(own.total)+pending+projected<=Number(env.RALLY_MEETING_BUDGET||.25);}
+  async function allowed(projected=0){const {all,own}=await costs();const pending=asr&&!recordedAudio?audioCost(Math.ceil(asr.sentSeconds),transcription):0;return !all.unknown&&Number(all.total)+pending+projected<=Number(env.RALLY_BUILD_BUDGET||.5)&&Number(own.total)+pending+projected<=Number(env.RALLY_MEETING_BUDGET||.25);}
   function speak(value,kind='prompt',priority=false){
     if(!canSpeak(m,Date.now(),priority)||speaking||ending)return null;
-    const u=utterance(m,value,kind);send('speak',{utterance:u});return u;
+    const u=utterance(m,value,kind);
+    if(env.RALLY_MMS_ENABLED==='1')enqueue(async()=>{await save();if(u.epoch===m.epoch&&!m.paused&&!ending&&['live','wrapping'].includes(m.phase)&&u.state!=='canceled')send('speak',{utterance:u});});
+    else send('speak',{utterance:u});return u;
   }
   async function evaluate(force=false){
     if(m.kind!=='live'||(budgetBlocked&&!force)||m.paused||!['live','wrapping'].includes(m.phase)||speaking||ending)return;
@@ -30,7 +34,7 @@ export function attachSession(socket,m,repository,env,ctx,leaseId,services={}){
       if(!(await allowed(.015))){budgetBlocked=true;warn('Automatic reasoning stopped at the session budget or unknown-cost boundary.','budget');return;}
       if(ending||epoch!==m.epoch||m.paused)return;
       send('thinking',{active:true});
-      const promise=runModeration(env,snapshot,repository,{pendingAudioEstimate:asr&&!recordedAudio?asr.sentSeconds*.18/3600:0});
+      const promise=runModeration(env,snapshot,repository,{pendingAudioEstimate:asr&&!recordedAudio?audioCost(Math.ceil(asr.sentSeconds),transcription):0});
       pendingAnalysis={promise,snapshot,signature};
       const result=await promise;
       if(ending)return; // End drains this same result without queue deadlock.
@@ -49,19 +53,19 @@ export function attachSession(socket,m,repository,env,ctx,leaseId,services={}){
   async function recordAudio(){
     if(recordedAudio||!asr)return;
     const duration=Math.max(asr.sentSeconds,asr.processedMs/1000);
-    await repository.usage({id:crypto.randomUUID(),meetingId:m.id,createdAt:new Date().toISOString(),model:'muse-voice-transcribe-1.0',status:'closed',estimatedCost:Math.floor(duration)*.18/3600,usage:{audioSentSeconds:asr.sentSeconds,audioProcessedMs:asr.processedMs},costBasis:asr.processedMs/1000>=asr.sentSeconds?'reported_processed_seconds':'sent_audio_estimate',sessionId:asr.sessionId});recordedAudio=true;await costs();
+    await repository.usage({id:crypto.randomUUID(),meetingId:m.id,createdAt:new Date().toISOString(),model:transcription.model,adapter:transcription.adapter,pricing:{usdPerAudioHour:transcription.usdPerAudioHour},status:'closed',estimatedCost:audioCost(duration,transcription),usage:{audioSentSeconds:asr.sentSeconds,audioProcessedMs:asr.processedMs},costBasis:asr.processedMs/1000>=asr.sentSeconds?'reported_processed_seconds':'sent_audio_estimate',sessionId:asr.sessionId});recordedAudio=true;await costs();
   }
   async function begin(command){
     if(m.phase!=='draft')throw new AppError('This meeting has already started. Create a new session.',409);
     if(command.consented!==true)throw new AppError('Confirm consent before starting.');
     if(m.kind==='live'){
       if(!env.MODEL_API_KEY||env.RALLY_PAID_ENABLED!=='1')throw new AppError('Live Muse calls are disabled for this environment. The walkthrough is available.',503);
-      if(!(await allowed(m.minutes*.003+.015)))throw new AppError('Meeting forecast exceeds the configured budget. Choose a shorter meeting.');
+      if(!(await allowed(m.minutes*60*transcription.usdPerAudioHour/3600+.015)))throw new AppError('Meeting forecast exceeds the configured budget. Choose a shorter meeting.');
       asr=await connectASR(env,{
-        onEvent(event,sessionId){
-          if(event.type==='transcript')send('partial',{text:String(event.transcript||'').slice(0,4000)});
-          if(event.type==='speechComplete'){
-            const value={sessionId,turnId:event.turnId,transcript:event.transcript,speaker:event.speaker||event.speakerId||null,echoRisk:false};
+        onEvent(event){
+          if(event.type==='partial')send('partial',{text:event.text});
+          if(event.type==='final'){
+            const value={sessionId:event.sessionId,turnId:event.turnId,transcript:event.text,speaker:event.speaker||null,echoRisk:false};
             if(ending){addFinal(m,value);return;}
             enqueue(async()=>{const t=addFinal(m,value);if(t){await save();send('partial',{text:''});ctx.waitUntil(evaluate());}});
           }

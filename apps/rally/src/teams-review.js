@@ -1,5 +1,6 @@
 import {AppError, applyDecision, confirmOutcome, createMeeting} from './core.js';
-import {moderate} from './muse.js';
+import {modelServices} from './model-services.js';
+import {modelConfig} from './models.js';
 
 // Saved-record work shares the live meeting lease, preventing concurrent edits
 // and paid reviews. It never starts capture, joins a meeting or queues speech.
@@ -54,8 +55,8 @@ export async function editTeamsRecord(repository, id, data) {
   });
 }
 
-async function sourceKey(m) {
-  const bytes = new TextEncoder().encode(JSON.stringify({title:m.title, agenda:m.agenda, participants:m.participants,
+async function sourceKey(m,reasoning) {
+  const bytes = new TextEncoder().encode(JSON.stringify({reasoning:{adapter:reasoning.adapter,model:reasoning.model,reasoningEffort:reasoning.reasoningEffort,maxOutputTokens:reasoning.maxOutputTokens},title:m.title, agenda:m.agenda, participants:m.participants,
     desiredOutcome:m.desiredOutcome, speakerNames:m.speakerNames, turns:m.turns}));
   return Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', bytes)), n => n.toString(16).padStart(2,'0')).join('');
 }
@@ -67,18 +68,19 @@ export async function reviewTeamsRecord(env, repository, id, data, services = {}
     if (!m.turns.length || m.turns.length > 200) throw new AppError('Review requires between 1 and 200 finalized turns.');
     if (!m.source.contextConfigured) throw new AppError('Save the meeting agenda and participant details before requesting review.');
     if (m.accountingWarning) throw new AppError('Reconcile this record’s accounting before further paid use.', 409);
-    const signature = await sourceKey(m);
+    const reasoning=modelConfig(env).reasoning;
+    const signature = await sourceKey(m,reasoning);
     if (m.review?.sourceKey === signature) {
       if(m.review.stale){m.review.stale=false;await repository.save(m);}
       return {meeting:m, cached:true};
     }
-    const run = services.moderate || moderate;
+    const run = modelServices(env,services).moderate;
     try {
       const result = await run(env, structuredClone(m), repository, {review:true, reserveUsage:true});
       // Validate citations, roster and uncertainty through the same contract as
       // live moderation. Spoken text is never queued for a saved-record review.
       applyDecision(m, result.decision);
-      m.review = {sourceKey:signature, at:new Date().toISOString(), model:'muse-spark-1.3',
+      m.review = {sourceKey:signature, at:new Date().toISOString(), model:result.usage.model||reasoning.model,
         turnCount:m.turns.filter(t => !t.echoRisk).length, stale:false, usageId:result.usage.id};
       await repository.save(m);
       return {meeting:m, cached:false};

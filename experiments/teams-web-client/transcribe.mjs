@@ -1,8 +1,11 @@
 import { spawn } from 'node:child_process';
+import {modelConfig,audioCost} from '../../apps/rally/src/models.js';
+import {metaTranscriptEvent} from '../../apps/rally/src/muse.js';
 import {framesDue} from './audio-pacing.mjs';
 
 // One session, no retries. Caller must record a reservation before opening.
-export async function transcribe({ key, source, signal, seconds = 180, onEvent = () => {}, onLevel = () => {} }) {
+export async function transcribe({ key, source, signal, config=modelConfig().transcription, seconds = 180, onEvent = () => {}, onLevel = () => {} }) {
+  config=modelConfig({RALLY_MODEL_CONFIG:JSON.stringify({transcription:config})}).transcription;
   if (!key || !Number.isFinite(seconds) || seconds <= 0 || seconds > 180) throw new Error('Invalid transcription configuration');
   let sentBytes = 0, processedMs = 0, sessionId, producer, finish, stopping;
   let failed = false, ended = false, stopReason=null, socketCloseCode=null, providerErrorCode=null, maxPendingBytes=0;
@@ -10,7 +13,7 @@ export async function transcribe({ key, source, signal, seconds = 180, onEvent =
   const socket = new WebSocket('wss://api.meta.ai/v1/asr/realtime');
   const done = new Promise(resolve => { finish = resolve; });
   const stats = () => ({sessionId, sentSeconds: sentBytes / 32000, processedMs, failed, stopReason, socketCloseCode, providerErrorCode, maxPendingBytes,
-    estimatedCost: sessionId ? Math.floor(Math.max(sentBytes / 32000, processedMs / 1000)) * .18 / 3600 : null,
+    estimatedCost: sessionId ? audioCost(Math.max(sentBytes / 32000, processedMs / 1000),config) : null,
     costBasis: processedMs ? 'conservative_max_sent_and_processed_seconds' : 'sent_seconds_estimate'});
   async function stop(reason='host_stop') {
     stopReason ||= reason;
@@ -30,14 +33,14 @@ export async function transcribe({ key, source, signal, seconds = 180, onEvent =
   const ready = new Promise((resolve, reject) => { resolveReady = resolve; rejectReady = reject; });
   const ackTimer = setTimeout(() => rejectReady(new Error('Transcription handshake timed out')), 12000);
   socket.addEventListener('open', () => socket.send(JSON.stringify({authorization:{accessToken:`Bearer ${key}`},
-    model:'muse-voice-transcribe-1.0', audioEncoding:'PCM_16KHZ', mode:'ENDPOINTING', partialMode:'CUMULATIVE', emitAudioProgress:true})));
+    model:config.model, audioEncoding:'PCM_16KHZ', mode:'ENDPOINTING', partialMode:'CUMULATIVE', emitAudioProgress:true})));
   socket.addEventListener('message', event => {
     try {
       const value = JSON.parse(event.data);
       if (Number.isFinite(value.audioProcessedMs)) processedMs = Math.max(processedMs, value.audioProcessedMs);
       if (value.type === 'error') { failed = true;stopReason||='upstream_protocol_error';const code=value.code||value.error?.code;providerErrorCode=typeof code==='string'&&/^[a-zA-Z0-9_.-]{1,80}$/.test(code)?code:null; rejectReady(new Error('Transcription rejected the stream')); void stop(); return; }
       if (!sessionId && value.sessionId) { sessionId = value.sessionId; resolveReady(); }
-      if (sessionId) onEvent(value, sessionId);
+      if(sessionId){const event=metaTranscriptEvent(value,sessionId);if(event)onEvent(event);}
     } catch { failed = true; void stop('event_processing_error'); }
   });
   const onAbort=()=>void stop();

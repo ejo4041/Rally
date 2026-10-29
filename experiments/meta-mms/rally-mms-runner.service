@@ -1,0 +1,18 @@
+[Unit]
+Description=Rally self-hosted Meta MMS speech queue runner
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/srv/hackathon/repo
+Environment=XDG_RUNTIME_DIR=/run/user/1000
+ExecStart=/srv/hackathon/tools/node/bin/node experiments/meta-mms/runner.mjs
+Restart=on-failure
+RestartSec=10
+TimeoutStopSec=15
+KillMode=control-group
+UMask=0077
+
+[Install]
+WantedBy=default.target

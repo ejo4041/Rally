@@ -17,7 +17,7 @@ test('Browser Teams transcription requires consent and admission, deduplicates t
  await assert.rejects(call('runner/transcription-start',data),/cannot start/);
  await call('runner/update',{...data,state:'connected'});
  await assert.rejects(call('runner/transcription-start',data,'wrong'),/authentication/);
- await call('runner/transcription-start',data);
+ const reservation=await call('runner/transcription-start',data);assert.equal(reservation.transcription.model,'muse-voice-transcribe-1.0');
  await assert.rejects(call('runner/transcription-start',data),/cannot start/);
  assert.equal((await db.prepare('SELECT COUNT(*) n FROM usage_events WHERE estimated_cost IS NULL').first()).n,1);
  const turn={sessionId:'asr-test',turnId:1,text:'Andrew will send it Friday.'};
@@ -29,8 +29,9 @@ test('Browser Teams transcription requires consent and admission, deduplicates t
  await assert.rejects(call('runner/transcription',{...data,partial:'late partial'}),/no longer/);
  await call('runner/transcription',{...data,final:{...turn,turnId:2,text:'Final words drained after Leave.'}});
  const usage={...data,sentSeconds:7.78,processedMs:7840,sessionAcknowledged:true};
+ env.RALLY_MODEL_CONFIG=JSON.stringify({transcription:{model:'muse-future-asr',usdPerAudioHour:9}});
  await call('runner/transcription-finish',usage);await call('runner/transcription-finish',{...usage,sentSeconds:179});
- const u=await db.prepare('SELECT * FROM usage_events').first();assert.equal(u.estimated_cost,.00035);assert.equal((await db.prepare('SELECT COUNT(*) n FROM usage_events').first()).n,1);
+ const u=await db.prepare('SELECT * FROM usage_events').first();assert.equal(u.estimated_cost,.00035);assert.equal(u.model,'muse-voice-transcribe-1.0');delete env.RALLY_MODEL_CONFIG;assert.equal((await db.prepare('SELECT COUNT(*) n FROM usage_events').first()).n,1);
  await call('leave',{id:job.id});await call('runner/update',{...data,state:'left'});status=await call('status');assert.equal(status.job.transcriptionState,'stopped');assert.equal(status.job.partial,'');assert.equal(status.job.transcript.length,2);
  // No further paid reservation when the build budget has insufficient headroom.
  env.RALLY_BUILD_BUDGET='.001';await call('join',{...join,transcriptionConsented:true});const claimed=await poll();const next={runnerId,id:claimed.job.id};await call('runner/update',{...next,state:'connected'});

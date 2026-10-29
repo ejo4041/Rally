@@ -13,7 +13,7 @@ class Socket extends EventTarget {
 function producer(){const p=new EventEmitter();p.stdout=new PassThrough();p.killed=false;p.kill=()=>{p.killed=true;p.emit('close');};queueMicrotask(()=>p.stdout.write(Buffer.alloc(32000)));return p;}
 test('20ms frames obey total cap and final text drains on stop, without model calls',async t=>{
  const original=globalThis.WebSocket;globalThis.WebSocket=Socket;t.after(()=>globalThis.WebSocket=original);let p;const finals=[];
- const session=await transcribe({key:'fake',seconds:.1,source:()=>p=producer(),onEvent:e=>{if(e.type==='speechComplete')finals.push(e.transcript);}});
+ const session=await transcribe({key:'fake',seconds:.1,source:()=>p=producer(),onEvent:e=>{if(e.type==='final')finals.push(e.text);}});
  await session.done;assert.equal(session.stats().sentSeconds,.1);assert.equal(session.stats().processedMs,100);assert.ok(p.killed);assert.deepEqual(finals,['Final on stop.']);
 });
 test('host cancellation kills audio source and ends the provider session',async t=>{

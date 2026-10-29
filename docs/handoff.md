@@ -1,5 +1,7 @@
 # Rally handoff — current checkpoint
 
+**Current release:** [Version 9 — model interfaces and self-hosted Meta MMS browser playback](releases/2026-10-29-v9.md) is live on the existing restricted Site. Earlier version-7/local-only entries below are historical. Teams spoken output and fresh live pacing retry remain pending; final submission is on hold.
+
 **Demo drafting:** [Presenter/participant script](demo-script.md) now ends with a clearly labeled future meeting-platform concept. It is a recording draft; audio/live validation gates remain open. Final submission is explicitly on hold until a separate user instruction.
 
 **Latest October 29 build:** [Retrospective Teams review, measured Meta MMS speech, and submission audit](overnight-build-2026-10-29.md). Source changes are tested locally; deployed Site is still version 7. Live Teams/MMS playback validation remains pending.

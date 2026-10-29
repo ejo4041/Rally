@@ -53,3 +53,7 @@ The displayed credit remainder assumes a full applied $150 grant and no untracke
 ## October 29 local build
 
 Saved Teams history/review and host corrections are implemented and tested locally, not yet deployed. [Current checkpoint](../../docs/overnight-build-2026-10-29.md). Browser/OS speech diagnostics default off; the competition speech candidate is self-hosted Meta MMS English, measured in [the local model adapter](../../experiments/meta-mms/README.md), not yet connected to hosted playback. Do not use third-party TTS models for the competition path under the supplied organizer FAQ.
+
+## Current release
+
+[Version 9](../../docs/releases/2026-10-29-v9.md) is deployed with Teams history/review, validated capability configuration and self-hosted Meta MMS browser playback. [Model interfaces](../../docs/model-interfaces.md) document the adapter contracts and pricing configuration. Teams audio feeds Muse Voice Transcribe; native Teams transcription is not consumed. Teams spoken output and real-device validation remain pending. Earlier local-only notes are historical.

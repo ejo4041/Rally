@@ -3,6 +3,7 @@ const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const icon=id=>`<svg aria-hidden="true"><use href="#i-${id}"/></svg>`;
 const state={m:null,ws:null,ready:false,config:null,history:[],voices:[],stream:null,context:null,worklet:null,muted:false,speech:null,speechGeneration:0,blockedEpoch:0,speechTimer:null,toastTimer:null,confirmId:null,turnCount:-1,connecting:false,reviewBusy:false};
 const emptyTranscript=$('transcript').innerHTML;
+const mms=RallyMMS.create({request:async(path,body)=>{const response=await fetch(`/api/speech/${path}`,body?{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}:{});const value=await response.json();if(!response.ok)throw new Error(value.error||'Voice unavailable.');return value;}});
 const active=()=>state.m&&['live','wrapping'].includes(state.m.phase)&&state.ws?.readyState===1;
 function notice(message,error=false){$('toast').textContent=message;$('toast').className=`toast${error?' error':''}`;$('toast').hidden=false;clearTimeout(state.toastTimer);state.toastTimer=setTimeout(()=>$('toast').hidden=true,6500);}
 async function api(path,options={}){const response=await fetch(path,{...options,headers:{'Content-Type':'application/json',...(options.headers||{})}});const data=await response.json();if(!response.ok)throw new Error(data.error||'The workspace is unavailable.');return data;}
@@ -61,7 +62,7 @@ function renderOutcomes(){
   $('decision-score').textContent=outcomes.filter(o=>o.type==='decision'&&o.status==='confirmed').length;$('action-score').textContent=outcomes.filter(o=>o.type==='action'&&o.status==='confirmed'&&o.owner&&o.dueDate).length;$('unresolved-score').textContent=outcomes.filter(o=>!['confirmed','rejected'].includes(o.status)).length;
 }
 function tick(){if(!state.m)return;const seconds=Math.floor(elapsed()/1000),remain=Math.max(0,state.m.minutes*60-seconds);$('meeting-timer').textContent=`${String(Math.floor(seconds/60)).padStart(2,'0')}:${String(seconds%60).padStart(2,'0')}`;$('remaining').textContent=state.m.phase==='draft'?`${state.m.minutes} minutes reserved`:state.m.phase==='ended'?'Meeting record saved':`${Math.floor(remain/60)}m ${remain%60}s remaining${state.m.demoClockUsed?' · demo clock':''}`;$('time-progress').style.width=`${Math.min(100,seconds/(state.m.minutes*60)*100)}%`;}
-function gate(){state.worklet?.port.postMessage({type:'gate',value:state.muted||!!state.speech});}
+function gate(){state.worklet?.port.postMessage({type:'gate',value:state.muted||!!(state.speech&&!state.speech.preparing)});}
 async function startAudio(){
   if(!navigator.mediaDevices?.getUserMedia)throw new Error('Microphone capture needs HTTPS (or localhost) and a supported browser.');
   try{
@@ -79,18 +80,31 @@ async function startAudio(){
 }
 function stopAudio(){state.ready=false;const stream=state.stream;state.stream=null;if(stream)for(const t of stream.getTracks()){t.onended=null;t.stop();}state.worklet?.disconnect();state.worklet=null;const context=state.context;state.context=null;if(context&&context.state!=='closed')context.close().catch(()=>{});$('input-level').style.height='0%';}
 function voices(){
-  $('test-voice').disabled=!state.config?.deviceVoiceAvailable;
+  $('test-voice').disabled=!state.config?.deviceVoiceAvailable&&!state.config?.mmsAvailable;
+  $('voice-select').hidden=!state.config?.deviceVoiceAvailable;
   state.voices=(window.speechSynthesis?.getVoices()||[]).filter(v=>v.localService===true&&v.lang.toLowerCase().startsWith('en'));
   const selected=$('voice-select').value;$('voice-select').innerHTML='<option value="">First local English voice</option>'+state.voices.map(v=>`<option value="${esc(v.voiceURI)}">${esc(v.name)} · local device</option>`).join('');$('voice-select').value=selected;
 }
 function cancelSpeech(notify=true){
-  const previous=state.speech;state.speechGeneration++;clearTimeout(state.speechTimer);state.speech=null;window.speechSynthesis?.cancel();gate();$('stop-speech').hidden=true;
+  const previous=state.speech;mms.cancel();state.speechGeneration++;clearTimeout(state.speechTimer);state.speech=null;window.speechSynthesis?.cancel();gate();$('stop-speech').hidden=true;
   if(previous&&notify&&state.ws?.readyState===1)send({type:'playback',id:previous.id,state:'canceled'});
 }
 function blockPendingSpeech(){state.blockedEpoch=Math.max(state.blockedEpoch+1,(state.m?.epoch||0)+1);cancelSpeech();}
 function speak(u,test=false){
   if(!test&&(u.epoch<state.blockedEpoch||u.epoch!==state.m?.epoch||state.m?.paused||state.m?.phase==='ended'))return;
   cancelSpeech();$('rally-prompt').textContent=u.text;$('rally-hint').textContent=test?'Local device voice test · no model API calls.':'Suggested by Rally. You can stop or pause the moderator at any time.';
+  if(state.config?.mmsAvailable){
+    if(!$('voice-enabled').checked&&!test){send({type:'playback',id:u.id,state:'shown'});return;}
+    const generation=++state.speechGeneration;u.isTest=test;u.preparing=true;state.speech=u;gate();$('stop-speech').hidden=false;
+    const current=()=>generation===state.speechGeneration&&state.speech===u;
+    state.speechTimer=setTimeout(()=>{if(current()){cancelSpeech();if(!test)send({type:'playback',id:u.id,state:'failed'});notice('Voice timed out. The prompt remains visible.',true);}},55000);
+    void mms.speak(test?{test:true}:{meetingId:state.m.id,utteranceId:u.id,epoch:u.epoch},status=>{
+      if(!current())return;
+      if(status==='speaking'){u.preparing=false;gate();if(!test)send({type:'playback',id:u.id,state:'speaking'});$('rally-state').textContent='Speaking';return;}
+      clearTimeout(state.speechTimer);state.speech=null;gate();$('stop-speech').hidden=true;
+      if(!test)send({type:'playback',id:u.id,state:status});if(status==='failed')notice('Meta MMS voice is unavailable. The prompt remains visible.',true);render();
+    });return;
+  }
   if(!state.config?.deviceVoiceAvailable){$('rally-hint').textContent='Voice output is unavailable here. Rally’s prompt stays visible.';if(!test)send({type:'playback',id:u.id,state:'shown'});return;}
   if(!$('voice-enabled').checked&&!test){send({type:'playback',id:u.id,state:'shown'});return;}
   if(!window.speechSynthesis||!window.SpeechSynthesisUtterance){notice('Speech synthesis is unavailable. The prompt is shown as text.',true);if(!test)send({type:'playback',id:u.id,state:'shown'});return;}

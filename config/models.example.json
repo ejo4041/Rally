@@ -1,0 +1,20 @@
+{
+  "reasoning": {
+    "adapter": "meta-chat-json",
+    "model": "muse-spark-1.3",
+    "reasoningEffort": "minimal",
+    "maxOutputTokens": 1024,
+    "rates": { "input": 1.25, "cachedInput": 0.15, "output": 4.25 }
+  },
+  "transcription": {
+    "adapter": "meta-realtime-asr",
+    "model": "muse-voice-transcribe-1.0",
+    "usdPerAudioHour": 0.18
+  },
+  "speech": {
+    "adapter": "mms-local",
+    "model": "facebook/mms-tts-eng",
+    "revision": "c71de0fe7204c83f1c10820a7d696d0b450048ba",
+    "sampleRate": 16000
+  }
+}

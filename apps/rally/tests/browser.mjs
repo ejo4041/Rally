@@ -7,7 +7,7 @@ const page=await browser.newPage({viewport:{width:1440,height:1080}});
 page.setDefaultTimeout(12000);
 const errors=[];page.on('pageerror',e=>errors.push(e.message));
 page.on('dialog',dialog=>dialog.accept());
-await page.route('**/api/config',async route=>{const response=await route.fetch();const value=await response.json();await route.fulfill({json:{...value,deviceVoiceAvailable:true}});});
+await page.route('**/api/config',async route=>{const response=await route.fetch();const value=await response.json();await route.fulfill({json:{...value,deviceVoiceAvailable:true,mmsAvailable:false}});});
 try{
   await mkdir('test-results',{recursive:true});
   await page.goto(base);await page.waitForSelector('.empty-history,.history-row');

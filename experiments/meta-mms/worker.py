@@ -16,12 +16,12 @@ MAX_SECONDS = 30
 def emit(value):
     print(json.dumps(value, separators=(',', ':')), flush=True)
 
-def load(directory):
+def load(directory,model_id=MODEL,revision=REVISION):
     # Loading is strictly offline; download.py is the only download operation.
     os.environ['HF_HUB_OFFLINE'] = '1'
     os.environ['TOKENIZERS_PARALLELISM'] = 'false'
     manifest = json.loads((directory / 'rally-model-manifest.json').read_text())
-    if manifest.get('model') != MODEL or manifest.get('revision') != REVISION:
+    if manifest.get('model') != model_id or manifest.get('revision') != revision:
         raise ValueError('Unexpected model identity')
     required = {'config.json','model.safetensors','special_tokens_map.json','tokenizer_config.json','vocab.json'}
     if not required.issubset(manifest['sha256']):
@@ -37,14 +37,14 @@ def load(directory):
     tokenizer = AutoTokenizer.from_pretrained(directory, local_files_only=True, trust_remote_code=False)
     return model, tokenizer
 
-def run(directory):
+def run(directory,model_id=MODEL,revision=REVISION):
     started = time.monotonic()
     try:
-        model, tokenizer = load(directory)
+        model, tokenizer = load(directory,model_id,revision)
     except Exception:
         emit({'type':'error','code':'model_load_failed'})
         return 1
-    emit({'type':'ready','model':MODEL,'revision':REVISION,'loadMs':round((time.monotonic()-started)*1000)})
+    emit({'type':'ready','model':model_id,'revision':revision,'loadMs':round((time.monotonic()-started)*1000)})
     import torch
     import numpy as np
     for line in sys.stdin:
@@ -71,7 +71,7 @@ def run(directory):
             if seconds>MAX_SECONDS or not len(waveform) or not np.isfinite(waveform).all():
                 raise ValueError('output_limit')
             pcm = (np.clip(waveform,-1,1)*32767).astype('<i2').tobytes()
-            emit({'type':'audio','id':request_id,'model':MODEL,'revision':REVISION,
+            emit({'type':'audio','id':request_id,'model':model_id,'revision':revision,
                   'sampleRate':rate,'seconds':seconds,'synthesisMs':round((time.monotonic()-started)*1000),
                   'pcmBase64':base64.b64encode(pcm).decode('ascii')})
         except ValueError as error:
@@ -84,5 +84,7 @@ def run(directory):
 if __name__ == '__main__':
     parser=argparse.ArgumentParser()
     parser.add_argument('--model-directory',type=Path,required=True)
+    parser.add_argument('--model-id',default=MODEL)
+    parser.add_argument('--model-revision',default=REVISION)
     args=parser.parse_args()
-    raise SystemExit(run(args.model_directory.resolve()))
+    raise SystemExit(run(args.model_directory.resolve(),args.model_id,args.model_revision))

@@ -2,7 +2,7 @@
 
 This is a local model adapter, not a second product backend. It generates moderator speech using **Meta `facebook/mms-tts-eng`**, executed on CPU on Rally's Ubuntu host. The organizer FAQ supplied by the user explicitly permits self-hosted MMS and excludes third-party TTS models. [Rule audit](../../docs/research/submission-requirements-meta-audit-2026-10-29.md).
 
-**Implemented and measured:** pinned offline model loading, persistent Python inference over stdio, one-request concurrency, bounded text/audio, cancellation by terminating model work, timeout, model-identity checks, PCM16/WAV output and synthetic-phrase CPU benchmark. **Not connected yet:** hosted app playback, Teams spoken interventions, echo rejection and host override through a real meeting.
+**Implemented and measured:** pinned offline model loading, persistent Python inference over stdio, one-request concurrency, bounded text/audio, cancellation by terminating model work, timeout, model-identity checks, PCM16/WAV output and synthetic-phrase CPU benchmark. **Connected in version 8:** [protected hosted browser playback](../../docs/releases/2026-10-29-v8.md) and Stop. Teams spoken interventions, echo rejection and host override through a real meeting remain pending.
 
 ## Model, license and provenance
 

@@ -6,6 +6,8 @@ Before implementing Rally or changing its scope, read [the roadmap](docs/rally-r
 
 The first product is implemented in `apps/rally/` and privately hosted with Sites. Read [the current build report](docs/build-progress.md) and [handoff](docs/handoff.md) before changing it; the original Python architecture proposal is historical, not a second backend to build. Preserve the private access policy and the distinction between the scripted walkthrough and real Muse processing.
 
+For model selection, adapter, audio-event or pricing changes, read [model interfaces and configuration](docs/model-interfaces.md) and preserve the capability contracts.
+
 ## Documentation and handoff
 
 The user requests all substantive outputs and important context saved as organized Markdown, alongside concise chat replies. Save plans, research, decisions, test results, and material findings in `docs/`; link existing authoritative content rather than duplicating it. Keep [the documentation index](docs/README.md) and [current handoff](docs/handoff.md) current at meaningful stopping points. Record completed work, untested assumptions, blockers, and next actions. Keep secrets out of Markdown. Write repository documentation as factual engineering and product records: requirements, implementation status, validation evidence, attribution, licenses and explicit limitations. Keep submission planning focused on published requirements and accurate demonstrations. Submission work is draft-only until the user explicitly requests final submission; keep final entry actions pending. When using the handoff skill, also maintain its temporary handoff as required by that skill.

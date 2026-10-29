@@ -6,3 +6,6 @@ dist/
 .env*
 .data/
 test-results/
+
+# Ignore both dependency directories and local reuse links.
+node_modules

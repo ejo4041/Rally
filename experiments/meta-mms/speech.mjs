@@ -13,13 +13,13 @@ export function wav(pcm,rate){
 // One local model process, one bounded request. Cancellation terminates model
 // work, rather than allowing stale speech to finish and play after an override.
 export class MMSSpeech {
- constructor({python,modelDirectory,worker=fileURLToPath(new URL('./worker.py',import.meta.url)),startTimeoutMs=45000,synthesisTimeoutMs=20000,onReady=()=>{}}){
+ constructor({python,modelDirectory,worker=fileURLToPath(new URL('./worker.py',import.meta.url)),startTimeoutMs=45000,synthesisTimeoutMs=20000,model=MODEL,revision=REVISION,onReady=()=>{}}){
   if(!python||!modelDirectory)throw new Error('Configure the Python environment and pinned model directory.');
-  Object.assign(this,{python,modelDirectory,worker,startTimeoutMs,synthesisTimeoutMs,onReady});
+  Object.assign(this,{python,modelDirectory,worker,startTimeoutMs,synthesisTimeoutMs,model,revision,onReady});
  }
  async start(){
   if(this.ready)return this.ready;
-  const child=spawn(this.python,[this.worker,'--model-directory',this.modelDirectory],{stdio:['pipe','pipe','ignore'],env:{...process.env,HF_HUB_OFFLINE:'1',TOKENIZERS_PARALLELISM:'false'}});this.child=child;
+  const child=spawn(this.python,[this.worker,'--model-directory',this.modelDirectory,'--model-id',this.model,'--model-revision',this.revision],{stdio:['pipe','pipe','ignore'],env:{...process.env,HF_HUB_OFFLINE:'1',TOKENIZERS_PARALLELISM:'false'}});this.child=child;
   this.ready=new Promise((resolve,reject)=>{
    const timer=setTimeout(()=>{reject(new Error('MMS startup timed out.'));this.close();},this.startTimeoutMs);
    const fail=()=>{clearTimeout(timer);reject(new Error('MMS process stopped.'));if(this.child===child){this.child=null;this.ready=null;this.pending?.reject(new Error('MMS process stopped.'));this.pending=null;}};
@@ -29,7 +29,7 @@ export class MMSSpeech {
      if(line.length>1400000)throw new Error('MMS response limit exceeded.');
      const message=JSON.parse(line);
      if(message.type==='ready'){
-      if(message.model!==MODEL||message.revision!==REVISION)throw new Error('Unexpected MMS model.');
+      if(message.model!==this.model||message.revision!==this.revision)throw new Error('Unexpected MMS model.');
       clearTimeout(timer);this.onReady(message);resolve(message);return;
      }
      if(message.type==='error'&&!message.id){clearTimeout(timer);reject(new Error('MMS model failed to load.'));this.close();return;}
@@ -37,7 +37,7 @@ export class MMSSpeech {
      if(message.type==='error')pending.reject(new Error(`MMS speech failed: ${message.code}`));
      else if(message.type==='audio'){
       const pcm=Buffer.from(message.pcmBase64||'','base64');
-      if(message.model!==MODEL||message.revision!==REVISION||message.sampleRate!==16000||!Number.isFinite(message.seconds)||!Number.isFinite(message.synthesisMs)||!pcm.length||pcm.length%2||pcm.length>960000||Math.abs(pcm.length/2/message.sampleRate-message.seconds)>.001)throw new Error('Invalid MMS audio.');
+      if(message.model!==this.model||message.revision!==this.revision||message.sampleRate!==16000||!Number.isFinite(message.seconds)||!Number.isFinite(message.synthesisMs)||!pcm.length||pcm.length%2||pcm.length>960000||Math.abs(pcm.length/2/message.sampleRate-message.seconds)>.001)throw new Error('Invalid MMS audio.');
       pending.resolve({...message,pcm,wav:wav(pcm,message.sampleRate)});
      }else throw new Error('Unexpected MMS response.');
     }catch(error){this.pending?.reject(error);clearTimeout(timer);reject(error);this.close();}
