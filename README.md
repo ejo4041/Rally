@@ -4,15 +4,23 @@ A meeting moderator that keeps a decision meeting moving and turns discussion in
 
 **Private preview:** https://rally-meeting-moderator.excavator3496.chatgpt.site — sign in with the account used for this workspace.
 
-Start with **Try a walkthrough** for a clearly labeled, zero-cost example. For real audio, create a meeting, enter an agenda/roster, confirm participant consent, and start the microphone. Muse handles transcription and reasoning; the browser voices Rally’s prompts. Review proposals before confirming them.
+Start with **Try a walkthrough** for a clearly labeled, zero-cost example. For real audio, create a meeting, enter an agenda/roster, confirm participant consent, and start the microphone. Muse handles transcription and reasoning. A self-hosted Meta MMS English voice adapter is now measured locally; connection to hosted/Teams playback is pending. New app code uses visible prompts by default while approved speech is unavailable. Review proposals before confirming them.
 
 ## Teams live-transcription POC
 
 On the existing Site, scroll to **Invite Rally to Teams**, paste a fresh work/school meeting invite, confirm participant consent and check **Transcribe this test**. Admit **Rally audio test** from the lobby. Live text starts after admission; select **Leave meeting** and download the transcript before starting another test. The server runner is active and uses the normal Teams browser guest route, with no ACS resource/app registration required for this POC.
 
-Tests stop after three minutes including preparation/lobby time. The deployed version is transcript-only, with no spoken moderation or main meeting-history integration yet. Local work now adds **Save to meeting history** for completed tests, with reload, Markdown export and deletion; this change has not been published. The first integrated live test transcribed speech but stopped about 26.5 seconds early. A server audio-pacing fix is installed and passes offline regression tests; a fresh consented live retry is pending. Phone-on-table browser microphone/TTS remains the fallback.
+Tests stop after three minutes including preparation/lobby time. The deployed version is transcript-only, with no spoken moderation or main meeting-history integration yet. Local work now adds **Save to meeting history** for completed tests, with reload, Markdown export and deletion. Saved Teams records now also have host agenda/roster editing, paid-consent retrospective Muse review, source-linked proposals, explicit confirmation, speaker correction and dismissal. These changes are tested locally and have not been published to the Site. The first integrated live test transcribed speech but stopped about 26.5 seconds early. A server audio-pacing fix is installed and passes offline regression tests; a fresh consented live retry is pending. Phone-on-table browser capture remains the baseline; approved MMS playback is still being connected.
 
 [Deployment result, verification and rollback](docs/research/teams-transcription-deployment-result.md) · [Current handoff](docs/handoff.md). Deployment incurred **$0** in Muse calls. Current tracked estimate **$0.15263115**, conditional remaining credit **$149.84736885** if the full $150 grant is applied and no other usage exists; actual Billing remains unverified.
+
+## Meta model use and competition voice
+
+Runtime transcription uses **Muse Voice Transcribe** and reasoning uses **Muse Spark 1.3** via Meta Model API. The additional voice adapter uses **Meta MMS English `facebook/mms-tts-eng`**, pinned to `c71de0fe7204c83f1c10820a7d696d0b450048ba`, **self-hosted on the Rally Ubuntu CPU host**. Its weights are **CC BY-NC 4.0**; model files stay outside this repository. [Adapter, attribution and reproduction](experiments/meta-mms/README.md) · [actual CPU measurements](docs/research/mms-cpu-benchmark.json).
+
+The organizer FAQ supplied by the user permits self-hosted MMS and excludes third-party TTS models. No GPT/third-party TTS is used for the competition path. Legacy browser/OS voice diagnostics are disabled by default in the new app code; local voice execution alone is not proof of Meta model origin. MMS currently generates WAVs locally and is not yet connected to deployed playback. The deployed version 7 predates the new default.
+
+[Latest build and remaining gates](docs/overnight-build-2026-10-29.md) · [submission requirements and model eligibility review](docs/research/submission-requirements-meta-audit-2026-10-29.md) · [submission draft](docs/submission-package.md).
 
 ## Run locally
 
@@ -35,7 +43,7 @@ The default local server disables paid calls. To enable real Muse locally, confi
 - [Documentation index](docs/README.md)
 - [API budget](docs/api-budget.md) and [tracked cost ledger](docs/research/muse-cost-ledger.md)
 
-The implemented flow includes live transcription/moderation, browser speech and host controls, proposed outcomes with explicit host confirmation, saved history, export/deletion, wrap-up timing, and visible cost estimates. The walkthrough is scripted and is never represented as a live model demonstration.
+The baseline implemented flow includes live transcription/moderation, host controls, proposed outcomes with explicit host confirmation, saved history, export/deletion, wrap-up timing, and visible cost estimates. The walkthrough is scripted and is never represented as a live model demonstration.
 
 Phone hardware, room echo, automatic voice identity and the fixed Teams transcription flow still require real-device/live checks. The normal Teams client previously exchanged real meeting audio; see the deployment result for the boundary between that proof and the new queue/transcription integration.
 

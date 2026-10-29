@@ -10,7 +10,7 @@ test('private-workspace API and WebSocket walkthrough persist, confirm, export a
   const db=await mf.getD1Database('DB');for(const sql of (await readFile('drizzle/0000_rally.sql','utf8')).split(';').map(s=>s.replaceAll('--> statement-breakpoint','').trim()).filter(Boolean))await db.prepare(sql).run();
   const request=(path,options={})=>mf.dispatchFetch('http://localhost'+path,options);
   assert.equal((await request('/')).status,200);
-  assert.equal((await request('/api/config')).status,200);
+  assert.equal((await request('/api/config')).status,200);assert.equal((await(await request('/api/config')).json()).deviceVoiceAvailable,false,'Unverified device TTS must be disabled by default');
   assert.equal((await request('/api/meetings',{method:'POST',headers:{Origin:'https://evil.example'},body:'{}'})).status,403);
   assert.equal((await request('/api/meetings',{method:'POST',body:JSON.stringify({agenda:['Decide'],minutes:5,wrapMinutes:5})})).status,400);
   const created=await request('/api/meetings',{method:'POST',body:JSON.stringify({kind:'walkthrough',minutes:30,wrapMinutes:5})});assert.equal(created.status,201);const {meeting}=await created.json();

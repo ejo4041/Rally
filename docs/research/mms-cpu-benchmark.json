@@ -1,0 +1,66 @@
+{
+  "model": "facebook/mms-tts-eng",
+  "revision": "c71de0fe7204c83f1c10820a7d696d0b450048ba",
+  "execution": "self-hosted CPU on Rally Ubuntu droplet",
+  "license": "CC-BY-NC-4.0",
+  "startup": {
+    "type": "ready",
+    "model": "facebook/mms-tts-eng",
+    "revision": "c71de0fe7204c83f1c10820a7d696d0b450048ba",
+    "loadMs": 10519
+  },
+  "results": [
+    {
+      "name": "opening",
+      "characters": 86,
+      "synthesisMs": 1782,
+      "requestMs": 12337,
+      "audioSeconds": 6.144,
+      "sampleRate": 16000,
+      "realTimeFactor": 0.2900390625,
+      "sha256": "9d46b02fe966825e34701f49172f5381569301fa8a103feeb6f64880e5a91e0a"
+    },
+    {
+      "name": "redirect",
+      "characters": 40,
+      "synthesisMs": 716,
+      "requestMs": 718,
+      "audioSeconds": 2.992,
+      "sampleRate": 16000,
+      "realTimeFactor": 0.23930481283422458,
+      "sha256": "d2b3695b0895b4275330a9e7d061d0bdef9ad00a30cd24669e377efc32d5c19f"
+    },
+    {
+      "name": "deadline",
+      "characters": 57,
+      "synthesisMs": 963,
+      "requestMs": 966,
+      "audioSeconds": 4.048,
+      "sampleRate": 16000,
+      "realTimeFactor": 0.23789525691699603,
+      "sha256": "423914352ae6b7aef6a81773c11821a105d57f3ad307eb4c40e39b8057c45fdb"
+    },
+    {
+      "name": "wrapup",
+      "characters": 84,
+      "synthesisMs": 1400,
+      "requestMs": 1403,
+      "audioSeconds": 5.728,
+      "sampleRate": 16000,
+      "realTimeFactor": 0.24441340782122906,
+      "sha256": "30ab10a8dad67bced75689d3cf49307fc945f09b8650126f08be13e33c7156e2"
+    }
+  ],
+  "limits": {
+    "maxCharacters": 650,
+    "maxAudioSeconds": 30,
+    "cpuThreads": 2
+  },
+  "boundaries": [
+    "Synthetic, explicitly authored phrases only.",
+    "No meeting joined; no meeting audio captured.",
+    "No physical listening or Teams output validation.",
+    "Generation timing is not first-audible latency.",
+    "No Muse/API inference charges; ordinary host infrastructure still exists."
+  ]
+}

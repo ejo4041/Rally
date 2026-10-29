@@ -2,6 +2,7 @@ import {AppError,confirmOutcome,createMeeting,markdown,scorecard} from './core.j
 import {repo} from './store.js';
 import {attachSession} from './live.js';
 import {teamsApi} from './teams.js';
+import {editTeamsRecord,reviewTeamsRecord} from './teams-review.js';
 const security={'X-Content-Type-Options':'nosniff','Referrer-Policy':'same-origin','Cache-Control':'no-store'};
 const json=(value,status=200)=>new Response(JSON.stringify(value),{status,headers:{...security,'Content-Type':'application/json; charset=utf-8'}});
 async function input(request){const raw=await request.text();if(raw.length>20000)throw new AppError('Request too large.',413);try{return JSON.parse(raw);}catch{throw new AppError('Invalid JSON.');}}
@@ -22,7 +23,7 @@ export default {async fetch(request,env,ctx){
     if(!env.DB)throw new AppError('Workspace storage is unavailable.',503);
     if(path.startsWith('/api/teams/'))return json(await teamsApi(request,env,request.method==='POST'?await input(request):{}));
     const r=repo(env.DB);
-    if(path==='/api/config'&&request.method==='GET')return json({liveAvailable:!!env.MODEL_API_KEY&&env.RALLY_PAID_ENABLED==='1',baselineSpend:Number(env.RALLY_BASELINE_SPEND||.0517416),meetingBudget:Number(env.RALLY_MEETING_BUDGET||.25),buildBudget:Number(env.RALLY_BUILD_BUDGET||.5),model:'Muse Spark 1.3',asr:'Muse Voice Transcribe',maxMinutes:55});
+    if(path==='/api/config'&&request.method==='GET')return json({liveAvailable:!!env.MODEL_API_KEY&&env.RALLY_PAID_ENABLED==='1',deviceVoiceAvailable:env.RALLY_DEVICE_VOICE_ENABLED==='1',baselineSpend:Number(env.RALLY_BASELINE_SPEND||.0517416),meetingBudget:Number(env.RALLY_MEETING_BUDGET||.25),buildBudget:Number(env.RALLY_BUILD_BUDGET||.5),model:'Muse Spark 1.3',asr:'Muse Voice Transcribe',maxMinutes:55});
     if(path==='/api/costs'&&request.method==='GET'){const c=await r.costs();return json({...c,baseline:Number(env.RALLY_BASELINE_SPEND||.0517416),conditionalRemainder:150-Number(env.RALLY_BASELINE_SPEND||.0517416)-Number(c.total||0)});}
     if(path==='/api/usage'&&request.method==='GET')return json({events:await r.usageList()});
     if(path==='/api/meetings'&&request.method==='GET')return json({meetings:await r.list()});
@@ -31,9 +32,11 @@ export default {async fetch(request,env,ctx){
       if(data.kind==='walkthrough'){data.participants=['Alex','Priya','Sam'];data.agenda=['Decide Friday release scope','Confirm rollback owner and deadline'];data.title=data.title||'Friday release · walkthrough';}
       return json({meeting:await r.create(createMeeting(data))},201);
     }
-    const match=path.match(/^\/api\/meetings\/([a-zA-Z0-9-]+)(?:\/(export|connect|confirm))?$/);
+    const match=path.match(/^\/api\/meetings\/([a-zA-Z0-9-]+)(?:\/(export|connect|confirm|record|review))?$/);
     if(!match)return json({error:'Not found'},404);
     const [,id,action]=match,m=await r.get(id);if(!m)throw new AppError('Meeting not found.',404);
+    if(action==='record'&&request.method==='POST')return json(await editTeamsRecord(r,id,await input(request)));
+    if(action==='review'&&request.method==='POST')return json(await reviewTeamsRecord(env,r,id,await input(request)));
     if(action==='connect'){
       if(request.headers.get('Upgrade')?.toLowerCase()!=='websocket')throw new AppError('WebSocket required.',426);
       if(!['draft'].includes(m.phase))throw new AppError('This meeting is already started or ended. Its saved record is still available.',409);
@@ -46,7 +49,7 @@ export default {async fetch(request,env,ctx){
     if(!action&&request.method==='DELETE'){await r.remove(id);return json({deleted:true});}
     if(action==='confirm'&&request.method==='POST'){
       if(['live','wrapping'].includes(m.phase))throw new AppError('Use the active meeting connection for confirmation.',409);
-      const data=await input(request);confirmOutcome(m,data.id,{owner:data.owner,dueDate:data.dueDate,actor:'Meeting host',note:'Explicit host confirmation on saved record'});await r.save(m);return json({meeting:m,scorecard:scorecard(m)});
+      const data=await input(request);if(m.kind==='teams')return json(await editTeamsRecord(r,id,{...data,action:'confirm'}));confirmOutcome(m,data.id,{owner:data.owner,dueDate:data.dueDate,actor:'Meeting host',note:'Explicit host confirmation on saved record'});await r.save(m);return json({meeting:m,scorecard:scorecard(m)});
     }
     return json({error:'Method not allowed'},405);
   }catch(e){return json({error:e instanceof AppError?e.message:'The workspace could not complete that operation. Please retry.',code:e instanceof AppError?e.status:500},e instanceof AppError?e.status:500);}

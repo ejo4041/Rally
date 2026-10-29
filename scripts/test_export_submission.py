@@ -21,6 +21,8 @@ class SourceExportTest(unittest.TestCase):
                 '.env.example': 'MODEL_API_KEY=',
                 '.env.local': 'DO_NOT_EXPORT_KEY',
                 'apps/rally/.dev.vars': 'DO_NOT_EXPORT_BINDINGS',
+                'experiments/meta-mms/models/model.safetensors': 'DO_NOT_EXPORT_WEIGHTS',
+                'loose-weights.safetensors': 'DO_NOT_EXPORT_WEIGHTS',
                 'experiments/teams-web-client/state/profile/Default/Cookies': 'DO_NOT_EXPORT_COOKIE',
                 'experiments/teams-web-client/state/profile/cache': 'DO_NOT_EXPORT_CACHE',
                 'apps/rally/.wrangler/local-store': 'DO_NOT_EXPORT_RUNTIME',

@@ -24,7 +24,7 @@ The dev server binds loopback. Do not expose it as an anonymous public shared wo
 
 ## Features and boundaries
 
-Agenda, outcome, roster, duration and editable opening; consent-gated streaming PCM; bounded Muse moderation; browser speech and immediate host controls; transcript-evidenced proposals with explicit host confirmation; five-minute default wrap-up; saved history, scorecard, export and deletion. The compressed demo clock and zero-cost scripted walkthrough are clearly labeled.
+Agenda, outcome, roster, duration and editable opening; consent-gated streaming PCM; bounded Muse moderation; immediate host controls and optional device speech diagnostics (off by default); transcript-evidenced proposals with explicit host confirmation; five-minute default wrap-up; saved history, scorecard, export and deletion. The compressed demo clock and zero-cost scripted walkthrough are clearly labeled.
 
 Microphone audio is shielded while Rally speaks to reduce self-voice contamination; host Stop returns the floor. Automatic spoken barge-in and verified voice identity are not claimed. Host correction and unknown speakers are explicit. Model output cannot confirm commitments itself.
 
@@ -49,3 +49,7 @@ Build with `node scripts/build.mjs`, validate with `node scripts/validate-artifa
 `RALLY_PAID_ENABLED=1` enables real calls; opening the app never triggers one. `RALLY_MEETING_BUDGET` defaults to $0.25 and `RALLY_BUILD_BUDGET` to $0.50. These are local forecast gates, not provider-enforced spend caps. `RALLY_BASELINE_SPEND` carries earlier tracked experiments; the app adds its persistent usage to that baseline. Reconcile exported usage before changing the baseline to avoid double counting.
 
 The displayed credit remainder assumes a full applied $150 grant and no untracked usage; actual Billing remains unverified. No raw audio is intentionally persisted by Rally. Provider retention needs separate verification; this is not a blanket zero-retention claim.
+
+## October 29 local build
+
+Saved Teams history/review and host corrections are implemented and tested locally, not yet deployed. [Current checkpoint](../../docs/overnight-build-2026-10-29.md). Browser/OS speech diagnostics default off; the competition speech candidate is self-hosted Meta MMS English, measured in [the local model adapter](../../experiments/meta-mms/README.md), not yet connected to hosted playback. Do not use third-party TTS models for the competition path under the supplied organizer FAQ.

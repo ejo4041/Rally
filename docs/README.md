@@ -1,5 +1,7 @@
 # Rally documentation
 
+**Latest October 29 build:** [Retrospective Teams review, measured Meta MMS speech, and submission audit](overnight-build-2026-10-29.md). Source changes are tested locally; deployed Site is still version 7. Live Teams/MMS playback validation remains pending.
+
 **October 29 offline checkpoint:** [Teams saved-history implementation, tests, documentation and Git state](offline-progress-2026-10-29.md). New history code is local, not deployed. Live pacing-fix retry remains pending; no live test or paid call was run tonight.
 
 **Resume from home:** [October 28 tonight handoff](tonight-handoff-2026-10-28.md) — personal/work account distinction, current deployment, live-test incident and fix, service commands, costs and next test. This is the latest starting point.
