@@ -14,6 +14,10 @@ Desktop Chrome or Edge with tab-audio sharing is the intended path. Mobile/other
 
 No added platform connector subscription is used. Real Muse calls still use the existing paid/grant account and software budget gates. The labeled walkthrough remains available without real model calls.
 
+## Present Rally
+
+[Presenter view](presenter-view.md) provides a clean call display with prompts and confirmed outcomes. Manual outgoing tab-audio sharing remains a separate platform/device check; the deployed input path is still host-side capture.
+
 ## WhatsApp follow-up
 
 After ending a meeting and confirming outcomes, choose **Share confirmed outcomes**. Review the draft and either copy it or open it in WhatsApp. Choose the recipient and press Send in WhatsApp yourself. Unconfirmed outcomes, stale evidence and the full transcript are excluded. The WhatsApp draft URL contains the displayed draft text; opening it shares that text with WhatsApp.

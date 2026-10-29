@@ -20,12 +20,12 @@ Do not try to show an entire 30-minute meeting. Show a compact full decision loo
 | 1:10–1:45 | Participants make a release decision and propose a follow-up. Rally asks for missing owner/date, gets explicit confirmation, and displays evidence-linked outcomes. | Accountability, bounded autonomy, useful output |
 | 1:45–2:00 | Demonstrate host pause/dismiss/override and immediate output stop. | User control and engineering craft |
 | 2:00–2:20 | Clearly label “demo clock advanced to five minutes remaining”; trigger actual scheduled wrap-up and read unresolved items. | Scheduled wrap-up with the clock advance explicitly labeled |
-| 2:20–2:40 | Show saved record, factual scorecard, transcript evidence and export. | Durable value and traceability |
-| 2:40–3:00 | Show concise runtime architecture and actual hackathon contributions; summarize observed outcome and measured latency. Product/repo links appear in submission. | Honest technical depth and reproducibility |
+| 2:20–2:30 | Show saved evidence, a confirmed WhatsApp follow-up preview and the actual model roles. | Durable value, traceability and clear model attribution |
+| 2:30–3:00 | Present the future meeting-platform direction with an explicit future label, then return to the real product and project links. | Product direction grounded in the demonstrated workflow |
 
 If the compressed clock risks ambiguity, show wrap-up in a second clearly labeled short capture instead. Use honest transitions between scenes. Do not accelerate model response time or pass synthetic/precomputed responses off as live. Label replay/fallback footage and disclose which optional integrations are not implemented.
 
-If Teams passes its join/receive/speak gate before feature freeze, use it as the meeting surface or show a brief real participant-join proof. Otherwise use the planned room-microphone surface. Do not claim browser room capture is a working remote-meeting bot.
+If Teams passes its join/receive/speak gate before feature freeze, use it as the meeting surface or show a brief real participant-join proof. Otherwise use a device-verified room microphone or meeting browser tab. WhatsApp Web is the first Meta preset; Zoom Web, Meet and Jitsi use the same host-selected tab-audio path. Run Check audio before recording. Do not claim browser room capture is a working remote-meeting bot.
 
 ## Validation requirements
 

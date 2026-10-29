@@ -1,10 +1,11 @@
 # Browser meeting capture verification
 
-October 29, 2026. The production app is version 11. These checks use synthetic audio and preserve the distinction between browser transport evidence and real meeting/provider evidence.
+October 29, 2026. The production app is version 12. These checks use synthetic audio and preserve the distinction between browser transport evidence and real meeting/provider evidence.
 
 | Check | Result and boundary |
 | --- | --- |
 | Capture lifecycle | Six unit cases cover tab/audio requirements, wrong display selection, permission rejection, sharing ending during setup, cancellation during the tab picker and cancellation during the microphone picker. Existing tracks stop immediately; late grants stop without starting another prompt. |
+| Initialization interruption | Browser tests force worklet loading failure and sharing ending during worklet setup; all sources close and no model socket opens. |
 | Mixed audio | Synthetic 440 Hz tab and 880 Hz microphone tracks reach the real 16 kHz PCM worklet. Both signals are measured; these are not human voices or platform calls. |
 | Free audio check | Separate tab/microphone levels register locally; manual stop, dialog closure, pending-picker cancellation and automatic 15-second stop close tracks without opening a model socket. |
 | Native Chromium | Real `getDisplayMedia` selects a synthetic 660 Hz tab. The local check and actual outbound PCM path pass. The model socket is mocked. [Measurement](native-tab-browser-check.json). |
@@ -27,3 +28,9 @@ The optional `tests/tab-soak-browser.mjs` fixture holds real tab capture for a c
 The fixture aggregates frame counts/timing and discards PCM after the initial frequency check. It also verifies that host mute sends silence and unmute resumes the signal. Results are written to `apps/rally/test-results/tab-soak-browser.json`; a completed measurement must be copied here before claiming a passed long-duration run.
 
 To run on an equipped Linux host from `apps/rally`: `RALLY_TEST_SOAK_MINUTES=30 dbus-run-session -- node tests/native-tab-runner.mjs tests/tab-soak-browser.mjs`. Whole durations from 1 to 55 minutes are accepted. The runner has a bounded deadline and removes its display/browser processes on completion.
+
+## Sample-rate and alias checks
+
+The actual PCM worklet passed 11 offline synthetic-tone cases at 16, 44.1, 48 and 96 kHz input rates. Every two-second case produced exactly 32,000 output samples in 25 frames of 1,280 samples. A 1 kHz input at amplitude 0.2 stayed between 0.1996 and 0.2001. A 6 kHz input stayed between 0.1591 and 0.2000; the 96 kHz input has the largest measured upper-band attenuation.
+
+For downsampling, an input tone at 10 kHz would alias to 6 kHz without filtering. Its measured output was 0.000105–0.001235, at least approximately 44 dB below the input amplitude. These are limited frequency checks, not a complete filter characterization, transcription accuracy test or latency claim. Offline render time is unrelated to Muse response time. No waveforms or real meeting audio were saved. [Measurement](browser-audio-quality-check.json). Run `node tests/audio-quality-browser.mjs` against the local preview to repeat.

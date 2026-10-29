@@ -1,10 +1,11 @@
 import {chromium} from 'playwright';
 import assert from 'node:assert/strict';
-import {mkdir} from 'node:fs/promises';
+import {mkdir,writeFile} from 'node:fs/promises';
 const base=process.env.RALLY_TEST_URL||'http://127.0.0.1:8787';
 const browser=await chromium.launch({headless:true,args:['--no-sandbox']});
 const page=await browser.newPage({viewport:{width:1440,height:1080}});
 page.setDefaultTimeout(12000);
+let otherRecordId;
 const errors=[];page.on('pageerror',e=>errors.push(e.message));
 page.on('dialog',dialog=>dialog.accept());
 await page.route('**/api/config',async route=>{const response=await route.fetch();const value=await response.json();await route.fulfill({json:{...value,deviceVoiceAvailable:true,mmsAvailable:false}});});
@@ -30,12 +31,18 @@ try{
   for(let i=1;i<=6;i++){await page.locator('#next-turn').click();await page.waitForFunction(count=>document.querySelectorAll('.turn').length===count,i);}
   assert.equal(await page.locator('.outcome').count(),2);
   const action=page.locator('.outcome').filter({hasText:'Run the rollback test.'});await action.locator('[data-confirm]').click();await page.locator('#confirm-check').check();await page.locator('#confirm-form button[type=submit]').click();await page.waitForFunction(()=>document.querySelector('#action-score').textContent==='1');
+  await page.locator('#present-meeting').click();assert.equal(await page.locator('#control-bar').isVisible(),true);assert.equal(await page.locator('#walkthrough-controls').isVisible(),true);
   await page.locator('#pause-moderator').click();await page.waitForFunction(()=>document.querySelector('#phase-badge').textContent==='Rally paused');await page.locator('#pause-moderator').click();
   await page.locator('#demo-clock').click();await page.waitForFunction(()=>!document.querySelector('#demo-clock-banner').hidden);
+  assert.equal(await page.locator('#demo-clock-banner').isVisible(),true);await page.locator('#exit-presenter').click();
   await page.screenshot({path:'test-results/meeting-desktop.png',fullPage:true});
   await page.locator('#end-meeting').click();await page.waitForFunction(()=>document.querySelector('#phase-badge').textContent==='Saved');await page.reload();await page.waitForFunction(()=>document.querySelector('#action-score').textContent==='1');
   await page.locator('#share-followup').click();await page.locator('#followup-dialog').waitFor({state:'visible'});const followup=await page.locator('#followup-text').inputValue();assert.match(followup,/Run the rollback test/);assert.ok(!followup.includes('Release only after'),'unconfirmed decision must not be shared');assert.ok(!followup.includes('mountain bikes'),'raw transcript must stay in Rally');
   await page.evaluate(()=>{window.__shareTarget=null;window.open=(url,target,features)=>{window.__shareTarget={url,target,features};return null;};});await page.locator('#whatsapp-followup').click();const share=await page.evaluate(()=>window.__shareTarget);assert.equal(new URL(share.url).origin,'https://wa.me');assert.equal(new URL(share.url).searchParams.get('text'),followup);assert.match(share.features,/noopener/);await page.locator('#followup-dialog [data-close]').click();
+  const originalHash=await page.evaluate(()=>location.hash);otherRecordId=await page.evaluate(async()=>{const response=await fetch('/api/meetings',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({title:'Private other meeting',agenda:['Private agenda'],minutes:3,wrapMinutes:.5})});return(await response.json()).meeting.id;});
+  await page.locator('#present-meeting').click();await page.locator('#presenter-bar').waitFor({state:'visible'});assert.equal(await page.locator('.sidebar').isVisible(),false);assert.equal(await page.locator('#transcript').isVisible(),false);assert.equal(await page.locator('.outcomes-card').isVisible(),false);assert.equal(await page.locator('#walkthrough-banner').isVisible(),true);assert.match(await page.locator('#presenter-outcome-list').textContent(),/Run the rollback test/);assert.ok(!(await page.locator('#presenter-outcome-list').textContent()).includes('Release only after'));assert.ok(!/mountain bikes/i.test(await page.locator('body').innerText()));
+  await page.evaluate(id=>location.hash='meeting/'+id,otherRecordId);await page.waitForFunction(hash=>location.hash===hash,originalHash);await page.reload();await page.locator('#presenter-bar').waitFor({state:'visible'});await page.waitForFunction(()=>document.querySelector('#phase-badge').textContent==='Saved');assert.equal(await page.locator('.sidebar').isVisible(),false);assert.ok(!(await page.locator('body').innerText()).includes('Private other meeting'));assert.ok(!/mountain bikes/i.test(await page.locator('body').innerText()));await page.screenshot({path:'test-results/presenter-desktop.png',fullPage:true});
+  await page.setViewportSize({width:390,height:844});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);await page.screenshot({path:'test-results/presenter-mobile.png',fullPage:true});await page.setViewportSize({width:1440,height:1080});await page.locator('#exit-presenter').click();assert.equal(await page.locator('.sidebar').isVisible(),true);await page.evaluate(id=>fetch('/api/meetings/'+id,{method:'DELETE'}),otherRecordId);otherRecordId=null;
   const exportData=await page.evaluate(async()=>fetch('/api/meetings/'+location.hash.split('/')[1]+'/export').then(r=>r.text()));assert.match(exportData,/SCRIPTED WALKTHROUGH/);assert.match(exportData,/Thursday/);
   await page.setViewportSize({width:390,height:844});await page.waitForTimeout(350);await page.screenshot({path:'test-results/meeting-mobile.png',fullPage:true});
   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false,'Mobile page must not overflow');
@@ -49,5 +56,5 @@ try{
   await page.locator('#test-voice').click();await page.locator('#stop-speech').waitFor({state:'visible'});await page.locator('#stop-speech').click();await page.evaluate(()=>window.__speechTest.last.onend?.());assert.equal(await page.locator('#stop-speech').isVisible(),false,'Late completion must not restart canceled speech');assert.ok(await page.evaluate(()=>window.__speechTest.cancels)>0);
   await page.evaluate(()=>{window.blockPendingSpeech();window.speak({id:'late-server-prompt',text:'A stale prompt that must not restart speech.',epoch:0});});assert.equal(await page.locator('#stop-speech').isVisible(),false,'An old-epoch prompt must be blocked immediately before the server acknowledges override');
   await page.locator('#delete-meeting').click();await page.locator('#confirm-delete').click();
-  assert.deepEqual(errors,[]);console.log('Browser flow passed: setup, short-meeting validation, deletion, labeled walkthrough, proposals, confirmation, pause/resume, demo clock, save/reload, export, responsive layout, zero paid usage.');
-}finally{await browser.close();}
+  assert.deepEqual(errors,[]);await writeFile('test-results/presenter-browser.json',JSON.stringify({testedAt:new Date().toISOString(),passed:true,transcriptHidden:true,proposalsHidden:true,historyHidden:true,confirmedOutcomesVisible:true,restoredOnReload:true,otherMeetingNavigationBlocked:true,scriptedLabelPreserved:true,demoClockLabelPreserved:true,liveHostControlsUsable:true,mobileOverflow:false,paidModelCalls:0,realPlatformCall:false},null,2)+'\n');console.log('Browser flow passed: setup, short-meeting validation, deletion, labeled walkthrough, proposals, confirmation, pause/resume, demo clock, save/reload, export, responsive layout, zero paid usage.');
+}finally{if(otherRecordId)await fetch(base+'/api/meetings/'+otherRecordId,{method:'DELETE'});await browser.close();}

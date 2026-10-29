@@ -1,6 +1,6 @@
 # Rally demonstration script — draft
 
-Draft prepared October 29, 2026. No recording or final submission has been made. This version reserves the final 30 seconds for the longer-term product vision. [Demonstration requirements](demo-walkthrough.md) and [current release](releases/2026-10-29-v11.md) determine what can be recorded as working behavior.
+Draft prepared October 29, 2026. No recording or final submission has been made. This version reserves the final 30 seconds for the longer-term product vision. [Demonstration requirements](demo-walkthrough.md) and [current release](releases/2026-10-29-v12.md) determine what can be recorded as working behavior.
 
 ## Narrative
 
@@ -47,3 +47,5 @@ After a consenting device rehearsal, use WhatsApp Web as the Meta meeting surfac
 For the three-minute edit, replace part of the 2:05–2:30 export narration with: “Here are the outcomes I confirmed, without the rest of the transcript. I can review them and open a WhatsApp draft.” Show the actual preview. Sending a message is optional and requires an intended recipient; previewing it is enough to demonstrate the feature. If using the scripted walkthrough, retain its visible label and describe these as example outcomes.
 
 In the closing future-platform pitch, the present-day bridge is concrete: work inside existing calls, help the host reach a decision, and carry confirmed next steps into their existing chat. Building the meeting platform itself remains the future direction.
+
+Presenter view is available for the browser-call variant. It keeps the current prompt and confirmed outcomes in view while hiding the workspace history, full transcript and proposals. Preserve its example/clock labels. Stop call-side sharing before returning to the workspace. Outgoing tab-audio sharing still needs a platform/device check; the view alone does not demonstrate remote speech.
