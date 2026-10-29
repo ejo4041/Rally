@@ -1,0 +1,23 @@
+[Unit]
+Description=Rally private integrated LiveKit media
+After=network-online.target tailscaled.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=hack
+Group=hack
+WorkingDirectory=/srv/hackathon/rally-deployed
+
+ExecStart=/srv/hackathon/rally-deployed/bin/livekit-server --config /srv/hackathon/rally-deployed/config/livekit.yaml
+Restart=on-failure
+RestartSec=3
+TimeoutStopSec=30
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/srv/hackathon/rally-deployed/state
+[Install]
+WantedBy=multi-user.target

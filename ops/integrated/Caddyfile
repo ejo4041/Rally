@@ -1,0 +1,23 @@
+{
+  admin off
+  auto_https off
+}
+http://:6772 {
+  bind 127.0.0.1
+  handle /api/* {
+    reverse_proxy 127.0.0.1:3301
+  }
+  handle {
+    root * /srv/hackathon/rally-deployed/current/apps/rally-web/dist
+    header Cache-Control "no-store"
+    header X-Content-Type-Options "nosniff"
+    header Referrer-Policy "same-origin"
+    header Permissions-Policy "microphone=(self), display-capture=(self)"
+    try_files {path} /index.html
+    file_server
+  }
+}
+http://:6773 {
+  bind 127.0.0.1
+  reverse_proxy 127.0.0.1:17890
+}

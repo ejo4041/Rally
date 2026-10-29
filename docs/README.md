@@ -1,5 +1,7 @@
 # Rally documentation
 
+**Integrated deployment:** [Open and test the Node/LiveKit app](integrated-deployment.md) · [deployed verification](research/integrated-deployment-check.json).
+
 **Frontend integration:** [Node API frontend, validation and current limits](frontend-integration.md). Local workflow is implemented in `apps/rally-web`; use `node scripts/dev-rally.mjs` after setup. Remote deployment and human rehearsal remain pending; the restricted Site is unchanged.
 
 **Backend team handoff:** [start here](backend-team-handoff.md). Backend MVP and Astra fixes are committed on `main`; frontend integration and deployment remain separate.

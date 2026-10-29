@@ -1,5 +1,7 @@
 # Rally handoff — current checkpoint
 
+**Integrated app deployed:** [Private HTTPS URL, test steps and service operations](integrated-deployment.md). Frontend/API/LiveKit run on the existing host. Sign in or create an app account with Tailscale connected. Muse is enabled with existing budget gates; generated speech is still pending.
+
 **Frontend integration:** [Node API frontend, validation and current limits](frontend-integration.md). Local workflow is implemented in `apps/rally-web`; use `node scripts/dev-rally.mjs` after setup. Remote deployment and human rehearsal remain pending; the restricted Site is unchanged.
 
 **Backend delivered on main:** [team handoff](backend-team-handoff.md). Implementation and Astra fixes: `50bfab1`. Setup, frontend contract, actual AI examples, validation evidence and next integration tasks are linked there.

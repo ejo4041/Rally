@@ -1,0 +1,25 @@
+[Unit]
+Description=Rally integrated frontend and proxy
+After=network-online.target tailscaled.service
+Wants=network-online.target
+After=rally-integrated-api.service
+[Service]
+Environment=XDG_CONFIG_HOME=/srv/hackathon/rally-deployed/state/caddy-config
+Environment=XDG_DATA_HOME=/srv/hackathon/rally-deployed/state/caddy-data
+Type=simple
+User=hack
+Group=hack
+WorkingDirectory=/srv/hackathon/rally-deployed
+
+ExecStart=/home/hack/.local/share/omnigent-relay-caddy/usr/bin/caddy run --config /srv/hackathon/rally-deployed/config/Caddyfile --adapter caddyfile
+Restart=on-failure
+RestartSec=3
+TimeoutStopSec=30
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/srv/hackathon/rally-deployed/state
+[Install]
+WantedBy=multi-user.target

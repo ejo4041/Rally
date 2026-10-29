@@ -1,5 +1,7 @@
 # Rally
 
+**Integrated app:** [Open Rally](https://rally.tail703f9e.ts.net:8445) with Tailscale connected, then create an app account or sign in. [Deployment and test steps](docs/integrated-deployment.md). The older Sites preview below remains a separate version.
+
 **Node API frontend:** [Local setup and integration](apps/rally-web/README.md) · [Validation and next steps](docs/frontend-integration.md). This is a separate integrated frontend for the new backend; the private Site below remains its earlier release.
 
 A meeting moderator that keeps a decision meeting moving and turns discussion into explicitly confirmed, transcript-evidenced follow-ups.

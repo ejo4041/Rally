@@ -1,0 +1,20 @@
+{
+  "testedAt": "2026-10-29T19:35:26.857Z",
+  "passed": true,
+  "sourceCommit": "64fed291b404f1c3a220bc92f76e48bc59c3b153",
+  "url": "https://rally.tail703f9e.ts.net:8445",
+  "checks": [
+    "valid HTTPS and static bundle",
+    "deployed signup, secure HttpOnly session cookie, reload and logout",
+    "owner-isolated empty history and usage",
+    "mobile layout",
+    "real WSS LiveKit connection",
+    "synthetic browser audio received by Node media subscriber",
+    "reliable data in both directions"
+  ],
+  "pcmBytes": 35200,
+  "signalDetected": true,
+  "paidModelCalls": 0,
+  "realHumanMeeting": false,
+  "remoteDeviceNetwork": false
+}

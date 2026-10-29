@@ -1,0 +1,24 @@
+[Unit]
+Description=Rally integrated API
+After=network-online.target tailscaled.service
+Wants=network-online.target
+Requires=rally-integrated-media.service
+After=rally-integrated-media.service
+[Service]
+Type=simple
+User=hack
+Group=hack
+WorkingDirectory=/srv/hackathon/rally-deployed/current/apps/rally-api
+EnvironmentFile=/srv/hackathon/rally-deployed/config/api.env
+ExecStart=/srv/hackathon/tools/node/bin/node src/server.ts
+Restart=on-failure
+RestartSec=3
+TimeoutStopSec=30
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/srv/hackathon/rally-deployed/state
+[Install]
+WantedBy=multi-user.target

@@ -1,5 +1,7 @@
 # Node backend frontend integration
 
+**Deployment update:** The integrated app is now running at its [private HTTPS endpoint](integrated-deployment.md). The local-only deployment paragraphs below describe the original integration checkpoint; use the deployment report for current runtime/access and validation.
+
 Implemented October 29, 2026 from backend main `f080a5f8b6ce6e28a99c3fa45bc054777a58da4b`, following the [frontend API contract](backend-api.md), [AI processing rules](ai-processing.md) and [backend team handoff](backend-team-handoff.md). New frontend: `apps/rally-web`; one-command local launcher: `node scripts/dev-rally.mjs` from the repository root. [Setup](../apps/rally-web/README.md).
 
 ## Delivered

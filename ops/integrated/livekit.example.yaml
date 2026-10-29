@@ -1,0 +1,18 @@
+# Supply a random API key/secret matching api.env; chmod 600 at runtime.
+port: 17890
+bind_addresses:
+  - 127.0.0.1
+  - 100.91.20.8
+rtc:
+  tcp_port: 17891
+  udp_port: 17892
+  use_external_ip: false
+  node_ip: 100.91.20.8
+  interfaces:
+    includes:
+      - tailscale0
+      - lo
+keys:
+  REPLACE_WITH_RANDOM_KEY: REPLACE_WITH_RANDOM_SECRET
+logging:
+  level: warn
