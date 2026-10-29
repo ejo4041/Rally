@@ -57,3 +57,9 @@ try {
 Cold model load: 10.519 seconds; first request including load: 12.337 seconds. These are generation measurements, **not first-audible latency**. Physical listening, name pronunciation and Teams transmission were not verified. No service was installed/enabled, no audio was played and no meeting was joined. MMS inference adds no Muse API charges; the existing host still has its normal infrastructure cost.
 
 Next: warm the adapter before advertising readiness; connect only server-approved moderator text, validate the returned WAV, gate against current host epoch, cancel generation and playback together, route through the proved virtual microphone, reject echoed speech, and prove Leave/override before claiming a working spoken Teams loop. Keep visible-text fallback.
+
+## Audio output controller
+
+`output.mjs` provides generation/host-state checks, immediate playback cancellation and a short potential-echo window behind the common speech-engine interface. `pulsePlayback` requires an explicit sink and streams bounded PCM through stdin. The controller is not yet wired to the active Teams meeting runner. [Morning reliability report](../../docs/morning-reliability-2026-10-29.md).
+
+Run `node --test experiments/meta-mms/output.test.mjs experiments/meta-mms/runner.test.mjs` for deterministic failure checks, and `node experiments/meta-mms/pulse-probe.mjs` for real synthetic MMS playback through a temporary private PulseAudio daemon. The latter does not access the existing Teams devices or save captured audio.

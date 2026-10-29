@@ -1,0 +1,15 @@
+{
+  "testedAt": "2026-10-29T11:14:56.487Z",
+  "passed": true,
+  "model": "facebook/mms-tts-eng",
+  "sink": "temporary isolated null sink, unloaded after test",
+  "activeRms": 0.006891024269337852,
+  "afterStopRms": 0,
+  "cancellationPromiseMs": 1,
+  "stopObservationDelayMs": 650,
+  "rawCapturedAudioSaved": false,
+  "realMeetingJoined": false,
+  "physicalAudibilityVerified": false,
+  "paidMuseCalls": 0,
+  "boundary": "Synthetic MMS speech routed through actual paplay/parec on a temporary private device. Physical room echo, Teams transmission and name pronunciation remain unverified."
+}

@@ -1,5 +1,5 @@
 {
-  "testedAt": "2026-10-29T04:31:59.122Z",
+  "testedAt": "2026-10-29T11:17:46.363Z",
   "passed": true,
   "model": "facebook/mms-tts-eng",
   "revision": "c71de0fe7204c83f1c10820a7d696d0b450048ba",
@@ -18,7 +18,7 @@
       "revision": "c71de0fe7204c83f1c10820a7d696d0b450048ba"
     }
   },
-  "decodedPlaybackStartMs": 4102,
+  "decodedPlaybackStartMs": 4010,
   "audioHttpStatus": 200,
   "hostStopPassed": true,
   "teamsInviteBlank": true,

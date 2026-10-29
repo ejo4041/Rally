@@ -28,3 +28,38 @@ test('stop during startup cancels loading without advertising readiness',async()
  const engine={start(){queueMicrotask(()=>controller.abort());return new Promise((resolve,reject)=>rejectLoad=reject);},close(){rejectLoad?.(new Error('startup canceled'));}};
  await runSpeechQueue({api:async()=>{polls++;},engine,signal:controller.signal});assert.equal(polls,0);
 });
+
+test('completion while a poll is in flight cannot requeue the previous job',async()=>{
+ const controller=new AbortController();let releaseAudio,releasePoll,started=false,polls=0,generated=0;
+ const audio=new Promise(resolve=>releaseAudio=resolve);
+ const engine={async start(){},synthesize(){generated++;started=true;return audio;},close(){}};
+ const api=async(action,data)=>{
+  if(action==='finish')return{};
+  if(action==='poll'){
+   polls++;
+   if(polls===1)return{job:{id:'first',text:'Approved text.'}};
+   if(polls===2){assert.equal(data.currentId,'first');return new Promise(resolve=>releasePoll=resolve);}
+   controller.abort();return{job:null};
+  }
+  return{};
+ };
+ const run=runSpeechQueue({api,engine,signal:controller.signal,sleep:()=>new Promise(r=>setImmediate(r))});
+ while(!releasePoll)await new Promise(r=>setImmediate(r));
+ assert.equal(started,true);releaseAudio({sampleRate:16000,pcmBase64:'AAAA'});
+ await new Promise(r=>setImmediate(r));releasePoll({job:{id:'first',state:'generating'}});
+ await run;assert.equal(generated,1,'in-flight status result must not become a fresh claim');
+});
+
+test('a canceled model is warmed again before advertising readiness',async()=>{
+ const controller=new AbortController();let warm=false,starts=0,polls=0,generated=0;
+ const engine={async start(){starts++;warm=true;},synthesize(text,{signal}){generated++;return new Promise((resolve,reject)=>signal.addEventListener('abort',()=>{warm=false;reject(new Error('canceled'));},{once:true}));},close(){warm=false;}};
+ const api=async(action)=>{
+  if(action!=='poll')return{};
+  polls++;if(polls>=3)controller.abort();assert.equal(warm,true,'only a loaded model may advertise readiness');
+  if(polls===1)return{job:{id:'one',text:'Approved'}};
+  if(polls===2)return{job:{id:'one',state:'canceled'}};
+  controller.abort();return{job:null};
+ };
+ await runSpeechQueue({api,engine,signal:controller.signal,sleep:()=>new Promise(r=>setImmediate(r))});
+ assert.equal(generated,1);assert.ok(starts>=2);
+});

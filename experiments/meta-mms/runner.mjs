@@ -8,13 +8,21 @@ import {resolve} from 'node:path';
 export async function runSpeechQueue({api,engine,signal,sleep=ms=>new Promise(r=>setTimeout(r,ms)),runnerId=randomUUID(),speech=modelConfig().speech}){
  let current=null;const stop=()=>{current?.abort.abort();engine.close();};signal.addEventListener('abort',stop,{once:true});
  try{
-  if(signal.aborted)return;await engine.start();
+  if(signal.aborted)return;
   while(!signal.aborted){
+   // Model startup is outside the poll retry block: a failed model load stops
+   // the runner instead of advertising readiness or retrying without bounds.
+   if(!current)await engine.start();
+   if(signal.aborted)break;
+   const polledJob=current;
    try{
-    const result=await api('poll',{runnerId,model:speech.model,revision:speech.revision,...(current?{currentId:current.id}:{})});
-    if(current){
-     if(!result.job||result.job.state!=='generating')current.abort.abort();
+    const result=await api('poll',{runnerId,model:speech.model,revision:speech.revision,...(polledJob?{currentId:polledJob.id}:{})});
+    if(signal.aborted)break;
+    if(polledJob){
+     if(current===polledJob&&(!result.job||result.job.state!=='generating'))polledJob.abort.abort();
     }else if(result.job){
+     if(result.job.state&&result.job.state!=='generating')throw new Error('Invalid speech claim.');
+     if(typeof result.job.text!=='string'||!result.job.text.trim())throw new Error('Missing approved speech text.');
      const job={...result.job,abort:new AbortController()};current=job;
      job.task=(async()=>{
       try{

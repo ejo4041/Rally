@@ -1,10 +1,12 @@
 # Rally handoff — current checkpoint
 
+**Morning update:** [Speech reliability fixes and isolated audio measurement](morning-reliability-2026-10-29.md) · [rehearsal checklist](morning-rehearsal.md). The app remains version 9; live Teams speech validation is pending.
+
 **Current release:** [Version 9 — model interfaces and self-hosted Meta MMS browser playback](releases/2026-10-29-v9.md) is live on the existing restricted Site. Earlier version-7/local-only entries below are historical. Teams spoken output and fresh live pacing retry remain pending; final submission is on hold.
 
 **Demo drafting:** [Presenter/participant script](demo-script.md) now ends with a clearly labeled future meeting-platform concept. It is a recording draft; audio/live validation gates remain open. Final submission is explicitly on hold until a separate user instruction.
 
-**Latest October 29 build:** [Retrospective Teams review, measured Meta MMS speech, and submission audit](overnight-build-2026-10-29.md). Source changes are tested locally; deployed Site is still version 7. Live Teams/MMS playback validation remains pending.
+**Earlier October 29 build:** [Retrospective Teams review, measured Meta MMS speech, and submission audit](overnight-build-2026-10-29.md). Source changes are tested locally; deployed Site is still version 7. Live Teams/MMS playback validation remains pending.
 
 **October 29 offline checkpoint:** [Teams saved-history implementation, tests, documentation and Git state](offline-progress-2026-10-29.md). New history code is local, not deployed. Live pacing-fix retry remains pending; no live test or paid call was run tonight.
 

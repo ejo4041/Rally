@@ -1,12 +1,12 @@
 # Rally demonstration script — draft
 
-Draft prepared October 29, 2026. No recording or final submission has been made. This version reserves the final 30 seconds for the longer-term product vision. [Demonstration requirements](demo-walkthrough.md) and [current implementation evidence](overnight-build-2026-10-29.md) determine what can be recorded as working behavior.
+Draft prepared October 29, 2026. No recording or final submission has been made. This version reserves the final 30 seconds for the longer-term product vision. [Demonstration requirements](demo-walkthrough.md) and [current release](releases/2026-10-29-v9.md) determine what can be recorded as working behavior.
 
 ## Narrative
 
 Show a complete useful interaction, then explain the broader problem it suggests. The near-term product helps a small software team make and confirm a decision inside its existing meeting. The longer-term concept is a meeting workspace with preparation, facilitation and follow-through built into the experience. That platform is a future direction, not an implemented release or an expansion of this week's committed scope.
 
-Use the Meta services that support each job. Current execution evidence covers Muse transcription, Spark reasoning and local MMS generation. Other ideas, including Wonder review, multimodal agenda capture and WhatsApp follow-through, remain separate proposed integrations. Present those roles as possibilities rather than promising every Meta service in one product.
+Use the Meta services that support each job. Current execution evidence covers Muse transcription, Spark reasoning and hosted MMS browser playback. Other ideas, including Wonder review, multimodal agenda capture and WhatsApp follow-through, remain separate proposed integrations. Present those roles as possibilities rather than promising every Meta service in one product.
 
 ## Three-minute version
 
@@ -17,7 +17,7 @@ Use the Meta services that support each job. Current execution evidence covers M
 | 0:35–1:05 | Alex: “We need to decide whether Friday’s release can proceed.” Sam: “I spent the weekend comparing mountain bikes.” Priya: “We should compare bike frames and holiday routes too.” Presenter leaves room for the actual moderator response. | Actual off-agenda turns and actual model behavior at normal speed. The response is not prerecorded or required to match a particular sentence. |
 | 1:05–1:40 | Alex: “We’ll release only after rollback is verified.” Priya: “I’ll run the rollback check.” If clarification is needed, Priya adds: “I’ll finish by Thursday at three.” Presenter: “These remain proposals until the host reviews and confirms them.” | Proposed decision/action, missing information when present, explicit host confirmation and the linked source turns. |
 | 1:40–2:05 | Presenter: “The host stays in control.” Pause or dismiss an actual intervention. For the separate wrap-up check: “I’m advancing the demo clock to the wrap-up checkpoint.” | Real output cancellation and a visibly labeled clock advance; otherwise show only the controls actually verified. |
-| 2:05–2:30 | Presenter: “The record keeps what we confirmed and what is still unresolved, with a path back to the source. Muse handles transcription and reasoning. Meta MMS is our self-hosted voice adapter.” | Persisted record, evidence navigation, export and the exact model roles. Identify MMS as local generation only until connected playback is validated. |
+| 2:05–2:30 | Presenter: “The record keeps what we confirmed and what is still unresolved, with a path back to the source. Muse handles transcription and reasoning. Meta MMS is our self-hosted voice adapter.” | Persisted record, evidence navigation, export and the exact model roles. Browser MMS playback is verified; identify Teams speech output as pending until the live route passes validation. |
 | 2:30–3:00 | Presenter: “This prototype is the starting point. Longer term, I want to build a meeting space around the work itself: arrive with an agenda, get help when a decision stalls, and leave with confirmed next steps. Meta models could connect preparation, conversation and follow-through. We’re starting with one promise: make it clear what was decided, who owns it, and why.” | A clearly labeled “Future direction” slide, followed by the working product and project links. |
 
 ## Recording readiness
