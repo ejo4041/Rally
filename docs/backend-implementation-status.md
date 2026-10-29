@@ -14,7 +14,7 @@ October 29, 2026. Implemented in `apps/rally-api/` on `rally-backend-mvp`, fresh
 
 ## Validation
 
-- Seven deterministic HTTP/lifecycle/provider tests passed; TypeScript check passed.
+- Eight deterministic HTTP/lifecycle/provider tests passed; TypeScript check passed.
 - Real browser → LiveKit → backend PCM and backend PCM → browser playback passed: 131,200 incoming bytes, detected incoming signal, outgoing RMS 0.174, JSON event received. Synthetic oscillator audio; physical microphones and frontend integration were not tested.
 - Real Muse integration passed with licensed reference speech: agenda preparation, three transcript turns with one speaker label, live assessment/intervention and final report. Four billable operations cost an estimated $0.03199; no unknown cost. [Ledger](research/muse-cost-ledger.md) has usage IDs and cumulative totals.
 - Automated fixtures prove app behavior; one reference-speech run does not establish real meeting scoring quality, multiple-speaker accuracy, or latency under load.
@@ -25,4 +25,4 @@ Frontend wiring and deployment are separate work. Existing private Sites product
 
 Voice agenda entry, provider-generated speech, and Teams/video remain follow-ups as agreed in [the plan](backend-plan.md). A bidirectional audio transport proof is present, not a completed TTS feature. No tickets or calendar events are created automatically. Final hackathon submission remains pending explicit instruction.
 
-Review and merge results will be recorded after the required two-axis review.
+[Two-axis review](backend-review.md) completed: all four findings addressed, full suite and typecheck pass, production dependency audit reports zero vulnerabilities. Merge reconciliation is recorded in the current handoff.

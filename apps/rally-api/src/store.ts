@@ -1,11 +1,11 @@
-import { DatabaseSync } from 'node:sqlite';
-import { mkdirSync } from 'node:fs';
-import { dirname } from 'node:path';
+import { DatabaseSync } from "node:sqlite";
+import { mkdirSync } from "node:fs";
+import { dirname } from "node:path";
 
 export class Store {
   db: DatabaseSync;
-  constructor(path:string) {
-    if(path!==':memory:') mkdirSync(dirname(path),{recursive:true});
+  constructor(path: string) {
+    if (path !== ":memory:") mkdirSync(dirname(path), { recursive: true });
     this.db = new DatabaseSync(path);
     this.db.exec(`PRAGMA journal_mode=WAL; PRAGMA foreign_keys=ON;
       CREATE TABLE IF NOT EXISTS users(id TEXT PRIMARY KEY,username TEXT UNIQUE NOT NULL,password TEXT NOT NULL);
@@ -16,5 +16,7 @@ export class Store {
     `);
     this.db.exec("UPDATE usage SET status='unknown' WHERE status='running'");
   }
-  close() { this.db.close(); }
+  close() {
+    this.db.close();
+  }
 }

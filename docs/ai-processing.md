@@ -60,3 +60,5 @@ Research informs these categories, not a validated scoring instrument: [agenda a
 ## Tuning next
 
 Tune the three prompt outlines and examples against saved, consented transcripts. Evaluate needless interventions, useful redirects, outcome omissions, incorrect attribution and score explanations. Keep model/effort/token settings and actual costs attached to runs. Spoken agenda, synthesized voice, Teams and video attach later without changing the core processing stages.
+
+Implementation tuning surface: [`src/prompts.ts`](../apps/rally-api/src/prompts.ts); output schemas: [`src/contracts.ts`](../apps/rally-api/src/contracts.ts).
