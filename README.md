@@ -41,7 +41,7 @@ Phone hardware, room echo, automatic voice identity and the fixed Teams transcri
 
 ## Submission source
 
-The event requires a public repository. The configured GitHub repository is `ejo4041/Rally`; read-only verification on October 29 found no remote refs. GitHub publication has not been performed. A sanitized local Git checkpoint is prepared separately; see [tonight's offline work](docs/offline-progress-2026-10-29.md). The Sites helper owns a nested source checkout at `apps/rally`; a sanitized export avoids nested-Git, credentials, local database and dependency files:
+The event requires a public repository. Source and documentation were pushed to [ejo4041/Rally](https://github.com/ejo4041/Rally) on October 29 with user authorization. The initial source checkpoint is `0668cf2` on `main`; repository visibility and outside-viewer access have not been verified. The sanitized publishing checkout is `/srv/hackathon/rally-source-checkpoint`; see [tonight's offline work](docs/offline-progress-2026-10-29.md). The Sites helper owns a nested source checkout at `apps/rally`; a sanitized export avoids nested-Git, credentials, local database and dependency files:
 
 ```bash
 python3 scripts/export_submission.py --out /tmp/rally-submission-source.zip

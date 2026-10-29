@@ -31,7 +31,7 @@ Substantial documentation already existed under docs/: roadmap, interviews, arch
 
 Read-only `git ls-remote origin` succeeded with no refs for `git@github-hackathon:ejo4041/Rally.git`. The outer working repository has no commits. The nested Sites checkout under apps/rally has its own local deployment commits; those are not GitHub publication.
 
-A separate sanitized source checkout is prepared at `/srv/hackathon/rally-source-checkpoint`, using `scripts/export_submission.py`. It contains source/docs/experiments plus these changes, without nested Git, local databases, dependencies, test recordings or credentials. The hosting manifest omits the owning Site identity; historical deployment IDs remain in the documentation. Its local commit is a reviewable checkpoint; **nothing was pushed to GitHub**. The snapshot is for this checkpoint, not an automatically synchronized working repository. The live development directory remains `/srv/hackathon/repo`.
+A separate sanitized source checkout is prepared at `/srv/hackathon/rally-source-checkpoint`, using `scripts/export_submission.py`. It contains source/docs/experiments plus these changes, without nested Git, local databases, dependencies, test recordings or credentials. The hosting manifest omits the owning Site identity; historical deployment IDs remain in the documentation. Its local commit is a reviewable checkpoint. The snapshot is for this checkpoint, not an automatically synchronized working repository. The live development directory remains `/srv/hackathon/repo`.
 
 ## Next work
 
@@ -40,3 +40,7 @@ A separate sanitized source checkout is prepared at `/srv/hackathon/rally-source
 3. Feed finalized Teams speech to the existing evidence-backed moderator. Begin with visible suggestions and host confirmation; configure agenda/roster and preserve source revisions, cancellation and cost guards.
 4. Add spoken Teams interventions with echo rejection, host override, cooldown and reliable cancellation. This is not implemented by the history patch.
 5. Run three-person/device rehearsals and failure/repeated-join tests. Rebuild submission snapshot after later changes; prepare public source, demo video and judge access before the recorded November 4 deadline.
+
+## GitHub push — authorized October 29
+
+At the user's request, pushed sanitized source and documentation to [ejo4041/Rally](https://github.com/ejo4041/Rally), branch `main`. Remote verification confirmed initial source commit `0668cf2233b7149ce1969f929ee3ba35267c2573`. This follow-up documentation commit records publication. Repository visibility and outside-viewer access remain unverified. The Site and running Teams services were not changed. Future development still occurs in `/srv/hackathon/repo`; refresh the sanitized publishing checkout deliberately before subsequent pushes.
