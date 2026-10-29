@@ -1,0 +1,18 @@
+{
+  "testedAt": "2026-10-29T23:33:44.285Z",
+  "passed": true,
+  "sourceCommit": "35ad395",
+  "url": "https://rally.tail703f9e.ts.net:8445",
+  "teamsRunnerOnline": true,
+  "transcriptionReady": true,
+  "checks": [
+    "real HTTPS login and owned empty Teams status",
+    "Teams link field rendered",
+    "existing Teams runner and transcription readiness verified",
+    "mobile layout has no overflow",
+    "browser-call setup preselects tab capture",
+    "Teams API requires app authentication"
+  ],
+  "realMeetingJoined": false,
+  "paidModelCalls": 0
+}

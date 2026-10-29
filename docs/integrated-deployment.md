@@ -1,5 +1,7 @@
 # Integrated Rally deployment
 
+**Teams UI update:** Application release `35ad395` now includes [the owned Teams invite-link bridge](teams-integrated-ui.md) at this same URL. Runtime configuration includes the existing server-only Sites service credential. Refresh and return to Meetings to see the new connection choices. Existing app accounts/data are preserved. The deployment details below describe the initial integration release where they identify `64fed29`.
+
 Deployed October 29, 2026 from application commit `64fed291b404f1c3a220bc92f76e48bc59c3b153` on the existing Rally Ubuntu host. This runs the Node frontend, Express/SQLite API and self-hosted LiveKit together.
 
 **Open [Rally](https://rally.tail703f9e.ts.net:8445) with Tailscale connected.** Create an app account or sign in to an account created in this deployment. App accounts are separate from Sites/Omnigent sign-in and the backend development database. No demo password is published or required.

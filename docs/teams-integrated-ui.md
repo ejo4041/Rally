@@ -28,3 +28,7 @@ Teams transcription continues to be reserved/reconciled in the existing queue's 
 27 backend tests and four frontend state tests pass. New HTTP tests verify authentication, other-owner denial, link/consent validation before forwarding, unknown-result/concurrent-join protection, finalized-only import, missing timing, deletion/idempotence and zero model requests. Browser integration exercises the actual UI/API with an injected Teams queue: invalid links, lobby, Leave and saved transcript. It retains the existing real local LiveKit checks for the separate browser-capture path. [Browser result](research/frontend-browser-check.json).
 
 Deployment validation checks the actual runner status and rendered invite panel without submitting a meeting invite. A consenting real Teams call remains the user's next test. Runtime services remain at the existing private HTTPS address.
+
+## Deployed checkpoint
+
+Application release `35ad395` is live at [the existing private Rally URL](https://rally.tail703f9e.ts.net:8445). Refresh the browser and return to Meetings, then expand **Invite Rally to Teams using a meeting link**. The server-side bridge is configured; live runner and Muse transcription readiness are both online. The actual deployed browser check verified the rendered link field, authenticated/owned status, mobile layout and tab-mode preset without submitting an invite or generating model usage. [Measurement](research/teams-integrated-ui-check.json). The pre-update database was backed up and existing accounts/history were preserved.
