@@ -495,3 +495,70 @@ test("interrupted host plan edits cannot bypass extension confirmation", async (
   );
   assert.equal(blocked.status, 409);
 });
+
+test("disputed extension blocks plan edits until reconfirmed without trapping recovery", async (t) => {
+  t.mock.timers.enable({ apis: ["Date"], now: Date.now() });
+  const f = await fixture(t, {
+    check: async (c) => ({
+      ...observation(c),
+      extension: c.extension
+        ? null
+        : { minutes: 5, reason: "Finish candidate" },
+      extensionConsent:
+        c.extension && c.finals.some((turn) => turn.id === "s:2")
+          ? { proposalId: c.extension.id, evidence: "s:2" }
+          : null,
+    }),
+  });
+  f.emit({ type: "partial", sessionId: "s", turnId: 1, text: "Need time" });
+  await waitFor(async () => !!(await f.snapshot()).extension);
+  const p = (await f.snapshot()).extension;
+  await f.req(`/meetings/${f.id}/extension/presented`, { proposalId: p.id });
+  t.mock.timers.tick(10000);
+  f.emit({
+    type: "final",
+    sessionId: "s",
+    turnId: 2,
+    text: "Yes, I agree to extend by 5 minutes.",
+    speaker: "A",
+    startMs: 5000,
+    endMs: 6000,
+  });
+  await waitFor(
+    async () => (await f.snapshot()).extension.state === "confirmed",
+  );
+  f.emit({
+    type: "final",
+    sessionId: "s",
+    turnId: 2,
+    text: "No, I cannot extend by 5 minutes.",
+    speaker: "A",
+    startMs: 5000,
+    endMs: 6000,
+  });
+  await waitFor(
+    async () => (await f.snapshot()).extension.state === "disputed",
+  );
+  const m = await f.snapshot();
+  assert.equal(
+    (
+      await f.req(
+        `/meetings/${f.id}/plan`,
+        { ...m.plan, durationMinutes: 10, wrapMinutes: 1 },
+        undefined,
+        "PATCH",
+      )
+    ).status,
+    409,
+  );
+  assert.equal(
+    (
+      await f.req(`/meetings/${f.id}/extension`, {
+        proposalId: p.id,
+        accept: true,
+      })
+    ).status,
+    200,
+  );
+  assert.equal((await f.snapshot()).plan.durationMinutes, 15);
+});

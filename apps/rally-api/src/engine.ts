@@ -798,14 +798,17 @@ export class Engine {
     return m;
   }
   editPlan(m: Meeting, input: unknown) {
+    if (m.extension?.state === "disputed")
+      throw new HttpError(
+        "Resolve disputed extension before editing the agenda",
+        409,
+      );
     if (m.phase === "ended") throw new HttpError("Meeting has ended", 409);
     const plan: import("./contracts.ts").Plan = planSchema.parse(input);
     if (
       m.startedAt !== null &&
       m.plan &&
-      plan.durationMinutes >
-        m.plan.durationMinutes -
-          (m.extension?.state === "disputed" ? m.extension.minutes : 0)
+      plan.durationMinutes > m.plan.durationMinutes
     )
       throw new HttpError(
         "Confirm a specific extension before increasing the deadline",
