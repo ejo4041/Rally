@@ -655,6 +655,53 @@ try {
       .reportAttempts,
     reportsBeforeCorrection + 1,
   );
+  const modelCountsBeforeDraft = await (
+    await page.request.get(base + "/api/test/state")
+  ).json();
+  await page.locator("#draft-follow-up").click();
+  await page.locator("#follow-up-dialog").waitFor({ state: "visible" });
+  assert.equal(await page.locator("#follow-up-text").inputValue(), "");
+  assert.equal(
+    await page.locator("#follow-up-whatsapp").getAttribute("href"),
+    null,
+  );
+  await page.locator("#follow-up-choices input").first().check();
+  assert.match(
+    await page.locator("#follow-up-text").inputValue(),
+    /Reported agreement/,
+  );
+  const manualDraft =
+    "Reviewed follow-up ✓\nPriya: rollback Thursday at three.";
+  await page.locator("#follow-up-text").fill(manualDraft);
+  const waLink = new URL(
+    await page.locator("#follow-up-whatsapp").getAttribute("href"),
+  );
+  assert.equal(waLink.origin, "https://wa.me");
+  assert.equal(waLink.searchParams.get("text"), manualDraft);
+  assert.equal(
+    await page.locator("#follow-up-whatsapp").getAttribute("rel"),
+    "noopener noreferrer",
+  );
+  await page.locator("#follow-up-text").fill("x".repeat(1501));
+  assert.equal(
+    await page.locator("#follow-up-whatsapp").getAttribute("href"),
+    null,
+  );
+  await page.locator('[data-close="follow-up-dialog"]').click();
+  await page.waitForFunction(
+    () => document.querySelector("#follow-up-text").value === "",
+  );
+  const modelCountsAfterDraft = await (
+    await page.request.get(base + "/api/test/state")
+  ).json();
+  assert.equal(
+    modelCountsAfterDraft.reportAttempts,
+    modelCountsBeforeDraft.reportAttempts,
+  );
+  assert.equal(
+    modelCountsAfterDraft.speechSessions,
+    modelCountsBeforeDraft.speechSessions,
+  );
   // A different real cookie session cannot retrieve this meeting.
   const other = await browser.newContext();
   const otherPage = await other.newPage();
@@ -873,6 +920,7 @@ try {
       "evidence links, host correction, reload and export",
       "cross-owner denial and deletion",
       "mobile layout",
+      "host-selected WhatsApp draft, uncertainty preserved, editable encoded text, length guard and private close cleanup without model requests",
       "opt-in browser WAV playback, Stop speaking, Pause and completion restore shielded input",
       "free preflight detects separate sources, rejects missing consent, stops manually/after 15s and closes late grants without ASR",
       "Teams invite validation, lobby, leave and finalized transcript import via injected bridge",

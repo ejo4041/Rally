@@ -298,6 +298,9 @@
                   </div>
                   <div id="report-body"></div>
                   <div class="report-actions">
+                    <button id="draft-follow-up" class="secondary" hidden>
+                      Draft WhatsApp follow-up
+                    </button>
                     <button id="retry-report" class="secondary" hidden>
                       Retry analysis · uses Muse
                     </button>
@@ -355,6 +358,41 @@
         <footer>Thoughtful meetings, powered by Meta Muse.</footer>
       </div>
     </div>
+    <dialog id="follow-up-dialog">
+      <div class="section-title">
+        <h2>Review your follow-up</h2>
+        <button
+          type="button"
+          class="text"
+          data-close="follow-up-dialog"
+          aria-label="Close follow-up"
+        >
+          ×
+        </button>
+      </div>
+      <p class="small muted">
+        Choose the report items to include, then review and edit the draft.
+        Changing your selection rebuilds the draft. Opening WhatsApp shares the
+        draft text with WhatsApp; you choose the recipient and send there.
+      </p>
+      <p id="follow-up-warning" class="error" role="status"></p>
+      <div id="follow-up-choices"></div>
+      <label
+        >Your draft<textarea id="follow-up-text" rows="7"></textarea>
+      </label>
+      <p id="follow-up-status" class="small muted" role="status"></p>
+      <div class="actions">
+        <button id="follow-up-copy" class="secondary" disabled>
+          Copy draft</button
+        ><a
+          id="follow-up-whatsapp"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-disabled="true"
+          >Open WhatsApp draft ↗</a
+        >
+      </div>
+    </dialog>
     <dialog id="audio-check-dialog">
       <div class="section-title">
         <h2>Check your audio</h2>

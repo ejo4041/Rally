@@ -8,6 +8,7 @@ import {
   type Plan,
   type Connection,
 } from "./api.ts";
+import { setupFollowUp } from "./follow-up.ts";
 import { createSpeechPlayer } from "./speech.ts";
 import { setupAudioCheck } from "./audio-check.ts";
 import { setupTeams } from "./teams.ts";
@@ -67,6 +68,7 @@ const speech = createSpeechPlayer({
   },
 });
 const audioCheck = setupAudioCheck();
+const followUp = setupFollowUp(() => state.session?.meeting);
 const teams = setupTeams((id) => {
   void loadHistory().catch(fail);
   location.hash = `meeting/${id}`;
@@ -103,6 +105,7 @@ function showAuth() {
 }
 async function signOutLocal() {
   speech.cancel();
+  followUp.clear();
   input("spoken-prompts").checked = false;
   audioCheck.stop();
   teams.reset();
@@ -212,6 +215,7 @@ async function route() {
     return;
   }
   speech.cancel();
+  followUp.clear();
   input("spoken-prompts").checked = false;
   audioCheck.stop();
   const generation = ++state.generation;
@@ -311,6 +315,7 @@ function evidence(ids: string[]) {
 }
 function render() {
   speech.validate();
+  followUp.validate();
   const session = state.session;
   for (const id of [
     "back",
@@ -431,6 +436,7 @@ function renderReport() {
   const m = state.session!.meeting,
     r = m.report;
   const current = r && m.reportStatus === "ready";
+  button("draft-follow-up").hidden = !current;
   $("report-status").textContent =
     label(m.reportStatus) + (m.reportStale ? " · labels changed" : "");
   button("retry-report").hidden = !(

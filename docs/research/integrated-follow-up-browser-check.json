@@ -1,0 +1,31 @@
+{
+  "testedAt": "2026-10-30T04:30:50.999Z",
+  "passed": true,
+  "backend": "real Express/cookie auth/SQLite and LiveKit",
+  "modelProviders": "injected deterministic fixtures for reasoning and ASR",
+  "speechEngine": "synthetic tone fixture",
+  "syntheticAudio": true,
+  "paidModelCalls": 0,
+  "checks": [
+    "signup/login/logout, cookie expiry and private UI cleanup",
+    "agenda edit and failed preparation retry",
+    "actual browser audio reaches backend",
+    "reload reconnects without duplicating ASR sessions",
+    "canonical final revisions, reversible session-scoped names, stale-report disclosure and explicit reanalysis",
+    "approved intervention only, pause/dismiss and mute",
+    "end stops tracks and drains final turn into complete report",
+    "visible report failure and explicit retry",
+    "leave and reopen a processing report",
+    "nullable scores and assessed coverage",
+    "evidence links, host correction, reload and export",
+    "cross-owner denial and deletion",
+    "mobile layout",
+    "host-selected WhatsApp draft, uncertainty preserved, editable encoded text, length guard and private close cleanup without model requests",
+    "opt-in browser WAV playback, Stop speaking, Pause and completion restore shielded input",
+    "free preflight detects separate sources, rejects missing consent, stops manually/after 15s and closes late grants without ASR",
+    "Teams invite validation, lobby, leave and finalized transcript import via injected bridge",
+    "tab rejection/cancellation stops tracks before ASR",
+    "capture gap stops audio; explicit restart uses new speaker session",
+    "stopping tab sharing ends capture and finalizes the meeting"
+  ]
+}
