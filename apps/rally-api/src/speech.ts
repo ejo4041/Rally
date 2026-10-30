@@ -2,7 +2,13 @@ import { randomUUID } from "node:crypto";
 import { createRequire } from "node:module";
 import { HttpError } from "./auth.ts";
 import type { Meeting } from "./contracts.ts";
+import {
+  defaultSpeech,
+  speechSettingsSchema,
+  type SpeechIdentity,
+} from "./speech-config.ts";
 export interface SpeechEngine {
+  readonly identity?: SpeechIdentity;
   start(): Promise<unknown>;
   synthesize(
     text: string,
@@ -19,21 +25,29 @@ export interface SpeechEngine {
 }
 export function configuredSpeech(): SpeechEngine | undefined {
   if (process.env.RALLY_MMS_ENABLED !== "1") return;
+  const identity = speechSettingsSchema.parse(
+    JSON.parse(process.env.RALLY_MODEL_CONFIG || "{}").speech || {},
+  );
   const { MMSSpeech } = createRequire(import.meta.url)(
     "../../../experiments/meta-mms/speech.mjs",
   ) as {
     MMSSpeech: new (options: {
       python: string;
       modelDirectory: string;
+      model: string;
+      revision: string;
     }) => SpeechEngine;
   };
-  return new MMSSpeech({
+  const engine = new MMSSpeech({
+    model: identity.model,
+    revision: identity.revision,
     python:
       process.env.RALLY_MMS_PYTHON ||
       "/srv/hackathon/tools/mms-venv/bin/python",
     modelDirectory:
       process.env.RALLY_MMS_MODEL_DIR || "/srv/hackathon/models/mms-tts-eng",
   });
+  return Object.assign(engine, { identity });
 }
 type Offer = { id: string; text: string; epoch: number; at: number };
 type Job = {
@@ -52,6 +66,7 @@ type Job = {
 // There is no client-supplied text, retry loop, persisted waveform or external TTS.
 export class SpeechOutput {
   private engine: SpeechEngine | undefined;
+  private identity: SpeechIdentity;
   private current: (id: string) => Meeting;
   private jobs = new Map<string, Job>();
   private offers = new Map<string, Offer>();
@@ -67,6 +82,7 @@ export class SpeechOutput {
     current: (id: string) => Meeting,
   ) {
     this.engine = engine;
+    this.identity = engine?.identity || defaultSpeech;
     this.current = current;
     if (engine)
       void engine
@@ -82,10 +98,10 @@ export class SpeechOutput {
     return {
       enabled: !!this.engine,
       ready: this.ready,
-      model: "facebook/mms-tts-eng",
-      revision: "c71de0fe7204c83f1c10820a7d696d0b450048ba",
+      model: this.identity.model,
+      revision: this.identity.revision,
       execution: "self-hosted",
-      sampleRate: 16000,
+      sampleRate: this.identity.sampleRate,
     };
   }
   offer(meetingId: string, offer: Offer) {
@@ -186,9 +202,9 @@ export class SpeechOutput {
       .then((audio) => {
         if (job.abort.signal.aborted || !this.valid(meetingId, offer)) return;
         if (
-          audio.model !== "facebook/mms-tts-eng" ||
-          audio.revision !== "c71de0fe7204c83f1c10820a7d696d0b450048ba" ||
-          audio.sampleRate !== 16000 ||
+          audio.model !== this.identity.model ||
+          audio.revision !== this.identity.revision ||
+          audio.sampleRate !== this.identity.sampleRate ||
           !Buffer.isBuffer(audio.pcm) ||
           !audio.pcm.length ||
           audio.pcm.length % 2 ||

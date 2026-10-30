@@ -1,4 +1,5 @@
 import { prompts } from "./prompts.ts";
+import { speechSettingsSchema } from "./speech-config.ts";
 import { randomUUID } from "node:crypto";
 import { z } from "zod";
 import WebSocket from "ws";
@@ -50,7 +51,7 @@ const settingsSchema = z
         model: "muse-voice-transcribe-1.0",
         usdPerAudioHour: 0.18,
       }),
-    speech: z.unknown().optional(),
+    speech: speechSettingsSchema.optional(),
     report: z
       .object({
         reasoningEffort: effort.default("max"),

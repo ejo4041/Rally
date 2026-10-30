@@ -4,6 +4,8 @@ import { randomUUID } from "node:crypto";
 import { createApplication } from "../src/app.ts";
 import { SpeechOutput, type SpeechEngine } from "../src/speech.ts";
 import type { Meeting, TranscriptEvent, Media } from "../src/contracts.ts";
+import { defaultSpeech, speechSettingsSchema } from "../src/speech-config.ts";
+import { modelSettings } from "../src/muse.ts";
 function audio() {
   const pcm = Buffer.alloc(32000);
   for (let i = 0; i < 16000; i++)
@@ -24,6 +26,57 @@ function audio() {
   };
 }
 const settle = () => new Promise<void>((r) => setImmediate(r));
+test("speech configuration requires a compatible Meta adapter, checkpoint pin and audio format", () => {
+  assert.deepEqual(speechSettingsSchema.parse({}), defaultSpeech);
+  for (const speech of [
+    { adapter: "third-party-tts" },
+    { model: "someone/voice" },
+    { revision: "main" },
+    { sampleRate: 24000 },
+    { model: "facebook/mms-tts-spa" },
+    { endpoint: "https://example.test/tts" },
+  ])
+    assert.throws(() => modelSettings(JSON.stringify({ speech })));
+  const selected = {
+    ...defaultSpeech,
+    model: "facebook/mms-tts-spa",
+    revision: "a".repeat(40),
+  };
+  assert.deepEqual(
+    modelSettings(JSON.stringify({ speech: selected })).speech,
+    selected,
+  );
+});
+test("speech provenance follows the injected adapter identity instead of assuming the default checkpoint", async () => {
+  const m = meeting("m"),
+    identity = { ...defaultSpeech, revision: "b".repeat(40) };
+  const output = new SpeechOutput(
+    {
+      identity,
+      async start() {},
+      async synthesize() {
+        return { ...audio(), revision: identity.revision };
+      },
+      close() {},
+    },
+    () => m,
+  );
+  await settle();
+  const item = {
+    id: randomUUID(),
+    at: Date.now(),
+    text: "Selected voice",
+    kind: "clarify",
+    epoch: 1,
+  };
+  m.interventions.push(item);
+  output.offer(m.id, item);
+  const job = output.create(m.id, item.id, 1);
+  await settle();
+  assert.equal(output.status().revision, identity.revision);
+  assert.equal(output.get(m.id, job.id).state, "ready");
+  output.close();
+});
 const meeting = (id: string) =>
   ({
     id,

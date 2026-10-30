@@ -12,6 +12,8 @@ Before playback, the browser acknowledges the job and the server arms a bounded 
 
 The `SpeechEngine` interface separates process management from approved-prompt lifecycle and HTTP/browser playback. Deployment selects the local implementation with `RALLY_MMS_ENABLED=1`, `RALLY_MMS_PYTHON` and `RALLY_MMS_MODEL_DIR`. The current adapter verifies the pinned model/revision, mono 16 kHz PCM16 and a maximum 30-second output. Future model adapters must define their provenance and validated audio capabilities explicitly.
 
+`RALLY_MODEL_CONFIG.speech` selects `{adapter, model, revision, sampleRate}`. Compatible `facebook/mms-tts-*` checkpoints can be selected with `adapter: "mms-local"`, their own 40-character revision and `sampleRate: 16000`; provision matching weights/hash manifest in the configured directory first. Changed models cannot silently retain the English model's revision. Unsupported adapters, formats, unpinned revisions and unknown speech settings fail validation. The worker checks the actual local manifest and hashes; configuration alone does not establish model compatibility or grant a license. The default English checkpoint is the only one exercised with real weights so far. Other checkpoints are covered only by adapter/configuration fixtures.
+
 ## API
 
 All routes require the existing cookie authentication and origin checks. Meeting routes also enforce meeting ownership. Audio responses are private and `no-store`.
