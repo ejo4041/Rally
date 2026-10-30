@@ -28,6 +28,7 @@ export function reportContext(snapshot: Snapshot): Snapshot {
       progress: "",
       assessment: null,
       report: null,
+      reportNotes: [],
       reportStatus: m.reportStatus,
       error: null,
     },
