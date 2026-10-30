@@ -1,10 +1,11 @@
-**Streaming speech work in progress:** [implementation checkpoint and remaining work](streaming-speech-plan.md). Isolated worktree; implementation and public ingress checks in progress.
-
 # Rally documentation
 
 Start with the [current handoff](handoff.md). The integrated Node app and the older Sites preview are separate releases. Historical records preserve their original checkpoints; their old “current” status and cost figures do not describe today's deployment or verified Billing.
 
 ## Current integrated product
+
+[Streaming speech implementation](streaming-speech-plan.md) · [Current public deployment, final review and tests](streaming-speech-validation.md) · [Public login/audio evidence](research/public-deployment-smoke-2026-10-30.json).
+
 
 | Topic | Documents |
 | --- | --- |

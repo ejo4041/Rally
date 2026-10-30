@@ -1,4 +1,14 @@
-**Streaming speech work in progress:** [implementation checkpoint and remaining work](streaming-speech-plan.md). Isolated worktree; implementation and public ingress checks in progress.
+# Rally handoff — streaming speech release, October 30
+
+The integrated Node app is deployed from `c20261d` at **https://rally.tail703f9e.ts.net/**. It is public HTTPS with backend signup/login. Work is committed on the isolated `rally-streaming-speech` branch based on main `1d988d0`; it has not been merged or pushed. The separate private Sites release is unchanged.
+
+Shared AWS TTS now supports complete WAV and streamed PCM, approved meeting interventions stream to browser speakers or the integrated Teams virtual microphone, and ten-second status updates expose meeting health and assessment freshness. Teams mode uses one moderation engine, survives dashboard closure, and ends on explicit End/Leave. See [implementation decisions](streaming-speech-plan.md), [API contract](backend-api.md), and [release validation/deployment](streaming-speech-validation.md).
+
+64 backend tests, nine frontend tests, both type checks, frontend build and two actual browser/LiveKit regression paths pass. Final Astra Standards review found no actionable issues; both Spec findings were fixed and verified. Public UI signup/login, owner isolation and bidirectional synthetic audio pass through the public relay. [Evidence and limitations](streaming-speech-validation.md).
+
+Remaining: fresh consented Teams admission/audibility rehearsal and independent external-device playback. The exact opening is now `Let's get back on track.` (ASCII apostrophe). A real AWS probe confirms **cache hit**, with first audio in 855 ms. No new Muse calls occurred; three AWS probe costs are unknown. Runtime credentials remain private. Public SSH443 was preserved; Funnel supplies the public web endpoint. Submission remains draft-only.
+
+## Prior checkpoint (historical; superseded where different)
 
 # Rally handoff — October 30 current checkpoint
 

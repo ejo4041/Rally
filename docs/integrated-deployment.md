@@ -1,5 +1,7 @@
 # Integrated Rally deployment
 
+**Current integrated release:** `c20261d` is publicly hosted with backend login. See [streaming speech deployment and validation](streaming-speech-validation.md) and [current handoff](handoff.md). The checkpoints below are historical; their access policies and active-release labels are superseded for the integrated Node app. The separate Sites app stays private.
+
 **Speaker protocol update:** `06019a6` is active. The Muse adapter now follows documented preceding-span labels, preserves unknown end boundaries and carries explicit source order independently of opaque turn IDs. [Primary-source review](research/muse-speaker-metadata-contract-2026-10-30.md). [Deployed startup/UI check](research/speaker-span-release-deployed.json) passes with local MMS and synthetic records; packet/ordering correctness is covered by local adapter tests, not a new paid ASR benchmark.
 
 **Coverage and report-resume update:** `964f401` is active. Speech acknowledgement records upper-bound input exclusion windows; reports expose the coverage caveat. Resumed interrupted capture marks prior analysis stale, preserves annotations and withholds sharing/reanalysis while live. Saved ended/imported transcripts offer explicit paid analysis. [Deployed check](research/speech-coverage-release-deployed.json) passes real diagnostic MMS playback and report/sharing controls; coverage UI used an explicitly synthetic window. Complete callback persistence/report input and resume behavior are covered by local HTTP/browser fixtures. No paid model call was made.

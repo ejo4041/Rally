@@ -1,5 +1,7 @@
 # Rally v0.1 — build verification
 
+**Current integrated release:** `c20261d` is publicly hosted with backend login. See [streaming speech deployment and validation](streaming-speech-validation.md) and [current handoff](handoff.md). The checkpoints below are historical; their access policies and active-release labels are superseded for the integrated Node app. The separate Sites app stays private.
+
 Built October 28, 2026 under the user's authorization to implement independently without further prompts. This replaces the research-only stopping point. Work was completed in the active session; no unattended scheduler is configured.
 
 **Teams follow-up:** Native version 6 adds [Site join controls plus a persistent Ubuntu browser runner](research/teams-site-integration.md). App suite now has 18 passing tests. Hosted controls/runner heartbeat are verified; Azure credential setup and an actual Teams join remain outstanding. No Muse calls in this follow-up. The original v0.1 build verification below remains historical evidence for the browser meeting implementation.
