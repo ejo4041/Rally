@@ -1,36 +1,35 @@
-# Streaming speech implementation — October 30
+# Streaming speech and public access — implementation record
 
-## Agreed design
+## Scope and decisions
 
-Implement on a fresh worktree from fetched main. Extend the Node API, not the older Sites application. Shared AWS Seamless synthesis accepts caller text through internal and authenticated HTTP APIs, with complete WAV and streamed PCM. Muse retains transcription and reasoning. Approved meeting interventions must begin exactly `Let’s get back on track.` (U+2019). Speak immediately after server approval; preserve the sixty-second cooldown and cancellation/evidence rules.
+Work is isolated on `rally-streaming-speech`, created from freshly fetched main `1d988d0`. The user approved internal and authenticated generic TTS, automatic immediate interventions, ten-second meeting health updates, live Teams moderation until End/Leave even if the dashboard closes, and call-only output when Teams is selected. Every intervention starts exactly **Let’s get back on track.** (U+2019). Generic synthesis preserves caller text.
 
-Publish meeting health/status every ten seconds, even without another model call. Use LiveKit audio tracks for browser/Teams speech. When call mode is enabled, output only to the call; otherwise use browser playback. Teams must feed the same live engine, remain until End/Leave even if the dashboard closes, and own its capture lease. Keep WhatsApp and hosting changes outside scope. Preserve private access and no automatic replay after partial delivery.
+The user subsequently authorized public HTTPS on port 443 with backend login. This supersedes the earlier private-only scope for the integrated Node app, not the separate Sites release. Final hackathon submission remains pending.
 
-## Implementation checkpoint
+## Implemented architecture
 
-Fresh branch `rally-streaming-speech`, worktree `/srv/hackathon/rally-streaming-speech`, based on fetched remote main `1d988d0`. Fetch required running Git as the existing repository owner; no SSH configuration was changed. Other worktrees were left intact.
+- `TextToSpeech` and `SpeechService` provide bounded complete WAV and incremental PCM through the supplied AWS Seamless endpoint. Adapter identity identifies the requested model; the API supplies no checkpoint revision, so revision stays null. Stream sample alignment, deadlines, backpressure, abort, validation, concurrency and no automatic retries are enforced.
+- Authenticated `/api/speech/generate`, `/api/speech/stream` and `/api/speech/usage` keep provider credentials server-side. Requests require paid processing enabled; rate limits cover accounts and global request counts. AWS request records persist cache-hit information, first-byte timing where measured, output duration for PCM and unknown infrastructure cost, separately from Muse accounting. They retain no input text or audio. Interrupted requests are marked on restart.
+- `LiveSpeech` consumes only server-approved, current intervention IDs/epochs. Approval is saved before synthesis. It records and publishes preparing/playing/completed/canceled/failed, preserves input shielding through the bounded task and echo tail, and cancels on host controls, invalidation and transport loss.
+- Browser speech uses LiveKit audio publication. Subscription requires a current authorized job/epoch, rejects delayed canceled tracks, and does not replay on reconnect. Stop acts locally before the server round trip. Voice on/off is server-controlled for streamed meetings.
+- Ten-second notifications include health, rationale, concerns, progress, assessment freshness, speech destination and call state, even when moderation is paused or an assessment remains in flight. HTTP snapshots remain authoritative.
+- Browser capture leases renew every twenty seconds and expire after ninety seconds. Teams has an independent connected-runner lease and browser-process watchdog. Dashboard logout does not stop Teams.
+- Teams connects a prepared owner-scoped meeting to the same ASR/assessment/report engine. An isolated Chromium/PulseAudio transport carries incoming audio and streamed output. **Implementation refinement:** the Teams sink consumes normalized PCM directly through its private virtual microphone instead of creating an extra LiveKit participant/codec round trip. The dashboard still receives LiveKit status events, and browser capture/playback still uses LiveKit. There is only one ASR/model loop; Teams mode never publishes speech to dashboard speakers.
+- Teams startup/cancellation holds exclusive runner ownership until late startup and cleanup settle. No automatic rejoin. End/Leave drains transcription and invokes the existing final report flow. The legacy Sites Teams queue and integrated mode must not run simultaneously.
+- Backend login uses the existing scrypt/session/owner isolation. New throttles limit concurrent hashing, login attempts and public registrations. Public registration remains available as requested; shared model budgets still apply.
 
-Implemented shared Seamless adapter and authenticated `/api/speech/generate` and `/api/speech/stream`, WAV signature validation, incremental aligned PCM, bounded output, cancellation, deadlines, global concurrency limit, upstream error mapping and Retry-After propagation. Added exact-prefix normalization helper. Ten-second status notification remains outstanding; the earlier attempted edit did not match the committed engine baseline.
+## Configuration
 
-Configuration reads `RALLY_TTS_TOKEN` from backend environment; no credential was saved or provider request made. The adapter is not yet connected to meeting speech. Existing MMS remains the meeting speech implementation.
+Use server secrets for `RALLY_TTS_TOKEN`, select `RALLY_SPEECH_ADAPTER=seamless-aws`, and enable `RALLY_PAID_ENABLED=1`. Concurrency defaults to one. MMS remains an explicitly selected legacy adapter and is not an automatic fallback. Default provider input/output limits are unchanged from the supplied quickstart: English/default voice, 1,200 characters, PCM16 mono 16 kHz; upstream validates its phrase-token limit. Generic audio is bounded to 120 seconds, meeting utterances to 30 seconds of samples and forty seconds elapsed.
 
-## Remaining required work
+`LIVEKIT_URL` is backend signaling; `LIVEKIT_PUBLIC_URL` is the browser WSS endpoint. Public ingress proxies `/livekit/` to local signaling. Public ICE TCP/UDP ports must also be reachable. HTTPS UI access alone is not proof of media connectivity.
 
-- Add account rate limits, cache-header/usage telemetry, richer WAV validation and HTTP streaming tests.
-- Wire automatic approved intervention streaming, speech lifecycle/snapshot state and the prefix helper into the engine.
-- Extend LiveKit publication permissions and cancellable frame streaming; integrate browser playback, controls and input shielding.
-- Implement integrated Teams live transport, owner-scoped connection lifecycle, exclusive capture source, runner lease and watchdog, and final drain/report handling.
-- Complete status freshness and speech/destination fields in canonical snapshots and frontend rendering.
-- Run full regression and synthetic media tests, then bounded AWS and consented Teams validation. No live access/latency claim is established.
+## Validation and boundaries
 
-## Validation
+Red/green tests reproduced pre-aborted provider requests, invalid WAV encoding, Teams retry during canceled startup, and browser capture expiry. Actual browser/Express/SQLite/LiveKit streaming playback, local Stop, prefix presentation and persisted coverage pass using synthetic model/audio fixtures. Two fresh-context Astra reviews identified and prompted fixes for Teams cleanup races, pending browser track authorization, shielding lifetime and canceled-status persistence. Final regression/review/deployment results are recorded in the final handoff when complete.
 
-Initial validation: TypeScript passed and 54 backend tests passed (50 existing, four new adapter/prefix tests). No paid calls, deployment, service restart or meeting join occurred. Dependencies are reused through a local-only node_modules symlink to the existing installed checkout.
+No new Muse call has been made during implementation. Actual AWS cache/latency validation and a fresh consented Teams admission/audibility rehearsal remain distinct live checks. A real meeting invite has been requested; synthetic tests do not establish Teams tenant admission or remote audibility.
 
-## Review checkpoint
+## Public ingress evidence
 
-The implement skill's code-review step reviewed foundation commit af62962 against 1d988d0 using independent Standards and Spec agents. Standards: three hard findings (capability metadata, accounting/enablement, missing HTTP tests) and two heuristic findings (inconsistent character counting, meeting policy location). Spec: seven findings; the full live meeting/Teams feature remains unimplemented. Review does not approve this as a completed feature.
-
-Follow-up fixes validate WAV chunks/PCM encoding and lengths, reject pre-aborted requests before fetching, enforce the PCM duration ceiling, normalize upstream timeouts/network failures, and gate HTTP calls on paidEnabled with a thirty-second per-account limit. Capability metadata, actual AWS accounting, HTTP tests and all live integration remain outstanding. Do not enable this foundation in production.
-
-Latest completed verification before the enablement/rate-limit follow-up: 56 backend tests and TypeScript pass. No provider calls or deployment occurred.
+Tailscale Funnel accepted HTTPS 443 on `rally.tail703f9e.ts.net`. A request forced through its public DNS relay returned the temporary setup text. Both pre-existing public SSH443 sessions remained established; no SSH listener configuration was changed. Direct server-local hostname resolution uses the Tailscale address and reaches the SSH wildcard listener, so public-route probes must use public DNS resolution. Public UI publication follows verified release installation; a setup page is not the application deployment.

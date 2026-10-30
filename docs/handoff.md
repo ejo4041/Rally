@@ -1,4 +1,4 @@
-**Streaming speech work in progress:** [implementation checkpoint and remaining work](streaming-speech-plan.md). New isolated worktree; not deployed.
+**Streaming speech work in progress:** [implementation checkpoint and remaining work](streaming-speech-plan.md). Isolated worktree; implementation and public ingress checks in progress.
 
 # Rally handoff — October 30 current checkpoint
 

@@ -1,3 +1,4 @@
+import type { LiveSpeech } from "./live-speech.ts";
 import { randomUUID } from "node:crypto";
 import { createRequire } from "node:module";
 import { HttpError } from "./auth.ts";
@@ -66,6 +67,7 @@ type Job = {
 // Only Engine-approved interventions enter this bounded in-memory output queue.
 // There is no client-supplied text, retry loop, persisted waveform or external TTS.
 export class SpeechOutput {
+  live?: LiveSpeech;
   private engine: SpeechEngine | undefined;
   private identity: SpeechIdentity;
   private current: (id: string) => Meeting;
@@ -109,6 +111,7 @@ export class SpeechOutput {
     };
   }
   offer(meetingId: string, offer: Offer) {
+    if (this.live) { this.live.offer(meetingId, offer); return; }
     this.cancel(meetingId);
     this.offers.set(meetingId, offer);
   }
@@ -278,10 +281,12 @@ export class SpeechOutput {
     return this.view(job);
   }
   shielded(meetingId: string) {
+    if (this.live) return this.live.shielded(meetingId);
     const job = this.jobs.get(meetingId);
     return !!job && job.shieldUntil > Date.now();
   }
   cancel(meetingId: string) {
+    this.live?.cancel(meetingId);
     this.offers.delete(meetingId);
     const job = this.jobs.get(meetingId);
     if (!job) return;
@@ -292,6 +297,7 @@ export class SpeechOutput {
     job.audio = undefined;
   }
   forget(meetingId: string) {
+    this.live?.forget(meetingId);
     const job = this.jobs.get(meetingId);
     if (job) clearTimeout(job.timer);
     this.cancel(meetingId);
@@ -299,6 +305,7 @@ export class SpeechOutput {
     this.diagnostics.delete(meetingId);
   }
   close() {
+    void this.live?.close();
     this.closed = true;
     for (const id of this.jobs.keys()) this.forget(id);
     this.offers.clear();

@@ -21,6 +21,8 @@ async function fixture(t: TestContext, assessmentMs = 100000) {
     }[] = [];
   let shutdown = false;
   const api = createApplication({
+    // These scenarios isolate ASR rotation from the separately tested browser lease.
+    captureLeaseMs:24*3600000,
     dbPath: ":memory:",
     assessmentMs,
     providers: {

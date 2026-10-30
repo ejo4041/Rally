@@ -108,6 +108,14 @@ export class MeetingSession {
         if (data?.type === "pause") m.paused = true;
         if (data?.type === "resume") m.paused = false;
         return true;
+      case "speech.status":
+        if(data?.epoch >= m.epoch) m.speechStatus=data;
+        return false;
+      case "meeting.status":
+        if(data?.epoch < m.epoch)return false;
+        m.liveStatus={at:data.at,assessmentState:data.assessmentState,destination:data.destination,callState:data.callState};
+        if(data?.assessmentAt && (!m.assessmentAt || data.assessmentAt>m.assessmentAt))return true;
+        return false;
       case "assessment":
         return true; // The embedded recommendation is not an approved intervention.
       case "transcription.gap":

@@ -11,7 +11,8 @@ export type Summary = Pick<
   Meeting,
   "id" | "title" | "createdAt" | "phase" | "reportStatus"
 >;
-export type Connection = { url: string; token: string; room: string };
+export type Connection = {
+  captureToken?:string; url: string; token: string; room: string };
 export class APIError extends Error {
   constructor(
     message: string,

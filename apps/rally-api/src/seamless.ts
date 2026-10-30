@@ -10,10 +10,11 @@ export class SpeechError extends HttpError {
 }
 export type SpeechRequest = { input: string; voice?: 'default' };
 export class SeamlessSpeech {
+  readonly identity = {adapter:'seamless-aws',model:'facebook/seamless-m4t-v2-large',sampleRate:16000,channels:1,format:'pcm_s16le',revision:null};
   private active = 0;
   private token: string; private endpoint: string; private request: typeof fetch; private concurrency: number;
   constructor(token: string, endpoint = 'https://2tluh56msb.execute-api.us-west-2.amazonaws.com/prod/v1/audio/speech', request: typeof fetch = fetch, concurrency = 1) { this.token=token; this.endpoint=endpoint; this.request=request; this.concurrency=concurrency; }
-  async *stream(input: SpeechRequest, signal: AbortSignal, format: 'pcm' | 'wav' = 'pcm'): AsyncGenerator<Buffer> {
+  async *stream(input: SpeechRequest, signal: AbortSignal, format: 'pcm' | 'wav' = 'pcm', onCache?: (cached:boolean|null)=>void): AsyncGenerator<Buffer> {
     signal.throwIfAborted();
     if (!input || typeof input.input !== 'string' || !input.input.trim() || [...input.input].length > 1200 || (input.voice !== undefined && input.voice !== 'default')) throw new SpeechError('Invalid speech input', 422);
     if (this.active >= this.concurrency) throw new SpeechError('Speech service busy', 429, '1');
@@ -27,6 +28,8 @@ export class SeamlessSpeech {
     try {
       const response = await this.request(this.endpoint, {method:'POST', redirect:'error', signal:combined, headers:{Authorization:`Bearer ${this.token}`, 'Content-Type':'application/json'}, body:JSON.stringify({model:'facebook/seamless-m4t-v2-large', input:input.input, voice:'default', response_format:format, chunking:format === 'pcm' ? 'sentence' : 'none'})});
       if (!response.ok) throw new SpeechError('Speech provider request failed', [400,422,429].includes(response.status) ? response.status : 502, response.headers.get('Retry-After') || undefined);
+      const cache=response.headers.get('X-First-Phrase-Cached');
+      onCache?.(cache === null ? null : ['true','1','yes'].includes(cache.toLowerCase()));
       if (!response.body) throw new SpeechError('Speech provider returned no audio',502);
       reader = response.body.getReader();
       let bytes = 0;
@@ -55,9 +58,9 @@ export class SeamlessSpeech {
       this.active--;
     }
   }
-  async synthesize(input: SpeechRequest, signal: AbortSignal) {
+  async synthesize(input: SpeechRequest, signal: AbortSignal, onCache?: (cached:boolean|null)=>void) {
     const parts: Buffer[] = [];
-    for await (const part of this.stream(input, signal, 'wav')) parts.push(part);
+    for await (const part of this.stream(input, signal, 'wav', onCache)) parts.push(part);
     const wav = Buffer.concat(parts);
     if (wav.length < 44 || wav.toString('ascii',0,4) !== 'RIFF' || wav.toString('ascii',8,12) !== 'WAVE') throw new SpeechError('Invalid WAV response',502);
     let formatFound = false, audioBytes = 0;

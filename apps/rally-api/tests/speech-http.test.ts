@@ -1,0 +1,22 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {createApplication} from '../src/app.ts';
+import {SeamlessSpeech} from '../src/seamless.ts';
+test('HTTP speech is authenticated and delivers first PCM before upstream completes',async(t)=>{
+ let finish!:()=>void;
+ const api=createApplication({dbPath:':memory:',paidEnabled:true,tts:new SeamlessSpeech('fixture',undefined,async()=>new Response(new ReadableStream({start(c){c.enqueue(new Uint8Array([1,2]));finish=()=>{c.enqueue(new Uint8Array([3,4]));c.close();};}}),{headers:{'X-First-Phrase-Cached':'true'}}))});
+ const server=api.app.listen(0,'127.0.0.1');await new Promise<void>(r=>server.once('listening',r));
+ t.after(async()=>{await api.close();await new Promise<void>(r=>server.close(()=>r()));});
+ const base=`http://127.0.0.1:${(server.address() as any).port}/api`;let cookie='';
+ const req=(path:string,body?:unknown,origin?:string)=>fetch(base+path,{method:body?'POST':'GET',headers:{cookie,'Content-Type':'application/json',...(origin?{Origin:origin}:{})},body:body?JSON.stringify(body):undefined});
+ assert.equal((await req('/speech/stream',{input:'Hello.'})).status,401);
+ const signup=await req('/auth/signup',{username:'speech-http',password:'test-password'});cookie=signup.headers.get('set-cookie')!.split(';')[0];
+ assert.equal((await req('/speech/stream',{input:'Hello.'},'https://foreign.test')).status,403);
+ const response=await req('/speech/stream',{input:'Hello.'});assert.equal(response.status,200);
+ const reader=response.body!.getReader();const first=await reader.read();assert.deepEqual([...first.value!],[1,2]);finish();
+ const next=await reader.read();assert.deepEqual([...next.value!],[3,4]);assert.equal((await reader.read()).done,true);
+ const usage=await(await req('/speech/usage')).json();assert.equal(usage[0].cached,true);assert.equal(usage[0].state,'completed');
+ assert.equal((await req('/speech/stream',{input:'Hello.'})).status,429);
+ for(let n=0;n<20;n++)await req('/auth/login',{username:'bad-name',password:'wrong-password'});
+ assert.equal((await req('/auth/login',{username:'bad-name',password:'wrong-password'})).status,429);
+});

@@ -1,0 +1,59 @@
+{
+  "at": "2026-10-30T14:50:07.229Z",
+  "model": "facebook/seamless-m4t-v2-large",
+  "requests": [
+    {
+      "mode": "pcm",
+      "firstByteMs": 1556.178633,
+      "elapsedMs": 1726.60256,
+      "bytes": 58240,
+      "chunks": 5,
+      "seconds": 1.82
+    },
+    {
+      "mode": "wav",
+      "elapsedMs": 983.0616659999998,
+      "bytes": 58284
+    }
+  ],
+  "cost": "AWS infrastructure cost unknown; no Muse call",
+  "passed": true,
+  "usage": [
+    {
+      "id": "91e45943-c0bc-4c23-a7ab-4e5bd0ab5c5a",
+      "at": 1793371808957,
+      "meetingId": null,
+      "adapter": "seamless-aws",
+      "model": "facebook/seamless-m4t-v2-large",
+      "sampleRate": 16000,
+      "channels": 1,
+      "format": "wav",
+      "revision": null,
+      "state": "completed",
+      "bytes": 58284,
+      "seconds": null,
+      "firstByteMs": null,
+      "cached": false,
+      "cost": null,
+      "billing": "AWS infrastructure; cost unknown"
+    },
+    {
+      "id": "3ff2b3da-5d77-4fb2-9f78-cce1c75e540b",
+      "at": 1793371807231,
+      "meetingId": null,
+      "adapter": "seamless-aws",
+      "model": "facebook/seamless-m4t-v2-large",
+      "sampleRate": 16000,
+      "channels": 1,
+      "format": "pcm_s16le",
+      "revision": null,
+      "state": "completed",
+      "bytes": 58240,
+      "seconds": 1.82,
+      "firstByteMs": 1555,
+      "cached": false,
+      "cost": null,
+      "billing": "AWS infrastructure; cost unknown"
+    }
+  ]
+}

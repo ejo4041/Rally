@@ -128,6 +128,13 @@ export type Meeting = {
   progress: string;
   speakerNames: Record<string, string>;
   assessment: Assessment | null;
+  assessmentAt?: number;
+  captureSource?: "browser" | "teams";
+  callState?: string;
+  speechEnabled?:boolean;
+  speechTransport?:"livekit"|"wav";
+  liveStatus?: {at:number;assessmentState:string;destination:string;callState:string};
+  speechStatus?: import("./live-speech.ts").SpeechState | null;
   interventions: { id: string; at: number; text: string; kind: string }[];
   reportStatus: "none" | "processing" | "ready" | "failed";
   reportStale?: boolean;
@@ -189,6 +196,7 @@ export type LiveEvent = {
   data: unknown;
 };
 export interface MediaSession {
+  play?(job: import("./live-speech.ts").SpeechState, chunks: AsyncIterable<Buffer>, signal: AbortSignal, beforeAudio: () => void): Promise<void>;
   connection(): Promise<{ url: string; token: string; room: string }>;
   send(event: LiveEvent): Promise<void>;
   close(): Promise<void>;

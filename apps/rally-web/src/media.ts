@@ -1,6 +1,6 @@
 import { Room, RoomEvent, LocalAudioTrack, Track } from "livekit-client";
 import type { LiveEvent } from "../../rally-api/src/contracts.ts";
-import type { Connection } from "./api.ts";
+import { api, APIError, type Connection } from "./api.ts";
 export type AudioInput = {
   stream: MediaStream;
   sources: { kind: "tab" | "microphone"; stream: MediaStream }[];
@@ -120,16 +120,31 @@ export class MeetingMedia {
   room: Room | null = null;
   private track: LocalAudioTrack | null = null;
   private audio: AudioInput | null = null;
+  private leaseTimer?:ReturnType<typeof setInterval>;
   private muted = false;
   private shielded = false;
   private elements = new Set<HTMLMediaElement>();
+  private revokedSpeech = new Set<string>();
+  private activeSpeech: string | null = null;
+  private eligibleSpeech: string | null = null;
+  private speechEpoch=0;
+  private minimumEpoch=0;
+  private subscribeSpeech() {
+    for(const participant of this.room?.remoteParticipants.values() || []) {
+      if(participant.identity!==`backend-${this.meetingId}`)continue;
+      for(const publication of participant.trackPublications.values()) {
+        const parts=publication.trackName.split(':');
+        if(parts[0]==='rally-speech')publication.setSubscribed(parts[1]==='browser' && parts[2]===this.eligibleSpeech && Number(parts[3])>=this.minimumEpoch && !this.revokedSpeech.has(parts[2]));
+      }
+    }
+  }
   constructor(
     private meetingId: string,
     private onEvent: (event: LiveEvent) => void,
     private onStatus: (status: string) => void,
     private onRecovered: () => void,
   ) {}
-  async connect(connection: Connection, audio: AudioInput) {
+  async connect(connection: Connection, audio: AudioInput | null) {
     this.audio = audio;
     const room = new Room({ adaptiveStream: true, dynacast: true });
     this.room = room;
@@ -140,7 +155,21 @@ export class MeetingMedia {
       )
         return;
       try {
-        this.onEvent(JSON.parse(new TextDecoder().decode(bytes)));
+        const event = JSON.parse(new TextDecoder().decode(bytes));
+        if(event.type === 'speech.status') {
+          const state=event.data;
+          if(state?.state==='preparing' && state.epoch>=this.minimumEpoch && !this.revokedSpeech.has(state.id)) {
+            this.eligibleSpeech=state.id;this.speechEpoch=state.epoch;this.subscribeSpeech();
+          }
+          if(['canceled','failed'].includes(state?.state))this.stopSpeech(state.id);
+          if(state?.state==='completed'){this.revokedSpeech.add(state.id);if(this.eligibleSpeech===state.id)this.eligibleSpeech=null;}
+          if(state?.state==='playing' && state.id===this.eligibleSpeech && state.epoch>=this.minimumEpoch)this.setShielded(true);
+          if(['completed','canceled','failed'].includes(state?.state))this.setShielded(false);
+        }
+        if(event.type==='moderator.control' && Number.isInteger(event.data?.epoch)) {
+          this.minimumEpoch=Math.max(this.minimumEpoch,event.data.epoch);this.speechEpoch=Math.max(this.speechEpoch,event.data.epoch);this.stopSpeech();
+        }
+        this.onEvent(event);
       } catch {
         this.onStatus(
           "A live update could not be read. Refresh the meeting record.",
@@ -161,11 +190,17 @@ export class MeetingMedia {
         "Audio disconnected. Refresh the record, then reconnect explicitly.",
       );
     });
-    room.on(RoomEvent.TrackSubscribed, (track, _pub, participant) => {
+    room.on(RoomEvent.TrackPublished,()=>this.subscribeSpeech());
+    room.on(RoomEvent.TrackSubscribed, (track, publication, participant) => {
       if (
         track.kind === Track.Kind.Audio &&
         participant.identity === `backend-${this.meetingId}`
       ) {
+        const parts=publication.trackName.split(':');
+        if(parts[0]==='rally-speech' && parts.length>1) {
+          if(parts[1]!=='browser' || parts[2]!==this.eligibleSpeech || Number(parts[3])<this.minimumEpoch || this.revokedSpeech.has(parts[2])) {publication.setSubscribed(false);return;}
+          this.activeSpeech=parts[2];
+        }
         const element = track.attach();
         element.hidden = true;
         document.body.append(element);
@@ -179,12 +214,13 @@ export class MeetingMedia {
       }
     });
     try {
-      await room.connect(connection.url, connection.token);
+      await room.connect(connection.url, connection.token, {autoSubscribe:false});
       if (
         this.room !== room ||
-        !audio.stream.getAudioTracks().some((t) => t.readyState === "live")
+        (audio !== null && !audio.stream.getAudioTracks().some((t) => t.readyState === "live"))
       )
         throw new Error("Audio sharing ended during connection.");
+      if(audio) {
       this.track = new LocalAudioTrack(
         audio.stream.getAudioTracks()[0],
         undefined,
@@ -198,12 +234,34 @@ export class MeetingMedia {
         this.track.mediaStreamTrack.readyState !== "live"
       )
         throw new Error("Audio sharing ended during publication.");
+      }
       await room.startAudio();
       this.onStatus("Connected");
+      if(audio && connection.captureToken) {
+        let renewing=false;
+        const renew=async()=>{
+          if(renewing||!this.track)return;renewing=true;
+          try{await api(`/meetings/${this.meetingId}/heartbeat`,'POST',{captureToken:connection.captureToken},AbortSignal.timeout(5000));}
+          catch(error){if(error instanceof APIError && [401,409].includes(error.status)){this.stopCapture();this.onStatus('Audio disconnected; reconnect explicitly.');}}
+          finally{renewing=false;}
+        };
+        void renew();this.leaseTimer=setInterval(()=>void renew(),20000);
+      }
     } catch (error) {
       await this.close();
       throw error;
     }
+  }
+  stopSpeech(id = this.eligibleSpeech || this.activeSpeech, invalidateEpoch=false) {
+    if(invalidateEpoch)this.minimumEpoch=Math.max(this.minimumEpoch,this.speechEpoch+1);
+    if(id===this.eligibleSpeech)this.eligibleSpeech=null;
+    this.subscribeSpeech();
+    if(id)this.revokedSpeech.add(id);
+    if(id && id!==this.activeSpeech)return;
+    for(const element of this.elements){element.pause();element.srcObject=null;}
+    this.activeSpeech=null;
+    this.setShielded(false);
+    if(this.revokedSpeech.size>1000)this.revokedSpeech.delete(this.revokedSpeech.values().next().value!);
   }
   setMuted(muted: boolean) {
     this.muted = muted;
@@ -218,6 +276,7 @@ export class MeetingMedia {
       this.track.mediaStreamTrack.enabled = !(this.muted || this.shielded);
   }
   stopCapture() {
+    clearInterval(this.leaseTimer);this.leaseTimer=undefined;
     this.audio?.close();
     this.audio = null;
     this.track?.stop();

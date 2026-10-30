@@ -1,4 +1,9 @@
-import { SeamlessSpeech, SpeechError } from "./seamless.ts";
+import { AuthLimit } from "./auth-limit.ts";
+import { TeamsLive, type TeamsConnector } from "./teams-live.ts";
+import { connectTeamsBrowser } from "./teams-browser.ts";
+import { SpeechService, configuredTTS, type TextToSpeech } from "./speech-service.ts";
+import { LiveSpeech } from "./live-speech.ts";
+import { SpeechError } from "./seamless.ts";
 import { once } from "node:events";
 import express from "express";
 import { retainLegacyNotes } from "./report-notes.ts";
@@ -32,7 +37,8 @@ export function createApplication(
     media?: Media;
     teamsRequest?: TeamsRequest;
     speechEngine?: SpeechEngine;
-    tts?: SeamlessSpeech;
+    tts?: TextToSpeech;
+    teamsConnector?: TeamsConnector;
   } = {},
 ) {
   const config = { ...defaults, ...options };
@@ -42,19 +48,48 @@ export function createApplication(
     ...options.providers,
   };
   const meetings = new Meetings(store, providers);
-  const media: Media = options.media || new LiveKitMedia(config);
+  const transport: Media = options.media || new LiveKitMedia(config);
+  let liveTeams: TeamsLive;
+  const media: Media = {open: async (meeting,onAudio,onGap) => {
+    const call=meeting.captureSource==='teams';
+    const session=await transport.open(meeting,call?()=>{}:onAudio,onGap);
+    if(!call)return session;
+    try {
+      const detach=liveTeams.attach(meeting.id,onAudio,onGap);
+      return {...session,play:async (_job,chunks,signal,beforeAudio)=>liveTeams.play(meeting.id,chunks,signal,beforeAudio),close:async()=>{detach();await session.close();}};
+    }catch(error){await session.close();throw error;}
+  }};
+  const streamingSelected=!!options.tts || process.env.RALLY_SPEECH_ADAPTER==='seamless-aws';
   const speech = new SpeechOutput(
-    options.speechEngine || configuredSpeech(),
+    options.speechEngine || (streamingSelected ? undefined : configuredSpeech()),
     (id) => meetings.get(id),
     (id, shield) => meetings.recordAudioExclusion(id, shield),
   );
   const engine = new Engine(meetings, media, config, speech);
+  liveTeams = new TeamsLive({current:id=>meetings.get(id),save:m=>meetings.save(m),start:m=>engine.start(m,true),end:m=>engine.end(m),interrupt:m=>engine.interrupt(m),renew:id=>engine.renewCall(id),connect:options.teamsConnector||connectTeamsBrowser});
+  engine.onCaptureStop=id=>liveTeams.stop(id);
   const teams = new TeamsBridge(
     store,
     meetings,
     options.teamsRequest || configuredTeamsRequest(),
   );
-  const tts = options.tts || new SeamlessSpeech(process.env.RALLY_TTS_TOKEN || "");
+  const tts = new SpeechService(store, options.tts || configuredTTS(), config.paidEnabled);
+  if (config.paidEnabled && streamingSelected && (options.tts || process.env.RALLY_TTS_TOKEN)) {
+    speech.live = new LiveSpeech({
+      current: id => meetings.get(id),
+      stream: (text,signal,id) => tts.stream(meetings.get(id).userId,{input:text},signal,id),
+      play: async (id,job,chunks,signal,beforeAudio) => {
+        const session=engine.active.get(id)?.media;
+        if (!session?.play) throw new HttpError('Streaming playback unavailable',503);
+        await session.play(job,chunks,signal,beforeAudio);
+      },
+      event: (id,status) => {
+        const m=meetings.get(id);m.speechStatus=status;meetings.save(m);
+        engine.emit(id,'speech.status',status);
+      },
+      shield: (id,window) => meetings.recordAudioExclusion(id,window),
+    });
+  }
   const app = express();
   app.disable("x-powered-by");
   app.use((req, res, next) => {
@@ -94,15 +129,18 @@ export function createApplication(
     password: z.string().min(10).max(200),
   });
   app.get("/api/health", (_req, res) => res.json({ ok: true }));
+  const authLimit=new AuthLimit();
   app.post("/api/auth/signup", async (req, res) => {
     const input = credentials.parse(req.body);
-    const user = await createUser(store, input.username, input.password);
+    const release=authLimit.enter("signup",input.username);
+    let user;try{user=await createUser(store,input.username,input.password);}finally{release();}
     issueSession(store, res, user, config.secureCookies);
     res.status(201).json(user);
   });
   app.post("/api/auth/login", async (req, res) => {
     const input = credentials.parse(req.body);
-    const user = await authenticate(store, input.username, input.password);
+    const release=authLimit.enter("login",input.username);
+    let user;try{user=await authenticate(store,input.username,input.password);}finally{release();}
     issueSession(store, res, user, config.secureCookies);
     res.json(user);
   });
@@ -179,8 +217,9 @@ export function createApplication(
     meetings.get(String(req.params.id), userForRequest(store, req).id);
   app.get("/api/speech/status", (req, res) => {
     userForRequest(store, req);
-    res.json(speech.status());
+    res.json(speech.live ? tts.status() : speech.status());
   });
+  app.get('/api/speech/usage',(req,res)=>res.json(tts.usage(userForRequest(store,req).id)));
   const speechAccounts = new Map<string, number>();
   for (const mode of ['generate', 'stream'] as const) {
     app.post('/api/speech/' + mode, async (req, res, next) => {
@@ -192,20 +231,20 @@ export function createApplication(
         res.setHeader('Retry-After', '30');
         throw new HttpError('Wait before requesting more speech',429);
       }
-      const input = z.object({input:z.string().min(1).max(1200),voice:z.literal('default').optional()}).strict().parse(req.body);
+      const input = z.object({input:z.string().refine(value=>!!value.trim()&&[...value].length<=1200),voice:z.literal('default').optional()}).strict().parse(req.body);
       speechAccounts.set(user.id, now + 30000);
       const controller = new AbortController();
       const close = () => controller.abort();
       res.once('close', close);
       try {
         if (mode === 'generate') {
-          res.type('audio/wav').send(await tts.synthesize(input, controller.signal));
+          res.type('audio/wav').send(await tts.synthesize(user.id, input, controller.signal));
         } else {
           res.setHeader('Content-Type','application/octet-stream');
           res.setHeader('X-Audio-Format','pcm_s16le');
           res.setHeader('X-Audio-Sample-Rate','16000');
           res.setHeader('X-Audio-Channels','1');
-          for await (const bytes of tts.stream(input, controller.signal)) {
+          for await (const bytes of tts.stream(user.id, input, controller.signal)) {
             if (!res.write(bytes)) await once(res, 'drain', {signal:controller.signal});
           }
           res.end();
@@ -272,6 +311,15 @@ export function createApplication(
       speech.playback(owned(req).id, String(req.params.job), data.state),
     );
   });
+  app.post('/api/meetings/:id/teams/connect',(req,res)=>{
+    if(!config.paidEnabled || (!options.teamsConnector && process.env.RALLY_TEAMS_LIVE_ENABLED!=='1'))throw new HttpError('Live Teams is disabled',503);
+    const m=owned(req);
+    if(meetings.list(m.userId).some(other=>other.id!==m.id&&other.phase==='live'))throw new HttpError('This host already has an active meeting',409);
+    const input=z.object({meetingUrl:z.string().max(4000),consented:z.literal(true)}).parse(req.body);
+    res.status(202).json(liveTeams.join(m,input.meetingUrl,input.consented));
+  });
+  app.get('/api/meetings/:id/teams/status',(req,res)=>res.json(liveTeams.status(owned(req).id)));
+  app.post('/api/meetings/:id/teams/leave',async(req,res)=>res.json(await liveTeams.leave(owned(req).id)));
   app.post("/api/meetings/:id/prepare", async (req, res) => {
     const m = owned(req);
     await meetings.prepare(m);
@@ -283,13 +331,17 @@ export function createApplication(
   app.patch("/api/meetings/:id/speakers", (req, res) =>
     res.json(engine.speaker(owned(req), req.body)),
   );
-  app.post("/api/meetings/:id/start", async (req, res) =>
-    res.json(await engine.start(owned(req), req.body?.consented === true)),
-  );
+  app.post("/api/meetings/:id/start", async (req, res) => {
+    const m=owned(req);
+    if(['joining','lobby','connected'].includes(liveTeams.status(m.id).state))throw new HttpError('Teams owns this meeting capture',409);
+    m.captureSource='browser';meetings.save(m);
+    res.json(await engine.start(m,req.body?.consented===true));
+  });
   app.post("/api/meetings/:id/reconnect", async (req, res) => {
     let m = owned(req);
     if (req.body?.consented !== true)
       throw new HttpError("Recording consent required");
+    if(m.captureSource==='teams')throw new HttpError('Reconnect Teams through its invitation controls',409);
     await engine.interrupt(m);
     m = meetings.get(m.id);
     res.json(await engine.start(m, true));
@@ -297,6 +349,7 @@ export function createApplication(
   app.post("/api/meetings/:id/connection", async (req, res) =>
     res.json(await engine.connection(owned(req))),
   );
+  app.post("/api/meetings/:id/heartbeat",(req,res)=>res.json(engine.heartbeat(owned(req),req.body?.captureToken)));
   app.post("/api/meetings/:id/commands", async (req, res) =>
     res.json(await engine.command(owned(req), req.body)),
   );
@@ -369,7 +422,9 @@ export function createApplication(
   return {
     app,
     async close() {
+      await liveTeams.close();
       await engine.close();
+      await speech.live?.close();
       speech.close();
       store.close();
     },

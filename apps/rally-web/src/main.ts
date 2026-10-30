@@ -331,7 +331,7 @@ function render() {
     live = m.phase === "live",
     pre =
       ["draft", "ready", "interrupted"].includes(m.phase) ||
-      (live && !state.capture);
+      (live && !state.capture && !state.media);
   $("meeting-title").textContent = m.title;
   $("meeting-meta").textContent =
     `${m.durationMinutes} minutes planned · ${m.participants.length} roster names${m.paused ? " · Moderator paused" : ""}`;
@@ -378,8 +378,11 @@ function render() {
         ? "Rally is paused. Transcription continues."
         : "You lead the meeting. Rally helps it move forward.");
   $("progress").textContent = m.progress || "";
+  if(m.speechTransport==='livekit')input("spoken-prompts").checked=m.speechEnabled!==false;
+  if(m.speechStatus) $("speech-status").textContent=`Voice: ${m.speechStatus.state} · ${m.speechStatus.destination === 'teams' ? 'Teams call only' : 'browser speakers'}${m.speechStatus.error ? ' · '+m.speechStatus.error : ''}`;
+  button("stop-speaking").hidden = !(speech.isActive() || ["preparing","playing"].includes(m.speechStatus?.state || ""));
   $("assessment-note").textContent = m.assessment
-    ? `${m.assessment.reason}${m.assessment.issues.length ? " · " + m.assessment.issues.map(label).join(", ") : ""}`
+    ? `${m.assessmentAt ? "Assessed " + Math.floor((Date.now()-m.assessmentAt)/1000) + "s ago · " : ""}${m.assessment.reason}${m.assessment.issues.length ? " · " + m.assessment.issues.map(label).join(", ") : ""}`
     : "";
   renderTranscript();
   $("partial").textContent = session.partial;
@@ -509,7 +512,8 @@ async function start() {
   await perform(async () => {
     let attempted = false;
     try {
-      const capture = await acquireAudio(
+      const callMode=input("audio-mode").value==='teams' || (session.meeting.captureSource==='teams' && session.meeting.phase==='live');
+      const capture = callMode ? null : await acquireAudio(
         input("audio-mode").value,
         input("include-mic").checked,
         controller.signal,
@@ -524,9 +528,20 @@ async function start() {
       if (controller.signal.aborted)
         throw new Error("Audio selection canceled.");
       attempted = true;
+      if(callMode && session.meeting.phase!=='live') {
+        await api(`/meetings/${id}/teams/connect`,'POST',{meetingUrl:input('live-teams-link').value,consented:true});
+        while(true) {
+          if(controller.signal.aborted){await api(`/meetings/${id}/teams/leave`,'POST',{});throw new Error('Teams join canceled');}
+          const call=await api<{state:string}>(`/meetings/${id}/teams/status`);
+          state.status=`Teams: ${call.state}. Admit Rally from the lobby.`;render();
+          if(call.state==='connected'){await refresh();break;}
+          if(['failed','left'].includes(call.state))throw new Error('Teams did not connect. Check the invitation and retry explicitly.');
+          await new Promise(r=>setTimeout(r,500));
+        }
+      }
       const phase = session.meeting.phase;
       let connection: Connection;
-      if (phase === "live" && !input("restart-session").checked)
+      if (phase === "live" && (callMode || !input("restart-session").checked))
         connection = await api<Connection>(
           `/meetings/${id}/connection`,
           "POST",
@@ -579,8 +594,10 @@ async function start() {
             event.type === "plan.updated" ||
             event.type === "meeting.ended" ||
             event.type === "capture.gap"
-          )
+          ) {
             speech.cancel();
+            state.media?.stopSpeech();
+          }
           if (session.apply(event)) scheduleRefresh();
           if (
             event.type === "intervention" &&
@@ -590,8 +607,10 @@ async function start() {
               id: string;
               text: string;
               epoch: number;
+              streaming?: boolean;
             };
             if (
+              !prompt.streaming &&
               typeof prompt.epoch === "number" &&
               session.intervention?.id === prompt.id
             )
@@ -647,6 +666,7 @@ async function end() {
 }
 async function command(type: string) {
   speech.cancel();
+  state.media?.stopSpeech(undefined,type!=='request_guidance');
   if (!state.session) return;
   state.session.intervention = null;
   await perform(async () => {
@@ -846,6 +866,7 @@ button("cancel-start").onclick = () => state.selecting?.abort();
 input("consent").onchange = render;
 input("audio-mode").onchange = () => {
   const tab = input("audio-mode").value === "tab";
+  $("live-teams-link-label").hidden=input("audio-mode").value!=="teams";
   $("include-mic-label").hidden = !tab;
   $("tab-help").hidden = !tab;
 };
@@ -1018,6 +1039,10 @@ button("check-audio").onclick = () => {
 };
 
 input("spoken-prompts").onchange = () => {
+  if(state.session?.meeting.speechTransport==='livekit') {
+    if(!input('spoken-prompts').checked)state.media?.stopSpeech(undefined,true);
+    void command(input('spoken-prompts').checked?'voice_on':'voice_off');return;
+  }
   if (!input("spoken-prompts").checked) speech.cancel();
   else
     void api<{ enabled: boolean; ready: boolean }>("/speech/status")
@@ -1032,6 +1057,8 @@ input("spoken-prompts").onchange = () => {
       .catch(fail);
 };
 button("stop-speaking").onclick = () => {
+  state.media?.stopSpeech(undefined,true);
+
   speech.cancel();
   if (state.session?.meeting.phase === "live") void command("dismiss");
 };

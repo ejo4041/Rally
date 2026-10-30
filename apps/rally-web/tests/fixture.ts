@@ -1,3 +1,4 @@
+import { SeamlessSpeech } from "../../rally-api/src/seamless.ts";
 // Local integration fixture only. Providers are injected; no model API is used.
 import {
   configuredSpeech,
@@ -210,6 +211,19 @@ const localSpeech =
 if (process.env.RALLY_TEST_REAL_MMS === "1" && !localSpeech)
   throw Error("Enable the pinned local MMS engine for the real speech test.");
 const api = createApplication({
+  ...(process.env.RALLY_TEST_STREAMING==='1'?{
+    paidEnabled:true,
+    tts:new SeamlessSpeech('fixture',undefined,async()=>new Response(new ReadableStream({
+      async start(controller){
+        for(let n=0;n<30;n++){
+          const pcm=Buffer.alloc(6400);for(let i=0;i<3200;i++)pcm.writeInt16LE(Math.round(3000*Math.sin(2*Math.PI*440*i/16000)),i*2);
+          try{controller.enqueue(pcm);}catch{return;}
+          await new Promise(r=>setTimeout(r,100));
+        }
+        try{controller.close();}catch{}
+      }
+    }),{headers:{'X-First-Phrase-Cached':'true'}}))
+  }:{}),
   speechEngine: localSpeech
     ? {
         start: () => localSpeech.start(),
@@ -263,6 +277,7 @@ const api = createApplication({
     throw Error("Unexpected Teams operation");
   },
   ...config,
+  paidEnabled:process.env.RALLY_TEST_STREAMING==='1',
   providers,
   media: {
     async open(m, onAudio, onGap) {

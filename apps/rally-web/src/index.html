@@ -221,15 +221,16 @@
                   >Audio source<select id="audio-mode">
                     <option value="microphone">Room microphone</option>
                     <option value="tab">Meeting browser tab</option>
+                    <option value="teams">Rally joins Teams</option>
                   </select></label
                 ><label id="include-mic-label" class="check" hidden
                   ><input id="include-mic" type="checkbox" checked />Include my
                   microphone</label
                 >
               </div>
+              <label id="live-teams-link-label" hidden>Teams invitation<input id="live-teams-link" type="url" placeholder="https://teams.microsoft.com/l/meetup-join/…" /></label>
               <p class="small muted">
-                A call tab is host-side capture. To have Rally join from a Teams
-                link, use the Teams invite panel on the Meetings page.
+                A call tab is host-side capture. Select Rally joins Teams to moderate the call using this agenda. Rally stays until End, even if this dashboard closes.
                 Zoom/WhatsApp link-based joining is not available.
               </p>
               <p id="tab-help" class="small muted" hidden>
@@ -270,9 +271,9 @@
                   <div class="actions">
                     <label class="check"
                       ><input id="spoken-prompts" type="checkbox" />Spoken
-                      prompts · Meta MMS</label
+                      prompts</label
                     ><button id="test-voice" class="text" type="button">
-                      Test voice · free
+                      Test local voice · free
                     </button>
                     <button id="stop-speaking" class="secondary" hidden>
                       Stop speaking

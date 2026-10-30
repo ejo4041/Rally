@@ -1,3 +1,7 @@
+## Streaming speech addition
+
+The integrated backend now supports `TextToSpeech` (`identity`, `stream`, `synthesize`) with a shared `SpeechService` for authenticated access and request accounting. Select `RALLY_SPEECH_ADAPTER=seamless-aws` with the backend secret `RALLY_TTS_TOKEN`; `RALLY_PAID_ENABLED` remains required. Identity declares the requested model and PCM format; remote checkpoint revision is unknown. See [implementation/configuration/evidence](streaming-speech-plan.md). The earlier MMS interface below remains available for explicitly selected local speech. AWS cost records are separate from the Muse grant and keep unknown infrastructure cost explicit.
+
 # Model interfaces and configuration
 
 This page describes the integrated Node app in `apps/rally-api/` and `apps/rally-web/`. Muse Voice Transcribe supplies its canonical transcript. Teams, Zoom and WhatsApp capture surfaces do not supply native platform transcripts. Changing a model does not require changing the meeting UI when the replacement satisfies the same capability interface.
