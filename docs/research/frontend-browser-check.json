@@ -1,5 +1,5 @@
 {
-  "testedAt": "2026-10-29T23:32:41.239Z",
+  "testedAt": "2026-10-30T03:53:41.416Z",
   "passed": true,
   "backend": "real Express/cookie auth/SQLite and LiveKit",
   "modelProviders": "injected deterministic fixtures",
@@ -19,6 +19,7 @@
     "evidence links, host correction, reload and export",
     "cross-owner denial and deletion",
     "mobile layout",
+    "free preflight detects separate sources, rejects missing consent, stops manually/after 15s and closes late grants without ASR",
     "Teams invite validation, lobby, leave and finalized transcript import via injected bridge",
     "tab rejection/cancellation stops tracks before ASR",
     "capture gap stops audio; explicit restart uses new speaker session",

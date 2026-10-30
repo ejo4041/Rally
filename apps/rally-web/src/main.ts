@@ -8,6 +8,7 @@ import {
   type Plan,
   type Connection,
 } from "./api.ts";
+import { setupAudioCheck } from "./audio-check.ts";
 import { setupTeams } from "./teams.ts";
 import { MeetingSession } from "./session.ts";
 import { MeetingMedia, acquireAudio, type AudioInput } from "./media.ts";
@@ -43,6 +44,7 @@ const state = {
   pollBusy: false,
   ending: false,
 };
+const audioCheck = setupAudioCheck();
 const teams = setupTeams((id) => {
   void loadHistory().catch(fail);
   location.hash = `meeting/${id}`;
@@ -78,6 +80,7 @@ function showAuth() {
   $("workspace").hidden = true;
 }
 async function signOutLocal() {
+  audioCheck.stop();
   teams.reset();
   showAuth();
   $("meeting").hidden = true;
@@ -156,6 +159,7 @@ async function loadHistory() {
     .join("");
 }
 function home() {
+  audioCheck.stop();
   const media = state.media;
   state.media = null;
   void media?.close();
@@ -182,6 +186,7 @@ async function route() {
     if (state.session) location.hash = `meeting/${state.session.meeting.id}`;
     return;
   }
+  audioCheck.stop();
   const generation = ++state.generation;
   const media = state.media;
   state.media = null;
@@ -301,6 +306,7 @@ function render() {
   $("connection-status").textContent = state.status;
   $("restart-session-label").hidden = !(live && !state.capture);
   $("start-panel").hidden = !pre;
+  button("check-audio").disabled = state.busy || !!state.capture;
   button("start").disabled = state.busy || !m.plan || !input("consent").checked;
   button("start").textContent = state.selecting
     ? "Selecting audio…"
@@ -429,6 +435,7 @@ function stopCapture() {
   state.muted = false;
 }
 async function start() {
+  audioCheck.stop();
   if (!state.session || !input("consent").checked || state.busy) return;
   const session = state.session,
     id = session.meeting.id;
@@ -906,3 +913,16 @@ button("create-browser-meeting").onclick = () => {
   input("audio-mode").dispatchEvent(new Event("change"));
 };
 setInterval(() => teams.poll(), 3000);
+
+button("check-audio").onclick = () => {
+  if (!input("consent").checked) {
+    toast("Confirm participant consent before checking audio.");
+    input("consent").focus();
+    return;
+  }
+  if (!state.busy && !state.capture)
+    void audioCheck.start(
+      input("audio-mode").value,
+      input("include-mic").checked,
+    );
+};

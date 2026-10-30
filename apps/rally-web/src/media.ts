@@ -1,7 +1,11 @@
 import { Room, RoomEvent, LocalAudioTrack, Track } from "livekit-client";
 import type { LiveEvent } from "../../rally-api/src/contracts.ts";
 import type { Connection } from "./api.ts";
-export type AudioInput = { stream: MediaStream; close: () => void };
+export type AudioInput = {
+  stream: MediaStream;
+  sources: { kind: "tab" | "microphone"; stream: MediaStream }[];
+  close: () => void;
+};
 export async function acquireAudio(
   mode: string,
   includeMic: boolean,
@@ -91,6 +95,15 @@ export async function acquireAudio(
       sources.push(stream);
     }
     return {
+      sources: sources
+        .slice(0, mode === "tab" && includeMic ? 2 : 1)
+        .map((stream, index) => ({
+          kind:
+            mode === "tab" && index === 0
+              ? ("tab" as const)
+              : ("microphone" as const),
+          stream,
+        })),
       stream,
       close: () => {
         signal.removeEventListener("abort", close);

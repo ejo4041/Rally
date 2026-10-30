@@ -217,6 +217,81 @@ try {
     await page.locator("#plan").textContent(),
     /Choose release scope/,
   );
+  // Local preflight must leave meeting lifecycle and ASR untouched.
+  await page.locator("#check-audio").click();
+  assert.equal(await page.locator("#audio-check-dialog").isVisible(), false);
+  await page.locator("#consent").check();
+  await page.locator("#audio-mode").selectOption("tab");
+  await page.evaluate(() => {
+    fixtureAudio.displayMode = "tab";
+    fixtureAudio.streams = [];
+  });
+  const preflightSessions = (
+    await (await page.request.get(base + "/api/test/state")).json()
+  ).speechSessions;
+  await page.locator("#check-audio").click();
+  await page.waitForFunction(() =>
+    ["tab", "microphone"].every(
+      (k) =>
+        document.querySelector("#check-" + k + "-result").textContent ===
+        "Audio signal detected.",
+    ),
+  );
+  assert.equal(
+    (await (await page.request.get(base + "/api/test/state")).json())
+      .speechSessions,
+    preflightSessions,
+  );
+  assert.equal(await page.locator("#phase").textContent(), "Ready");
+  await page.locator("#stop-audio-check").click();
+  assert.equal(
+    await page.evaluate(() =>
+      fixtureAudio.streams.every((s) =>
+        s.getTracks().every((t) => t.readyState === "ended"),
+      ),
+    ),
+    true,
+  );
+  await page.locator("[data-close=audio-check-dialog]").click();
+  await page.locator("#check-audio").click();
+  await page.waitForFunction(
+    () =>
+      document.querySelector("#audio-check-status").textContent ===
+      "Check complete. Capture is off.",
+    undefined,
+    { timeout: 18000 },
+  );
+  assert.equal(
+    await page.evaluate(() =>
+      fixtureAudio.streams.every((s) =>
+        s.getTracks().every((t) => t.readyState === "ended"),
+      ),
+    ),
+    true,
+  );
+  await page.locator("[data-close=audio-check-dialog]").click();
+  await page.evaluate(() => {
+    fixtureAudio.displayMode = "pending";
+    fixtureAudio.streams = [];
+  });
+  await page.locator("#check-audio").click();
+  await page.waitForFunction(
+    () => typeof fixtureAudio.resolveDisplay === "function",
+  );
+  await page.locator("[data-close=audio-check-dialog]").click();
+  await page.evaluate(() => fixtureAudio.resolveDisplay());
+  await page.waitForFunction(() =>
+    fixtureAudio.streams.every((s) =>
+      s.getTracks().every((t) => t.readyState === "ended"),
+    ),
+  );
+  assert.equal(
+    (await (await page.request.get(base + "/api/test/state")).json())
+      .speechSessions,
+    preflightSessions,
+  );
+  await page.locator("#audio-mode").selectOption("microphone");
+  await page.evaluate(() => (fixtureAudio.streams = []));
   await page.locator("#consent").check();
   await page.locator("#start").click();
   await page.waitForFunction(() =>
@@ -625,6 +700,7 @@ try {
       "evidence links, host correction, reload and export",
       "cross-owner denial and deletion",
       "mobile layout",
+      "free preflight detects separate sources, rejects missing consent, stops manually/after 15s and closes late grants without ASR",
       "Teams invite validation, lobby, leave and finalized transcript import via injected bridge",
       "tab rejection/cancellation stops tracks before ASR",
       "capture gap stops audio; explicit restart uses new speaker session",

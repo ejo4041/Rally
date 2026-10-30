@@ -1,5 +1,7 @@
 # Rally documentation
 
+**Free audio preflight:** [Integrated local tab/microphone check and validation](audio-preflight.md). Verify separate input signals before opening paid transcription.
+
 **WhatsApp guest prototype:** [Preparation and local audio evidence](whatsapp-guest-prototype.md). Isolated audio routing passes; a fresh call link and host admission are needed for actual guest joining. No enabled WhatsApp invite UI is deployed.
 
 **Next Meta meeting integration:** [WhatsApp guest calls, LiveKit connector constraints and comparison](research/meta-call-integration-options-2026-10-30.md). Research recommends a bounded guest transport test; no new adapter is claimed.

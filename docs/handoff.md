@@ -1,5 +1,7 @@
 # Rally handoff — current checkpoint
 
+**Free audio preflight:** [Integrated local tab/microphone check and validation](audio-preflight.md). Verify separate input signals before opening paid transcription.
+
 **WhatsApp guest prototype:** [Preparation and local audio evidence](whatsapp-guest-prototype.md). Isolated audio routing passes; a fresh call link and host admission are needed for actual guest joining. No enabled WhatsApp invite UI is deployed.
 
 **Teams invite UI:** [Meeting links, ownership, transcription-test limits and validation](teams-integrated-ui.md). The Meetings page now has a Teams link field plus a distinct browser-tab setup path for other calls.

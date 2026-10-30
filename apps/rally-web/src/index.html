@@ -247,7 +247,10 @@
               >
               <div class="actions">
                 <button id="start" class="primary">Start meeting</button
-                ><button id="cancel-start" class="secondary" hidden>
+                ><button id="check-audio" class="secondary" type="button">
+                  Check audio · free
+                </button>
+                <button id="cancel-start" class="secondary" hidden>
                   Cancel audio selection</button
                 ><button id="prepare" class="secondary">
                   Retry agenda preparation
@@ -340,6 +343,36 @@
         <footer>Thoughtful meetings, powered by Meta Muse.</footer>
       </div>
     </div>
+    <dialog id="audio-check-dialog">
+      <div class="section-title">
+        <h2>Check your audio</h2>
+        <button
+          class="text"
+          data-close="audio-check-dialog"
+          aria-label="Close audio check"
+        >
+          ×
+        </button>
+      </div>
+      <p class="small muted">
+        Local levels only. Nothing is recorded, transcribed or sent to a model.
+        Ask someone in the call to speak, then speak yourself. Return to Rally
+        if the browser focuses the call tab. Stops after 15 seconds. Starting a
+        meeting will ask for audio again.
+      </p>
+      <div id="check-tab-row">
+        <label for="check-tab-level">Meeting tab</label
+        ><meter id="check-tab-level" min="0" max="1" value="0"></meter>
+        <p id="check-tab-result" class="small muted"></p>
+      </div>
+      <div id="check-microphone-row">
+        <label for="check-microphone-level">Your microphone</label
+        ><meter id="check-microphone-level" min="0" max="1" value="0"></meter>
+        <p id="check-microphone-result" class="small muted"></p>
+      </div>
+      <p id="audio-check-status" role="status"></p>
+      <button id="stop-audio-check" class="secondary">Stop check</button>
+    </dialog>
     <dialog id="create-dialog">
       <form id="create-form">
         <div class="section-title">

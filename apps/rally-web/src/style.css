@@ -931,3 +931,9 @@ dialog::backdrop {
 #teams-invite .actions {
   margin-top: 12px;
 }
+
+#audio-check-dialog meter {
+  display: block;
+  width: 100%;
+  height: 22px;
+}
