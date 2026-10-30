@@ -1,5 +1,31 @@
 import type { LiveEvent } from "../../rally-api/src/contracts.ts";
 import type { RecordView, Turn } from "./api.ts";
+function newerExtension(incoming: RecordView['extension'], current: RecordView['extension']) {
+  if(!current)return true;
+  if(!incoming)return false;
+  if(incoming.id!==current.id)return incoming.at>=current.at;
+  const oldAt=current.confirmation?.at??current.at,newAt=incoming.confirmation?.at??incoming.at;
+  if(newAt!==oldAt)return newAt>oldAt;
+  if(current.state==='disputed'&&incoming.state==='confirmed')return false;
+  if(current.state!=='pending'&&incoming.state==='pending')return false;
+  return true;
+}
+function newerSpeech(incoming: RecordView['speechStatus'], current: RecordView['speechStatus']) {
+  if(!incoming)return false;
+  if(!current)return true;
+  if(incoming.epoch!==current.epoch)return incoming.epoch>current.epoch;
+  if(incoming.at<current.at)return false;
+  if(incoming.id!==current.id)return incoming.at>=current.at;
+  if(['completed','canceled','failed'].includes(current.state)&&['preparing','playing'].includes(incoming.state))return false;
+  return incoming.at>current.at||(incoming.playedMs??0)>=(current.playedMs??0);
+}
+function newerCheck(incoming: RecordView['monitor'], current: RecordView['monitor']) {
+  if(!incoming)return false;
+  if(!current)return true;
+  if(incoming.sequence!==current.sequence)return incoming.sequence>current.sequence;
+  if(current.status!=='checking'&&incoming.status==='checking')return false;
+  return (incoming.completedAt??incoming.capturedAt)>=(current.completedAt??current.capturedAt);
+}
 // Events are transient notifications; an HTTP snapshot replaces canonical state.
 // Partial text never becomes a turn, and old revisions cannot overwrite new ones.
 export class MeetingSession {
@@ -29,7 +55,7 @@ export class MeetingSession {
   replace(meeting: RecordView) {
     if (meeting.id !== this.meeting.id)
       throw new Error("Wrong meeting snapshot");
-    if (meeting.epoch < this.meeting.epoch || (meeting.sceneRevision ?? 0) < (this.meeting.sceneRevision ?? 0)) return;
+    if (meeting.epoch < this.meeting.epoch) return;
     // A snapshot requested before a final event may arrive after it. Keep newer
     // revisions until the next authoritative read includes them.
     const turns = new Map(meeting.turns.map((turn) => [turn.id, turn]));
@@ -45,6 +71,15 @@ export class MeetingSession {
       meeting.phase !== "live"
     )
       this.intervention = null;
+    if(!newerCheck(meeting.monitor,this.meeting.monitor)) {
+      meeting={...meeting,monitor:this.meeting.monitor};
+    }
+    if((meeting.revisions?.length??0)<(this.meeting.revisions?.length??0)) {
+      meeting={...meeting,plan:this.meeting.plan,revisions:this.meeting.revisions};
+    }
+    if(!newerExtension(meeting.extension,this.meeting.extension))meeting={...meeting,extension:this.meeting.extension};
+    const oldSpeech=this.meeting.speechStatus,incomingSpeech=meeting.speechStatus;
+    if(oldSpeech && !newerSpeech(incomingSpeech,oldSpeech))meeting={...meeting,speechStatus:oldSpeech};
     this.meeting = meeting;
     if (
       meeting.phase !== "live" ||
@@ -108,9 +143,17 @@ export class MeetingSession {
         if (data?.type === "pause") m.paused = true;
         if (data?.type === "resume") m.paused = false;
         return true;
-      case "speech.playback":
-        if (data.epoch === m.epoch) m.playback = data;
-        return true;
+      case "meeting.check":
+        if(data?.epoch===m.epoch && Number.isSafeInteger(data?.sequence) && newerCheck(data,m.monitor))m.monitor=data;
+        return false;
+      case "speech.status":
+        if(data?.epoch >= m.epoch && newerSpeech(data,m.speechStatus))m.speechStatus=data;
+        return false;
+      case "meeting.status":
+        if(data?.epoch < m.epoch)return false;
+        m.liveStatus={at:data.at,assessmentState:data.assessmentState,destination:data.destination,callState:data.callState};
+        if(data?.assessmentAt && (!m.assessmentAt || data.assessmentAt>m.assessmentAt))return true;
+        return false;
       case "assessment":
         return true; // The embedded recommendation is not an approved intervention.
       case "transcription.gap":

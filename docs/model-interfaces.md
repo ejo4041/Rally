@@ -1,3 +1,7 @@
+## Streaming speech addition
+
+The integrated backend now supports `TextToSpeech` (`identity`, `stream`, `synthesize`) with a shared `SpeechService` for authenticated access and request accounting. Select `RALLY_SPEECH_ADAPTER=seamless-aws` with the backend secret `RALLY_TTS_TOKEN`; `RALLY_PAID_ENABLED` remains required. Identity declares the requested model and PCM format; remote checkpoint revision is unknown. See [implementation/configuration/evidence](streaming-speech-plan.md). The earlier MMS interface below remains available for explicitly selected local speech. AWS cost records are separate from the Muse grant and keep unknown infrastructure cost explicit.
+
 # Model interfaces and configuration
 
 This page describes the integrated Node app in `apps/rally-api/` and `apps/rally-web/`. Muse Voice Transcribe supplies its canonical transcript. Teams, Zoom and WhatsApp capture surfaces do not supply native platform transcripts. Changing a model does not require changing the meeting UI when the replacement satisfies the same capability interface.
@@ -75,3 +79,7 @@ Run adapter tests, lifecycle tests, both type checks and the browser workflow af
 ## Historical Sites implementation
 
 The older `apps/rally/` release has a separate JavaScript adapter registry in [model-services.js](../apps/rally/src/model-services.js) and configuration in [models.js](../apps/rally/src/models.js). It uses proposal/host-confirmation semantics and Sites runtime bindings. Those function signatures and deployment steps do not describe the integrated Node app. Its Teams queue and MMS bridge remain documented separately in [Teams integration research](research/teams-transcription-poc.md) and [MMS playback](mms-playback.md).
+
+## Living-presence integration
+
+The production `checkLive` contract adds nullable `affect`, `focus` and bounded `concerns` to the existing judgment, preserving the configured Spark1.3/minimal model, 1,024-token live allowance, deadlines and accounting path. Affect is signed continuous actuation with exact supplied evidence, never a mapping from feeling enums. Browser/Teams scenes consume accepted state; current streaming speech remains canonical. See [implementation and measured schema checks](living-presence-implementation.md).

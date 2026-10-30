@@ -1,0 +1,269 @@
+{
+  "at": "2026-10-30T18:50:24.665Z",
+  "scope": "Three sequential synthetic text judgments using merged production schema; no remote call",
+  "results": [
+    {
+      "scenario": "tangent",
+      "latencyMs": 10690.375681,
+      "valid": true,
+      "decision": {
+        "affect": {
+          "forces": {
+            "joy": null,
+            "curiosity": null,
+            "worry": 0.4,
+            "irritation": null,
+            "sadness": null,
+            "confidence": null,
+            "energy": null,
+            "sass": null
+          },
+          "evidence": [
+            "s:0"
+          ],
+          "rationale": "First off-topic push away from launch scope warrants mild worry."
+        },
+        "concerns": [
+          {
+            "id": "off-topic-scope",
+            "description": "Conversation diverted to phone cameras instead of launch scope",
+            "resolved": false,
+            "evidence": [
+              "s:0"
+            ]
+          }
+        ],
+        "focus": {
+          "intendedTopicId": "scope",
+          "detour": "phone camera comparison",
+          "evidence": [
+            "s:0"
+          ]
+        },
+        "agendaChange": null,
+        "extension": null,
+        "extensionConsent": null,
+        "health": 4,
+        "feeling": "concerned",
+        "observation": "Opening turn proposes phone cameras over launch scope",
+        "progress": "No scope agreement yet; off-topic proposal on table",
+        "concern": "Discussion starting off-topic from launch scope",
+        "evidence": [
+          "s:0"
+        ],
+        "intervention": {
+          "text": "Let's park camera talk and agree launch scope first. What must be in scope?",
+          "kind": "redirect"
+        }
+      },
+      "rejected": [],
+      "eligibleWithinEightSeconds": false
+    },
+    {
+      "scenario": "recovery",
+      "latencyMs": 4274.005105,
+      "valid": true,
+      "decision": {
+        "affect": {
+          "forces": {
+            "joy": null,
+            "curiosity": null,
+            "worry": 0,
+            "irritation": null,
+            "sadness": null,
+            "confidence": null,
+            "energy": null,
+            "sass": null
+          },
+          "evidence": [
+            "s:1"
+          ],
+          "rationale": "Return to scope repairs detour; brake worry rise."
+        },
+        "concerns": [
+          {
+            "id": "off-topic-scope",
+            "description": "Conversation diverted to phone cameras instead of launch scope",
+            "resolved": true,
+            "evidence": [
+              "s:1"
+            ]
+          }
+        ],
+        "focus": {
+          "intendedTopicId": "scope",
+          "detour": null,
+          "evidence": [
+            "s:1"
+          ]
+        },
+        "agendaChange": null,
+        "extension": null,
+        "extensionConsent": null,
+        "health": null,
+        "feeling": "focused",
+        "observation": "Conversation returned to launch scope.",
+        "progress": "Scope discussion resumed; browser and Teams camera noted as required, owners next.",
+        "concern": "No active concern; scope back on track.",
+        "evidence": [
+          "s:1"
+        ],
+        "intervention": null
+      },
+      "rejected": [],
+      "eligibleWithinEightSeconds": true
+    },
+    {
+      "scenario": "relapse",
+      "latencyMs": 3874.2195279999996,
+      "valid": true,
+      "decision": {
+        "affect": {
+          "forces": {
+            "joy": null,
+            "curiosity": null,
+            "worry": 0.5,
+            "irritation": 0.6,
+            "sadness": null,
+            "confidence": null,
+            "energy": null,
+            "sass": null
+          },
+          "evidence": [
+            "s:2"
+          ],
+          "rationale": "Repeat phone-camera push after repair warrants stronger worry and irritation."
+        },
+        "concerns": [
+          {
+            "id": "off-topic-scope",
+            "description": "Conversation diverted to phone cameras instead of launch scope",
+            "resolved": false,
+            "evidence": [
+              "s:2"
+            ]
+          }
+        ],
+        "focus": {
+          "intendedTopicId": "scope",
+          "detour": "phone cameras comparison",
+          "evidence": [
+            "s:2"
+          ]
+        },
+        "agendaChange": null,
+        "extension": null,
+        "extensionConsent": null,
+        "health": 3,
+        "feeling": "concerned",
+        "observation": "Speaker reintroduced phone cameras after agreeing to return to scope.",
+        "progress": "Prior agreement to focus on scope at risk; owners assignment still pending.",
+        "concern": "Return to launch scope; phone comparison parked after prior repair.",
+        "evidence": [
+          "s:2"
+        ],
+        "intervention": {
+          "text": "Let's stay on launch scope as agreed. Park phone cameras and assign validation owners next.",
+          "kind": "redirect"
+        }
+      },
+      "rejected": [],
+      "eligibleWithinEightSeconds": true
+    }
+  ],
+  "knownCost": 0.019195249999999997,
+  "unknown": 0,
+  "usage": [
+    {
+      "id": "d47eb902-cfcb-448c-a00c-f642698b13b1",
+      "at": 1793386205830,
+      "kind": "live",
+      "reasoningEffort": "minimal",
+      "maxOutputTokens": 1024,
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "requestId": "cb6b9f59-e112-496d-a425-c1e6d4c69a9e",
+      "httpStatus": 200,
+      "finishReason": "stop",
+      "usage": {
+        "completion_tokens": 693,
+        "prompt_tokens": 2363,
+        "total_tokens": 3056,
+        "completion_tokens_details": {
+          "reasoning_tokens": 423
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "cost": 0.005899,
+      "status": "known"
+    },
+    {
+      "id": "bad49264-7613-4841-90f8-f793a2b0ef7f",
+      "at": 1793386216517,
+      "kind": "live",
+      "reasoningEffort": "minimal",
+      "maxOutputTokens": 1024,
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "requestId": "2376d91b-96e0-4b0e-b933-ddc886971109",
+      "httpStatus": 200,
+      "finishReason": "stop",
+      "usage": {
+        "completion_tokens": 894,
+        "prompt_tokens": 2531,
+        "total_tokens": 3425,
+        "completion_tokens_details": {
+          "reasoning_tokens": 655
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "cost": 0.00696325,
+      "status": "known"
+    },
+    {
+      "id": "203b573a-60d9-4d47-ba48-c27f5f6a602a",
+      "at": 1793386220791,
+      "kind": "live",
+      "reasoningEffort": "minimal",
+      "maxOutputTokens": 1024,
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "requestId": "0bfac8d2-c2f2-4680-a07c-75a25c127487",
+      "httpStatus": 200,
+      "finishReason": "stop",
+      "usage": {
+        "completion_tokens": 721,
+        "prompt_tokens": 2615,
+        "total_tokens": 3336,
+        "completion_tokens_details": {
+          "reasoning_tokens": 436
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "cost": 0.006333,
+      "status": "known"
+    }
+  ],
+  "stateSimulation": "Controller state advanced ten simulated seconds from all schema-valid responses, including the first late response; production would discard that response."
+}

@@ -947,6 +947,41 @@ dialog::backdrop {
   overflow-y: auto;
   margin-bottom: 16px;
 }
+
+.admin-dialog { width: min(1100px, 95vw); max-width: 95vw; }
+.admin-dialog pre, #recovery-codes { white-space: pre-wrap; overflow-wrap: anywhere; max-height: 26rem; overflow-y: auto; }
+#enrollment-secret { overflow-wrap: anywhere; user-select: all; }
+#enrollment-qr { max-width: 100%; height: auto; }
+
+/* The color represents Rally's assessment, not participants' emotions. */
+.rally-card { --feeling: #6d7680; border-top: 4px solid var(--feeling); transition: border-color .35s ease, background-color .35s ease; }
+.rally-card[data-feeling="focused"] { --feeling: #52794d; }
+.rally-card[data-feeling="curious"] { --feeling: #356a94; }
+.rally-card[data-feeling="concerned"] { --feeling: #946219; }
+.rally-card[data-feeling="urgent"] { --feeling: #a3403c; }
+.rally-feeling { color: var(--feeling); text-transform: capitalize; margin-left: auto; }
+.rally-card .eyebrow { display: flex; align-items: center; flex-wrap: wrap; gap: .6rem; }
+#guidance { font-size: clamp(1.3rem, 2.5vw, 1.9rem); line-height: 1.5; min-height: 3em; white-space: pre-wrap; }
+#guidance .read-word { opacity: .46; transition: opacity .18s ease; }
+#guidance .read-word.spoken { opacity: 1; }
+#rally-freshness { margin: .65rem 0 1rem; }
+.rally-observation { border-top: 1px solid var(--line, #ddd); margin-top: 1.25rem; padding-top: 1rem; }
+.rally-observation .eyebrow { font-size: .65rem; opacity: .7; }
+#assessment-note { margin: .45rem 0 0; line-height: 1.5; }
+#rally-history { margin-top: 1.1rem; border-top: 1px solid var(--line, #ddd); padding-top: .8rem; }
+#rally-history summary { cursor: pointer; font-size: .85rem; }
+#rally-history summary span { margin-left: .5rem; }
+.rally-check { border-bottom: 1px solid var(--line, #ddd); padding: .7rem 0; font-size: .85rem; }
+.rally-check p { margin: .3rem 0; }
+.rally-check header { display: flex; justify-content: space-between; gap: 1rem; color: var(--muted, #666); font-size: .75rem; }
+.rally-agenda-change { border-left: 2px solid var(--feeling); padding-left: .75rem; }
+.rally-extension { margin-top: 1rem; padding: .8rem; border: 1px solid var(--line, #ddd); border-radius: .5rem; }
+.rally-extension p { margin-top: 0; }
+@media (prefers-reduced-motion: reduce) {
+ .rally-card, #guidance .read-word { transition: none; }
+ #guidance .read-word { opacity: 1; }
+}
+
 .rally-presence{border-radius:18px;overflow:hidden;background:#101925;color:#f6f4ee;text-align:center;padding:16px;margin-bottom:18px}.rally-silk{height:320px;width:100%}.presence-words{font-size:1.25rem;margin:8px 0}.presence-next{font-style:italic;opacity:.8}.rally-presence progress{width:100%;height:5px;accent-color:#a8ddb2}.presence-time{display:block;margin-top:6px}.rally-presence[data-graphics=unavailable] .rally-silk{height:90px;display:grid;place-items:center}@media(max-width:600px){.rally-silk{height:220px}}
 .presence-copy {padding:0 1.2rem 1rem;position:relative;z-index:1}
 .presence-tag {font-size:.75rem;color:#d8c6a3;min-height:1em;margin:.2rem 0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}

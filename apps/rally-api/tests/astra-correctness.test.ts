@@ -1,7 +1,7 @@
 import test from "node:test";
 import type { TestContext } from "node:test";
 import assert from "node:assert/strict";
-import { createApplication } from "../src/app.ts";
+import { createApplication } from "./support/application.ts";
 import { categories } from "../src/contracts.ts";
 import type {
   Providers,
@@ -121,7 +121,7 @@ async function fixture(
       body: body === undefined ? undefined : JSON.stringify(body),
     });
   const signup = async (username: string) => {
-    const response = await request("/auth/signup", "POST", {
+    const response = await request("/fixture/signup", "POST", {
       username,
       password: "a-demo-password",
     });
@@ -565,7 +565,7 @@ test("resuming a reviewed interrupted meeting keeps the old report but marks it 
   await f.start(m.id);
   f.emit(m.id, 0, "First captured sentence.");
   assert.equal((await f.request("/auth/logout", "POST", {})).status, 204);
-  const login = await f.request("/auth/login", "POST", {
+  const login = await f.request("/fixture/login", "POST", {
     username: "alice",
     password: "a-demo-password",
   });

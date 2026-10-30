@@ -26,7 +26,7 @@ export function assessmentContext(snapshot: Snapshot, now = Date.now()) {
       originalDeadline:
         m.startedAt === null ? null : m.startedAt + m.durationMinutes * 60000,
       epoch: m.epoch,
-      progress: m.progress.slice(0, 2000),
+      progress: (m.progress ?? "").slice(0, 2000),
       concerns: m.concerns ?? [],
       focus: m.assessment?.focus ?? null,
       emotions: Object.fromEntries(
@@ -58,9 +58,9 @@ export function assessmentContext(snapshot: Snapshot, now = Date.now()) {
         }),
       ),
       rejectedEmotionCommands: state.rejected ?? [],
-      latestInterventions: m.interventions.slice(-2),
+      latestInterventions: (m.interventions ?? []).slice(-2),
       playback: m.playback ?? null,
-      gaps: m.gaps.slice(-3),
+      gaps: (m.gaps ?? []).slice(-3),
       audioExclusions: m.audioExclusions?.slice(-3) ?? [],
     },
     elapsedSeconds: snapshot.elapsedSeconds,

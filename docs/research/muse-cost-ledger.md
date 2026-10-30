@@ -6,7 +6,7 @@ The $150 remainder below assumes the full grant is applied and no other usage ex
 
 [Official pricing](https://dev.meta.ai/docs/pricing-rate-limits): Spark input $1.25/M, cached input $0.15/M, output $4.25/M; Voice Transcribe $0.18/hour.
 
-Known tracked estimated spend after runtime reconciliation: **$1.38818810**. Conditional $150 remainder: **$148.61181190**.
+Known estimated spend: **$0.47338150**. Conditional $150 remainder: **$149.52661850**.
 Calls/sessions with unknown cost: **0**. These are excluded from the known total; it is not a complete total if nonzero.
 
 | Time UTC | Test | Model | Seconds | Status | Estimated USD |
@@ -95,6 +95,18 @@ Original 60.336-second synthetic single-voice meeting generated offline with Met
 
 One report-only retry with maximum effort and 32,768 completion-token allowance completed, passed application evidence validation and the case-specific checks. No successful preparation/assessment was repeated. Cost **$0.08957025**, unknown **0**. Cumulative **$0.47338150**, conditional remainder **$149.52661850**. Run `report-retry-1793281702834`. The whole Astra follow-up spent **$0.28876035** across agenda examples, initial failed report, full audio test, and explicit successful retry.
 
+## October 30 — continuous monitoring production-schema smoke
+
+Four purpose-written text fixtures through the real `checkLive` adapter, Spark 1.3 minimal, 1,024 output tokens. [Results and per-call usage](realtime-model-benchmark.json). All four valid and below eight seconds (2.131–4.243 seconds). Identical exploratory input remained silent with twenty minutes available and prompted a redirect with three minutes available; on-topic input stayed silent and irrelevant drift prompted redirect. No retries, ASR, TTS or platform join. This small short-context batch is not a production p95 guarantee or near-limit context evaluation.
+
+Batch **$0.01176350**, unknown **0**. Development-ledger cumulative **$0.48514500**, conditional remainder **$149.51485500** against the unverified $150 grant. Separately recorded user-operated live meeting charges are not reconciled into this development ledger; this is not an actual Billing balance. Runtime accounting remains authoritative for those requests. Experiment maximum was $0.15, not an allowance consumed in full.
+
+### Continuous monitoring agenda and bounded-context follow-up
+
+Two additional production-schema text checks exercised an actual agenda reorder and a bounded 20-topic/recent-transcript context. [Per-call results](realtime-model-edge-benchmark.json). Both valid within eight seconds: reorder 6.257 s (841 output tokens including 712 reasoning), bounded context 1.791 s (4,585 prompt tokens). No retries or audio/platform calls; no latency guarantee inferred.
+
+Batch **$0.01194350**, unknown **0**. Development-ledger cumulative **$0.49708850**; conditional unverified-grant remainder **$149.50291150**. All six realtime experiment calls together cost **$0.02370700**. User-operated live meeting charges remain separately recorded, not reconciled into this development estimate.
+
 ## Living presence schema calibration — October 30
 
 Stage 1: one synthetic on-topic assessment through the production Muse adapter and strict presence schema. Passed in 2.282 seconds; no intervention and no forced affect change. Batch **$0.00407575**, unknown **0**. Central tracked cumulative **$0.47745725**; conditional $150 remainder **$149.52254275**. Billing/grant unverified; deployed user-session usage is recorded separately in its runtime database. The authorized presence experiment ceiling is $3, not a spending target.
@@ -106,3 +118,17 @@ Stage 3: two targeted repair/relapse retests after supplying precomputed valid-f
 ## Runtime usage reconciliation — October 30
 
 Read-only audit of the integrated runtime ledger imported 105 distinct usage rows, with no duplicated usage IDs against the central log: **$0.85913060**, unknown **0**. These are previously incurred deployment/user-session costs, not a new experiment batch. Combined tracked estimate **$1.38818810**, conditional remainder **$148.61181190**. [Sanitized audit](runtime-usage-reconciliation-2026-10-30.json). Billing/grant still unverified.
+
+Combined reconciliation including the separate six realtime benchmarks adds $0.02370700: tracked total **$1.41189510**, conditional unverified-$150 remainder **$148.58810490** before the merged presence benchmark. No new charge occurred during the reverted activation; signup failed before any preparation or meeting join.
+
+## Merged presence/realtime production schema — October 30
+
+Three sequential synthetic tangent/recovery/relapse calls through the actual `checkLive` adapter returned valid output in 3.086, 2.503 and 4.901 seconds; all continuous commands were accepted. No ASR, speech-provider call or Teams join. [Results](living-presence-live-benchmark.json). Batch **$0.01735250**, unknown **0**. Combined tracked estimate **$1.42924760**, conditional unverified-$150 remainder **$148.57075240**. Presence calibration cumulative **$0.07302850**, below the authorized $3 ceiling. This is a small scenario check, not a production latency percentile.
+
+### Cadence/recovery follow-up
+
+Three valid-schema calls with ten-second simulated state advancement cost **$0.01919525**, unknown0. One tangent response took10.690s and would be discarded by the production8s gate; recovery4.274s and relapse3.874s were eligible. [Results](living-presence-live-cadence.json) explicitly distinguish simulated state from production acceptance. Recovery held attained worry rather than releasing it, prompting a targeted endpoint-semantics clarification. Combined tracked total **$1.44844285**, conditional unverified-$150 remainder **$148.55155715**. Presence experiments cumulative **$0.09222375**.
+
+### Attained-concern recovery endpoint check
+
+One targeted real check after clarifying that zero holds (does not reduce) attained emotion. [Result](living-presence-live-repair.json). Valid in3.920s; batch **$0.00659400**, unknown0. Combined tracked total **$1.45503685**, conditional unverified-$150 remainder **$148.54496315**. Presence calibration cumulative **$0.09881775**. No audio or platform join.

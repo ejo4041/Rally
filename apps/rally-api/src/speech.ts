@@ -1,3 +1,4 @@
+import type { LiveSpeech } from "./live-speech.ts";
 import { randomUUID } from "node:crypto";
 import { createRequire } from "node:module";
 import { HttpError } from "./auth.ts";
@@ -50,7 +51,7 @@ export function configuredSpeech(): SpeechEngine | undefined {
   });
   return Object.assign(engine, { identity });
 }
-type Offer = { id: string; text: string; epoch: number; at: number };
+type Offer = import("./live-speech.ts").SpeechOffer;
 type Job = {
   id: string;
   meetingId: string;
@@ -72,30 +73,7 @@ type Job = {
 // Only Engine-approved interventions enter this bounded in-memory output queue.
 // There is no client-supplied text, retry loop, persisted waveform or external TTS.
 export class SpeechOutput {
-  onPlayback: (
-    meetingId: string,
-    playback: NonNullable<Meeting["playback"]>,
-  ) => void = () => {};
-  private ended = new Map<string, number>();
-  lastEnd(meetingId: string) {
-    return this.ended.get(meetingId) ?? 0;
-  }
-  activity(meetingId: string) {
-    const job = this.jobs.get(meetingId);
-    if (!job) return null;
-    return {
-      id: job.id,
-      interventionId: job.offer.id,
-      text: job.offer.text,
-      state: job.state,
-      at: Date.now(),
-      until: job.shieldUntil,
-    };
-  }
-  private notify(job: Job) {
-    if (!this.diagnostics.has(job.meetingId))
-      this.onPlayback(job.meetingId, this.activity(job.meetingId)!);
-  }
+  live?: LiveSpeech;
   private engine: SpeechEngine | undefined;
   private identity: SpeechIdentity;
   private current: (id: string) => Meeting;
@@ -139,6 +117,10 @@ export class SpeechOutput {
     };
   }
   offer(meetingId: string, offer: Offer) {
+    if (this.live) {
+      this.live.offer(meetingId, offer);
+      return;
+    }
     this.cancel(meetingId);
     this.offers.set(meetingId, offer);
   }
@@ -278,7 +260,7 @@ export class SpeechOutput {
   }
   audio(meetingId: string, id: string) {
     const job = this.find(meetingId, id);
-    if (!["ready", "armed", "playing"].includes(job.state) || !job.audio)
+    if (!["ready", "playing"].includes(job.state) || !job.audio)
       throw new HttpError("Speech is no longer available.", 409);
     return job.audio;
   }
@@ -288,14 +270,9 @@ export class SpeechOutput {
     state: "armed" | "playing" | "completed" | "canceled",
   ) {
     const job = this.find(meetingId, id);
-    if (state === "armed" || state === "playing") {
-      if (job.state === state) return this.view(job);
-      if (
-        !(
-          job.state === "ready" ||
-          (state === "playing" && job.state === "armed")
-        )
-      )
+    if (state === "playing" || state === "armed") {
+      if (job.state === state || job.state === "playing") return this.view(job);
+      if (job.state !== "ready" && job.state !== "armed")
         throw new HttpError("Speech is not ready.", 409);
       const start = Date.now(),
         end = start + (job.seconds ?? 30) * 1000 + 2000;
@@ -303,40 +280,33 @@ export class SpeechOutput {
         this.onShield(meetingId, { id: job.id, start, end });
       job.state = state;
       job.shieldUntil = end;
-      if (state === "playing")
-        this.ended.set(meetingId, start + (job.seconds ?? 30) * 1000);
     } else {
-      if (job.state === "completed" || job.state === "canceled")
-        return this.view(job);
-      if (state === "completed" && job.state !== "playing")
-        throw new HttpError("Speech has not played.", 409);
-      if (job.state === "playing") this.ended.set(meetingId, Date.now());
-      if (["playing", "armed"].includes(job.state))
+      if (job.state === "playing" || job.state === "armed")
         job.shieldUntil = Math.min(job.shieldUntil, Date.now() + 800);
       job.state = state;
       job.audio = undefined;
       job.abort.abort();
     }
-    this.notify(job);
     return this.view(job);
   }
   shielded(meetingId: string) {
+    if (this.live) return this.live.shielded(meetingId);
     const job = this.jobs.get(meetingId);
     return !!job && job.shieldUntil > Date.now();
   }
   cancel(meetingId: string) {
+    this.live?.cancel(meetingId);
     this.offers.delete(meetingId);
     const job = this.jobs.get(meetingId);
     if (!job) return;
     job.abort.abort();
-    if (job.state === "playing") this.ended.set(meetingId, Date.now());
-    if (["playing", "armed"].includes(job.state))
+    if (job.state === "playing" || job.state === "armed")
       job.shieldUntil = Math.min(job.shieldUntil, Date.now() + 800);
     job.state = "canceled";
     job.audio = undefined;
-    this.notify(job);
   }
   forget(meetingId: string) {
+    this.live?.forget(meetingId);
     const job = this.jobs.get(meetingId);
     if (job) clearTimeout(job.timer);
     this.cancel(meetingId);
@@ -344,6 +314,7 @@ export class SpeechOutput {
     this.diagnostics.delete(meetingId);
   }
   close() {
+    void this.live?.close();
     this.closed = true;
     for (const id of this.jobs.keys()) this.forget(id);
     this.offers.clear();

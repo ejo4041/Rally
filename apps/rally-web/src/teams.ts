@@ -32,7 +32,7 @@ export function setupTeams(
     el("teams-runner-status").textContent = !status
       ? "Checking runner…"
       : !status.enabled
-        ? "Teams link joining is not configured. Browser-tab capture is available."
+        ? "For live moderation, prepare a meeting and choose Rally joins Teams as its audio source."
         : status.online
           ? "Teams runner online"
           : "Teams runner offline. No join will be attempted.";

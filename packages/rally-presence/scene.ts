@@ -22,11 +22,15 @@ export type Scene = {
 };
 export function sceneFor(m: Meeting, now = Date.now()): Scene {
   const topics = m.plan?.topics ?? [];
+  const focus =
+    m.presenceFocus !== undefined
+      ? m.presenceFocus
+      : (m.monitor?.decision?.focus ?? m.assessment?.focus);
   const intended =
-    topics.find((t) => t.id === m.assessment?.focus?.intendedTopicId) ??
+    topics.find((t) => t.id === focus?.intendedTopicId) ??
     topics.find((t) => t.status === "active") ??
     topics.find((t) => t.status === "pending");
-  const detour = m.assessment?.focus?.detour ?? null;
+  const detour = focus?.detour ?? null;
   const next = topics.find(
     (t) => t.status === "pending" && t.id !== intended?.id,
   );
@@ -35,7 +39,7 @@ export function sceneFor(m: Meeting, now = Date.now()): Scene {
     revision: m.sceneRevision ?? 0,
     epoch: m.epoch,
     captureEpoch: m.captureEpoch ?? 0,
-    speechOwner: m.captureMode ?? "browser",
+    speechOwner: m.captureSource ?? m.captureMode ?? "browser",
     serverTime: now,
     phase: m.phase,
     paused: m.paused,
@@ -55,6 +59,18 @@ export function sceneFor(m: Meeting, now = Date.now()): Scene {
       minutes,
       status,
     })),
-    speech: m.phase === "live" && !m.paused ? (m.playback ?? null) : null,
+    speech:
+      m.phase === "live" && !m.paused
+        ? m.speechStatus
+          ? {
+              id: m.speechStatus.id,
+              interventionId: m.speechStatus.interventionId,
+              text: m.speechStatus.text ?? "",
+              state: m.speechStatus.state,
+              at: m.speechStatus.at,
+              until: (m.speechStatus.startedAt ?? m.speechStatus.at) + 42000,
+            }
+          : (m.playback ?? null)
+        : null,
   };
 }

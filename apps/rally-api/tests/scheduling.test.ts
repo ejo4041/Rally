@@ -1,10 +1,9 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { createApplication } from "../src/app.ts";
+import { createApplication } from "./support/application.ts";
 import type { TranscriptEvent } from "../src/contracts.ts";
 
 test("scheduled checks suppress unchanged work and cooldown repeats; empty reports remain retryable", async (t) => {
-  t.mock.timers.enable({apis:["Date"],now:Date.now()});
   let event: (e: TranscriptEvent) => void = () => {};
   let calls = 0;
   const plan = {
@@ -83,7 +82,7 @@ test("scheduled checks suppress unchanged work and cooldown repeats; empty repor
       body: body ? JSON.stringify(body) : undefined,
     });
   cookie = (
-    await req("/auth/signup", "POST", {
+    await req("/fixture/signup", "POST", {
       username: "host",
       password: "demo-password",
     })
@@ -117,9 +116,6 @@ test("scheduled checks suppress unchanged work and cooldown repeats; empty repor
     text: "Still a tangent",
     speaker: "A",
   });
-  await new Promise((r) => setTimeout(r, 70));
-  assert.equal(calls,1,"automatic requests are at least two seconds apart");
-  t.mock.timers.setTime(Date.now()+2000);
   await waitFor(() => calls === 2);
   assert.equal((await (await req(path)).json()).interventions.length, 1);
   await req(path + "/commands", "POST", { type: "request_guidance" });

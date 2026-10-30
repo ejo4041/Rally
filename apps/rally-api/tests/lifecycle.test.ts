@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { createApplication } from "../src/app.ts";
+import { createApplication } from "./support/application.ts";
 import { categories } from "../src/contracts.ts";
 import type {
   Providers,
@@ -143,7 +143,7 @@ test("a live meeting saves speaker turns, accepts autonomous plan changes and re
       headers: { cookie, "content-type": "application/json" },
       body: body ? JSON.stringify(body) : undefined,
     });
-  const signup = await request("/auth/signup", "POST", {
+  const signup = await request("/fixture/signup", "POST", {
     username: "alice",
     password: "demo-password",
   });

@@ -1,0 +1,116 @@
+{
+  "at": "2026-10-30T18:52:57.901Z",
+  "scope": "Three sequential synthetic text judgments using merged production schema; no remote call",
+  "results": [
+    {
+      "scenario": "attained-concern-recovery",
+      "latencyMs": 3919.922575,
+      "valid": true,
+      "decision": {
+        "affect": {
+          "forces": {
+            "joy": null,
+            "curiosity": null,
+            "worry": -0.3996114601411937,
+            "irritation": -0.19880922602712206,
+            "sadness": null,
+            "confidence": null,
+            "energy": null,
+            "sass": null
+          },
+          "evidence": [
+            "s:0"
+          ],
+          "rationale": "Tangent reported ended, clearing pending worry/irritation."
+        },
+        "concerns": [
+          {
+            "id": "drift",
+            "description": "Off-topic phone comparison",
+            "resolved": true,
+            "evidence": [
+              "history:0",
+              "s:0"
+            ]
+          }
+        ],
+        "focus": {
+          "intendedTopicId": "owners",
+          "detour": null,
+          "evidence": [
+            "s:0"
+          ]
+        },
+        "agendaChange": {
+          "reason": "Scope reported agreed, move to owners",
+          "order": [
+            "scope",
+            "owners"
+          ],
+          "additions": [],
+          "updates": [
+            {
+              "id": "scope",
+              "minutes": 2,
+              "status": "done"
+            },
+            {
+              "id": "owners",
+              "minutes": 2,
+              "status": "active"
+            }
+          ],
+          "evidence": [
+            "s:0"
+          ]
+        },
+        "extension": null,
+        "extensionConsent": null,
+        "health": 4,
+        "feeling": "focused",
+        "observation": "Turn reports scope agreed and owners discussion started.",
+        "progress": "Scope claimed agreed; work is now assigning validation owners.",
+        "concern": "Phone tangent ended, owners discussion underway",
+        "evidence": [
+          "s:0"
+        ],
+        "intervention": null
+      },
+      "rejected": []
+    }
+  ],
+  "knownCost": 0.006594,
+  "unknown": 0,
+  "usage": [
+    {
+      "id": "ef7b0c7b-6427-494e-ba3d-2cb1d397e5ab",
+      "at": 1793386373986,
+      "kind": "live",
+      "reasoningEffort": "minimal",
+      "maxOutputTokens": 1024,
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "requestId": "693a09b6-abf6-46a2-b1fa-8dca669c5fa0",
+      "httpStatus": 200,
+      "finishReason": "stop",
+      "usage": {
+        "completion_tokens": 798,
+        "prompt_tokens": 2562,
+        "total_tokens": 3360,
+        "completion_tokens_details": {
+          "reasoning_tokens": 475
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "cost": 0.006594,
+      "status": "known"
+    }
+  ]
+}

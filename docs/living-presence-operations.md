@@ -1,33 +1,30 @@
 # Living presence operations
 
-Source: active integrated Node app, not the historical Sites frontend. Preserve the private deployment described in [integrated deployment](integrated-deployment.md).
+Use the existing integrated deployment and authentication policy. Preserve closed registration, MFA, owner isolation, current HTTPS/signaling origins and secrets. The canonical call path is `TeamsLive`, not the removed standalone native queue service.
 
-## Build and checks
+## Build and verify
 
-Install with the configured Node 24 toolchain in each physical directory: `packages/living-silk`, `apps/rally-api`, `apps/rally-web`, `experiments/teams-presence`. Run `npm ci` using the committed lockfiles. The local silk dependency is linked to its source package; install its Three.js/types dependencies before frontend build/typecheck.
+Install locked dependencies in physical directories `packages/living-silk`, `apps/rally-api`, `apps/rally-web`, and `experiments/teams-presence`, using the configured Node24 toolchain. The camera experiment package supplies Playwright to the shared native camera helper. Run both application typechecks/tests, frontend build, and the browser/HTTP/SQLite/LiveKit regression. Record whether providers are synthetic or real.
 
-Run both application typechecks and test suites, then frontend build. `apps/rally-web/tests/browser.mjs` uses an isolated API/LiveKit and injected reasoning/ASR. Set `RALLY_TEST_LIVEKIT_BINARY` to the installed binary, `PLAYWRIGHT_BROWSERS_PATH` and `LD_LIBRARY_PATH` to this host's existing browser locations. `RALLY_TEST_REAL_MMS=1 RALLY_MMS_ENABLED=1` verifies the pinned offline voice.
+The isolated `video-check.mjs` opens the actual virtual camera through WebRTC and measures distinct frames. It requires an unused `/dev/video42` and must never run during a call. `audio-check.mjs` measures actual pinned local MMS routing; production calls use the existing configured streaming speech adapter. Neither local check establishes remote Teams quality.
 
-For video checks, serve the frontend locally and set `RALLY_PRESENCE_TEST_ORIGIN`; run `experiments/teams-presence/video-check.mjs`. It takes exclusive ownership of `/dev/video42`, creates disposable displays/browsers, sends the real camera through a local WebRTC pair and records decoded versus distinct image frames. Never run it during a user call. `audio-check.mjs` uses disposable private PulseAudio and actual pinned MMS; no paid model request.
+`presence-live-benchmark.ts` is an explicitly authorized, non-retrying three-scenario production-schema experiment, capped at $0.15. It refuses to overwrite completed usage. Record every call in the ledger; the overall presence experiment ceiling remains $3.
 
-Paid calibration is separate: `apps/rally-api/scripts/presence-muse.ts`, explicit `RALLY_PRESENCE_CALIBRATION_APPROVED=1`, one case by default. It preserves a usage database and stops on unknown costs. The authorized total experiment ceiling is $3. Record every batch in the [ledger](research/muse-cost-ledger.md). Do not silently rerun completed scenarios.
+## Native camera configuration
 
-## Service configuration
+- Tested host driver: upstream v4l2loopback v0.15.4, pinned source `0f9ee86760b7f2bea174b7e3e7a1d38845da0ab4`, installed through DKMS for the current kernel. Older distro module failed repeated producer opens. Preserve the pin and verify after kernel changes.
+- Device options: `devices=1 video_nr=42 card_label=Rally_Presence exclusive_caps=1`. Install the module/udev examples under `ops/integrated`; `hack` must have read/write access. Never unload/reload during use.
+- Enable `RALLY_PRESENCE_VIDEO_ENABLED=1` on the integrated API only after verifying its camera dependencies. Set `RALLY_PRESENCE_ORIGIN` to the existing HTTPS frontend serving `/renderer.html`. No renderer service credential/bootstrap token is needed; the owned process supplies bounded scenes directly.
+- Use `RALLY_TEAMS_LOCK=/srv/hackathon/rally-deployed/state/teams.lock` for all canonical/legacy processes. The shared helper defaults there when deployed state exists. This avoids the API's `PrivateTmp` namespace and remains inside its existing writable state directory.
+- Preserve `RALLY_TEAMS_LIVE_ENABLED`, `RALLY_REALTIME_ENABLED`, streaming adapter credentials and existing budget gates. Duplex remains subject to its separate measured-echo acceptance flag; camera activation does not silently enable it.
+- Keep the retired `rally-teams-presence` service disabled. Do not start a legacy guest runner concurrently with the integrated connector.
 
-1. Load a tested v4l2loopback module with `devices=1 video_nr=42 card_label=Rally_Presence exclusive_caps=1`. This host requires upstream v0.15.4 through DKMS; the older package failed repeated opens. Preserve source pin and rebuild when the kernel changes. Install the module/udev examples under `ops/integrated`; the device must be readable/writable by `hack`.
-2. Give API and runner the same random secret (at least 32 characters) in protected environment files. Never put it in Markdown, browser URLs or client bundles. `RALLY_PRESENCE_RUNNER_SECRET` enables the queue. Set `RALLY_COOLDOWN_MS=45000` in existing runtime configuration if it previously overrides the default.
-3. Set `RALLY_PRESENCE_ORIGIN` to the private HTTPS frontend origin accepted by API CORS. The loopback origin is valid only if explicitly included in the API's allowed origins. The renderer has no application session cookie and obtains its scoped access through one-use bootstrap.
-4. Install the user service `experiments/teams-presence/rally-teams-presence.service` for `hack`. It conflicts with the legacy Teams runner and shares its process lock. Use the same `RALLY_TEAMS_LOCK` path for both if overriding the default. Preserve `KillMode=control-group` and the bounded stop timeout.
-5. Start the producer before the Teams browser enumerates cameras; the runner handles this. The camera page is a separate foreground display. Do not put the Teams window over the captured display.
+## Host and release workflow
 
-Before updating the API, check for live meetings and processing reports, back up SQLite, then activate an immutable built release and restart only the integrated API/web services. Do not restart media unnecessarily. Verify the renderer, app authentication and runner health after restart. Keep the prior release for rollback.
+Create/review the agenda, choose **Rally joins Teams · voice and video**, paste a fresh consented invitation, then **Join with voice and video**. Admit Rally if Teams requires it. The existing host-microphone/tab choices remain. A connected call has one capture owner and one approved speech transport.
 
-## Host workflow
+Stop/Pause/End and security revocation cancel output. Leave ends the call through the existing final-report flow. Pending lobby joins are canceled on logout; a connected independently hosted call continues until explicit End/Leave, as in the deployed contract. Failed connections require explicit retry.
 
-Create and review a meeting agenda. Open **Have Rally join this Teams meeting**, paste a fresh work/school Teams invitation and confirm participants' consent. Choose **Join with voice and video**, then admit Rally if required. The existing room-microphone/tab workflow remains available separately. Do not start host capture for the same Teams-guided meeting. Host observers receive the shared visual and live state without publishing another input or playing duplicate speech.
+Before activating any release, compare its ancestry with the actual `current` release; merge newer security/product changes first. Check for live meetings and processing reports, back up SQLite, build an immutable release, then switch `current` and restart API/web only. Preserve media and all persistent state. Verify closed signup/MFA and normal app access before joining a call.
 
-Pause/dismiss/Stop controls cancel approved playback. **Leave and end meeting** requests departure, stops capture and starts the existing final-report flow. A lost runner lease or transport interrupts without an automatic paid report/rejoin. Retry only after checking the Teams roster and saved record. Logout withdraws queued work and interrupts active capture.
-
-## Rollback
-
-Stop `rally-teams-presence` first and verify its process group has exited. Restore the previous immutable app release and restart API/web only after the idle check and backup. Keep persistent SQLite, usage records and secrets. Re-enable the legacy runner only when explicitly using that test flow, with the shared lock installed. Kernel driver installation is independent of app releases; no camera module unload/reload while any process is using the device.
+Rollback stops native ownership, restores the prior release and restarts API/web after the idle check. Never deploy `ee8d7fe` alone: it predates the merged MFA/streaming/realtime contracts. Retain backups, cost records and user data. Document actual remote feedback separately from local camera measurements.

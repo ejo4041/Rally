@@ -3,7 +3,7 @@ import { z } from "zod";
 import { HttpError } from "./auth.ts";
 import type { Store } from "./store.ts";
 import { planSchema } from "./contracts.ts";
-import type { Meeting, Providers, Turn } from "./contracts.ts";
+import type { Meeting, Providers, Turn, Plan } from "./contracts.ts";
 
 export const createMeetingSchema = z.object({
   title: z.string().trim().min(1).max(160).default("Meeting"),
@@ -171,13 +171,28 @@ export class Meetings {
     if (current.epoch === epoch) this.save(m);
   }
 }
-export function validatePlan(plan: z.infer<typeof planSchema>) {
+export function validatePlan(plan: Plan, spent: Record<string, number> = {}) {
+  if (
+    Object.entries(spent).some(
+      ([id, seconds]) => seconds > 0 && !plan.topics.some((t) => t.id === id),
+    )
+  )
+    throw new HttpError(
+      "Retain consumed topics as parked instead of removing their spent time",
+    );
+  if (plan.topics.filter((t) => t.status === "active").length > 1)
+    throw new HttpError("Only one topic may be active");
+  for (const t of plan.topics)
+    if (t.status !== "parked" && t.minutes * 60 + 0.01 < (spent[t.id] ?? 0))
+      throw new HttpError("Topic allocation cannot reclaim spent time");
   if (new Set(plan.topics.map((t) => t.id)).size !== plan.topics.length)
     throw new HttpError("Agenda topic IDs must be unique");
   const allocated =
     plan.topics
       .filter((t) => t.status !== "parked")
-      .reduce((sum, t) => sum + t.minutes, 0) + plan.wrapMinutes;
+      .reduce((sum, t) => sum + t.minutes, 0) +
+    plan.wrapMinutes +
+    (plan.retiredMinutes ?? 0);
   if (
     plan.wrapMinutes >= plan.durationMinutes ||
     Math.abs(allocated - plan.durationMinutes) > 0.05

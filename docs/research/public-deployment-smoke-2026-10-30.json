@@ -1,0 +1,27 @@
+{
+  "at": "2026-10-30T15:14:35.950Z",
+  "passed": true,
+  "scope": "Server browser through public Funnel relay; synthetic bidirectional media; not an independent external device or Teams rehearsal",
+  "paidCalls": 0,
+  "platformJoins": 0,
+  "secureHttpOnlyCookie": true,
+  "signupAndLogin": true,
+  "ownerIsolation": true,
+  "speechStatus": {
+    "adapter": "seamless-aws",
+    "model": "facebook/seamless-m4t-v2-large",
+    "sampleRate": 16000,
+    "channels": 1,
+    "format": "pcm_s16le",
+    "revision": null,
+    "enabled": true,
+    "ready": true,
+    "transport": "livekit",
+    "billing": "AWS infrastructure; cost not supplied"
+  },
+  "publicWebSocket": "wss://rally.tail703f9e.ts.net/livekit",
+  "incomingBytes": 125440,
+  "outgoingRms": 0.173587761742223,
+  "teardownFailures": 0,
+  "temporaryAccountRemoved": true
+}

@@ -1,8 +1,17 @@
+**Living presence:** [Merged implementation and validation](living-presence-implementation.md), [camera operations](living-presence-operations.md).
+
+**Continuous monitoring:** [Accepted design](realtime-monitoring-plan.md), [backend/API behavior](realtime-backend-notes.md), [review and validation](realtime-monitoring-validation.md), [Rally display](realtime-ui-notes.md).
+
+**MFA and judge access:** [Closed registration, enrollment, admin controls and opt-in transcript review](mfa-admin-judge-audit.md).
+
 # Rally documentation
 
 Start with the [current handoff](handoff.md). The integrated Node app and the older Sites preview are separate releases. Historical records preserve their original checkpoints; their old “current” status and cost figures do not describe today's deployment or verified Billing.
 
 ## Current integrated product
+
+[Streaming speech implementation](streaming-speech-plan.md) · [Current public deployment, final review and tests](streaming-speech-validation.md) · [Public login/audio evidence](research/public-deployment-smoke-2026-10-30.json).
+
 
 | Topic | Documents |
 | --- | --- |
@@ -52,6 +61,6 @@ These distinguish documented capability, access experiments, actual model measur
 
 Teams voice preparation: [Meta MMS output and remaining live moderation connection](teams-mms-output.md).
 
-- [Living Silk implementation checkpoint and remaining plan](living-presence-implementation.md)
+[Integrated Teams startup configuration incident](teams-startup-incident.md): missing Chromium library path, production-sandbox reproduction and correction.
 
-- [Living presence operations](living-presence-operations.md) — native Teams camera, audio, scoped renderer, build/checks and rollback.
+[Successful live Teams trial: saved guidance and pause-to-intervention timing](teams-live-rehearsal-2026-10-30.md).

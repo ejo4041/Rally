@@ -37,15 +37,35 @@
               maxlength="200"
               required
           /></label>
-          <p id="auth-error" class="error" role="alert"></p>
+
           <button id="auth-submit" class="primary" type="submit">Sign in</button
-          ><button id="auth-toggle" class="text" type="button">
+          ><button id="auth-toggle" hidden class="text" type="button">
             Create an account
           </button>
         </form>
+        <p class="small muted">Registration is invitation-only. An authenticator app is required.</p>
+        <button id="activate-open" class="text" type="button">Activate or reset account</button>
+        <form id="activate-form" hidden>
+          <h2>Activate or reset account</h2>
+          <p>Use the code delivered privately by the administrator. For an invitation, choose your password. For an MFA reset, enter your existing password.</p>
+          <label>Username<input id="activate-username" autocomplete="username" required pattern="[a-z0-9_-]{3,40}" /></label>
+          <label>Password<input id="activate-password" type="password" autocomplete="new-password" required minlength="10" maxlength="200" /></label>
+          <label>Activation code<input id="activate-code" autocomplete="off" required /></label>
+          <button id="activate-submit" type="submit" class="primary">Continue to MFA setup</button>
+        </form>
+        <form id="mfa-form" hidden>
+          <h2 id="mfa-title">Verify your sign-in</h2>
+          <div id="enrollment" hidden><p>Scan this QR code in your authenticator app, then enter the six-digit code.</p><img id="enrollment-qr" alt="Authenticator enrollment QR code" width="240" height="240" /><p>Manual setup key: <code id="enrollment-secret"></code></p></div>
+          <label>Authenticator or recovery code<input id="mfa-code" autocomplete="one-time-code" maxlength="80" required /></label>
+          <button id="mfa-submit" type="submit" class="primary">Verify</button>
+          <button id="use-recovery" type="button" class="text">Use a recovery code</button>
+        </form>
+        <div id="recovery-panel" hidden><h2>Save your recovery codes</h2><p>Store these somewhere safe. Each code works once and requires setting up MFA again. These codes will not be shown again.</p><pre id="recovery-codes"></pre><button id="recovery-continue" class="primary">I saved my codes — continue</button></div>
+        <p id="auth-error" class="error" role="alert"></p>
+        <button id="auth-restart" type="button" class="text">Back to sign in</button>
       </div>
       <p class="small muted">
-        Your meetings and reports belong to your account.
+        Your meetings and reports belong to your account. Administrators see basic usage; transcript sharing is optional.
       </p>
     </section>
     <div id="workspace" hidden>
@@ -66,6 +86,7 @@
           <button class="text" id="mobile-home">Meetings</button
           ><span id="breadcrumb">Workspace / Meetings</span
           ><button id="mobile-logout" class="text mobile-only">Sign out</button>
+          <button id="admin-open" class="pill" hidden>Admin</button>
           <button id="usage-button" class="pill">Usage</button>
         </header>
         <main>
@@ -144,7 +165,7 @@
                   <label class="check"
                     ><input id="teams-transcribe" type="checkbox" />Transcribe
                     with Muse: participants consent to sending audio to Meta and
-                    saving the transcript.</label
+                    saving the transcript, and to Rally speaking and displaying its camera in a connected Teams call.</label
                   >
                   <p class="small muted">
                     Full three-minute transcription estimate: $0.009. This uses
@@ -206,18 +227,9 @@
                 ><button id="delete" class="danger">Delete</button>
               </div>
             </div>
+            <section class="card"><label class="check"><input id="share-feedback" type="checkbox" disabled />Share this test’s transcript and report with the developer for feedback</label><p class="small muted">Optional, off by default. Inform participants before sharing. Administrators can read shared text; access is logged. Uncheck to withdraw future access. Basic usage, errors and processing costs are visible to the administrator regardless. No replayable audio is stored by this app.</p></section>
             <p id="record-error" class="banner error" role="alert" hidden></p>
             <p id="connection-status" class="banner" role="status" hidden></p>
-            <section class="card" id="teams-presence-panel">
-              <details><summary>Have Rally join this Teams meeting</summary>
-                <p>Rally joins as a meeting guide with its own animated camera and voice. Review the agenda first.</p>
-                <label>Teams invitation<input id="teams-presence-url" type="url" placeholder="https://teams.microsoft.com/meet/…"></label>
-                <label class="check"><input id="teams-presence-consent" type="checkbox">Everyone is aware and consents to Rally joining, sending audio to Meta, saving the transcript, and speaking into the call.</label>
-                <p id="teams-presence-status" role="status">Checking Teams presence…</p>
-                <button id="teams-presence-join" class="primary" disabled>Join with voice and video</button>
-                <button id="teams-presence-leave" class="danger" hidden>Leave and end meeting</button>
-              </details>
-            </section>
             <section class="card setup" id="start-panel">
               <h2 id="start-title">Review the plan. Then bring everyone in.</h2>
               <p class="small muted">
@@ -228,18 +240,19 @@
               </p>
               <div class="input-options">
                 <label
-                  >Audio source<select id="audio-mode">
+                  >Meeting connection<select id="audio-mode">
                     <option value="microphone">Room microphone</option>
                     <option value="tab">Meeting browser tab</option>
+                    <option value="teams">Rally joins Teams · voice and video</option>
                   </select></label
                 ><label id="include-mic-label" class="check" hidden
                   ><input id="include-mic" type="checkbox" checked />Include my
                   microphone</label
                 >
               </div>
+              <label id="live-teams-link-label" hidden>Teams invitation<input id="live-teams-link" type="url" placeholder="https://teams.microsoft.com/l/meetup-join/…" /></label>
               <p class="small muted">
-                A call tab is host-side capture. To have Rally join from a Teams
-                link, use the Teams invite panel on the Meetings page.
+                A call tab is host-side capture. Select Rally joins Teams for its animated camera, spoken guidance and agenda display. Rally stays until End, even if this dashboard closes.
                 Zoom/WhatsApp link-based joining is not available.
               </p>
               <p id="tab-help" class="small muted" hidden>
@@ -250,7 +263,7 @@
               <label class="check"
                 ><input id="consent" type="checkbox" />Everyone has been
                 informed and consents to sending audio to Meta and saving the
-                transcript.</label
+                transcript, and to Rally speaking and displaying its camera in a connected Teams call.</label
               ><label id="restart-session-label" class="check" hidden
                 ><input id="restart-session" type="checkbox" />Start a new
                 transcription session (speaker labels restart; uses Muse)</label
@@ -269,27 +282,32 @@
             </section>
             <div class="meeting-grid">
               <div class="main-column">
-                <section class="rally-card" aria-live="polite">
+                <section id="rally-display" class="rally-card" data-feeling="neutral" aria-label="Rally live assessment">
                   <div class="eyebrow">
-                    ▥ RALLY <span id="health" class="pill"></span>
+                    ▥ RALLY <span id="rally-feeling" class="rally-feeling">Listening</span> <span id="health" class="pill"></span>
                   </div>
-                  <p id="guidance">
+                  <p id="rally-freshness" class="small muted" role="status"></p>
+                  <p id="guidance" aria-live="off">
                     You lead the meeting. Rally helps it move forward.
                   </p>
                   <p id="progress" class="small muted"></p>
                   <div class="actions">
                     <label class="check"
                       ><input id="spoken-prompts" type="checkbox" />Spoken
-                      prompts · Meta MMS</label
+                      prompts</label
                     ><button id="test-voice" class="text" type="button">
-                      Test voice · free
+                      Test local voice · free
                     </button>
                     <button id="stop-speaking" class="secondary" hidden>
                       Stop speaking
                     </button>
                   </div>
                   <p id="speech-status" class="small muted" role="status"></p>
-                  <p id="assessment-note" class="small muted"></p>
+                  <p id="readalong-note" class="small muted" hidden>Approximate read-along</p>
+                  <div class="rally-observation"><span class="eyebrow">Current observation</span><p id="assessment-note" class="small" aria-live="polite"></p></div>
+                  <p id="rally-timing" class="small muted" hidden></p>
+                  <div id="rally-extension" class="rally-extension" hidden></div>
+                  <details id="rally-history"><summary>Check history <span class="small muted">and agenda changes</span></summary><p id="rally-budget-forecast" class="small muted" hidden></p><div id="rally-history-items"></div><p id="rally-history-status" class="small muted" role="status"></p><button id="rally-history-more" class="text" type="button" hidden>Earlier checks</button></details>
                 </section>
                 <section class="card">
                   <div class="card-heading">
@@ -402,6 +420,19 @@
           >Open WhatsApp draft ↗</a
         >
       </div>
+    </dialog>
+    <dialog id="admin-dialog" class="admin-dialog">
+      <div class="section-title"><h2>Administration</h2><button id="admin-close">Close</button></div>
+      <p>Only explicitly shared transcripts and reports can be opened here. Content views and account changes are audited.</p>
+      <form id="admin-reauth"><h3>Admin security</h3><p>Confirm a fresh authenticator code and password before changing accounts.</p><label>Password<input id="admin-password" type="password" autocomplete="current-password" required /></label><label>MFA code<input id="admin-code" autocomplete="one-time-code" required pattern="[0-9]{6}" /></label><button type="submit">Confirm admin security</button></form>
+      <p id="admin-status" role="status"></p>
+      <form id="admin-create"><h3>Invite user</h3><label>Username<input id="admin-new-username" required pattern="[a-z0-9_-]{3,40}" /></label><label>Role<select id="admin-new-role"><option value="user">User</option><option value="admin">Administrator</option></select></label><button type="submit">Create invitation</button></form>
+      <pre id="admin-secret" aria-live="polite"></pre>
+      <h3>Accounts</h3><div id="admin-users"></div><button id="admin-refresh">Refresh activity</button>
+      <h3>Meeting activity</h3><div id="admin-activity"></div>
+      <h3>Shared transcript and report</h3><pre id="admin-content"></pre>
+      <h3>Model usage</h3><pre id="admin-usage"></pre>
+      <h3>Audit events</h3><pre id="admin-events"></pre>
     </dialog>
     <dialog id="audio-check-dialog">
       <div class="section-title">

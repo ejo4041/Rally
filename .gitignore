@@ -14,3 +14,6 @@ site.tar.gz
 *.sqlite
 *.sqlite3
 *.db
+
+# Also exclude local dependency symlinks used by worktrees.
+node_modules

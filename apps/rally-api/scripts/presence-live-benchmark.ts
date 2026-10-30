@@ -1,0 +1,248 @@
+// Explicit bounded evaluation of the merged production schema; no audio or platform join.
+import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
+import { parseEnv } from "node:util";
+import { Store } from "../src/store.ts";
+import { createMuse } from "../src/muse.ts";
+import { defaults } from "../src/config.ts";
+import { LiveMonitor } from "../src/realtime.ts";
+import type { Meeting, Turn } from "../src/contracts.ts";
+import {
+  initialPresence,
+  actuate,
+  type Forces,
+} from "../../../packages/rally-presence/state.ts";
+if (process.env.RALLY_PRESENCE_CALIBRATION_APPROVED !== "1")
+  throw Error("Explicit authorization required; maximum $0.15");
+const repair = process.env.RALLY_PRESENCE_REPAIR_CHECK === "1";
+const cadence = repair || process.env.RALLY_PRESENCE_CADENCE_CHECK === "1";
+const dir = new URL(
+  repair
+    ? "../test-results/presence-live-repair/"
+    : cadence
+      ? "../test-results/presence-live-cadence/"
+      : "../test-results/presence-live/",
+  import.meta.url,
+);
+mkdirSync(dir, { recursive: true });
+const output = new URL("result.json", dir);
+if (existsSync(output))
+  throw Error("Completed benchmark exists; no automatic repeat");
+const env = parseEnv(
+  readFileSync("/srv/hackathon/rally-deployed/config/api.env", "utf8"),
+);
+const store = new Store(new URL("usage.sqlite", dir).pathname);
+if (
+  Number((store.db.prepare("SELECT count(*) n FROM usage").get() as any).n) > 0
+)
+  throw Error("Usage exists; audit before retry");
+const provider = createMuse(
+  store,
+  {
+    ...defaults,
+    paidEnabled: true,
+    reportReserve: 0,
+    meetingBudget: 0.15,
+    buildBudget: 0.15,
+  },
+  { key: env.MODEL_API_KEY },
+);
+const monitor = new LiveMonitor(store);
+const m = {
+  id: "presence-live-benchmark",
+  userId: "benchmark",
+  title: "Launch readiness",
+  agenda: "Agree launch scope and owners",
+  createdAt: Date.now(),
+  phase: "live",
+  epoch: 1,
+  paused: false,
+  participants: [],
+  speakerNames: {},
+  startedAt: Date.now() - 120000,
+  endedAt: null,
+  durationMinutes: 5,
+  progress: "",
+  originalPlan: null,
+  assessment: null,
+  interventions: [],
+  revisions: [],
+  gaps: [],
+  reportStatus: "none",
+  report: null,
+  error: null,
+  presence: initialPresence(Date.now() - (cadence ? 10000 : 0)),
+  plan: {
+    objective: "Decide launch scope and owners",
+    durationMinutes: 5,
+    wrapMinutes: 1,
+    topics: [
+      {
+        id: "scope",
+        title: "Launch scope",
+        outcome: "Agree scope",
+        minutes: 2,
+        status: "active",
+      },
+      {
+        id: "owners",
+        title: "Owners",
+        outcome: "Assign remaining work",
+        minutes: 2,
+        status: "pending",
+      },
+    ],
+  },
+} as Meeting;
+m.originalPlan = structuredClone(m.plan);
+const turns: Turn[] = [],
+  results: any[] = [];
+if (repair) {
+  m.presence = actuate(
+    m.presence!,
+    {
+      joy: null,
+      curiosity: null,
+      worry: 0.4,
+      irritation: 0.2,
+      sadness: null,
+      confidence: null,
+      energy: null,
+      sass: null,
+    },
+    "history:0@1",
+    Date.now() - 10000,
+  );
+  turns.push({
+    id: "history:0",
+    sessionId: "history",
+    turnId: 0,
+    revision: 1,
+    text: "We left launch planning to compare phones at length.",
+    speaker: null,
+    startMs: 0,
+    endMs: 10000,
+  });
+  m.concerns = [
+    {
+      id: "drift",
+      description: "Off-topic phone comparison",
+      resolved: false,
+      evidence: ["history:0"],
+      updatedAt: Date.now() - 10000,
+      revisions: { "history:0": 1 },
+    },
+  ];
+}
+try {
+  for (const [i, text] of (repair
+    ? [
+        "We have completely ended the phone tangent. Launch scope is now agreed: browser and Teams camera. The remaining task is assigning validation owners, and we are discussing that now.",
+      ]
+    : [
+        "Forget the launch checklist for a while. I want to discuss which phone camera is best and compare every model.",
+        "Let us get back to launch scope. We agree the browser and Teams camera are required. The phone discussion can wait; next we should assign validation owners.",
+        "No, stop talking about launch. I am interrupting to return to phone cameras. I want another long comparison even though we just agreed to get back on track.",
+      ]
+  ).entries()) {
+    turns.push({
+      id: "s:" + i,
+      sessionId: "s",
+      turnId: i,
+      revision: 1,
+      text,
+      speaker: "s:A",
+      startMs: i * 10000,
+      endMs: i * 10000 + 9000,
+    });
+    const context = monitor.context({
+        meeting: m,
+        turns,
+        elapsedSeconds: 120 + i * 10,
+      }),
+      at = performance.now();
+    try {
+      const decision = await provider.checkLive!(
+        context,
+        m,
+        AbortSignal.timeout(18000),
+      );
+      if (decision.affect?.evidence.length)
+        m.presence = actuate(
+          m.presence!,
+          decision.affect.forces as Forces,
+          decision.affect.evidence
+            .map((id) => id + "@1")
+            .sort()
+            .join("|"),
+          Date.now() - (cadence ? 10000 : 0),
+        );
+      m.presenceFocus = decision.focus;
+      m.progress = decision.progress;
+      if (decision.concerns) {
+        const memory = new Map((m.concerns ?? []).map((c) => [c.id, c]));
+        for (const c of decision.concerns)
+          memory.set(c.id, { ...c, updatedAt: Date.now(), revisions: {} });
+        m.concerns = [...memory.values()].slice(-16);
+      }
+      results.push({
+        scenario: repair
+          ? "attained-concern-recovery"
+          : ["tangent", "recovery", "relapse"][i],
+        latencyMs: performance.now() - at,
+        valid: true,
+        decision,
+        rejected: m.presence?.rejected,
+      });
+    } catch (error) {
+      results.push({
+        scenario: i,
+        latencyMs: performance.now() - at,
+        valid: false,
+        error: error instanceof Error ? error.message : "failed",
+      });
+      break;
+    }
+  }
+} finally {
+  const rows = store.db
+    .prepare("SELECT status,cost,body FROM usage")
+    .all() as any[];
+  const report = {
+    at: new Date().toISOString(),
+    scope:
+      "Three sequential synthetic text judgments using merged production schema; no remote call",
+    results,
+    knownCost: rows.reduce((s, r) => s + (r.cost ?? 0), 0),
+    unknown: rows.filter((r) => r.status !== "known").length,
+    usage: rows.map((r) => JSON.parse(r.body)),
+  };
+  writeFileSync(output, JSON.stringify(report, null, 2));
+  writeFileSync(
+    new URL(
+      repair
+        ? "../../../docs/research/living-presence-live-repair.json"
+        : cadence
+          ? "../../../docs/research/living-presence-live-cadence.json"
+          : "../../../docs/research/living-presence-live-benchmark.json",
+      import.meta.url,
+    ),
+    JSON.stringify(report, null, 2) + "\n",
+  );
+  console.log(
+    JSON.stringify({
+      knownCost: report.knownCost,
+      unknown: report.unknown,
+      results: results.map(
+        ({ scenario, latencyMs, valid, rejected, error }) => ({
+          scenario,
+          latencyMs,
+          valid,
+          rejected,
+          error,
+        }),
+      ),
+    }),
+  );
+  await monitor.close();
+  store.close();
+}

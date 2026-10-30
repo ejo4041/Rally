@@ -1,0 +1,10 @@
+{
+  "passed": true,
+  "measuredPlayoutMs": 1020.25,
+  "observations": 202,
+  "inputDurationMs": 1000,
+  "scope": "Actual isolated PulseAudio sink monitor with synthetic PCM; not remote Teams audibility",
+  "modelCalls": 0,
+  "meetingJoins": 0,
+  "limitations": "Approximate local output clock. Fixture uses an isolated D-Bus address to avoid the existing user PulseAudio name. PulseAudio fell back to socket copies after a memfd diagnostic."
+}

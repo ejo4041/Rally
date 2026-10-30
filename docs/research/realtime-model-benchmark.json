@@ -1,0 +1,217 @@
+{
+  "at": "2026-10-30T16:49:21.363Z",
+  "scope": "Synthetic text, production live schema; no ASR, TTS or meeting join",
+  "budget": 0.15,
+  "results": [
+    {
+      "name": "useful-exploration",
+      "latencyMs": 3642.0784169999997,
+      "valid": true,
+      "withinDeadline": true,
+      "decision": {
+        "agendaChange": null,
+        "extension": null,
+        "extensionConsent": null,
+        "health": 4,
+        "feeling": "neutral",
+        "observation": "Provisional request to explore API retry link to later reliability topic.",
+        "progress": "Scope remains active with no finalized decisions; connection is explicitly provisional.",
+        "concern": "",
+        "evidence": [
+          "bench:1"
+        ],
+        "intervention": null
+      }
+    },
+    {
+      "name": "deadline-pressure",
+      "latencyMs": 4242.593315,
+      "valid": true,
+      "withinDeadline": true,
+      "decision": {
+        "agendaChange": null,
+        "extension": null,
+        "extensionConsent": null,
+        "health": 3,
+        "feeling": "focused",
+        "observation": "Provisional request to explore API retry link to reliability topic.",
+        "progress": "No finalized decisions on scope or owner in current evidence.",
+        "concern": "Limited time remains with no confirmed scope or owner decisions yet.",
+        "evidence": [
+          "bench:1"
+        ],
+        "intervention": {
+          "text": "Please stay on release scope and validation owner to meet the deadline. Note the reliability link briefly if needed.",
+          "kind": "redirect"
+        }
+      }
+    },
+    {
+      "name": "on-track",
+      "latencyMs": 2214.898177000001,
+      "valid": true,
+      "withinDeadline": true,
+      "decision": {
+        "agendaChange": null,
+        "extension": null,
+        "extensionConsent": null,
+        "health": 4,
+        "feeling": "focused",
+        "observation": "Discussion opening on release scope with validation owner queued next.",
+        "progress": "Scope topic active; no scope decision or owner assignment yet.",
+        "concern": "",
+        "evidence": [
+          "bench:1"
+        ],
+        "intervention": null
+      }
+    },
+    {
+      "name": "unrelated-detour",
+      "latencyMs": 2130.538491000001,
+      "valid": true,
+      "withinDeadline": true,
+      "decision": {
+        "agendaChange": null,
+        "extension": null,
+        "extensionConsent": null,
+        "health": 2,
+        "feeling": "urgent",
+        "observation": "Only input is an unrelated vacation detour",
+        "progress": "No scope choice or validation owner agreed yet",
+        "concern": "Discussion is on vacation story, not release scope or owner",
+        "evidence": [
+          "bench:1"
+        ],
+        "intervention": {
+          "text": "Let's park vacation talk and return to release scope. What changes are required?",
+          "kind": "redirect"
+        }
+      }
+    }
+  ],
+  "usage": [
+    {
+      "id": "3979a3c5-7f2d-40ea-bac7-c55d44e31e9b",
+      "at": 1793378949134,
+      "kind": "live",
+      "reasoningEffort": "minimal",
+      "maxOutputTokens": 1024,
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "requestId": "f51522c2-4f4d-4f87-a3e9-7403d99b62ee",
+      "httpStatus": 200,
+      "finishReason": "stop",
+      "usage": {
+        "completion_tokens": 430,
+        "prompt_tokens": 1120,
+        "total_tokens": 1550,
+        "completion_tokens_details": {
+          "reasoning_tokens": 336
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "cost": 0.0032275,
+      "status": "known"
+    },
+    {
+      "id": "f776ef45-5818-4096-b6fe-d3dd60c2fc35",
+      "at": 1793378952775,
+      "kind": "live",
+      "reasoningEffort": "minimal",
+      "maxOutputTokens": 1024,
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "requestId": "ae81306e-94e3-4427-9f32-f34bc1b700c2",
+      "httpStatus": 200,
+      "finishReason": "stop",
+      "usage": {
+        "completion_tokens": 493,
+        "prompt_tokens": 1119,
+        "total_tokens": 1612,
+        "completion_tokens_details": {
+          "reasoning_tokens": 360
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "cost": 0.003494,
+      "status": "known"
+    },
+    {
+      "id": "912ee474-434f-46c6-981a-3012491f59d1",
+      "at": 1793378957018,
+      "kind": "live",
+      "reasoningEffort": "minimal",
+      "maxOutputTokens": 1024,
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "requestId": "01037169-59cf-415b-9d2f-5ffac68418c1",
+      "httpStatus": 200,
+      "finishReason": "stop",
+      "usage": {
+        "completion_tokens": 268,
+        "prompt_tokens": 1118,
+        "total_tokens": 1386,
+        "completion_tokens_details": {
+          "reasoning_tokens": 178
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "cost": 0.0025365,
+      "status": "known"
+    },
+    {
+      "id": "c5830987-796a-4ed4-92ee-e1c9c4932615",
+      "at": 1793378959233,
+      "kind": "live",
+      "reasoningEffort": "minimal",
+      "maxOutputTokens": 1024,
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "requestId": "8a09b474-cdb2-4b2a-930d-340db9b53e79",
+      "httpStatus": 200,
+      "finishReason": "stop",
+      "usage": {
+        "completion_tokens": 261,
+        "prompt_tokens": 1117,
+        "total_tokens": 1378,
+        "completion_tokens_details": {
+          "reasoning_tokens": 140
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "cost": 0.0025055,
+      "status": "known"
+    }
+  ],
+  "knownCost": 0.0117635,
+  "unknown": 0
+}

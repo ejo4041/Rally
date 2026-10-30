@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
-import { createApplication } from "../src/app.ts";
+import { createApplication } from "./support/application.ts";
 import { SpeechOutput, type SpeechEngine } from "../src/speech.ts";
 import type {
   Meeting,
@@ -353,7 +353,7 @@ test("HTTP speech is owner isolated, generated only from approved text, shields 
     });
   const cookies = [];
   for (const username of ["alice", "bravo"]) {
-    const r = await req("/auth/signup", "POST", {
+    const r = await req("/fixture/signup", "POST", {
       username,
       password: "fixture-test-password",
     });

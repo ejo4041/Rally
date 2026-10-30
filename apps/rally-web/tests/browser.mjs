@@ -1,3 +1,5 @@
+import { createRequire } from 'node:module';
+const {TOTP,Secret}=createRequire(new URL('../../rally-api/package.json',import.meta.url))('otpauth');
 // Real HTTP/session/database/LiveKit integration; synthetic audio and injected
 // model providers only. Does not load shared credentials or contact Meta.
 import { chromium } from "playwright";
@@ -40,6 +42,28 @@ async function ready(url, child) {
     await new Promise((r) => setTimeout(r, 100));
   }
   throw new Error("Fixture did not start: " + child.diagnostics());
+}
+const recoveryByUser=new Map();
+async function loginWithMFA(page,username,password) {
+  await page.locator('#username').fill(username);
+  await page.locator('#password').fill(password);
+  await page.locator('#auth-submit').click();
+  await page.locator('#mfa-form').waitFor({state:'visible'});
+  if(recoveryByUser.has(username)) {
+    await page.locator('#use-recovery').click();
+    await page.locator('#mfa-code').fill(recoveryByUser.get(username)[0]);
+    await page.locator('#mfa-submit').click();
+  }
+  await page.locator('#enrollment-secret').waitFor({state:'visible'});
+  await page.waitForFunction(()=>document.querySelector('#enrollment-secret').textContent.length>0);
+  const secret=await page.locator('#enrollment-secret').textContent();
+  const code=new TOTP({secret:Secret.fromBase32(secret),algorithm:'SHA1',digits:6,period:30}).generate();
+  await page.locator('#mfa-code').fill(code);
+  await page.locator('#mfa-submit').click();
+  await page.locator('#recovery-panel').waitFor({state:'visible'});
+  recoveryByUser.set(username,(await page.locator('#recovery-codes').textContent()).trim().split('\n'));
+  await page.locator('#recovery-continue').click();
+  await page.locator('#workspace').waitFor({state:'visible'});
 }
 try {
   const media = run(
@@ -139,17 +163,10 @@ try {
     });
   });
   await page.goto(base);
-  await page.locator("#auth-toggle").click();
-  await page.locator("#username").fill("frontend_test");
-  await page.locator("#password").fill("fixture-password-only");
-  await page.locator("#auth-submit").click();
-  await page.locator("#workspace").waitFor({ state: "visible" });
+  await loginWithMFA(page,"frontend_test","fixture-password-only");
   await page.locator("#logout").click();
   await page.locator("#auth-screen").waitFor({ state: "visible" });
-  await page.locator("#username").fill("frontend_test");
-  await page.locator("#password").fill("fixture-password-only");
-  await page.locator("#auth-submit").click();
-  await page.locator("#workspace").waitFor({ state: "visible" });
+  await loginWithMFA(page,"frontend_test","fixture-password-only");
   assert.equal(await page.locator("#logout").isEnabled(), true);
   await page.locator("#teams-invite summary").click();
   await page.waitForFunction(
@@ -728,11 +745,7 @@ try {
   const other = await browser.newContext();
   const otherPage = await other.newPage();
   await otherPage.goto(base);
-  await otherPage.locator("#auth-toggle").click();
-  await otherPage.locator("#username").fill("other_host");
-  await otherPage.locator("#password").fill("other-fixture-password");
-  await otherPage.locator("#auth-submit").click();
-  await otherPage.locator("#workspace").waitFor({ state: "visible" });
+  await loginWithMFA(otherPage,"other_host","other-fixture-password");
   assert.equal(
     (await otherPage.request.get(base + `/api/meetings/${id}`)).status(),
     404,
@@ -858,10 +871,7 @@ try {
   ).speechSessions;
   await page.locator("#logout").click();
   await page.locator("#auth-screen").waitFor({ state: "visible" });
-  await page.locator("#username").fill("frontend_test");
-  await page.locator("#password").fill("fixture-password-only");
-  await page.locator("#auth-submit").click();
-  await page.locator("#workspace").waitFor({ state: "visible" });
+  await loginWithMFA(page,"frontend_test","fixture-password-only");
   await page.goto(base + "/#meeting/" + tabId);
   await page.locator("#retry-report").waitFor({ state: "visible" });
   await page.locator("#retry-report").click();
@@ -957,10 +967,7 @@ try {
   );
   assert.equal(await page.locator("#transcript").textContent(), "");
   assert.equal(await page.locator("#report-body").textContent(), "");
-  await page.locator("#username").fill("frontend_test");
-  await page.locator("#password").fill("fixture-password-only");
-  await page.locator("#auth-submit").click();
-  await page.locator("#workspace").waitFor({ state: "visible" });
+  await loginWithMFA(page,"frontend_test","fixture-password-only");
   await page.waitForFunction(
     () => document.querySelector("#phase").textContent === "Ended",
   );
@@ -983,7 +990,7 @@ try {
     syntheticAudio: true,
     paidModelCalls: 0,
     checks: [
-      "signup/login/logout, cookie expiry and private UI cleanup",
+      "mandatory MFA enrollment/recovery, login/logout, cookie expiry and private UI cleanup",
       "agenda edit and failed preparation retry",
       "actual browser audio reaches backend",
       "reload reconnects without duplicating ASR sessions",

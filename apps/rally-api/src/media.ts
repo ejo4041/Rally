@@ -1,4 +1,5 @@
-import { AccessToken } from "livekit-server-sdk";
+import { randomUUID } from "node:crypto";
+import { AccessToken, RoomServiceClient } from "livekit-server-sdk";
 import {
   Room,
   RoomEvent,
@@ -26,11 +27,8 @@ export class LiveKitMedia implements Media {
     onGap: (reason: string) => void,
   ): Promise<MediaSession> {
     const room = new Room(),
-      roomName = `rally-${meeting.id}`,
-      host = `host-${meeting.id}`,
-      capture =
-        meeting.captureMode === "teams" ? `capture-${meeting.id}` : host,
-      renderer = `renderer-${meeting.id}`;
+      roomName = `rally-${meeting.id}-${randomUUID()}`,
+      host = `host-${meeting.id}`;
     let stopped = false,
       reader: ReadableStreamDefaultReader<AudioFrame> | undefined,
       trackId: string | undefined;
@@ -43,10 +41,11 @@ export class LiveKitMedia implements Media {
       access.addGrant({
         room: roomName,
         roomJoin: true,
-        canSubscribe: identity !== renderer,
-        canPublish: identity === capture,
-        canPublishData: backend || identity === capture,
-        canPublishSources: identity === capture ? [2] : [],
+        canSubscribe: true,
+        canPublish: backend || meeting.captureSource !== "teams",
+        canPublishData: backend,
+        canPublishSources:
+          backend || meeting.captureSource !== "teams" ? [2] : [],
       });
       return access.toJwt();
     };
@@ -55,7 +54,8 @@ export class LiveKitMedia implements Media {
       participant: RemoteParticipant,
     ) => {
       if (
-        participant.identity === capture &&
+        meeting.captureSource !== "teams" &&
+        participant.identity === host &&
         publication.kind === TrackKind.KIND_AUDIO &&
         publication.source === TrackSource.SOURCE_MICROPHONE &&
         !trackId
@@ -66,8 +66,7 @@ export class LiveKitMedia implements Media {
     };
     room.on(RoomEvent.TrackPublished, subscribe);
     room.on(RoomEvent.TrackSubscribed, (track, publication, participant) => {
-      if (participant.identity !== capture || publication.sid !== trackId)
-        return;
+      if (participant.identity !== host || publication.sid !== trackId) return;
       void (async () => {
         const current = new AudioStream(track, {
           sampleRate: 16000,
@@ -115,7 +114,7 @@ export class LiveKitMedia implements Media {
       }
     });
     room.on(RoomEvent.ParticipantDisconnected, (p) => {
-      if (p.identity === capture && !stopped)
+      if (meeting.captureSource !== "teams" && p.identity === host && !stopped)
         onGap("Browser disconnected; recording contains a gap.");
     });
     room.on(RoomEvent.Reconnecting, () =>
@@ -139,15 +138,19 @@ export class LiveKitMedia implements Media {
       for (const publication of participant.trackPublications.values())
         subscribe(publication, participant);
     }
+    const admin = new RoomServiceClient(
+      this.config.livekitUrl.replace(/^ws/, "http"),
+      this.config.livekitKey,
+      this.config.livekitSecret,
+    );
     return {
-      connection: async (role = "host") => ({
-        url: this.config.livekitUrl,
-        token: await token(
-          role === "renderer" ? renderer : role === "capture" ? capture : host,
-          false,
-        ),
+      connection: async () => ({
+        url: this.config.livekitPublicUrl || this.config.livekitUrl,
+        token: await token(host, false),
         room: roomName,
       }),
+      play: (job, chunks, signal, beforeAudio) =>
+        publishStream(room, job, chunks, signal, beforeAudio),
       async send(event: LiveEvent) {
         if (stopped || !room.localParticipant) return;
         let encoded = new TextEncoder().encode(JSON.stringify(event));
@@ -160,19 +163,22 @@ export class LiveKitMedia implements Media {
             }),
           );
         await room.localParticipant.publishData(encoded, {
-          reliable: event.type !== "transcript.partial",
+          reliable: !["transcript.partial", "presence.voice"].includes(
+            event.type,
+          ),
           topic: "rally",
-          destination_identities:
-            event.type === "presence.scene"
-              ? [...new Set([host, renderer, capture])]
-              : [...new Set([host, capture])],
+          destination_identities: [host],
         });
       },
       async close() {
         if (stopped) return;
         stopped = true;
         await reader?.cancel().catch(() => {});
-        await room.disconnect();
+        try {
+          await admin.deleteRoom(roomName);
+        } finally {
+          await room.disconnect();
+        }
       },
     };
   }
@@ -206,5 +212,79 @@ export async function publishPCM(
     await source.close();
     if (publication?.sid)
       await room.localParticipant!.unpublishTrack(publication.sid);
+  }
+}
+
+export async function publishStream(
+  room: Room,
+  job: import("./live-speech.ts").SpeechState,
+  chunks: AsyncIterable<Buffer>,
+  signal: AbortSignal,
+  beforeAudio: () => void,
+) {
+  signal.throwIfAborted();
+  const source = new AudioSource(16000, 1, 200);
+  const track = LocalAudioTrack.createAudioTrack(
+    `rally-speech:${job.destination}:${job.id}:${job.epoch}`,
+    source,
+  );
+  const cancel = () => source.clearQueue();
+  signal.addEventListener("abort", cancel, { once: true });
+  let publication:
+    | Awaited<ReturnType<NonNullable<Room["localParticipant"]>["publishTrack"]>>
+    | undefined;
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  let abortWait: (() => void) | undefined;
+  try {
+    publication = await room.localParticipant!.publishTrack(
+      track,
+      new TrackPublishOptions({ source: TrackSource.SOURCE_MICROPHONE }),
+    );
+    if (!publication) throw new Error("Speech publication failed");
+    await Promise.race([
+      publication.waitForSubscription(),
+      new Promise<never>((_, reject) => {
+        timer = setTimeout(() => reject(new Error("No speech listener")), 5000);
+        abortWait = () => reject(new Error("Speech canceled"));
+        signal.addEventListener("abort", abortWait, { once: true });
+        if (signal.aborted) abortWait();
+      }),
+    ]);
+    clearTimeout(timer);
+    let pending = Buffer.alloc(0),
+      started = false;
+    const push = async (bytes: Buffer) => {
+      signal.throwIfAborted();
+      if (!started) {
+        beforeAudio();
+        started = true;
+      }
+      const samples = new Int16Array(bytes.length / 2);
+      for (let i = 0; i < samples.length; i++)
+        samples[i] = bytes.readInt16LE(i * 2);
+      await source.captureFrame(
+        new AudioFrame(samples, 16000, 1, samples.length),
+      );
+    };
+    for await (const chunk of chunks) {
+      signal.throwIfAborted();
+      pending = Buffer.concat([pending, chunk]);
+      while (pending.length >= 640) {
+        await push(pending.subarray(0, 640));
+        pending = pending.subarray(640);
+      }
+    }
+    if (pending.length % 2) throw new Error("Incomplete PCM sample");
+    if (pending.length) await push(pending);
+    signal.throwIfAborted();
+    await source.waitForPlayout();
+  } finally {
+    clearTimeout(timer);
+    if (abortWait) signal.removeEventListener("abort", abortWait);
+    signal.removeEventListener("abort", cancel);
+    source.clearQueue();
+    if (publication?.sid)
+      await room.localParticipant?.unpublishTrack(publication.sid);
+    await source.close();
   }
 }

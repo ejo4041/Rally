@@ -1,5 +1,11 @@
-import {setupTeamsPresence} from "./teams-presence.ts";
-import { updatePresence, disposePresence, presenceSpeech, unlockPresenceAudio } from "./presence.ts";
+import {
+  updatePresence,
+  disposePresence,
+  unlockPresenceAudio,
+  presenceSpeech,
+} from "./presence.ts";
+import { RallyDisplay } from "./rally-display.ts";
+import { setupSecurity } from "./security.ts";
 import {
   api,
   APIError,
@@ -70,9 +76,10 @@ const speech = createSpeechPlayer({
       $("capture-label").textContent = "Audio shielded while Rally speaks";
   },
 });
-const teamsPresence = setupTeamsPresence(() => state.session?.meeting, () => scheduleRefresh(), fail);
+const security = setupSecurity(signedIn, canNavigate);
 const audioCheck = setupAudioCheck();
 const followUp = setupFollowUp(() => state.session?.meeting);
+const rallyDisplay = new RallyDisplay(refresh, fail);
 const teams = setupTeams((id) => {
   void loadHistory().catch(fail);
   location.hash = `meeting/${id}`;
@@ -109,6 +116,7 @@ function showAuth() {
 }
 async function signOutLocal() {
   disposePresence();
+  rallyDisplay.clear();
   speech.cancel();
   followUp.clear();
   input("spoken-prompts").checked = false;
@@ -118,6 +126,7 @@ async function signOutLocal() {
   $("meeting").hidden = true;
   $("home").hidden = false;
   state.user = null;
+  security.setUser(null);
   state.generation++;
   state.selecting?.abort();
   state.selecting = null;
@@ -164,12 +173,15 @@ async function signedIn(user: User) {
   button("auth-toggle").textContent = "Create an account";
   input("password").autocomplete = "current-password";
   state.user = user;
+  security.setUser(user);
   $("auth-screen").hidden = true;
   $("workspace").hidden = false;
   $("current-user").textContent = user.username;
   input("password").value = "";
   await loadHistory();
   await teams.refresh();
+  const voice = await api<{ transport?: string }>("/speech/status");
+  button("test-voice").hidden = voice.transport === "livekit";
   await route();
 }
 async function loadHistory() {
@@ -191,7 +203,6 @@ async function loadHistory() {
     .join("");
 }
 function home() {
-  disposePresence();
   speech.cancel();
   audioCheck.stop();
   const media = state.media;
@@ -232,6 +243,8 @@ async function route() {
   const meeting = await api<RecordView>(`/meetings/${id}`);
   if (generation !== state.generation) return;
   state.session = new MeetingSession(meeting);
+  input("share-feedback").dataset.meeting = id;
+  void security.sharing(id).catch(fail);
   for (const d of document.querySelectorAll("dialog")) d.close();
   state.ending = false;
   input("restart-session").checked = false;
@@ -333,12 +346,11 @@ function render() {
   ])
     button(id).disabled = state.busy;
   if (!session) return;
-  teamsPresence.update();
   const m = session.meeting,
     live = m.phase === "live",
     pre =
       ["draft", "ready", "interrupted"].includes(m.phase) ||
-      (live && !state.capture && m.captureMode !== "teams");
+      (live && !state.capture && !state.media);
   $("meeting-title").textContent = m.title;
   $("meeting-meta").textContent =
     `${m.durationMinutes} minutes planned · ${m.participants.length} roster names${m.paused ? " · Moderator paused" : ""}`;
@@ -348,7 +360,7 @@ function render() {
   $("record-error").textContent = error || "";
   $("connection-status").hidden = !state.status;
   $("connection-status").textContent = state.status;
-  $("restart-session-label").hidden = !(live && !state.capture && m.captureMode !== "teams");
+  $("restart-session-label").hidden = !(live && !state.capture);
   $("start-panel").hidden = !pre;
   button("test-voice").disabled =
     state.busy || !!state.capture || m.phase === "live";
@@ -360,7 +372,9 @@ function render() {
       ? "Reconnect audio"
       : m.phase === "interrupted"
         ? "Restart interrupted capture"
-        : "Start meeting";
+        : input("audio-mode").value === "teams"
+          ? "Join with voice and video"
+          : "Start meeting";
   button("cancel-start").hidden = !state.selecting;
   button("prepare").hidden = !["draft", "ready"].includes(m.phase);
   button("prepare").disabled = state.busy;
@@ -385,10 +399,20 @@ function render() {
         ? "Rally is paused. Transcription continues."
         : "You lead the meeting. Rally helps it move forward.");
   $("progress").textContent = m.progress || "";
+  if (m.speechTransport === "livekit")
+    input("spoken-prompts").checked = m.speechEnabled !== false;
+  if (m.speechStatus)
+    $("speech-status").textContent =
+      `Voice: ${m.speechStatus.state} · ${m.speechStatus.destination === "teams" ? "Teams call only" : "browser speakers"}${m.speechStatus.error ? " · " + m.speechStatus.error : ""}`;
+  button("stop-speaking").hidden = !(
+    speech.isActive() ||
+    ["preparing", "playing"].includes(m.speechStatus?.state || "")
+  );
   $("assessment-note").textContent = m.assessment
-    ? `${m.assessment.reason}${m.assessment.issues.length ? " · " + m.assessment.issues.map(label).join(", ") : ""}`
+    ? `${m.assessmentAt ? "Assessed " + Math.floor((Date.now() - m.assessmentAt) / 1000) + "s ago · " : ""}${m.assessment.reason}${m.assessment.issues.length ? " · " + m.assessment.issues.map(label).join(", ") : ""}`
     : "";
   updatePresence(m);
+  rallyDisplay.render(m);
   renderTranscript();
   $("partial").textContent = session.partial;
   const speakerIds = [
@@ -403,17 +427,13 @@ function render() {
         .join("")
     : '<p class="small muted">No attributable voices yet.</p>';
   $("controls").hidden = !(live || state.capture);
-  const nativeSpeaking = live && m.captureMode === "teams" && !!m.playback && ["armed", "playing"].includes(m.playback.state);
-  button("stop-speaking").hidden = !(speech.isActive() || nativeSpeaking);
-  input("spoken-prompts").closest("label")!.hidden = m.captureMode === "teams";
-  if (m.captureMode === "teams") $("speech-status").textContent = nativeSpeaking ? "Rally is speaking into Teams" : "Voice is delivered by Rally in Teams";
   $("capture-label").textContent = state.capture
     ? speech.isPlaying()
       ? "Audio shielded while Rally speaks"
       : state.muted
         ? "Audio muted"
         : "Listening · Muse transcription"
-    : live && m.captureMode === "teams" ? "Listening in Teams · Muse transcription" : "Audio off here";
+    : "Audio off here";
   button("mute").disabled = !state.capture || state.busy;
   button("mute").textContent = state.muted ? "Unmute audio" : "Mute audio";
   button("pause").textContent = m.paused ? "Resume Rally" : "Pause Rally";
@@ -513,6 +533,7 @@ function stopCapture() {
 async function start() {
   audioCheck.stop();
   if (!state.session || !input("consent").checked || state.busy) return;
+  unlockPresenceAudio();
   const session = state.session,
     id = session.meeting.id;
   const controller = new AbortController();
@@ -521,24 +542,56 @@ async function start() {
   await perform(async () => {
     let attempted = false;
     try {
-      const capture = await acquireAudio(
-        input("audio-mode").value,
-        input("include-mic").checked,
-        controller.signal,
-        () => {
-          stopCapture();
-          state.status = "Audio sharing ended. Capture is off.";
-          render();
-          if (!state.busy) void end();
-        },
-      );
+      const callMode =
+        input("audio-mode").value === "teams" ||
+        (session.meeting.captureSource === "teams" &&
+          session.meeting.phase === "live");
+      const capture = callMode
+        ? null
+        : await acquireAudio(
+            input("audio-mode").value,
+            input("include-mic").checked,
+            controller.signal,
+            () => {
+              stopCapture();
+              state.status = "Audio sharing ended. Capture is off.";
+              render();
+              if (!state.busy) void end();
+            },
+          );
       state.capture = capture;
       if (controller.signal.aborted)
         throw new Error("Audio selection canceled.");
       attempted = true;
+      if (callMode && session.meeting.phase !== "live") {
+        await api(`/meetings/${id}/teams/connect`, "POST", {
+          meetingUrl: input("live-teams-link").value,
+          consented: true,
+        });
+        while (true) {
+          if (controller.signal.aborted) {
+            await api(`/meetings/${id}/teams/leave`, "POST", {});
+            throw new Error("Teams join canceled");
+          }
+          const call = await api<{ state: string }>(
+            `/meetings/${id}/teams/status`,
+          );
+          state.status = `Teams: ${call.state}. Admit Rally from the lobby.`;
+          render();
+          if (call.state === "connected") {
+            await refresh();
+            break;
+          }
+          if (["failed", "left"].includes(call.state))
+            throw new Error(
+              "Teams did not connect. Check the invitation and retry explicitly.",
+            );
+          await new Promise((r) => setTimeout(r, 500));
+        }
+      }
       const phase = session.meeting.phase;
       let connection: Connection;
-      if (phase === "live" && !input("restart-session").checked)
+      if (phase === "live" && (callMode || !input("restart-session").checked))
         connection = await api<Connection>(
           `/meetings/${id}/connection`,
           "POST",
@@ -586,14 +639,15 @@ async function start() {
             );
           if (
             event.type === "speech.cancel" ||
-            event.type === "transcription.gap" ||
             event.type === "moderator.control" ||
-            event.type === "plan.updated" ||
             event.type === "meeting.ended" ||
             event.type === "capture.gap"
-          )
+          ) {
             speech.cancel();
+            state.media?.stopSpeech();
+          }
           if (session.apply(event)) scheduleRefresh();
+          rallyDisplay.event(event);
           if (
             event.type === "intervention" &&
             input("spoken-prompts").checked
@@ -602,8 +656,11 @@ async function start() {
               id: string;
               text: string;
               epoch: number;
+              streaming?: boolean;
             };
             if (
+              session.meeting.captureSource !== "teams" &&
+              !prompt.streaming &&
               typeof prompt.epoch === "number" &&
               session.intervention?.id === prompt.id
             )
@@ -624,6 +681,7 @@ async function start() {
           render();
         },
         () => scheduleRefresh(),
+        (id, playedMs, running) => rallyDisplay.playback(id, playedMs, running),
       );
       state.media = media;
       await media.connect(connection, capture);
@@ -659,6 +717,7 @@ async function end() {
 }
 async function command(type: string) {
   speech.cancel();
+  state.media?.stopSpeech(undefined, type !== "request_guidance");
   if (!state.session) return;
   state.session.intervention = null;
   await perform(async () => {
@@ -815,37 +874,6 @@ $("create-form").onsubmit = async (event) => {
     button("create-submit").disabled = false;
   }
 };
-$("auth-form").onsubmit = async (event) => {
-  event.preventDefault();
-  button("auth-submit").disabled = true;
-  $("auth-error").textContent = "";
-  try {
-    await signedIn(
-      await api<User>(`/auth/${state.authMode}`, "POST", {
-        username: input("username").value,
-        password: input("password").value,
-      }),
-    );
-  } catch (error) {
-    $("auth-error").textContent =
-      error instanceof Error ? error.message : "Sign-in failed.";
-  } finally {
-    button("auth-submit").disabled = false;
-  }
-};
-button("auth-toggle").onclick = () => {
-  state.authMode = state.authMode === "login" ? "signup" : "login";
-  $("auth-title").textContent =
-    state.authMode === "login" ? "Welcome back" : "Create your workspace";
-  button("auth-submit").textContent =
-    state.authMode === "login" ? "Sign in" : "Create account";
-  button("auth-toggle").textContent =
-    state.authMode === "login"
-      ? "Create an account"
-      : "Already have an account? Sign in";
-  input("password").autocomplete =
-    state.authMode === "login" ? "current-password" : "new-password";
-};
 button("mobile-logout").onclick = () => button("logout").click();
 button("logout").onclick = () =>
   void perform(async () => {
@@ -858,6 +886,7 @@ button("cancel-start").onclick = () => state.selecting?.abort();
 input("consent").onchange = render;
 input("audio-mode").onchange = () => {
   const tab = input("audio-mode").value === "tab";
+  $("live-teams-link-label").hidden = input("audio-mode").value !== "teams";
   $("include-mic-label").hidden = !tab;
   $("tab-help").hidden = !tab;
 };
@@ -1004,6 +1033,8 @@ void api<User>("/auth/me")
   .then(signedIn)
   .catch((error) => {
     showAuth();
+    if (error instanceof APIError && error.status === 401)
+      void security.resume();
     if (!(error instanceof APIError && error.status === 401))
       $("auth-error").textContent =
         "Rally API is unavailable. Start the API and refresh.";
@@ -1030,7 +1061,12 @@ button("check-audio").onclick = () => {
 };
 
 input("spoken-prompts").onchange = () => {
-  if (input("spoken-prompts").checked) unlockPresenceAudio();
+  if (state.session?.meeting.speechTransport === "livekit") {
+    if (!input("spoken-prompts").checked)
+      state.media?.stopSpeech(undefined, true);
+    void command(input("spoken-prompts").checked ? "voice_on" : "voice_off");
+    return;
+  }
   if (!input("spoken-prompts").checked) speech.cancel();
   else
     void api<{ enabled: boolean; ready: boolean }>("/speech/status")
@@ -1045,8 +1081,35 @@ input("spoken-prompts").onchange = () => {
       .catch(fail);
 };
 button("stop-speaking").onclick = () => {
+  rallyDisplay.stop();
+  state.media?.stopSpeech(undefined, true);
+
   speech.cancel();
   if (state.session?.meeting.phase === "live") void command("dismiss");
 };
 
-button("test-voice").onclick = () => { unlockPresenceAudio(); void speech.test(); };
+button("test-voice").onclick = () => {
+  unlockPresenceAudio();
+  void speech.test();
+};
+
+input("share-feedback").onchange = () => {
+  const field = input("share-feedback"),
+    id = field.dataset.meeting,
+    enabled = field.checked;
+  if (!id) return;
+  field.disabled = true;
+  void api(`/meetings/${id}/sharing`, "PATCH", { enabled })
+    .then(() =>
+      toast(
+        enabled
+          ? "Transcript and report shared with the developer."
+          : "Developer access withdrawn.",
+      ),
+    )
+    .catch((e) => {
+      field.checked = !enabled;
+      fail(e);
+    })
+    .finally(() => (field.disabled = false));
+};

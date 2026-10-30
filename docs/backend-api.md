@@ -85,3 +85,32 @@ Authenticated `GET /teams/status`, `POST /teams/join`, `POST /teams/leave` and `
 ## ASR continuity notifications
 
 `transcription.gap` reports a planned or recoverable handoff: clear transient captions/interventions and refresh the snapshot, while preserving capture. `capture.gap` remains a fatal local-capture stop with explicit recovery. Both can have `{reason}` and persist gap metadata. See [session handoff and tests](asr-session-handoff.md).
+
+## Streaming speech and live Teams (release `c20261d`)
+
+These additions supersede the older host-only MMS delivery description when `RALLY_SPEECH_ADAPTER=seamless-aws` is selected. All routes below require backend login and owner access where a meeting is specified. Mutation requests retain origin checks. Provider credentials never reach clients.
+
+| Route (under `/api`) | Contract |
+| --- | --- |
+| `GET /speech/status` | Configured adapter/model/audio identity and readiness. Configuration readiness is not an upstream health measurement. |
+| `POST /speech/generate` | `{input,voice?:"default"}` → complete validated `audio/wav`. |
+| `POST /speech/stream` | Same request → incremental raw PCM, `application/octet-stream`, headers `X-Audio-Format: pcm_s16le`, `X-Audio-Sample-Rate: 16000`, `X-Audio-Channels: 1`. |
+| `GET /speech/usage` | Current owner's sanitized AWS speech request records; infrastructure costs may be null. |
+| `POST /meetings/:id/heartbeat` | `{captureToken}` renews browser capture lease. Renew every twenty seconds; default expiry is ninety seconds. Token is supplied by the capture connection flow. |
+| `POST /meetings/:id/teams/connect` | Prepared meeting, `{meetingUrl,consented:true}` → HTTP 202 join state. Requires enabled live Teams and streaming speech. Poll status for admission/failure. |
+| `GET /meetings/:id/teams/status` | Current call connection state. Joining does not imply admission. |
+| `POST /meetings/:id/teams/leave` | Explicitly disconnects. A previously started call, including an interrupted call, follows the existing final-report flow. |
+
+The commands endpoint additionally accepts `voice_on` and `voice_off`. Voice-off cancels current synthesis/playback. Pause, dismiss, End, invalidation and transport loss also cancel current speech. Do not automatically retry commands or an utterance after uncertain partial playback.
+
+Generic TTS accepts 1–1,200 Unicode characters (nonblank), English/default voice. It does not insert meeting language. WAV uses whole-generation; PCM uses sentence chunking. A network chunk need not align to a sample or playback frame: retain odd trailing bytes and frame for the consumer. A failure before response bytes uses the standard error response; after bytes begin, the connection closes. Honor `Retry-After` when present. Paid processing must be enabled; per-account request throttles, hourly/daily quotas and provider concurrency apply. No automatic provider retry or MMS fallback occurs.
+
+Every approved meeting intervention is saved as structured guidance before audio begins and starts with `Let's get back on track.`. `speech.status` events identify job/intervention, epoch, destination and preparing/playing/completed/canceled/failed state. Accept only the current approved job/epoch; revoke stopped jobs immediately and do not replay on reconnect. Audio arrives through LiveKit, not as JSON/base64. In Teams mode it goes solely to the isolated call microphone; the dashboard does not duplicate speech or publish microphone input.
+
+`meeting.status` is emitted at the ten-second check interval, including while paused or an assessment is busy. Its data includes `at`, `epoch`, `phase`, `paused`, nullable `health` and `reason`, `issues`, `progress`, `assessmentAt`, `assessmentState`, `speech`, `destination`, `callState` and `currentTopic`. `assessmentAt` makes stale judgments distinguishable from a fresh heartbeat. Authoritative HTTP snapshots retain assessment, `liveStatus`, `speechStatus` and call state for reconnects.
+
+Teams has a connected-runner lease independent of the dashboard; logout or dashboard closure does not end it. Explicit End/Leave does. Transport loss interrupts capture without automatic rejoin. The legacy `/teams/join` flow is disabled when integrated live Teams is enabled. See [implementation](streaming-speech-plan.md) and [tested boundaries](streaming-speech-validation.md).
+
+## Continuous monitoring additions
+
+With `RALLY_REALTIME_ENABLED=1`, live snapshots include `monitor` and optional `extension`; `meeting.check` events carry monotonically sequenced check results, source freshness and a conservative forecast. `GET /api/meetings/:id/checks?before=<sequence>` provides owner-only pages of fifty records. `POST /api/meetings/:id/extension/presented` acknowledges a visible proposal with `{proposalId}`; `POST /api/meetings/:id/extension` confirms or rejects it with `{proposalId,accept}`. These mutations retain existing authentication and origin protection. Host reconfirmation resolves disputed spoken consent before further agenda edits. [Complete backend behavior](realtime-backend-notes.md) and [validation boundaries](realtime-monitoring-validation.md).

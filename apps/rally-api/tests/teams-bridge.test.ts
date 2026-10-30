@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { createApplication } from "../src/app.ts";
+import { createApplication } from "./support/application.ts";
 import { randomUUID } from "node:crypto";
 import { HttpError } from "../src/auth.ts";
 
@@ -60,7 +60,7 @@ test("Teams bridge authenticates, isolates ownership, bounds links/consent and i
   }
   const users = [];
   for (const username of ["alice", "bravo"]) {
-    const r = await req("/auth/signup", "POST", {
+    const r = await req("/fixture/signup", "POST", {
       username,
       password: "fixture-password-only",
     });
@@ -185,7 +185,7 @@ test("an uncertain invitation blocks duplicate remote joins, including a concurr
     await api.close();
   });
   const base = `http://127.0.0.1:${(server.address() as { port: number }).port}/api`;
-  const signup = await fetch(base + "/auth/signup", {
+  const signup = await fetch(base + "/fixture/signup", {
     method: "POST",
     headers: { "content-type": "application/json" },
     body: JSON.stringify({

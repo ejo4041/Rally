@@ -1,6 +1,6 @@
 import test, { type TestContext } from "node:test";
 import assert from "node:assert/strict";
-import { createApplication } from "../src/app.ts";
+import { createApplication } from "./support/application.ts";
 import type { ASRSession, LiveEvent, Providers } from "../src/contracts.ts";
 
 async function fixture(t: TestContext, assessmentMs = 100000, captureLeaseMs = 120 * 60000) {
@@ -21,6 +21,7 @@ async function fixture(t: TestContext, assessmentMs = 100000, captureLeaseMs = 1
     }[] = [];
   let shutdown = false;
   const api = createApplication({
+    // These scenarios isolate ASR rotation from the separately tested browser lease.
     dbPath: ":memory:",
     assessmentMs,
     captureLeaseMs,
@@ -144,7 +145,7 @@ async function fixture(t: TestContext, assessmentMs = 100000, captureLeaseMs = 1
       headers: { cookie, "content-type": "application/json" },
       body: body === undefined ? undefined : JSON.stringify(body),
     });
-  const signup = await req("/auth/signup", "POST", {
+  const signup = await req("/fixture/signup", "POST", {
     username: "host",
     password: "fixture-password",
   });
@@ -208,7 +209,7 @@ async function fixture(t: TestContext, assessmentMs = 100000, captureLeaseMs = 1
       await api.close();
     },
     async login() {
-      const r = await req("/auth/login", "POST", {
+      const r = await req("/fixture/login", "POST", {
         username: "host",
         password: "fixture-password",
       });

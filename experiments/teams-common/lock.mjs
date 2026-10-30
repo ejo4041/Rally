@@ -1,11 +1,21 @@
 import { spawn } from "node:child_process";
+import { existsSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 /** Both legacy and presence services must hold this before polling or launching. */
-export async function acquireTeamsLock() {
+export async function acquireTeamsLock(
+  onLost = () => process.kill(process.pid, "SIGTERM"),
+) {
   const path =
     process.env.RALLY_TEAMS_LOCK ||
-    join(tmpdir(), `rally-teams-${process.getuid?.() ?? "service"}.lock`);
+    (existsSync("/srv/hackathon/rally-deployed/state")
+      ? "/srv/hackathon/rally-deployed/state/teams.lock"
+      : join(
+          existsSync(`/run/user/${process.getuid?.()}`)
+            ? `/run/user/${process.getuid?.()}`
+            : tmpdir(),
+          `rally-teams-${process.getuid?.() ?? "service"}.lock`,
+        ));
   const child = spawn(
     "flock",
     ["--nonblock", path, "sh", "-c", "echo acquired; cat >/dev/null"],
@@ -42,7 +52,15 @@ export async function acquireTeamsLock() {
       }
     });
   });
-  child.once("exit", () => process.kill(process.pid, "SIGTERM"));
-  process.once("exit", () => child.stdin.end());
-  return () => child.stdin.end();
+  let released = false;
+  const release = () => {
+    released = true;
+    process.removeListener("exit", release);
+    child.stdin.end();
+  };
+  child.once("exit", () => {
+    if (!released) onLost();
+  });
+  process.once("exit", release);
+  return release;
 }

@@ -1,3 +1,35 @@
+## Living presence integration — current checkpoint
+
+The living-presence branch is merging deployed `40c5739` into the silk work. Read [the current implementation](living-presence-implementation.md) and [operations](living-presence-operations.md); they supersede the earlier foundation/standalone-runner paragraphs below. Canonical TeamsLive now owns camera plus existing streaming audio; no competing native queue. MFA/closed registration and production realtime decision deadlines are preserved. Latest combined checks: **117 backend tests, 14 frontend tests, both typechecks**, full synthetic-provider HTTP/SQLite/LiveKit browser workflow. Three merged-schema real Muse calls passed in 2.503–4.901 seconds for $0.01735250; combined tracked total $1.45503685, conditional unverified-$150 remainder $148.54496315, unknown0. Full-pixel repeat measured26distinctfps; final silk-only1280px rendering measured29.29distinctfps with30fpsrenderer, while text/video remain1920×1080. Remote Teams acceptance remains pending. Runtime is restored to40c5739; never deploy foundationee8d7fe independently of the merged security work.
+
+**Live Teams rehearsal:** The user reports a successful call test; saved records confirm connected capture and completed cached TTS to Teams. [Guidance outputs and latency analysis](teams-live-rehearsal-2026-10-30.md) explain why the first intervention followed an 89-second speaking turn: assessment currently consumes finalized turns only.
+
+**Teams startup correction, October 30:** Integrated API runtime now includes the Chromium library path used by the original Sites runner. Actual headed-browser launch passes in an equivalent production sandbox. See [incident and validation](teams-startup-incident.md). The subsequent user trial succeeded; see the rehearsal record above.
+
+# Rally MFA/admin security release — October 30
+
+**Current app: https://rally.tail703f9e.ts.net/**, deployed application `ca539a5`. Source: `/srv/hackathon/rally-security`, branch `security/mfa-admin-20261030`, based on streaming checkpoint `e779d8d`. This supersedes earlier signup/login access instructions below. Public signup is closed. Existing accounts keep their passwords but must enroll MFA; password-only sessions were revoked on migration.
+
+Owner administrator username: `rally_admin`. Choose Activate or reset account using the one-time code delivered privately in the owner’s local `Downloads/Rally Admin Activation.txt`, choose a password, enroll an authenticator, save recovery codes. No credentials are recorded here. Activation expires in 24 hours. Server plaintext activation file was deleted after private delivery.
+
+Admin includes invitations, recent-MFA protected account enable/disable/role/reset controls, usage/activity and explicitly shared read-only transcripts/reports. Sharing is off per meeting by default; owners can withdraw future access. No replayable audio recording was added. [Operations, threat boundaries and recovery](mfa-admin-judge-audit.md). [Actual public HTTPS and synthetic bidirectional media evidence](research/mfa-public-deployment-smoke-2026-10-30.json).
+
+71 backend tests, nine frontend tests, both type checks/build and three browser workflows pass with synthetic providers. Public enrollment/refresh, secure cookies, closed signup, owner isolation and bidirectional media pass; temporary test account removed. No paid model calls or real meeting joins in this security change. Backup before migration is recorded in the linked operations document. Prior streaming improvements/cached opening are retained; separate dirty worktrees remain preserved.
+
+## Previous streaming checkpoint (historical)
+
+# Rally handoff — streaming speech release, October 30
+
+The integrated Node app is deployed from `c20261d` at **https://rally.tail703f9e.ts.net/**. It is public HTTPS with backend signup/login. Work is committed on the isolated `rally-streaming-speech` branch based on main `1d988d0`; it has not been merged or pushed. The separate private Sites release is unchanged.
+
+Shared AWS TTS now supports complete WAV and streamed PCM, approved meeting interventions stream to browser speakers or the integrated Teams virtual microphone, and ten-second status updates expose meeting health and assessment freshness. Teams mode uses one moderation engine, survives dashboard closure, and ends on explicit End/Leave. See [implementation decisions](streaming-speech-plan.md), [API contract](backend-api.md), and [release validation/deployment](streaming-speech-validation.md).
+
+64 backend tests, nine frontend tests, both type checks, frontend build and two actual browser/LiveKit regression paths pass. Final Astra Standards review found no actionable issues; both Spec findings were fixed and verified. Public UI signup/login, owner isolation and bidirectional synthetic audio pass through the public relay. [Evidence and limitations](streaming-speech-validation.md).
+
+Remaining: fresh consented Teams admission/audibility rehearsal and independent external-device playback. The exact opening is now `Let's get back on track.` (ASCII apostrophe). A real AWS probe confirms **cache hit**, with first audio in 855 ms. No new Muse calls occurred; three AWS probe costs are unknown. Runtime credentials remain private. Public SSH443 was preserved; Funnel supplies the public web endpoint. Submission remains draft-only.
+
+## Prior checkpoint (historical; superseded where different)
+
 # Rally handoff — October 30 current checkpoint
 
 The integrated Node app is deployed from `9202d1f` at [Rally](https://rally.tail703f9e.ts.net:8445). It requires Tailscale and its own app login. Source is pushed to `main`. The older restricted Sites app remains a separate release; do not mix its presenter, confirmation or demo-clock controls with the Node workflow.

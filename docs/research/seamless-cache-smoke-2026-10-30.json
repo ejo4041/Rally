@@ -1,0 +1,32 @@
+{
+  "at": "2026-10-30T15:13:10.326Z",
+  "input": "Let's get back on track. Let's discuss the budget.",
+  "passed": true,
+  "cacheHit": true,
+  "firstByteMs": 854.506229,
+  "elapsedMs": 1482.0409140000002,
+  "bytes": 87040,
+  "chunks": 9,
+  "seconds": 2.72,
+  "usage": [
+    {
+      "id": "dff01f4c-7ae4-48d2-8372-d5d631a317d7",
+      "at": 1793373188845,
+      "meetingId": null,
+      "adapter": "seamless-aws",
+      "model": "facebook/seamless-m4t-v2-large",
+      "sampleRate": 16000,
+      "channels": 1,
+      "format": "pcm_s16le",
+      "revision": null,
+      "state": "completed",
+      "bytes": 87040,
+      "seconds": 2.72,
+      "firstByteMs": 854,
+      "cached": true,
+      "cost": null,
+      "billing": "AWS infrastructure; cost unknown"
+    }
+  ],
+  "cost": "One AWS request this batch; cumulative three AWS probes; infrastructure cost unknown; zero Muse calls"
+}

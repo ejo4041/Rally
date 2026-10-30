@@ -1,4 +1,4 @@
-import {VoiceSequence} from "../../../packages/rally-presence/voice.ts";
+import { VoiceSequence } from "../../../packages/rally-presence/voice.ts";
 import { serverNow } from "./clock.ts";
 import { createLivingSilk, type LivingSilk } from "living-silk";
 import type { Meeting } from "./api.ts";
@@ -42,7 +42,7 @@ export function mountPresence(parent: HTMLElement, camera = false) {
       quality: "auto",
       initialQuality: camera ? "economy" : undefined,
       antialias: camera ? false : undefined,
-      pixelRatioCap: camera ? 1 : undefined,
+      pixelRatioCap: camera ? 2 / 3 : undefined,
       visibility: camera ? "always" : undefined,
       onError: fallback,
     });
@@ -132,7 +132,7 @@ export function mountPresence(parent: HTMLElement, camera = false) {
     },
     async speech(audio: HTMLAudioElement | null, text: string | null) {
       const epoch = ++audioEpoch;
-      localSpeech = text;
+      localSpeech = text ?? undefined;
       drawText();
       silk?.disconnectBotAudio();
       if (!audio || !silk) return;
@@ -188,7 +188,10 @@ export function presenceScene(scene: Scene) {
   surface?.update(scene);
 }
 export function presenceVoice(
-  frame: import("living-silk").BotVoiceFrame & { sequence?: number; captureEpoch?: number },
+  frame: import("living-silk").BotVoiceFrame & {
+    sequence?: number;
+    captureEpoch?: number;
+  },
 ) {
   if (!voiceSequence.accept(frame)) return;
   surface?.silk?.setVoice({ ...frame, timestamp: performance.now() / 1000 });

@@ -4,6 +4,9 @@
 }
 http://:6772 {
   bind 127.0.0.1
+  handle_path /livekit/* {
+    reverse_proxy 127.0.0.1:17890
+  }
   handle /api/* {
     reverse_proxy 127.0.0.1:3301
   }

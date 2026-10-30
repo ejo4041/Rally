@@ -29,6 +29,10 @@ export const defaults = {
   dbPath: ".data/rally.sqlite",
   origins: ["http://localhost:5173", "http://127.0.0.1:5173"],
   secureCookies: false,
+  mfaKey: "",
+  realtimeEnabled: false,
+  reportReserve: 0.25,
+  teamsDuplexEnabled: false,
   assessmentMs: 10000,
   cooldownMs: 45000,
   asrRotationMs: 55 * 60000,
@@ -38,6 +42,7 @@ export const defaults = {
   buildBudget: 5,
   paidEnabled: false,
   livekitUrl: "ws://127.0.0.1:7880",
+  livekitPublicUrl: "",
   livekitKey: "devkey",
   livekitSecret: "secret",
 };
@@ -57,7 +62,11 @@ export function environmentConfig(): Configuration {
       process.env.RALLY_ALLOWED_ORIGINS?.split(",").map((s) => s.trim()) ||
       defaults.origins,
     secureCookies: process.env.RALLY_SECURE_COOKIES === "1",
+    mfaKey: process.env.RALLY_MFA_KEY || "",
     paidEnabled: process.env.RALLY_PAID_ENABLED === "1",
+    teamsDuplexEnabled: process.env.RALLY_TEAMS_DUPLEX_ENABLED === "1",
+    reportReserve: number("RALLY_REPORT_RESERVE", 0.25),
+    realtimeEnabled: process.env.RALLY_REALTIME_ENABLED === "1",
     assessmentMs: number("RALLY_ASSESSMENT_MS", 10000),
     cooldownMs: number("RALLY_COOLDOWN_MS", 45000),
     asrRotationMs: number("RALLY_ASR_ROTATION_MS", 55 * 60000),
@@ -66,6 +75,7 @@ export function environmentConfig(): Configuration {
     meetingBudget: number("RALLY_MEETING_BUDGET", 2),
     buildBudget: number("RALLY_BUILD_BUDGET", 5),
     livekitUrl: process.env.LIVEKIT_URL || defaults.livekitUrl,
+    livekitPublicUrl: process.env.LIVEKIT_PUBLIC_URL || "",
     livekitKey: process.env.LIVEKIT_API_KEY || defaults.livekitKey,
     livekitSecret: process.env.LIVEKIT_API_SECRET || defaults.livekitSecret,
   };

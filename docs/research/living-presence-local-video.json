@@ -1,31 +1,33 @@
 {
-  "at": "2026-10-30T18:18:11.810Z",
+  "at": "2026-10-30T18:49:31.792Z",
   "scope": "Local virtual camera through real WebRTC; not remote Teams",
   "settings": {
     "aspectRatio": 1.7777777777777777,
+    "deviceId": "507b4007851125b341117599735dbf766704dfc225f458fbfb856452e7568998",
     "frameRate": 30,
+    "groupId": "dad6011f05677070ced8364b16688f649ee4c9f054f19c4602dd84780399928e",
     "height": 1080,
     "resizeMode": "none",
     "width": 1920
   },
-  "seconds": 10.00559999999404,
-  "presentedFrames": 291,
-  "uniqueFrames": 290,
-  "uniqueFPS": 28.98376908932725,
-  "decodedFPS": 30.083153434094836,
+  "seconds": 10.00190000000596,
+  "presentedFrames": 293,
+  "uniqueFrames": 293,
+  "uniqueFPS": 29.294434057511612,
+  "decodedFPS": 29.89432007916714,
   "width": 1920,
   "height": 1080,
   "dropped": 0,
   "renderer": {
-    "fps": 23,
-    "cpuSubmissionMs": 0.16666666666666666,
+    "fps": 30,
+    "cpuSubmissionMs": 0.20333333512147267,
     "drawCalls": 2,
     "triangles": 12800,
     "motes": 160,
-    "pixelRatio": 1,
+    "pixelRatio": 0.6666666666666666,
     "quality": "economy",
-    "width": 1920,
-    "height": 842
+    "width": 1280,
+    "height": 561
   },
   "passed": true
 }

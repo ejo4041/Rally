@@ -2,8 +2,12 @@
 export class VoiceSequence {
   private captureEpoch = -1;
   private sequence = -1;
-  accept(frame: {captureEpoch?: number; sequence?: number}): boolean {
-    if (!Number.isSafeInteger(frame.captureEpoch) || !Number.isSafeInteger(frame.sequence)) return false;
+  accept(frame: { captureEpoch?: number; sequence?: number }): boolean {
+    if (
+      !Number.isSafeInteger(frame.captureEpoch) ||
+      !Number.isSafeInteger(frame.sequence)
+    )
+      return false;
     if (frame.captureEpoch! < this.captureEpoch) return false;
     if (frame.captureEpoch! > this.captureEpoch) {
       this.captureEpoch = frame.captureEpoch!;

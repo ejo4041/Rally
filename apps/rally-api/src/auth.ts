@@ -15,14 +15,26 @@ export class HttpError extends Error {
     this.status = status;
   }
 }
-export type User = { id: string; username: string };
+export type User = { id: string; username: string; role?: string };
 const digest = (s: string) => createHash("sha256").update(s).digest("hex");
+let activeDerivations = 0;
 const derive = (password: string, salt: string) =>
-  new Promise<Buffer>((resolve, reject) =>
-    scrypt(password, salt, 64, (err, key) =>
-      err ? reject(err) : resolve(key),
-    ),
-  );
+  new Promise<Buffer>((resolve, reject) => {
+    if (activeDerivations >= 2) {
+      reject(new HttpError("Sign-in service busy. Try again shortly.", 429));
+      return;
+    }
+    activeDerivations++;
+    try {
+      scrypt(password, salt, 64, (err, key) => {
+        activeDerivations--;
+        err ? reject(err) : resolve(key);
+      });
+    } catch (e) {
+      activeDerivations--;
+      reject(e);
+    }
+  });
 export async function createUser(
   store: Store,
   username: string,
@@ -40,7 +52,17 @@ export async function createUser(
       throw new HttpError("Username already exists", 409);
     throw error;
   }
+  store.db.prepare("INSERT INTO user_security(user_id) VALUES(?)").run(user.id);
   return user;
+}
+export async function setPassword(store: Store, id: string, password: string) {
+  if (password.length < 10 || password.length > 200)
+    throw new HttpError("Password must have 10–200 characters");
+  const salt = randomBytes(16).toString("hex"),
+    value = (await derive(password, salt)).toString("hex");
+  store.db
+    .prepare("UPDATE users SET password=? WHERE id=?")
+    .run(`${salt}:${value}`, id);
 }
 export async function authenticate(
   store: Store,
@@ -71,7 +93,7 @@ export function userForRequest(store: Store, req: Request): User {
   const user = token
     ? (store.db
         .prepare(
-          "SELECT users.id,username FROM sessions JOIN users ON users.id=sessions.user_id WHERE hash=? AND expires>?",
+          "SELECT users.id,username,sec.role FROM sessions JOIN users ON users.id=sessions.user_id JOIN user_security sec ON sec.user_id=users.id WHERE hash=? AND expires>? AND sessions.mfa_verified=1 AND sec.disabled=0 AND sec.secret IS NOT NULL AND sec.reset_required=0",
         )
         .get(digest(token), Date.now()) as User | undefined)
     : undefined;
@@ -83,11 +105,20 @@ export function issueSession(
   res: Response,
   user: User,
   secure: boolean,
+  mfaVerified = false,
 ) {
   const token = randomBytes(32).toString("hex");
   store.db
-    .prepare("INSERT INTO sessions VALUES(?,?,?)")
-    .run(digest(token), user.id, Date.now() + 7 * 86400000);
+    .prepare(
+      "INSERT INTO sessions(hash,user_id,expires,mfa_verified,verified_at) VALUES(?,?,?,?,?)",
+    )
+    .run(
+      digest(token),
+      user.id,
+      Date.now() + 7 * 86400000,
+      Number(mfaVerified),
+      mfaVerified ? Date.now() : 0,
+    );
   res.cookie("rally_session", token, {
     httpOnly: true,
     sameSite: "lax",

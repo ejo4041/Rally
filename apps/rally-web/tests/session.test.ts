@@ -215,3 +215,38 @@ test("delayed finals preserve a newer scoped caption and late partials cannot re
   session.apply(event("capture.gap", { reason: "Audio disconnected" }));
   assert.equal(session.partial, "");
 });
+
+test('older snapshots and check events cannot replace a newer live observation or agenda',()=>{
+ const session=new MeetingSession(fixture());
+ const check={id:'c2',sequence:2,capturedAt:2000,completedAt:2200,status:'accepted',epoch:1,planRevision:1,decision:{health:4,feeling:'curious' as const,observation:'Useful exploration',progress:'',concern:'',evidence:[],intervention:null,agendaChange:null,extension:null,extensionConsent:null}};
+ session.apply(event('meeting.check',check));
+ session.replace({...fixture(),monitor:{...check,id:'c1',sequence:1,capturedAt:1000}} as RecordView);
+ assert.equal(session.meeting.monitor?.id,'c2');
+ session.apply(event('meeting.check',{...check,status:'checking',completedAt:undefined,decision:undefined}));
+ assert.equal(session.meeting.monitor?.status,'accepted');
+ session.apply(event('meeting.check',{...check,id:'c0',sequence:0}));
+ assert.equal(session.meeting.monitor?.id,'c2');
+});
+
+test('late playback events and snapshots never resurrect completed speech',()=>{
+ const session=new MeetingSession(fixture());
+ const completed={id:'new',interventionId:'i',epoch:1,at:5000,state:'completed',destination:'browser',playedMs:2000};
+ session.apply(event('speech.status',completed));
+ session.apply(event('speech.status',{...completed,state:'playing'}));
+ assert.equal(session.meeting.speechStatus?.state,'completed');
+ session.apply(event('speech.status',{...completed,id:'old',at:4000,state:'playing'}));
+ assert.equal(session.meeting.speechStatus?.id,'new');
+ session.replace({...fixture(),speechStatus:{...completed,state:'playing'}} as RecordView);
+ assert.equal(session.meeting.speechStatus?.state,'completed');
+});
+
+test('old extension snapshots cannot hide a dispute or reopen a confirmed proposal',()=>{
+ const proposal={id:'extra',minutes:5,deadline:10000,baseRevision:0,at:100,state:'disputed' as const,reason:'Finish decision',confirmation:{method:'spoken' as const,at:200,evidence:{id:'t',revision:1}}};
+ const session=new MeetingSession({...fixture(),extension:proposal});
+ session.replace({...fixture(),extension:{...proposal,state:'confirmed'}});
+ assert.equal(session.meeting.extension?.state,'disputed');
+ session.replace({...fixture(),extension:{...proposal,state:'pending',confirmation:undefined}});
+ assert.equal(session.meeting.extension?.state,'disputed');
+ session.replace({...fixture(),extension:{...proposal,state:'confirmed',confirmation:{method:'host',at:300}}});
+ assert.equal(session.meeting.extension?.state,'confirmed');
+});
