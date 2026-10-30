@@ -1,5 +1,7 @@
 # Rally documentation
 
+**Next Meta meeting integration:** [WhatsApp guest calls, LiveKit connector constraints and comparison](research/meta-call-integration-options-2026-10-30.md). Research recommends a bounded guest transport test; no new adapter is claimed.
+
 **Teams invite UI:** [Meeting links, ownership, transcription-test limits and validation](teams-integrated-ui.md). The Meetings page now has a Teams link field plus a distinct browser-tab setup path for other calls.
 
 **Integrated deployment:** [Open and test the Node/LiveKit app](integrated-deployment.md) · [deployed verification](research/integrated-deployment-check.json).
