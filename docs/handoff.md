@@ -1,4 +1,6 @@
-**Teams startup correction, October 30:** Integrated API runtime now includes the Chromium library path used by the original Sites runner. Actual headed-browser launch passes in an equivalent production sandbox. See [incident and validation](teams-startup-incident.md). Fresh user admission retry remains pending.
+**Live Teams rehearsal:** The user reports a successful call test; saved records confirm connected capture and completed cached TTS to Teams. [Guidance outputs and latency analysis](teams-live-rehearsal-2026-10-30.md) explain why the first intervention followed an 89-second speaking turn: assessment currently consumes finalized turns only.
+
+**Teams startup correction, October 30:** Integrated API runtime now includes the Chromium library path used by the original Sites runner. Actual headed-browser launch passes in an equivalent production sandbox. See [incident and validation](teams-startup-incident.md). The subsequent user trial succeeded; see the rehearsal record above.
 
 # Rally MFA/admin security release — October 30
 

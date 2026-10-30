@@ -58,3 +58,5 @@ These distinguish documented capability, access experiments, actual model measur
 Teams voice preparation: [Meta MMS output and remaining live moderation connection](teams-mms-output.md).
 
 [Integrated Teams startup configuration incident](teams-startup-incident.md): missing Chromium library path, production-sandbox reproduction and correction.
+
+[Successful live Teams trial: saved guidance and pause-to-intervention timing](teams-live-rehearsal-2026-10-30.md).
