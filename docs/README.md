@@ -13,7 +13,7 @@ Start with the [current handoff](handoff.md). The integrated Node app and the ol
 | Input checks | [Free local tab/microphone preflight](audio-preflight.md) |
 | Follow-through | [Reviewed manual WhatsApp drafts](integrated-whatsapp-follow-up.md), [official-source check and device limits](research/whatsapp-manual-draft-check-2026-10-30.md) |
 | Meeting connectors | [Teams invitation UI and bounds](teams-integrated-ui.md), [WhatsApp guest prototype](whatsapp-guest-prototype.md), [Meta call integration research](research/meta-call-integration-options-2026-10-30.md) |
-| Demonstration | [Rehearsal packet](integrated-rehearsal.md), [three-minute script and future-platform close](demo-script.md), [current access observations](research/submission-access-check-2026-10-30.md) |
+| Demonstration | [Rehearsal packet](integrated-rehearsal.md), [three-minute script and future-platform close](demo-script.md), [longer show-and-tell/pitch](show-and-tell-script.md), [current access observations](research/submission-access-check-2026-10-30.md) |
 
 [Local draft archive/privacy check](research/source-draft-archive-check.json) · [clean source reproduction](research/source-draft-reproduction-check.json). These are local preparation evidence, not a submitted entry.
 

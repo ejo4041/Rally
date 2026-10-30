@@ -28,7 +28,7 @@ The Teams invitation remains a bounded transcription test. The WhatsApp guest pr
 
 ## Longer show-and-tell
 
-For a separate six-to-eight-minute talk, use one minute on the team problem, three on the prototype, one on architecture and observed limits, then one to two on the future platform. Expand the source/correction example and invite feedback about real meeting habits. Keep this talk distinct from the required three-minute submission video. No adoption, revenue, accuracy or time-savings claim has been established by the current tests.
+Use the [longer presenter script](show-and-tell-script.md) for a separate six-to-eight-minute talk. Spend one minute on the team problem, three on the prototype, one on architecture and observed limits, then one to two on the future platform. Expand the source/correction example and invite feedback about real meeting habits. Keep this talk distinct from the required three-minute submission video. No adoption, revenue, accuracy or time-savings claim has been established by the current tests.
 
 The implemented Meta responsibilities are complementary: Muse Voice Transcribe supplies speech evidence, Muse Spark reasons about agenda/progress/outcomes, and the local MMS adapter makes approved prompts audible. Future services should solve a clear user need and retain replaceable capability boundaries. The pitch does not require claiming every Meta service is integrated.
 
