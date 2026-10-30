@@ -33,3 +33,9 @@ No new Muse call has been made during implementation. Actual AWS cache/latency v
 ## Public ingress evidence
 
 Tailscale Funnel accepted HTTPS 443 on `rally.tail703f9e.ts.net`. A request forced through its public DNS relay returned the temporary setup text. Both pre-existing public SSH443 sessions remained established; no SSH listener configuration was changed. Direct server-local hostname resolution uses the Tailscale address and reaches the SSH wildcard listener, so public-route probes must use public DNS resolution. Public UI publication follows verified release installation; a setup page is not the application deployment.
+
+## Final review and live AWS probe
+
+Final Standards review of baseline `1d988d0` through `32def64` found no actionable violations. Final Spec review identified two defects: incompatible legacy browser speech could be used in Teams mode, and Leave did not finalize an already interrupted call. The follow-up requires streaming speech for Teams, rejects its legacy browser speech route, and finalizes previously started interrupted calls on explicit Leave. A failing Leave test reproduced the latter before correction.
+
+The bounded AWS probe made two requests and passed: PCM first bytes in 1,556 ms, five chunks, 1.82 seconds audio; complete WAV in 983 ms. **Both requests reported cache miss for the exact requested curly-apostrophe opening.** Preserve the requested wording; do not claim a cache speedup until the AWS service caches this exact sentence. [Sanitized measurement](research/seamless-streaming-smoke-2026-10-30.json). AWS batch/cumulative probe cost is unknown; no Muse calls occurred. Last recorded Muse ledger estimate remains $0.47338150 with conditional $149.52661850 of the unverified $150 grant; AWS infrastructure is separate.

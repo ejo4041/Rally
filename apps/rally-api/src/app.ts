@@ -288,6 +288,7 @@ export function createApplication(
   });
   app.post("/api/meetings/:id/speech", (req, res) => {
     const m = owned(req);
+    if(m.captureSource==='teams')throw new HttpError('Teams speech is delivered only into the call',409);
     const data = z
       .object({
         interventionId: z.string().uuid(),
@@ -312,6 +313,7 @@ export function createApplication(
     );
   });
   app.post('/api/meetings/:id/teams/connect',(req,res)=>{
+    if(!speech.live)throw new HttpError('Live Teams requires the streaming speech adapter',503);
     if(!config.paidEnabled || (!options.teamsConnector && process.env.RALLY_TEAMS_LIVE_ENABLED!=='1'))throw new HttpError('Live Teams is disabled',503);
     const m=owned(req);
     if(meetings.list(m.userId).some(other=>other.id!==m.id&&other.phase==='live'))throw new HttpError('This host already has an active meeting',409);

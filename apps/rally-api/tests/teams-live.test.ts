@@ -23,3 +23,9 @@ test('cancel during connector startup holds the runner until the late connector 
  resolve({alive:()=>true,receive:()=>()=>{},play:async()=>{},close:async()=>{closed++;}});
  await leaving;assert.ok(closed>=1);assert.equal(teams.status('m').state,'left');
 });
+test('explicit Leave finalizes a previously started interrupted Teams meeting',async()=>{
+ const m={id:'m',userId:'u',phase:'ready',plan:{},epoch:0} as Meeting;let ended=0;
+ const teams=new TeamsLive({current:()=>m,save:()=>{},start:async()=>{m.phase='live';m.startedAt=Date.now();},end:async()=>{ended++;m.phase='ended';},interrupt:async()=>{},connect:async()=>({alive:()=>true,receive:()=>()=>{},play:async()=>{},close:async()=>{}})});
+ teams.join(m,'https://teams.microsoft.com/meet/test',true);await new Promise(r=>setImmediate(r));
+ m.phase='interrupted';await teams.leave('m');assert.equal(ended,1);assert.equal(m.phase,'ended');
+});

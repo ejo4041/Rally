@@ -610,6 +610,7 @@ async function start() {
               streaming?: boolean;
             };
             if (
+              session.meeting.captureSource!=="teams" &&
               !prompt.streaming &&
               typeof prompt.epoch === "number" &&
               session.intervention?.id === prompt.id
