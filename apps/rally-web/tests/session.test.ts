@@ -141,3 +141,22 @@ test("a late HTTP snapshot cannot regress a finalized revision or a host control
   assert.equal(session.meeting.paused, true);
   assert.equal(session.meeting.epoch, 2);
 });
+
+test("a continuity notice clears transient output without ending capture or changing pause state", () => {
+  const session = new MeetingSession(fixture());
+  session.partial = "Transient words";
+  session.intervention = { id: "i", text: "Old prompt", kind: "clarify" };
+  assert.equal(
+    session.apply(
+      event("transcription.gap", {
+        reason: "Source restarted; check continuity",
+      }),
+    ),
+    true,
+  );
+  assert.equal(session.partial, "");
+  assert.equal(session.intervention, null);
+  assert.equal(session.meeting.phase, "live");
+  assert.equal(session.meeting.paused, false);
+  assert.match(session.notice, /Source restarted/);
+});

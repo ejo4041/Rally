@@ -27,7 +27,10 @@ const config = {
   ...defaults,
   dbPath: join(folder, "fixture.sqlite"),
   origins: [`http://127.0.0.1:${process.env.RALLY_WEB_PORT || 5174}`],
-  assessmentMs: 60000,
+  assessmentMs: Number(process.env.RALLY_TEST_ASSESSMENT_MS || 60000),
+  asrRotationMs: Number(
+    process.env.RALLY_TEST_ASR_ROTATION_MS || defaults.asrRotationMs,
+  ),
   livekitUrl: `ws://127.0.0.1:${process.env.RALLY_TEST_MEDIA_PORT || 18890}`,
 };
 const livekit = new LiveKitMedia(config),

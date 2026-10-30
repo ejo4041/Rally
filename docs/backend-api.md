@@ -80,3 +80,7 @@ The overall score averages only assessable categories; `coverage` is the number 
 ## Existing Teams runner bridge
 
 Authenticated `GET /teams/status`, `POST /teams/join`, `POST /teams/leave` and `POST /teams/save` reuse the bounded existing Teams transcription runner. Join accepts `{meetingUrl,consented:true,transcribe,transcriptionConsented}`. Leave/save accept the **local** owned connection `{id}`. Status never exposes another user's job. Save returns `{meetingId}` without a model request. The Teams service budget/usage is separate from the Node ledger. This is not LiveKit-based platform joining or live moderation. [Lifecycle, privacy and configuration](teams-integrated-ui.md).
+
+## ASR continuity notifications
+
+`transcription.gap` reports a planned or recoverable handoff: clear transient captions/interventions and refresh the snapshot, while preserving capture. `capture.gap` remains a fatal local-capture stop with explicit recovery. Both can have `{reason}` and persist gap metadata. See [session handoff and tests](asr-session-handoff.md).

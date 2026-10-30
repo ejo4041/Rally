@@ -17,6 +17,8 @@ Start with the [current handoff](handoff.md). The integrated Node app and the ol
 
 [Local draft archive/privacy check](research/source-draft-archive-check.json) · [clean source reproduction](research/source-draft-reproduction-check.json). These are local preparation evidence, not a submitted entry.
 
+[Transcription handoff and capture endurance](asr-session-handoff.md) · [two-hour MMS checkpoint, still running](research/mms-soak-two-hour-checkpoint.json).
+
 ## Backend and AI contracts
 
 - [Backend team handoff](backend-team-handoff.md), [frontend API/streaming contract](backend-api.md), [AI processing diagram/rules](ai-processing.md), [actual agenda/outcome/score/tip examples](backend-ai-examples.md).

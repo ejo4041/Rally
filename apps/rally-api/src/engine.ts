@@ -28,6 +28,7 @@ type Active = {
   timer?: NodeJS.Timeout;
   busy: boolean;
   ending: boolean;
+  rotating: boolean;
   signature: string;
   lastIntervention: number;
   rotationAt: number;
@@ -41,6 +42,7 @@ export class Engine {
   reports = new Map<string, Promise<void>>();
   starting = new Set<string>();
   closed = false;
+  private handoffs = new Set<Promise<boolean>>();
   speech?: SpeechOutput;
   constructor(
     meetings: Meetings,
@@ -94,16 +96,26 @@ export class Engine {
         .send({ version: 1, id: randomUUID(), meetingId: id, type, data })
         .catch(() => {});
   }
-  gap(id: string, reason: string) {
+  gap(id: string, reason: string, mode: "capture" | "continuity" = "capture") {
     this.speech?.cancel(id);
     try {
       const m = this.meetings.get(id);
-      if (m.gaps.at(-1)?.reason !== reason) {
+      const previous = m.gaps.at(-1);
+      if (
+        mode === "continuity" ||
+        m.error !== reason ||
+        previous?.reason !== reason ||
+        Date.now() - previous.at >= 1000
+      ) {
         m.gaps.push({ at: Date.now(), reason });
         m.gaps = m.gaps.slice(-100);
-        m.error = reason;
+        if (mode === "capture") m.error = reason;
         this.meetings.save(m);
-        this.emit(id, "capture.gap", { reason });
+        this.emit(
+          id,
+          mode === "capture" ? "capture.gap" : "transcription.gap",
+          { reason },
+        );
       }
     } catch {
       /* deleted */
@@ -160,18 +172,39 @@ export class Engine {
     this.emit(id, "transcript.final", turn);
   }
   async openASR(m: Meeting, state: Active) {
-    return this.meetings.providers.openASR(m, {
-      onEvent: (e) => this.ingest(m.id, e),
-      onError: (e) => this.gap(m.id, e.message),
+    let opened: ASRSession | undefined;
+    const owns = () =>
+      this.active.get(m.id) === state && (!opened || state.asr === opened);
+    opened = await this.meetings.providers.openASR(m, {
+      onEvent: (event) => {
+        if (!owns()) return;
+        if (
+          event.type === "final" &&
+          state.asr &&
+          event.sessionId !== state.asr.sessionId
+        )
+          return;
+        this.ingest(m.id, event);
+      },
+      onError: (error) => {
+        if (owns() && this.meetings.get(m.id).phase === "live")
+          this.gap(
+            m.id,
+            error.message,
+            state.rotating ? "continuity" : "capture",
+          );
+      },
       onClose: () => {
-        if (!state.ending)
+        if (owns() && !state.ending && !state.rotating)
           this.gap(
             m.id,
             "Transcription connection closed; reconnect audio explicitly.",
           );
       },
     });
+    return opened;
   }
+
   async start(m: Meeting, consented: boolean) {
     if (!consented) throw new HttpError("Recording consent required");
     if (!["ready", "interrupted"].includes(m.phase) || !m.plan)
@@ -195,9 +228,10 @@ export class Engine {
     const state: Active = {
       busy: false,
       ending: false,
+      rotating: false,
       signature: "",
       lastIntervention: 0,
-      rotationAt: Date.now() + 55 * 60000,
+      rotationAt: Date.now() + this.config.asrRotationMs,
       offset: m.startedAt ? Date.now() - m.startedAt : 0,
     };
     this.active.set(m.id, state);
@@ -214,7 +248,7 @@ export class Engine {
         m,
         (bytes) => {
           try {
-            if (!state.ending)
+            if (!state.ending && !state.rotating)
               state.asr?.send(
                 this.speech?.shielded(m.id)
                   ? new Uint8Array(bytes.byteLength)
@@ -266,30 +300,77 @@ export class Engine {
     if (!state?.media) throw new HttpError("Start the meeting first", 409);
     return state.media.connection();
   }
+  private async rotateASR(m: Meeting, state: Active) {
+    const current = () =>
+      !this.closed &&
+      this.active.get(m.id) === state &&
+      !state.ending &&
+      this.meetings.get(m.id).phase === "live";
+    state.rotating = true;
+    this.speech?.cancel(m.id);
+    this.emit(m.id, "speech.cancel", { reason: "Transcription handoff" });
+    try {
+      await state.asr?.end();
+      if (!current()) return false;
+      state.offset = Date.now() - (m.startedAt ?? Date.now());
+      const next = await this.openASR(this.meetings.get(m.id), state);
+      if (!current()) {
+        try {
+          await next.end();
+        } finally {
+          next.close();
+        }
+        return false;
+      }
+      state.asr = next;
+      state.rotationAt = Date.now() + this.config.asrRotationMs;
+      this.gap(
+        m.id,
+        "Muse transcription restarted. Audio capture continues; speaker labels restart. Check the transcript around this handoff.",
+        "continuity",
+      );
+      return true;
+    } catch {
+      if (!current()) return false;
+      this.gap(
+        m.id,
+        "Transcription restart failed. Audio is stopping; check usage and reconnect explicitly.",
+      );
+      await this.interrupt(this.meetings.get(m.id));
+      throw new HttpError(
+        "Transcription restart failed. Audio is off; check usage and reconnect explicitly.",
+        502,
+      );
+    } finally {
+      state.rotating = false;
+    }
+  }
   async tick(id: string, force = false) {
     const state = this.active.get(id);
-    if (!state || state.busy || state.ending) return;
+    if (this.closed || !state || state.busy || state.ending) return;
     let snapshot = this.snapshot(id),
       m = snapshot.meeting;
-    if (m.paused || m.phase !== "live") return;
+    if (m.phase !== "live") return;
+    const shouldRotate = Date.now() >= state.rotationAt;
+    if (m.paused && !shouldRotate) return;
     // Milestone changes permit reassessment without calling on every silent tick.
     const signature = `${m.epoch}:${snapshot.turns.map((t) => `${t.id}@${t.revision}`).join(",")}:${Math.floor(snapshot.elapsedSeconds / 60)}`;
-    if (!force && signature === state.signature) return;
+    if (!force && !shouldRotate && signature === state.signature) return;
     state.busy = true;
     state.signature = signature;
     try {
-      if (Date.now() >= state.rotationAt) {
-        state.ending = true;
-        await state.asr?.end();
-        state.ending = false;
-        state.offset = Date.now() - (m.startedAt || Date.now());
-        state.asr = await this.openASR(m, state);
-        state.rotationAt = Date.now() + 55 * 60000;
-        this.gap(id, "Transcription session rotated; speaker labels restart.");
+      if (shouldRotate) {
+        const handoff = this.rotateASR(m, state);
+        this.handoffs.add(handoff);
+        try {
+          if (!(await handoff)) return;
+        } finally {
+          this.handoffs.delete(handoff);
+        }
         snapshot = this.snapshot(id);
         m = snapshot.meeting;
       }
-      if (!snapshot.turns.length) return;
+      if (m.paused || m.phase !== "live" || !snapshot.turns.length) return;
       const epoch = m.epoch;
       const result = assessmentSchema.parse(
         await this.meetings.providers.assess({
@@ -606,6 +687,7 @@ export class Engine {
     }
     await Promise.allSettled(this.reports.values());
     this.active.clear();
+    await Promise.allSettled(this.handoffs);
   }
 }
 export function validateEvidence(value: unknown, turns: Turn[]) {

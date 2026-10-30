@@ -29,6 +29,7 @@ Default seed users are `demo` and `demo2`; passwords come only from `RALLY_DEMO_
 | `LIVEKIT_API_KEY`, `LIVEKIT_API_SECRET` | LiveKit's local-development placeholders |
 | `LIVEKIT_PORT`, `LIVEKIT_BINARY` | `7880`, `.data/bin/livekit-server` |
 | `RALLY_ASSESSMENT_MS`, `RALLY_COOLDOWN_MS` | `10000`, `60000` |
+| `RALLY_ASR_ROTATION_MS` | `3300000` (55 minutes); below the selected model session limit |
 | `RALLY_CAPACITY` | `5` |
 | `RALLY_MEETING_BUDGET`, `RALLY_BUILD_BUDGET` | `$2`, `$5` cumulative for this database |
 | `RALLY_MODEL_CONFIG` | Validated reasoning/transcription settings, optional `report` settings and pinned compatible `speech` settings |

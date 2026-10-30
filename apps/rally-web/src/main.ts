@@ -574,6 +574,7 @@ async function start() {
             );
           if (
             event.type === "speech.cancel" ||
+            event.type === "transcription.gap" ||
             event.type === "moderator.control" ||
             event.type === "plan.updated" ||
             event.type === "meeting.ended" ||

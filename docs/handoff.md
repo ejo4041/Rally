@@ -1,6 +1,6 @@
 # Rally handoff — October 30 current checkpoint
 
-The integrated Node app is deployed from `964f401` at [Rally](https://rally.tail703f9e.ts.net:8445). It requires Tailscale and its own app login. Source is pushed to `main`. The older restricted Sites app remains a separate release; do not mix its presenter, confirmation or demo-clock controls with the Node workflow.
+The integrated Node app is deployed from `06019a6` at [Rally](https://rally.tail703f9e.ts.net:8445). It requires Tailscale and its own app login. Source is pushed to `main`. The older restricted Sites app remains a separate release; do not mix its presenter, confirmation or demo-clock controls with the Node workflow.
 
 ## Working now
 
@@ -17,13 +17,15 @@ New overnight work:
 
 ## Validation and running check
 
-44 backend tests, seven frontend tests, both TypeScript checks and the frontend build pass. The full local HTTP/SQLite/LiveKit browser workflow passed with synthetic ASR/reasoning providers and actual pinned MMS speech. [Real speech/browser evidence](research/integrated-speech-browser-check.json) and [follow-up workflow evidence](research/integrated-follow-up-browser-check.json) identify test boundaries.
+50 backend tests, eight frontend tests, both TypeScript checks and the frontend build pass. The full local HTTP/SQLite/LiveKit browser workflow passed with synthetic ASR/reasoning providers and actual pinned MMS speech. [Real speech/browser evidence](research/integrated-speech-browser-check.json) and [follow-up workflow evidence](research/integrated-follow-up-browser-check.json) identify test boundaries.
 
 [Deployed HTTPS verification](research/speech-coverage-release-deployed.json) passes real MMS playback/Stop, distinct anonymous sessions, host name correction, stale warning, draft construction and annotation export. The setup used a temporary account and synthetic records, which were removed. No WhatsApp link was opened and no paid model call was made by these checks. Existing provider spending/Billing observations are separate; use the runtime usage view and [cost ledger](research/muse-cost-ledger.md).
 
 An eight-hour local MMS reliability process started October 30 at 04:09 UTC, with a synthetic phrase every 30 minutes and periodic worker reloads. It is **running**, not an eight-hour pass, at this checkpoint. Its ignored local report is `experiments/meta-mms/test-results/overnight-check.json`; command and limits are in [integrated speech](integrated-speech.md). Do not terminate it as an abandoned browser fixture.
 
 A local [source draft/privacy manifest](research/source-draft-archive-check.json) and [clean-archive reproduction](research/source-draft-reproduction-check.json) pass. The archive is local only, from `3317f1f`; source is not claimed public.
+
+[ASR handoff work and bounded capture experiments](asr-session-handoff.md) correct planned session continuation, pause, failure and ownership. The [two-hour MMS checkpoint](research/mms-soak-two-hour-checkpoint.json) remains a running eight-hour test, not a final pass.
 
 ## Next work and boundaries
 

@@ -90,6 +90,14 @@ export class MeetingSession {
         return true;
       case "assessment":
         return true; // The embedded recommendation is not an approved intervention.
+      case "transcription.gap":
+        this.partial = "";
+        this.intervention = null;
+        this.notice = String(
+          data?.reason ||
+            "Transcription restarted; check continuity around this point.",
+        );
+        return true;
       case "capture.gap":
         this.notice = String(
           data?.reason ||
