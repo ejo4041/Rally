@@ -1,0 +1,36 @@
+{
+  "startedAt": "2026-10-30T11:37:36.886Z",
+  "passed": true,
+  "realPinnedMMS": true,
+  "teamsJoined": false,
+  "paidModelCalls": 0,
+  "rawAudioSaved": false,
+  "privateDisposableAudio": true,
+  "virtualMicrophoneDuring": {
+    "samples": 16000,
+    "rms": 0.13885994769549426,
+    "peakRms": 0.2972680176600734,
+    "totalBytes": 132054
+  },
+  "virtualMicrophoneAfterStop": {
+    "samples": 7040,
+    "rms": 0,
+    "peakRms": 0.2972680176600734,
+    "totalBytes": 177262
+  },
+  "incomingDuring": {
+    "samples": 16000,
+    "rms": 0.1078664734831888,
+    "peakRms": 0.10808340284937806,
+    "totalBytes": 133164
+  },
+  "incomingAfterStop": {
+    "samples": 16000,
+    "rms": 0.1078664734831888,
+    "peakRms": 0.10808340284937806,
+    "totalBytes": 177964
+  },
+  "cancellation": true,
+  "inputShieldObserved": true,
+  "endedAt": "2026-10-30T11:37:44.697Z"
+}

@@ -49,3 +49,5 @@ These distinguish documented capability, access experiments, actual model measur
 - [Browser implementation](research/browser-audio-implementation.md), [Teams implementation plan](research/teams-implementation-plan.md), [Teams SDK local spike](research/teams-sdk-local-spike.md), [platform verification](research/teams-sdk-platform-verification.md).
 - [Earlier ACS setup](teams-setup.md), [Teams admin brief](teams-admin-brief.md), [app-registration setup](teams-app-registration-setup.md), [RBAC research](research/teams-app-registration-fit.md), [earlier Site integration](research/teams-site-integration.md). The normal guest runner has different prerequisites from ACS.
 - [Remote access](remote-access.md), [repository skills/tooling](aihero-skills.md).
+
+Teams voice preparation: [Meta MMS output and remaining live moderation connection](teams-mms-output.md).

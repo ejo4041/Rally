@@ -39,3 +39,23 @@ test('timer jitter cannot accumulate a two-second audio backlog',async()=>{
  assert.ok(peak<=1280,'Clock-based scheduling stays within two frames');
  assert.equal(framesDue(180000,max,max),0,'Cannot exceed the audio cap');
 });
+
+test('speech shielding sends silence at the same cadence and never replays excluded audio',async t=>{
+ const original=globalThis.WebSocket;let shield=true;const samples=[];
+ class ShieldSocket extends Socket{
+  send(data){
+   if(typeof data!=='string'){
+    samples.push(Buffer.from(data));
+    if(samples.length===2)shield=false;
+   }
+   super.send(data);
+  }
+ }
+ globalThis.WebSocket=ShieldSocket;t.after(()=>globalThis.WebSocket=original);
+ const actualSource=()=>{const p=new EventEmitter();p.stdout=new PassThrough();p.kill=()=>p.emit('close');queueMicrotask(()=>p.stdout.write(Buffer.alloc(6400,17)));return p;};
+ const session=await transcribe({key:'fake',seconds:.1,source:actualSource,shielded:()=>shield});
+ await session.done;assert.equal(samples.length,5);
+ assert.ok(samples[0].every(b=>b===0));assert.ok(samples[1].every(b=>b===0));
+ assert.ok(samples.slice(2).every(frame=>frame.every(b=>b===17)));
+ assert.equal(session.stats().sentSeconds,.1);assert.equal(session.stats().shieldedSeconds,.04);
+});

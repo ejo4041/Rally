@@ -1,6 +1,8 @@
 # Normal Teams web client on the Rally server
 
-**Speech scope:** The eSpeak command below is a historical transport diagnostic used to check virtual-microphone routing. It is not the competition speech implementation. The current voice adapter uses [self-hosted Meta MMS](../meta-mms/README.md); its generation has been measured, while hosted/Teams playback remains pending.
+**Current MMS output:** [Teams MMS preparation](../../docs/teams-mms-output.md) adds a call-owned local voice controller, private virtual-microphone playback, cancellation and ASR shielding. A default-off `RALLY_TEAMS_MMS_TEST=1` enables one fixed diagnostic after connection for the next deliberate live test. Automatic agenda-based replies are not connected. Local real-MMS routing passes; actual Teams audibility remains unverified.
+
+**Historical speech scope:** The eSpeak command below is a historical transport diagnostic used to check virtual-microphone routing. It is not the competition speech implementation. The current voice adapter uses [self-hosted Meta MMS](../meta-mms/README.md); its generation has been measured, while hosted/Teams playback remains pending.
 
 This is an isolated transport experiment using headed Chromium, Xvfb and private PulseAudio devices. It does not use the ACS Calling SDK or a custom Entra app registration. The existing `experiments/teams-audio` ACS runner and hosted Site controls remain separate.
 
@@ -69,3 +71,12 @@ Before joining a real meeting, run `audio-probe.mjs` while the session is prepar
 The successful test used guest admission from the meeting URL. No new app registration, Graph permissions, ACS subscription or client secret is required for that route. A tenant requiring sign-in instead needs an authorized Teams user and interactive sign-in/MFA; a client ID/secret is not a Teams user session. Do not bypass tenant policies or paste account secrets into chat.
 
 This is a working transport spike, not integrated Rally moderation. The hosted Invite Rally control still invokes the original ACS runner. Next work is to adapt the authenticated Site queue to the normal-client runner, feed incoming PCM to the existing Muse pipeline only after explicit consent, play rendered moderator speech into the outgoing device, and verify echo/stop/override behavior. Browser UI changes, guest policy, login expiry, network recovery and multiple meetings remain limitations.
+
+## Offline MMS preparation checks
+
+```bash
+node --test experiments/teams-web-client/speech.test.mjs experiments/teams-web-client/transcribe.test.mjs
+XDG_RUNTIME_DIR=/run/user/1000 node experiments/teams-web-client/mms-audio-check.mjs
+```
+
+Run from the repository root. The audio check uses disposable devices, actual pinned MMS and a synthetic incoming tone; it does not open a stored meeting link or use the active Teams daemon. Provision MMS as described in its README first.

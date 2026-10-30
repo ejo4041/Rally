@@ -4,6 +4,7 @@ import {spawn,execFileSync} from 'node:child_process';
 import {parseEnv} from 'node:util';
 import {randomUUID} from 'node:crypto';
 import {transcribe,pulseSource} from './transcribe.mjs';
+import {createTeamsSpeech} from './speech.mjs';
 const env={...parseEnv(await readFile('../../.env.local','utf8')),...process.env};
 const runnerId=randomUUID();const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 let current,closing=false,quitting=false;
@@ -17,7 +18,7 @@ async function api(action,data={}){
 function unit(action){execFileSync('systemctl',['--user',action,'rally-teams-web-client.service'],{stdio:'ignore'});}
 async function finish(state='left',reason='stop_requested'){
  if(closing||!current)return;closing=true;const c=current;
- clearTimeout(c.timer);c.abort.abort();c.meter?.kill('SIGTERM');
+ clearTimeout(c.timer);c.speech?.close();c.abort.abort();c.meter?.kill('SIGTERM');
  // Stop sending audio first, drain finalized text, then close the client.
  try{if(c.asrOpening){try{c.asr=await c.asrOpening;}catch(e){c.failedUsage=e.usage;}}if(c.asr)await c.asr.stop();await c.events;
  if(c.reserved){const s=c.asr?.stats()||c.failedUsage||{};await api('transcription-finish',{id:c.id,sentSeconds:s.sentSeconds||0,processedMs:s.processedMs||0,sessionAcknowledged:!!s.sessionId,notOpened:!c.asrOpening,failed:state==='failed'||!!s.failed});}
@@ -26,7 +27,7 @@ async function finish(state='left',reason='stop_requested'){
  try{unit('stop');}catch{}
  await c.browser?.close().catch(()=>{});
  await api('update',{id:c.id,state}).catch(()=>{});
- const stats=c.asr?.stats()||c.failedUsage||{};console.log(JSON.stringify({event:'meeting-ended',jobId:c.id,state,reason,asr:{stopReason:stats.stopReason,socketCloseCode:stats.socketCloseCode,providerErrorCode:stats.providerErrorCode,maxPendingBytes:stats.maxPendingBytes,sentSeconds:stats.sentSeconds,processedMs:stats.processedMs,failed:stats.failed}}));
+ const stats=c.asr?.stats()||c.failedUsage||{};console.log(JSON.stringify({event:'meeting-ended',jobId:c.id,state,reason,asr:{stopReason:stats.stopReason,socketCloseCode:stats.socketCloseCode,providerErrorCode:stats.providerErrorCode,maxPendingBytes:stats.maxPendingBytes,sentSeconds:stats.sentSeconds,processedMs:stats.processedMs,shieldedSeconds:stats.shieldedSeconds,failed:stats.failed}}));
  current=null;closing=false;
 }
 async function launch(job){
@@ -56,13 +57,14 @@ async function inspect(){
  const c=current;if(!c||closing||!c.page)return;
  const connected=await c.page.evaluate(()=>(window.__rallyPeers||[]).some(p=>p.connectionState==='connected')&&[...document.querySelectorAll('button')].some(b=>/^(Leave|Hang up)(\b|$)/i.test(b.getAttribute('aria-label')||b.textContent)));
  const state=connected?'connected':'lobby';
+ if(!connected)c.speech?.cancel();
  await api('update',{id:c.id,state,inputLevel:c.level});
  if(connected&&!c.transcribe&&!c.meter){const audioEnv={...process.env,...JSON.parse(await readFile('state/audio-env.json','utf8'))};c.meter=pulseSource(audioEnv);c.meter.stdout.on('data',b=>{let sum=0;for(let i=0;i+1<b.length;i+=2)sum+=(b.readInt16LE(i)/32768)**2;c.level=Math.min(1,Math.sqrt(sum/Math.max(1,b.length/2))*4);});c.meter.on('error',()=>void finish('failed'));}
  if(connected&&c.transcribe&&!c.asr&&!c.reserved){
    const reservation=await api('transcription-start',{id:c.id});c.reserved=true;
    if(current!==c||closing){await api('transcription-finish',{id:c.id,sentSeconds:0,processedMs:0,notOpened:true});return;}
    const audioEnv={...process.env,...JSON.parse(await readFile('state/audio-env.json','utf8'))};
-   try{c.asrOpening=transcribe({key:env.MODEL_API_KEY,config:reservation.transcription,signal:c.abort.signal,seconds:Math.max(1,reservation.maxSeconds),source:()=>pulseSource(audioEnv),onLevel:n=>c.level=n,onEvent:e=>{
+   try{c.asrOpening=transcribe({key:env.MODEL_API_KEY,config:reservation.transcription,signal:c.abort.signal,seconds:Math.max(1,reservation.maxSeconds),source:()=>pulseSource(audioEnv),onLevel:n=>c.level=n,shielded:()=>c.speech?.shielded()===true,onEvent:e=>{
      if(e.type!=='partial'&&e.type!=='final')return;
      const data=e.type==='final'?{final:{sessionId:e.sessionId,turnId:Number(e.turnId),text:e.text||'',speaker:e.speaker||null},partial:''}:{partial:e.text||''};
      // Serialize final turns; partial updates are intentionally limited to 1/s.
@@ -70,6 +72,17 @@ async function inspect(){
      c.events=c.events.then(()=>api('transcription',{id:c.id,...data})).catch(()=>{void finish('failed','transcript_write_failed');});
    }});c.asr=await c.asrOpening;if(current!==c||closing){await c.asr.stop();return;}c.asr.done.then(()=>{if(!closing&&current===c)void finish(c.asr.stats().failed?'failed':'left','asr_session_ended');});}
    catch(e){c.failedUsage=e.usage;throw e;}
+ }
+ if(current===c&&!closing&&connected&&env.RALLY_TEAMS_MMS_TEST==='1'&&!c.speechAttempted){
+   c.speechAttempted=true;
+   const audioEnv={...env,...JSON.parse(await readFile('state/audio-env.json','utf8'))};
+   c.speech=createTeamsSpeech({env:audioEnv,canSpeak:async()=>{
+     if(current!==c||closing||c.abort.signal.aborted||Date.now()>=c.deadline)return false;
+     const latest=await api('poll',{transport:'teams-web',credentialsConfigured:true,transcriptionReady:!!env.MODEL_API_KEY});
+     if(current!==c||closing||latest.job?.id!==c.id||latest.job.leaveRequested||latest.job.state!=='connected')return false;
+     return c.page.evaluate(()=>(window.__rallyPeers||[]).some(p=>p.connectionState==='connected'));
+   }});
+   c.speechTask=(async()=>{try{await c.speech.start();const result=await c.speech.diagnostic();console.log(JSON.stringify({event:'teams-mms-diagnostic',jobId:c.id,result}));}catch{c.speech.close();console.error('Teams MMS diagnostic unavailable; no retry.');}})();
  }
 }
 async function tick(){

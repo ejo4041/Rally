@@ -4,15 +4,15 @@ import {metaTranscriptEvent} from '../../apps/rally/src/muse.js';
 import {framesDue} from './audio-pacing.mjs';
 
 // One session, no retries. Caller must record a reservation before opening.
-export async function transcribe({ key, source, signal, config=modelConfig().transcription, seconds = 180, onEvent = () => {}, onLevel = () => {} }) {
+export async function transcribe({ key, source, signal, config=modelConfig().transcription, seconds = 180, onEvent = () => {}, onLevel = () => {}, shielded = () => false }) {
   config=modelConfig({RALLY_MODEL_CONFIG:JSON.stringify({transcription:config})}).transcription;
   if (!key || !Number.isFinite(seconds) || seconds <= 0 || seconds > 180) throw new Error('Invalid transcription configuration');
-  let sentBytes = 0, processedMs = 0, sessionId, producer, finish, stopping;
+  let sentBytes = 0, shieldedBytes = 0, processedMs = 0, sessionId, producer, finish, stopping;
   let failed = false, ended = false, stopReason=null, socketCloseCode=null, providerErrorCode=null, maxPendingBytes=0;
   const startedAt = Date.now();
   const socket = new WebSocket('wss://api.meta.ai/v1/asr/realtime');
   const done = new Promise(resolve => { finish = resolve; });
-  const stats = () => ({sessionId, sentSeconds: sentBytes / 32000, processedMs, failed, stopReason, socketCloseCode, providerErrorCode, maxPendingBytes,
+  const stats = () => ({sessionId, sentSeconds: sentBytes / 32000, shieldedSeconds: shieldedBytes / 32000, processedMs, failed, stopReason, socketCloseCode, providerErrorCode, maxPendingBytes,
     estimatedCost: sessionId ? audioCost(Math.max(sentBytes / 32000, processedMs / 1000),config) : null,
     costBasis: processedMs ? 'conservative_max_sent_and_processed_seconds' : 'sent_seconds_estimate'});
   async function stop(reason='host_stop') {
@@ -65,7 +65,10 @@ export async function transcribe({ key, source, signal, config=modelConfig().tra
     sending = true;
     const count=Math.min(framesDue(performance.now()-captureStarted,sentBytes,maxBytes),Math.floor(pending.length/640));
     try{for(let n=0;n<count;n++){
-      const frame = pending.subarray(0,640);pending=pending.subarray(640);
+      const captured = pending.subarray(0,640);pending=pending.subarray(640);
+      // Preserve cadence while excluding possible moderator echo. Discard, never replay.
+      const suppress=shielded();if(suppress)shieldedBytes+=640;
+      const frame=suppress?Buffer.alloc(640):captured;
       let sum=0;for(let i=0;i<frame.length;i+=2)sum+=(frame.readInt16LE(i)/32768)**2;
       onLevel(Math.min(1,Math.sqrt(sum/320)*4));
       socket.send(frame);sentBytes+=frame.length;
