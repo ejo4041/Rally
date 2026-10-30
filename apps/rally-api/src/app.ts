@@ -1,3 +1,4 @@
+import {summaryURL} from "./teams-summary.ts";
 import {installReportSharing} from "./report-sharing.ts";
 import { sceneFor } from "../../../packages/rally-presence/scene.ts";
 import { confirmExtension } from "./live-agenda.ts";
@@ -106,6 +107,7 @@ export function createApplication(
         })),
   });
   engine.onCaptureStop = (id) => liveTeams.stop(id);
+  engine.onCaptureFinish = (id) => liveTeams.finish(id,summaryURL(config.origins.find(origin=>origin.startsWith("https://"))??config.origins[0],id));
   const teams = new TeamsBridge(
     store,
     meetings,

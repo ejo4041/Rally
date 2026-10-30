@@ -6,13 +6,13 @@ import {SeamlessSpeech} from '../src/seamless.ts';
 
 for(const capture of ['browser','teams'] as const) test(`HTTP ${capture} meeting automatically streams approved guidance and emits status even when paused`,async(t)=>{
  let emit:(event:TranscriptEvent)=>void=()=>{};
- const events:LiveEvent[]=[];let spoken='',played=0,browserPlayed=0;
- const call={alive:()=>true,receive:()=>()=>{},play:async(chunks:AsyncIterable<Buffer>,_signal:AbortSignal,before:()=>void)=>{before();for await(const bytes of chunks)played+=bytes.length;},close:async()=>{}};
+ const events:LiveEvent[]=[];let spoken='',played=0,browserPlayed=0,finished=0,closed=0,drained=false;
+ const call={alive:()=>true,receive:()=>()=>{},play:async(chunks:AsyncIterable<Buffer>,_signal:AbortSignal,before:()=>void)=>{before();for await(const bytes of chunks)played+=bytes.length;},finish:async(url:string)=>{assert.ok(drained);assert.equal(closed,0);assert.match(url,/#report/);finished++;return 'sent' as const;},close:async()=>{closed++;}};
  const api=createApplication({teamsConnector:async()=>call,dbPath:':memory:',paidEnabled:true,assessmentMs:25,
   tts:new SeamlessSpeech('fixture',undefined,async(_url,init)=>{spoken=JSON.parse(String(init?.body)).input;return new Response(Buffer.alloc(640));}),
   media:{open:async()=>({connection:async()=>({url:'ws://fixture',token:'fixture',room:'fixture'}),send:async e=>{events.push(e);},close:async()=>{},play:async(_job,chunks,_signal,before)=>{before();for await(const b of chunks){played+=b.length;browserPlayed+=b.length;}}})},
   providers:{prepare:async()=>({objective:'Choose owner',topics:[{id:'one',title:'Owner',outcome:'Owner',minutes:8,status:'active'}],durationMinutes:10,wrapMinutes:2}),
-   openASR:async(_m,c)=>{emit=c.onEvent;return {sessionId:'s',send(){},end:async()=>{},close(){},sentSeconds:0,processedMs:0};},
+   openASR:async(_m,c)=>{emit=c.onEvent;return {sessionId:'s',send(){},end:async()=>{drained=true;},close(){},sentSeconds:0,processedMs:0};},
    assess:async s=>({health:2,reason:'Need owner',issues:['missing_action_details'],evidence:[s.turns[0].id],progress:'Owner missing',intervention:{text:'Who owns the next step?',kind:'clarify',evidence:[s.turns[0].id]},plan:null,planReason:''}),
   }});
  const server=api.app.listen(0,'127.0.0.1');await new Promise<void>(r=>server.once('listening',r));
@@ -40,7 +40,7 @@ for(const capture of ['browser','teams'] as const) test(`HTTP ${capture} meeting
   const login=await req('/fixture/login',{username:'live-test',password:'test-password'});cookie=login.headers.get('set-cookie')!.split(';')[0];
   assert.equal((await(await req(`/meetings/${meeting.id}`)).json()).phase,'live');
   assert.equal((await req(`/meetings/${meeting.id}/teams/leave`,{})).status,200);
-  assert.equal((await(await req(`/meetings/${meeting.id}`)).json()).phase,'ended');
+  assert.equal((await(await req(`/meetings/${meeting.id}`)).json()).phase,'ended');assert.equal(finished,1);assert.ok(closed>=1);assert.equal((await(await req(`/meetings/${meeting.id}`)).json()).wrapUp.chat,'sent');await req(`/meetings/${meeting.id}/end`,{});assert.equal(finished,1);
  }
  const usage=await(await req('/speech/usage')).json();assert.equal(usage.length,1);assert.equal(usage[0].state,'completed');assert.equal(usage[0].cost,null);
 });

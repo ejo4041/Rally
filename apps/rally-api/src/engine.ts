@@ -66,6 +66,7 @@ export class Engine {
   closed = false;
   private handoffs = new Set<Promise<boolean>>();
   onCaptureStop?: (id: string) => Promise<void>;
+  onCaptureFinish?: (id:string)=>Promise<void>;
   speech?: SpeechOutput;
   constructor(
     meetings: Meetings,
@@ -1019,13 +1020,13 @@ export class Engine {
   async end(m: Meeting) {
     if (m.presence) m.presence = hold(m.presence, Date.now());
     this.monitor.cancel(m.id);
-    await this.onCaptureStop?.(m.id);
     m = this.meetings.get(m.id);
     if (this.starting.has(m.id))
       throw new HttpError("Audio is starting; retry in a moment", 409);
     if (m.phase === "ended") return m;
     const state = this.active.get(m.id);
     if (state?.ending) throw new HttpError("Meeting is ending", 409);
+    if(m.captureSource==='teams')m.wrapUp={state:'processing',chat:'pending'};
     if (m.presence) m.presence = hold(m.presence, Date.now());
     this.monitor.cancel(m.id);
     this.cancelSpeech(m);
@@ -1034,7 +1035,14 @@ export class Engine {
     if (state) {
       state.ending = true;
       clearInterval(state.timer);
-      await state.asr?.end();
+      try{await state.asr?.end();}catch(error){
+        await this.onCaptureStop?.(m.id);
+        state.asr?.close();await state.media?.close();this.active.delete(m.id);
+        const failed=this.meetings.get(m.id);failed.phase='interrupted';failed.error='Final transcription drain failed. Review saved text before retrying analysis.';
+        if(failed.wrapUp)failed.wrapUp={...failed.wrapUp,state:'left',chat:'unavailable'};
+        this.meetings.save(failed);
+        throw error;
+      }
     }
     m = this.meetings.get(m.id);
     m.phase = "ended";
@@ -1042,6 +1050,7 @@ export class Engine {
     this.meetings.save(m);
     this.emit(m.id, "meeting.ended", { endedAt: m.endedAt });
     this.launchReport(m);
+    if(this.onCaptureFinish)await this.onCaptureFinish(m.id);else await this.onCaptureStop?.(m.id);
     return this.meetings.get(m.id);
   }
   launchReport(m: Meeting) {

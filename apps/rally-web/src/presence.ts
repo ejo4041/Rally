@@ -67,6 +67,14 @@ export function mountPresence(parent: HTMLElement, camera = false) {
   function drawText() {
     if (!scene) return;
     const time = now();
+    host.dataset.finishing=String(!!scene.finishing);
+    if(scene.finishing){
+      host.querySelector('.presence-words')!.textContent='Preparing meeting notes…';
+      host.querySelector('.presence-next')!.textContent='Sharing the summary link, then leaving';
+      host.querySelector('.presence-tag')!.textContent='Wrapping up';
+      host.querySelector('.presence-time')!.textContent='Your meeting can continue';
+      return;
+    }
     const speaking =
       localSpeech !== undefined
         ? localSpeech

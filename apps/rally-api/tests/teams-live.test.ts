@@ -155,3 +155,14 @@ test("terminal cleanup remains idempotent after its meeting record was deleted",
   await teams.close();
   assert.ok(closed >= 1);
 });
+
+test('graceful finish holds runner, sends once and leaves even when chat is blocked',async()=>{
+ const m={id:'m',userId:'u',phase:'ready',plan:{},epoch:0} as Meeting;
+ let sends=0,closes=0,release!:(value:'unavailable')=>void;
+ const teams=new TeamsLive({current:()=>m,save:()=>{},start:async()=>{m.phase='live';},end:async()=>{},interrupt:async()=>{},connect:async()=>({alive:()=>true,receive:()=>()=>{},play:async()=>{},finish:async url=>{assert.equal(url,'https://rally.example/#report/m');sends++;return new Promise(resolve=>release=resolve);},close:async()=>{closes++;}})});
+ teams.join(m,'https://teams.microsoft.com/meet/test',true);await new Promise(r=>setImmediate(r));
+ const first=teams.finish('m','https://rally.example/#report/m'),second=teams.finish('m','https://rally.example/#report/m');
+ assert.equal(teams.status('m').state,'finishing');assert.equal(m.wrapUp?.state,'processing');assert.equal(closes,0);assert.equal(sends,1);
+ assert.throws(()=>teams.join({...m,phase:'ready'},'https://teams.microsoft.com/meet/test',true),/busy/);
+ release('unavailable');await Promise.all([first,second]);assert.equal(closes,1);assert.equal(m.wrapUp?.chat,'unavailable');assert.equal(m.wrapUp?.state,'left');assert.equal(teams.status('m').state,'left');
+});

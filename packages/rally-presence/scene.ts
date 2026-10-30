@@ -2,6 +2,7 @@ import type { Meeting } from "../../apps/rally-api/src/contracts.ts";
 import { initialPresence, trajectory, type Presence } from "./state.ts";
 export type Scene = {
   meetingId: string;
+  finishing?: boolean;
   revision: number;
   epoch: number;
   captureEpoch: number;
@@ -36,6 +37,7 @@ export function sceneFor(m: Meeting, now = Date.now()): Scene {
   );
   return {
     meetingId: m.id,
+    finishing:m.wrapUp?.state==="processing",
     revision: m.sceneRevision ?? 0,
     epoch: m.epoch,
     captureEpoch: m.captureEpoch ?? 0,

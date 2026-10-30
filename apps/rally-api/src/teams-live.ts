@@ -12,6 +12,7 @@ export interface CallAudio {
     beforeAudio: () => void,
     onProgress?: (playedMs: number) => void,
   ): Promise<void>;
+  finish?(summaryUrl:string):Promise<import("./teams-summary.ts").ChatResult>;
   close(): Promise<void>;
 }
 export type TeamsConnector = (
@@ -39,6 +40,7 @@ type Job = {
   task?: Promise<void>;
   watch?: ReturnType<typeof setInterval>;
   leaseUntil: number;
+  finishTask?:Promise<void>;
 };
 export class TeamsLive {
   private occupied = false;
@@ -165,6 +167,24 @@ export class TeamsLive {
       onProgress,
     );
   }
+  async finish(id:string,url:string) {
+    const j=this.jobs.get(id);if(!j)return;
+    if(j.finishTask)return j.finishTask;
+    j.finishTask=(async()=>{
+      clearInterval(j.watch);this.update(j,'finishing');
+      const m=this.hooks.current(id);m.wrapUp={state:'processing',chat:'pending',summaryUrl:url};this.hooks.save(m);
+      let chat:import('./teams-summary.ts').ChatResult='unavailable';
+      try{
+        if(j.call?.alive()&&!j.abort.signal.aborted&&j.call.finish){
+          let timer:ReturnType<typeof setTimeout>;
+          chat=await Promise.race([j.call.finish(url),new Promise<import('./teams-summary.ts').ChatResult>(resolve=>{timer=setTimeout(()=>resolve('unknown'),12000);})]).finally(()=>clearTimeout(timer!));
+        }
+      }catch{chat='failed';}
+      finally{
+        try{await this.stop(id);}finally{const current=this.hooks.current(id);current.wrapUp={state:'left',chat,summaryUrl:url};this.hooks.save(current);}
+      }
+    })();return j.finishTask;
+  }
   async stop(id: string) {
     const j = this.jobs.get(id);
     if (!j) return;
@@ -179,15 +199,15 @@ export class TeamsLive {
     if (!j.starting && !j.failing) this.occupied = false;
   }
   async leave(id: string) {
-    await this.stop(id);
     const j = this.jobs.get(id);
-    await j?.task;
     const m = this.hooks.current(id);
     if (
       m.phase === "live" ||
       (m.phase === "interrupted" && m.startedAt != null)
     )
       await this.hooks.end(m);
+    await this.stop(id);
+    await j?.task;
     return this.status(id);
   }
   async close() {

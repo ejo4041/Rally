@@ -1,3 +1,4 @@
+import {postTeamsSummary} from "./teams-summary.ts";
 import { PlayoutClock } from "./playout-clock.ts";
 import { spawn, type ChildProcess } from "node:child_process";
 import { mkdtemp, readFile, writeFile, rm } from "node:fs/promises";
@@ -466,6 +467,17 @@ export const connectTeamsBrowser = async (
           await kill(monitor);
           if (player === proc) player = undefined;
         }
+      },
+      async finish(summaryUrl) {
+        clearInterval(inspect);
+        const started=Date.now();
+        const chat=await postTeamsSummary(page,summaryUrl);
+        // Keep the camera rendering long enough to make the transition visible.
+        await delay(Math.max(0,3000-(Date.now()-started)),undefined,{signal});
+        onState('leaving');
+        const leave=page.getByRole('button',{name:/^(Leave|Hang up)(\b|$)/i}).first();
+        await leave.click({timeout:1500}).catch(()=>{});
+        return chat;
       },
       close,
     };

@@ -1,3 +1,5 @@
+**Teams wrap-up follow-up:** [Animation, authenticated chat summary link and graceful leave](teams-wrapup.md). Branch/worktree unchanged; read this before further call lifecycle changes.
+
 **Current UI asset release `7f2a634`:** Loading spinners, contextual Meta model labels and separate Rally response history deployed. [Public validation passes](research/loading-replies-deployed.json);17 frontend tests and browser/security checks pass. Static publication only: running API/media were not restarted, API source unchanged (`d5d2399`). Read [scope and limits](loading-and-rally-responses.md). Existing phone checkpoint remains valid; resume in this worktree.
 
 **Latest UI follow-up:** [Loading indicators, Meta model attribution and Rally response history](loading-and-rally-responses.md). Same droplet worktree/branch; no new paid calls. See deployment evidence for current asset release.
