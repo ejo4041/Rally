@@ -1,0 +1,13 @@
+{
+  "at": "2026-10-30T23:17:49.239712+00:00",
+  "release": "08af62e",
+  "previous": "6df86ce",
+  "backup": "/srv/hackathon/rally-deployed/backups/teams-link-final-20261030T231749Z.sqlite",
+  "activeMeetingsReportsUsage": 0,
+  "sharedTeamsLockFree": true,
+  "mediaRestarted": false,
+  "wrapUpMinimumMs": 13000,
+  "overallFinishBoundMs": 25000,
+  "nativeLinkRemoteAccepted": false,
+  "remoteTest": "Final invitation not admitted before timeout; local explicit native-link insertion tests pass."
+}

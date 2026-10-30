@@ -1,0 +1,13 @@
+{
+  "chat": "sent",
+  "left": true,
+  "hyperlinkObserved": true,
+  "modelCalls": 0,
+  "at": "2026-10-30T23:22:40.479183+00:00",
+  "scope": "Live Teams formatted-paste hyperlink, observed composer anchor and posted chat anchor, then normal leave",
+  "newModelCalls": 0,
+  "newPaidCost": 0,
+  "applicationEndRetimed": false,
+  "priorMinimumHoldMeasuredMs": 13885,
+  "rallyAdminAccess": "Granted in DB; user opening newest exact link pending confirmation"
+}

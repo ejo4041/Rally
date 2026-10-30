@@ -12,15 +12,18 @@ export async function postTeamsSummary(page:Page,url:string):Promise<ChatResult>
     await chat.click({timeout:1500});
   }
   await composer.waitFor({state:'visible',timeout:2500});
-  stage='compose';await composer.fill('Rally is preparing the meeting notes. Summary: ',{timeout:1500});
-  stage='insert-link';await composer.press('Control+k');
-  await page.getByRole('textbox',{name:/^(Text to display|Display text|Text link to display)$/i}).filter({visible:true}).first().fill('Open meeting summary',{timeout:2500});
-  await page.getByRole('textbox',{name:/^(Address|Web address|URL|Link address)$/i}).filter({visible:true}).first().fill(url,{timeout:1500});
-  await page.getByRole('button',{name:'Insert',exact:true}).filter({visible:true}).first().click({timeout:1500});
-  // Verify a real rich-text hyperlink exists before sending anything.
-  await page.waitForFunction(url=>Array.from(document.querySelectorAll<HTMLAnchorElement>('[contenteditable="true"] a[href]')).some(a=>a.href===url),url,{timeout:1500});
-  stage='access-note';await composer.press('End');await composer.press('ArrowRight');await composer.press('Space');await composer.press('Shift+Enter');
-  await composer.pressSequentially('Sign in to Rally. The host can grant report access to your Rally account; the link does not make the report public.');
+  stage='compose';
+  // Use Teams' supported formatted-paste path. The anonymous meeting client
+  // exposes a minimal editor without the desktop Insert link dialog.
+  const escaped=url.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]!));
+  const html='<p>Rally is preparing the meeting notes. Summary: <a href="'+escaped+'">Open meeting summary</a></p><p>Sign in to Rally. The host can grant report access to your Rally account; the link does not make the report public.</p>';
+  await page.context().grantPermissions(['microphone','camera','clipboard-read','clipboard-write'],{origin:new URL(page.url()).origin});
+  await page.evaluate(async({html,url})=>navigator.clipboard.write([new ClipboardItem({'text/html':new Blob([html],{type:'text/html'}),'text/plain':new Blob(['Rally meeting summary: '+url],{type:'text/plain'})})]),{html,url});
+  try{
+    await composer.fill('',{timeout:1500});await composer.press('Control+v');
+    // Never send an unformatted substitute if Teams strips the rich link.
+    await page.waitForFunction(url=>Array.from(document.querySelectorAll<HTMLAnchorElement>('[contenteditable="true"] a[href]')).some(a=>a.href===url),url,{timeout:2000});
+  }finally{await page.evaluate(()=>navigator.clipboard.writeText('')).catch(()=>{});}
   stage='find-send';const send=page.getByRole('button',{name:/^Send( message)?( \(.*\))?$/i}).filter({visible:true}).first();
   if(!await send.isEnabled({timeout:1000}).catch(()=>false))return 'unavailable';
   const priorMessages=await page.locator('[data-tid="chat-pane-message"]').filter({hasText:'Rally is preparing the meeting notes. Summary:'}).filter({hasText:url}).count();
