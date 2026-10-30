@@ -202,3 +202,24 @@ test("blank finals and malformed metadata cannot become speech evidence or erase
       .every((e) => Number.isFinite(e.processedMs) && e.processedMs >= 0),
   );
 });
+
+test("a timing correction removes a label whose evidence falls outside the corrected turn", () => {
+  const events: TranscriptEvent[] = [];
+  const decoder = new TranscriptDecoder("bounded", (e) => events.push(e));
+  decoder.accept({ type: "speechStart", turnId: 0, audioProcessedMs: 0 });
+  decoder.accept({ type: "speechEnd", turnId: 0, audioProcessedMs: 1000 });
+  decoder.accept({ type: "speaker", label: "A", audioProcessedMs: 950 });
+  decoder.accept({
+    type: "speechComplete",
+    turnId: 0,
+    audioProcessedMs: 1000,
+    transcript: "A short sentence.",
+  });
+  decoder.accept({ type: "speechEnd", turnId: 0, audioProcessedMs: 900 });
+  const finals = events.filter((e) => e.type === "final");
+  assert.deepEqual(
+    finals.map((e) => e.speaker),
+    ["A", null],
+  );
+  assert.equal(finals[1].endMs, 900);
+});

@@ -1,6 +1,6 @@
 # Rally backend MVP — team handoff
 
-**Current integrated checkpoint:** release `b690607` is deployed; source is pushed to `main`. [Current handoff](handoff.md) covers the Node frontend, local MMS voice, reversible speaker attribution, durable host notes and reviewed WhatsApp drafts. 37 backend and seven frontend tests pass. The initial backend-only status below is historical.
+**Current integrated checkpoint:** release `b690607` is deployed; source is pushed to `main`. [Current handoff](handoff.md) covers the Node frontend, local MMS voice, reversible speaker attribution, durable host notes and reviewed WhatsApp drafts. 38 backend and seven frontend tests pass. The initial backend-only status below is historical.
 
 Backend MVP implementation and Astra review fixes are complete and pushed to `main`. Implementation checkpoint: [`50bfab1`](https://github.com/ejo4041/Rally/commit/50bfab15716e1e5125ac653b4b55d1a95b187e74). This document and the linked current docs are the backend handoff; older product release notes describe the separately hosted Sites application.
 

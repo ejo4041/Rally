@@ -315,7 +315,7 @@ export function createMuse(
 type DecodedTurn = {
   start: number | null;
   end: number | null;
-  labels: Set<string>;
+  labels: Map<string, Set<number>>;
   text?: string;
   emitted?: string;
 };
@@ -329,12 +329,22 @@ export class TranscriptDecoder {
   }
   private publish(turnId: number, turn: DecodedTurn) {
     if (typeof turn.text !== "string" || !turn.text.trim()) return;
+    const labels = [...turn.labels]
+      .filter(([, times]) =>
+        [...times].some(
+          (time) =>
+            turn.start !== null &&
+            time >= turn.start &&
+            (turn.end === null || time <= turn.end),
+        ),
+      )
+      .map(([label]) => label);
     const event: Extract<TranscriptEvent, { type: "final" }> = {
       type: "final",
       sessionId: this.sessionId,
       turnId,
       text: turn.text,
-      speaker: turn.labels.size === 1 ? [...turn.labels][0] : null,
+      speaker: labels.length === 1 ? labels[0] : null,
       startMs: turn.start,
       endMs: turn.end,
     };
@@ -366,7 +376,9 @@ export class TranscriptDecoder {
       );
       if (candidates.length === 1) {
         const [turnId, turn] = candidates[0];
-        turn.labels.add(v.label);
+        const times = turn.labels.get(v.label) || new Set<number>();
+        times.add(time);
+        turn.labels.set(v.label, times);
         this.publish(turnId, turn);
       }
     }
@@ -377,7 +389,7 @@ export class TranscriptDecoder {
     ) {
       let turn = this.turns.get(v.turnId);
       if (!turn) {
-        turn = { start: null, end: null, labels: new Set() };
+        turn = { start: null, end: null, labels: new Map() };
         this.turns.set(v.turnId, turn);
       }
       if (v.type === "speechStart" && time !== null) turn.start = time;
