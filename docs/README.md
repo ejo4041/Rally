@@ -7,7 +7,7 @@ Start with the [current handoff](handoff.md). The integrated Node app and the ol
 | Topic | Documents |
 | --- | --- |
 | Open/run/operate | [Deployment, access and rollback](integrated-deployment.md), [frontend setup](../apps/rally-web/README.md), [API setup](../apps/rally-api/README.md) |
-| Latest validation | [Latest deployed HTTPS measurement](research/late-speaker-release-deployed.json), [real MMS/browser workflow](research/integrated-speech-browser-check.json), [follow-up browser workflow](research/integrated-follow-up-browser-check.json) |
+| Latest validation | [Latest deployed HTTPS measurement](research/speech-coverage-release-deployed.json), [real MMS/browser workflow](research/integrated-speech-browser-check.json), [follow-up browser workflow](research/integrated-follow-up-browser-check.json) |
 | Speech | [Meta MMS integration, configuration, lifecycle and eight-hour check](integrated-speech.md), [model/runtime provisioning](../experiments/meta-mms/README.md) |
 | Speaker identity | [Anonymous sessions, reversible labels, stale reports and durable host notes](speaker-attribution.md) |
 | Input checks | [Free local tab/microphone preflight](audio-preflight.md) |
