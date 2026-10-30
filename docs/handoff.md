@@ -1,6 +1,14 @@
-# MFA and judge activity security update — prepared October 30
+# Rally MFA/admin security release — October 30
 
-Implementation and local/server validation are complete on `security/mfa-admin-20261030`; deployment is pending. See [account and audit operations](mfa-admin-judge-audit.md). Existing usernames/passwords and meeting ownership are preserved; password-only sessions will be revoked on migration. No audio recording is added. 71 backend tests, nine frontend tests, both type checks, build and three browser regression workflows pass with synthetic providers and zero paid calls.
+**Current app: https://rally.tail703f9e.ts.net/**, deployed application `ca539a5`. Source: `/srv/hackathon/rally-security`, branch `security/mfa-admin-20261030`, based on streaming checkpoint `e779d8d`. This supersedes earlier signup/login access instructions below. Public signup is closed. Existing accounts keep their passwords but must enroll MFA; password-only sessions were revoked on migration.
+
+Owner administrator username: `rally_admin`. Choose Activate or reset account using the one-time code delivered privately in the owner’s local `Downloads/Rally Admin Activation.txt`, choose a password, enroll an authenticator, save recovery codes. No credentials are recorded here. Activation expires in 24 hours. Server plaintext activation file was deleted after private delivery.
+
+Admin includes invitations, recent-MFA protected account enable/disable/role/reset controls, usage/activity and explicitly shared read-only transcripts/reports. Sharing is off per meeting by default; owners can withdraw future access. No replayable audio recording was added. [Operations, threat boundaries and recovery](mfa-admin-judge-audit.md). [Actual public HTTPS and synthetic bidirectional media evidence](research/mfa-public-deployment-smoke-2026-10-30.json).
+
+71 backend tests, nine frontend tests, both type checks/build and three browser workflows pass with synthetic providers. Public enrollment/refresh, secure cookies, closed signup, owner isolation and bidirectional media pass; temporary test account removed. No paid model calls or real meeting joins in this security change. Backup before migration is recorded in the linked operations document. Prior streaming improvements/cached opening are retained; separate dirty worktrees remain preserved.
+
+## Previous streaming checkpoint (historical)
 
 # Rally handoff — streaming speech release, October 30
 

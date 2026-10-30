@@ -26,7 +26,7 @@ try{
  await createUser({db} as Store,username,password);
  await page.locator('#username').fill(username);await page.locator('#password').fill(password);await page.locator('#auth-submit').click();
  await page.locator('#enrollment-secret').waitFor({state:'visible'});
- assert.equal((await page.request.get(base+'/api/meetings')).status(),401);
+ assert.equal(await page.evaluate(async()=>(await fetch('/api/meetings')).status),401);
  await page.reload(); // A reset/enrollment challenge must survive a page refresh.
  await page.locator('#enrollment-secret').waitFor({state:'visible'});
  await page.waitForFunction(()=>document.querySelector('#enrollment-secret')!.textContent!.length>0);
@@ -34,7 +34,7 @@ try{
  await page.locator('#mfa-code').fill(new TOTP({secret:Secret.fromBase32(secret!),algorithm:'SHA1',digits:6,period:30}).generate());await page.locator('#mfa-submit').click();
  await page.locator('#recovery-panel').waitFor({state:'visible'});await page.locator('#recovery-continue').click();await page.locator('#workspace').waitFor({state:'visible'});
  const cookies=await context.cookies();assert.ok(cookies.some(c=>c.name==='rally_session'&&c.secure&&c.httpOnly));report.secureHttpOnlyCookie=true;
- assert.equal((await page.request.post(base+'/api/auth/signup',{data:{username:'closed_signup_probe',password}})).status(),403);report.closedRegistration=true;report.mfaEnrollmentAndRefresh=true;
+ assert.equal(await page.evaluate(async password=>(await fetch('/api/auth/signup',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:'closed_signup_probe',password})})).status,password),403);report.closedRegistration=true;report.mfaEnrollmentAndRefresh=true;
  const other=db.prepare('SELECT id FROM meetings LIMIT 1').get() as {id:string}|undefined;
  if(other){assert.equal(await page.evaluate(async id=>(await fetch('/api/meetings/'+id)).status,other.id),404);report.ownerIsolation=true;}
  report.speechStatus=await page.evaluate(async()=>(await fetch('/api/speech/status')).json());

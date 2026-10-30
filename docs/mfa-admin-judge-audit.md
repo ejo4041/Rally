@@ -58,7 +58,13 @@ Security worktree: `/srv/hackathon/rally-security`, branch `security/mfa-admin-2
 - Frontend unit tests, both TypeScript checks and build.
 - Actual browser account activation, enrollment, admin invitation/reset, session revocation, optional sharing and mobile admin checks using synthetic records.
 - Full existing HTTP/SQLite/LiveKit browser workflow and actual streaming/Stop regression use synthetic model providers; zero paid calls or platform joins from these tests.
-- Public HTTPS smoke is recorded separately after deployment. It uses a temporary account and synthetic bidirectional media; it does not establish actual Teams admission, physical device audio or model accuracy.
+- Public HTTPS smoke passes after deployment: Secure/HttpOnly session cookie, enrollment across refresh, password-only denial, closed registration, owner isolation, public signaling and synthetic audio in both directions; temporary account removed. [Evidence](research/mfa-public-deployment-smoke-2026-10-30.json). It uses a temporary account and synthetic bidirectional media; it does not establish actual Teams admission, physical device audio or model accuracy.
 - The Nexus audit reports existing Express high-severity metadata and lower-severity dependency findings with no automatic fix advertised. No claim of a complete vulnerability audit or zero dependencies at risk is made. Authentication dependencies did not replace the existing Express stack.
 
 Primary references: [OWASP MFA](https://cheatsheetseries.owasp.org/cheatsheets/Multifactor_Authentication_Cheat_Sheet.html), [OWASP logging](https://cheatsheetseries.owasp.org/cheatsheets/Logging_Cheat_Sheet.html), [OTPAuth](https://github.com/hectorm/otpauth), [node-qrcode](https://github.com/soldair/node-qrcode).
+
+## Deployed checkpoint
+
+Application release `ca539a5` is active at the public base URL. Existing account/password and meeting records were preserved. SQLite and configuration backup: `/srv/hackathon/rally-deployed/backups/before-mfa-20261030T152640Z`, private permissions. `rally_admin` activation instructions were delivered to the owner’s local Downloads file; the server plaintext copy was removed. The first public smoke attempt hit the server-only DNS/SSH443 resolution path from Playwright’s separate HTTP client; the corrected operator script uses browser fetch through the public relay and passes. This script-only correction is in the security branch; runtime application code did not change or restart again.
+
+71 backend tests and nine frontend tests pass, as do type checks/build, the full existing browser flow, streaming audio/Stop flow, and admin/MFA/sharing browser flow. Tests use synthetic model providers. No paid call, platform join or real transcript inspection occurred in this change. Default branch is not changed; the security branch also contains the prior streaming release history.

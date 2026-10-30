@@ -1,0 +1,18 @@
+{
+  "passed": true,
+  "checks": [
+    "closed signup UI",
+    "MFA enrollment before app access",
+    "one-time recovery display cleanup",
+    "admin invitation",
+    "judge activation",
+    "owner-only default-off transcript sharing",
+    "audited content view",
+    "sharing withdrawal",
+    "admin MFA reset and session revocation",
+    "mandatory re-enrollment",
+    "mobile admin access"
+  ],
+  "paidCalls": 0,
+  "audioRecorded": false
+}
