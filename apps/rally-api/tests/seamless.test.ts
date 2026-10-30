@@ -27,3 +27,8 @@ test('aborted requests never reach the provider',async()=>{
  await assert.rejects(async()=>{for await(const b of tts.stream({input:'Hello.'},controller.signal)){} });
  assert.equal(calls,0);
 });
+test('whole generation rejects a WAV with unsupported audio encoding',async()=>{
+ const wav=Buffer.alloc(46);wav.write('RIFF');wav.writeUInt32LE(38,4);wav.write('WAVEfmt ',8);wav.writeUInt32LE(16,16);wav.writeUInt16LE(3,20);wav.writeUInt16LE(1,22);wav.writeUInt32LE(16000,24);wav.writeUInt32LE(32000,28);wav.writeUInt16LE(2,32);wav.writeUInt16LE(16,34);wav.write('data',36);wav.writeUInt32LE(2,40);
+ const tts=new SeamlessSpeech('fixture',undefined,async()=>new Response(wav));
+ await assert.rejects(tts.synthesize({input:'Hello.'},signal()),/WAV/);
+});

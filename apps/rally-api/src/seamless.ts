@@ -37,7 +37,7 @@ export class SeamlessSpeech {
         if (done) break;
         clearTimeout(idle); idle = setTimeout(() => abort.abort(),10000);
         bytes += value.byteLength;
-        if (bytes > 3840044) throw new SpeechError('Speech output exceeds duration limit',502);
+        if (bytes > (format === 'pcm' ? 3840000 : 3840044)) throw new SpeechError('Speech output exceeds duration limit',502);
         if (format === 'wav') { yield Buffer.from(value); continue; }
         const data = Buffer.concat([carry, value]);
         const aligned = data.length - data.length % 2;
@@ -45,6 +45,10 @@ export class SeamlessSpeech {
         if (aligned) yield data.subarray(0,aligned);
       }
       if (!bytes || carry.length) throw new SpeechError('Incomplete speech audio',502);
+    } catch (error) {
+      if (!signal.aborted && abort.signal.aborted) throw new SpeechError('Speech provider timed out',504);
+      if (error instanceof SpeechError || signal.aborted) throw error;
+      throw new SpeechError('Speech provider unavailable',502);
     } finally {
       clearTimeout(total); clearTimeout(idle); abort.abort();
       await reader?.cancel().catch(() => {});
@@ -56,6 +60,24 @@ export class SeamlessSpeech {
     for await (const part of this.stream(input, signal, 'wav')) parts.push(part);
     const wav = Buffer.concat(parts);
     if (wav.length < 44 || wav.toString('ascii',0,4) !== 'RIFF' || wav.toString('ascii',8,12) !== 'WAVE') throw new SpeechError('Invalid WAV response',502);
+    let formatFound = false, audioBytes = 0;
+    if (wav.readUInt32LE(4) !== wav.length - 8) throw new SpeechError('Invalid WAV length',502);
+    let offset = 12;
+    while (offset + 8 <= wav.length) {
+      const kind = wav.toString('ascii',offset,offset+4), size = wav.readUInt32LE(offset+4);
+      const start = offset + 8;
+      if (start + size > wav.length) throw new SpeechError('Truncated WAV chunk',502);
+      if (kind === 'fmt ') {
+        if (formatFound || size < 16 || wav.readUInt16LE(start) !== 1 || wav.readUInt16LE(start+2) !== 1 || wav.readUInt32LE(start+4) !== 16000 || wav.readUInt32LE(start+8) !== 32000 || wav.readUInt16LE(start+12) !== 2 || wav.readUInt16LE(start+14) !== 16) throw new SpeechError('Unsupported WAV format',502);
+        formatFound = true;
+      }
+      if (kind === 'data') {
+        if (size % 2) throw new SpeechError('Invalid WAV samples',502);
+        audioBytes += size;
+      }
+      offset = start + size + size % 2;
+    }
+    if (offset !== wav.length || !formatFound || !audioBytes || audioBytes > 3840000) throw new SpeechError('Invalid WAV audio',502);
     return wav;
   }
 }

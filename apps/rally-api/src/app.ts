@@ -181,10 +181,19 @@ export function createApplication(
     userForRequest(store, req);
     res.json(speech.status());
   });
+  const speechAccounts = new Map<string, number>();
   for (const mode of ['generate', 'stream'] as const) {
     app.post('/api/speech/' + mode, async (req, res, next) => {
-      userForRequest(store, req);
+      const user = userForRequest(store, req);
+      if (!config.paidEnabled) throw new HttpError('Provider speech is disabled',403);
+      const now = Date.now();
+      for (const [id, expires] of speechAccounts) if (expires <= now) speechAccounts.delete(id);
+      if (speechAccounts.has(user.id)) {
+        res.setHeader('Retry-After', '30');
+        throw new HttpError('Wait before requesting more speech',429);
+      }
       const input = z.object({input:z.string().min(1).max(1200),voice:z.literal('default').optional()}).strict().parse(req.body);
+      speechAccounts.set(user.id, now + 30000);
       const controller = new AbortController();
       const close = () => controller.abort();
       res.once('close', close);

@@ -26,3 +26,11 @@ Configuration reads `RALLY_TTS_TOKEN` from backend environment; no credential wa
 ## Validation
 
 Initial validation: TypeScript passed and 54 backend tests passed (50 existing, four new adapter/prefix tests). No paid calls, deployment, service restart or meeting join occurred. Dependencies are reused through a local-only node_modules symlink to the existing installed checkout.
+
+## Review checkpoint
+
+The implement skill's code-review step reviewed foundation commit af62962 against 1d988d0 using independent Standards and Spec agents. Standards: three hard findings (capability metadata, accounting/enablement, missing HTTP tests) and two heuristic findings (inconsistent character counting, meeting policy location). Spec: seven findings; the full live meeting/Teams feature remains unimplemented. Review does not approve this as a completed feature.
+
+Follow-up fixes validate WAV chunks/PCM encoding and lengths, reject pre-aborted requests before fetching, enforce the PCM duration ceiling, normalize upstream timeouts/network failures, and gate HTTP calls on paidEnabled with a thirty-second per-account limit. Capability metadata, actual AWS accounting, HTTP tests and all live integration remain outstanding. Do not enable this foundation in production.
+
+Latest completed verification before the enablement/rate-limit follow-up: 56 backend tests and TypeScript pass. No provider calls or deployment occurred.
