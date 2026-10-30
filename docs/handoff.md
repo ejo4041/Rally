@@ -1,3 +1,9 @@
+## Main integration — October 30
+
+The reviewed living-presence branch was fast-forwarded from remote main `1d988d0` to `b0d7e87` and pushed to `origin/main`. There were no merge conflicts or additional code changes. Integration used `/srv/hackathon/rally-main-integration` on `integrate/presence-main` because the original `/srv/hackathon/repo` workspace has an unborn local main with untracked files; those files and its branch/index were left untouched. Use the clean integration worktree or fetch remote main for subsequent development.
+
+Git access uses the existing `hack` account SSH configuration for `github-hackathon`; the earlier root-account hostname failure did not indicate a repository outage. Deployed application remains `d0a5364`. Validation and remaining remote/elapsed-hour acceptance limits below are unchanged by this merge. This documentation update accompanies the main integration.
+
 ## Living presence follow-up — deployed `d0a5364`
 
 Source follow-up fixes page-only Teams video, cumulative partial coordinates, live output allowance (2,048tokens), cache-friendly requests and dynamic report reserves. **125backend tests,14frontend tests, both typechecks, frontend build and full HTTP/SQLite/LiveKit browser workflow pass.** Accelerated30/60minute dense replays preserve complete reports, bounded concern memory (8active+8resolved), emotion bounds, replay protection, correction/agenda history and55-minute ASRhandoff. Camera decoded-frame verification passes1920×1080 at29.10distinctfps with no browser shell/cursor. The earlier real Teams call succeeded overall and negotiated720p30; remote acceptance of the framing correction remains untested.
