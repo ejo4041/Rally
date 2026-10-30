@@ -1,3 +1,6 @@
+import {formatMoney as formatCost} from "./format.ts";
+import {setupMeetingLayout} from "./meeting-layout.ts";
+import {setupReportSharing} from "./report-sharing.ts";
 import {
   updatePresence,
   disposePresence,
@@ -76,6 +79,8 @@ const speech = createSpeechPlayer({
       $("capture-label").textContent = "Audio shielded while Rally speaks";
   },
 });
+const meetingLayout=setupMeetingLayout();
+const reportSharing=setupReportSharing(()=>state.session?.meeting,fail);
 const security = setupSecurity(signedIn, canNavigate);
 const audioCheck = setupAudioCheck();
 const followUp = setupFollowUp(() => state.session?.meeting);
@@ -115,6 +120,7 @@ function showAuth() {
   $("workspace").hidden = true;
 }
 async function signOutLocal() {
+  meetingLayout.clear();reportSharing.clear();
   disposePresence();
   rallyDisplay.clear();
   speech.cancel();
@@ -142,6 +148,7 @@ async function signOutLocal() {
   $("recent").replaceChildren();
   $("history").replaceChildren();
   for (const id of [
+    "source-agenda",
     "meeting-title",
     "meeting-meta",
     "guidance",
@@ -179,6 +186,7 @@ async function signedIn(user: User) {
   $("current-user").textContent = user.username;
   input("password").value = "";
   await loadHistory();
+  await reportSharing.refresh();
   await teams.refresh();
   const voice = await api<{ transport?: string }>("/speech/status");
   button("test-voice").hidden = voice.transport === "livekit";
@@ -189,6 +197,7 @@ async function loadHistory() {
     rows = await api<Summary[]>("/meetings");
   if (state.user?.id !== userId) return;
   state.history = rows;
+  void reportSharing.refresh().catch(fail);
   const row = (m: Summary) =>
     `<button class="history-row" data-meeting="${escape(m.id)}"><span><strong>${escape(m.title)}</strong><small>${escape(new Date(m.createdAt).toLocaleString())} · Report ${escape(m.reportStatus)}</small></span><span class="pill">${escape(label(m.phase))}</span></button>`;
   $("history").innerHTML = rows.length
@@ -355,6 +364,7 @@ function render() {
   $("meeting-meta").textContent =
     `${m.durationMinutes} minutes planned · ${m.participants.length} roster names${m.paused ? " · Moderator paused" : ""}`;
   $("phase").textContent = label(m.phase);
+  if(m.phase==="ended" && m.reportStatus!=="processing")state.status="";
   const error = m.error || session.notice;
   $("record-error").hidden = !error;
   $("record-error").textContent = error || "";
@@ -384,6 +394,10 @@ function render() {
     !["draft", "ready", "live"].includes(m.phase);
   button("delete").disabled =
     state.busy || !!state.media || m.reportStatus === "processing" || live;
+  $("source-agenda").textContent=m.agenda;
+  input("moderation-mode").value=m.moderationMode??"balanced";
+  input("moderation-mode").disabled=m.phase==="ended";
+  meetingLayout.render(m);reportSharing.render(m);
   $("plan").innerHTML = topicHTML(m.plan);
   $("revisions").innerHTML =
     `<h3>Original plan</h3>${topicHTML(m.originalPlan)}${m.revisions.map((r) => `<div class="revision"><strong>${escape(new Date(r.at).toLocaleTimeString())}</strong><p>${escape(r.reason)}</p>${topicHTML(r.plan)}</div>`).join("")}`;
@@ -422,7 +436,7 @@ function render() {
     ? speakerIds
         .map(
           (id) =>
-            `<button data-speaker="${escape(id)}">${escape(speakerName(id))} · edit name</button>`,
+            `<button data-speaker="${escape(id)}">${escape(speakerName(id))} · Identify speaker</button>`,
         )
         .join("")
     : '<p class="small muted">No attributable voices yet.</p>';
@@ -436,6 +450,7 @@ function render() {
     : "Audio off here";
   button("mute").disabled = !state.capture || state.busy;
   button("mute").textContent = state.muted ? "Unmute audio" : "Mute audio";
+  button("end").textContent=state.ending&&state.busy?"Ending…":"End meeting";
   button("pause").textContent = m.paused ? "Resume Rally" : "Pause Rally";
   for (const name of ["pause", "request-guidance", "dismiss", "end"])
     button(name).disabled = state.busy;
@@ -458,7 +473,7 @@ function renderTranscript() {
     ? m.turns
         .map(
           (t) =>
-            `<article class="turn" id="turn-${escape(encodeURIComponent(t.id))}"><div class="turn-meta"><strong>${escape(speakerName(t.speaker))}</strong>${t.speaker ? `<button class="text" data-speaker="${escape(t.speaker)}">correct</button>` : ""}<time>${t.startMs == null ? "Time unknown" : `${Math.floor(t.startMs / 60000)}:${String(Math.floor(t.startMs / 1000) % 60).padStart(2, "0")}`}</time></div><p>${escape(t.text)}</p></article>`,
+            `<article class="turn" id="turn-${escape(encodeURIComponent(t.id))}"><div class="turn-meta"><strong>${escape(speakerName(t.speaker))}</strong>${t.speaker ? `<button class="secondary identify-speaker" data-speaker="${escape(t.speaker)}">Identify speaker</button>` : ""}<time>${t.startMs == null ? "Time unknown" : `${Math.floor(t.startMs / 60000)}:${String(Math.floor(t.startMs / 1000) % 60).padStart(2, "0")}`}</time></div><p>${escape(t.text)}</p></article>`,
         )
         .join("")
     : '<p class="empty-note">Finalized speech will appear here. Unknown identities stay unknown.</p>';
@@ -670,6 +685,7 @@ async function start() {
         },
         (status) => {
           if (state.session !== session) return;
+          if(state.ending || session.meeting.phase==='ended')return;
           state.status = status;
           if (status.includes("disconnected")) {
             stopCapture();
@@ -706,6 +722,7 @@ async function end() {
   if (!state.session) return;
   const id = state.session.meeting.id;
   state.ending = true;
+  state.status="Ending Rally’s capture and leaving its call. Your meeting can continue.";
   stopCapture();
   await perform(async () => {
     state.session!.intervention = null;
@@ -854,6 +871,7 @@ $("create-form").onsubmit = async (event) => {
   const data = new FormData(event.target as HTMLFormElement);
   try {
     const m = await api<Meeting>("/meetings", "POST", {
+      moderationMode:input("create-moderation-mode").value,
       title: data.get("title"),
       agenda: data.get("agenda"),
       durationMinutes: Number(data.get("durationMinutes")),
@@ -957,7 +975,7 @@ button("usage-button").onclick = () =>
       const total = rows.reduce((n, r) => n + (r.cost ?? 0), 0),
         unknown = rows.filter((r) => r.cost == null).length;
       $("usage").innerHTML =
-        `<h3>$${total.toFixed(6)} recorded · ${unknown} pending or unknown</h3>${rows.map((r) => `<div class="usage-row">${escape(r.model || "Model request")} · ${escape(r.status)}<strong>${r.cost == null ? "Unknown / reserved" : `$${r.cost.toFixed(6)}`}</strong></div>`).join("")}`;
+        `<h3>${formatCost(total)} recorded · ${unknown} pending or unknown</h3>${rows.map((r) => `<div class="usage-row">${escape(r.model || "Model request")} · ${escape(r.status)}<strong>${r.cost == null ? "Unknown / reserved" : formatCost(r.cost)}</strong></div>`).join("")}`;
       dialog("usage-dialog").showModal();
     } catch (error) {
       fail(error);
@@ -1113,3 +1131,5 @@ input("share-feedback").onchange = () => {
     })
     .finally(() => (field.disabled = false));
 };
+
+input('moderation-mode').onchange=()=>{const m=state.session?.meeting;if(!m)return;void api<Meeting>(`/meetings/${m.id}/moderation`,'PATCH',{mode:input('moderation-mode').value}).then(updated=>{mergeMeeting(updated);render();toast('Rally’s approach updated.');}).catch(fail);};

@@ -1,3 +1,4 @@
+import {addressedRequest,allowIntervention,moderationModeSchema} from "./moderation-policy.ts";
 import { sceneFor } from "../../../packages/rally-presence/scene.ts";
 import {
   actuate,
@@ -751,8 +752,12 @@ export class Engine {
               reason: decision.agendaChange?.reason ?? "Extension updated",
             });
           const acceptedRevision = current.revisions.length;
+          const supplied=this.monitor.context(this.snapshot(id));
+          const request=addressedRequest(supplied.finals,supplied.partials);
+          const policy=decision.intervention?allowIntervention(current,decision.intervention.text,decision.evidence,request):{allowed:false,direct:false};
+          if(force)policy.allowed=true;
           if (
-            decision.intervention &&
+            decision.intervention && policy.allowed &&
             !["preparing", "playing"].includes(
               current.speechStatus?.state ?? "",
             )
@@ -771,6 +776,7 @@ export class Engine {
               current.extension!.checkId = check.id;
               current.extension!.utteranceId = item.id;
             }
+            if(policy.direct && request)current.addressedRequestsHandled=[...(current.addressedRequestsHandled??[]),request.key].slice(-20);
             current.interventions.push(item);
             this.meetings.save(current);
             if (current.speechEnabled !== false)
@@ -791,6 +797,7 @@ export class Engine {
             });
           }
         },
+        force,
       );
       return;
     }
@@ -859,9 +866,11 @@ export class Engine {
         });
       }
       this.meetings.save(current);
+      const legacyRequest=addressedRequest(snapshot.turns,[]);
+      const legacyPolicy=result.intervention?allowIntervention(current,result.intervention.text,[...result.evidence,...result.intervention.evidence],legacyRequest):{allowed:false,direct:false};
       if (
-        result.intervention &&
-        (force ||
+        result.intervention && (force || current.moderationMode!=='passive' || legacyPolicy.direct) &&
+        (force || legacyPolicy.direct ||
           result.intervention.kind === "wrapup" ||
           Date.now() - state.lastIntervention >= this.config.cooldownMs)
       ) {
@@ -873,6 +882,7 @@ export class Engine {
             : result.intervention.text,
           kind: result.intervention.kind,
         };
+        if(legacyPolicy.direct && legacyRequest)current.addressedRequestsHandled=[...(current.addressedRequestsHandled??[]),legacyRequest.key].slice(-20);
         current.interventions.push(item);
         state.lastIntervention = item.at;
         this.meetings.save(current);
@@ -935,6 +945,13 @@ export class Engine {
       epoch: m.epoch,
     });
     return m;
+  }
+  setModeration(m:Meeting,input:unknown) {
+    const mode=moderationModeSchema.parse(input);
+    if(m.phase==='ended')throw new HttpError('Meeting has ended',409);
+    this.monitor.cancel(m.id);this.cancelSpeech(m);m.epoch++;
+    m.moderationMode=mode;this.meetings.save(m);
+    this.emit(m.id,'moderator.control',{type:'mode',epoch:m.epoch});return m;
   }
   editPlan(m: Meeting, input: unknown) {
     if (m.extension?.state === "disputed")

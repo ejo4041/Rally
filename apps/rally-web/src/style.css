@@ -998,3 +998,60 @@ dialog::backdrop {
 .camera-presence .presence-next {font-size:2.2vh}
 @media (prefers-reduced-motion:reduce) {.rally-presence:not(.camera-presence) .rally-silk {opacity:.85}}
 .camera-presence {background:#10171b}
+
+.source-agenda { white-space: pre-wrap; overflow-wrap: anywhere; padding: 12px; border-left: 3px solid #a28be8; background: #f6f3ff; }
+.identify-speaker { font-size: .75rem; padding: 5px 9px; border: 1px solid var(--border,#d8dce1); border-radius: 7px; }
+.account-menu { position: relative; margin-left: auto; }
+.account-menu > summary { cursor:pointer; padding:8px 12px; }
+.account-menu > div { position:absolute; z-index:30; right:0; top:100%; display:grid; gap:8px; background:white; border:1px solid #ddd; box-shadow:0 8px 30px #0002; padding:12px; min-width:180px; border-radius:12px; }
+.meeting-navigation { display:flex; gap:8px; margin:12px 0; }
+.shared-report-dialog { width:min(850px,94vw); }
+#moderation-control { margin:12px 0; }
+#meeting-settings-content { display:grid; gap:16px; }
+#meeting[data-view="review"] .main-column { display:flex; flex-direction:column; }
+#meeting[data-view="review"] #report-panel { order:-1; }
+.camera-presence .presence-words { font-size:58px; line-height:1.16; font-weight:650; text-shadow:0 2px 9px #000a; }
+.camera-presence .presence-next { font-size:32px; line-height:1.25; }
+.camera-presence .presence-tag { font-size:28px; }
+.camera-presence .presence-time { font-size:26px; }
+@media(max-width:760px) {
+ .meeting-navigation:not([hidden]) { display:flex; position:sticky; top:0; z-index:10; background:#f8f9fb; padding:8px 0; }
+ .meeting-heading h1 { font-size:1.45rem; }
+ #meeting[data-view="live"] .meeting-heading .actions { display:none; }
+ #meeting[data-view="live"] .feedback-card, #meeting[data-view="live"] #conversation-panel, #meeting[data-view="live"] #report-panel, #meeting[data-view="live"] .meeting-aside { display:none; }
+ #meeting[data-view="review"] .meeting-aside, #meeting[data-view="review"] #conversation-panel { display:none; }
+ #meeting[data-view="live"] #rally-history, #meeting[data-view="live"] #rally-timing, #meeting[data-view="live"] #rally-budget-forecast, #meeting[data-view="live"] #voice-toggle-label, #meeting[data-view="live"] #test-voice { display:none; }
+ #meeting[data-view="live"] #controls #mute, #meeting[data-view="live"] #controls #dismiss { display:none; }
+ #meeting[data-view="live"] #controls { position:sticky; bottom:0; padding:10px 8px max(10px,env(safe-area-inset-bottom)); z-index:15; border-radius:14px; }
+ #meeting[data-view="live"] #controls .actions { display:grid; grid-template-columns:1fr 1fr 1fr; width:100%; gap:6px; }
+ #meeting[data-view="live"] #controls button { font-size:.8rem; padding:10px 6px; }
+ #meeting[data-view="live"] #capture-label { font-size:.75rem; }
+ #meeting[data-view="live"] .rally-card { padding:14px; }
+ #meeting[data-view="live"] .rally-presence { min-height:270px; }
+ .bottom-sheet { margin:auto 0 0; width:100%; max-width:100%; max-height:84dvh; padding:16px; border-radius:22px 22px 0 0; overflow-y:auto; animation:sheet-in .18s ease-out; }
+ .bottom-sheet .card { border:0; box-shadow:none; padding:0; }
+ .bottom-sheet .transcript { max-height:60dvh; }
+ .account-menu > div { min-width:160px; }
+}
+@keyframes sheet-in { from { transform:translateY(25px);opacity:.5 } to { transform:translateY(0);opacity:1 } }
+@media(prefers-reduced-motion:reduce) { .bottom-sheet { animation:none; } }
+
+#meeting[data-view="review"] { display:flex; flex-direction:column; }
+#meeting[data-view="review"] .meeting-grid { order:2; }
+#meeting[data-view="review"] .feedback-card { order:3; margin-top:16px; }
+#meeting[data-view="review"] #rally-display { display:none; }
+@media(max-width:760px) {
+ #meeting[data-view="review"] .score-list { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
+ #meeting[data-view="review"] .score { min-width:0; padding:10px; }
+ #meeting[data-view="review"] .score strong { font-size:1.3rem; }
+ #meeting[data-view="review"] .score p { font-size:.75rem; }
+ #meeting[data-view="review"] .meeting-navigation { order:1; }
+}
+
+@media(max-width:760px) {
+ #meeting[data-view="setup"] #rally-display, #meeting[data-view="setup"] #conversation-panel, #meeting[data-view="setup"] #report-panel, #meeting[data-view="setup"] .participants {display:none;}
+}
+
+.table-scroll { overflow-x:auto; }
+.table-scroll table { border-collapse:collapse; width:100%; font-size:.85rem; }
+.table-scroll td,.table-scroll th { text-align:left; padding:9px; border-bottom:1px solid #ddd; white-space:nowrap; }

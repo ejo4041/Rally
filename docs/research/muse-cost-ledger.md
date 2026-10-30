@@ -142,3 +142,11 @@ Consented4m56s live call:32 Muse usage records (preparation, transcription,29liv
 Three synthetic bounded-transcript calls using production schema and cache-friendly layout: **$0.01526095**, unknown0. Latencies1.928/1.708/2.559seconds; all valid and within8seconds. Cached inputs0/3898,0/3950,3313/4002 (82.78% on third request). No real participant content, speech or meeting join. This is a small cache measurement, not a guaranteed production hit rate. [Usage/results](living-presence-cache-benchmark.json).
 
 Combined tracked Muse spend **$1.80496175**; conditional unverified-$150 remainder **$148.19503825**. Actual grant/Billing remains unverified; other ongoing deployment activity is not inferred from this experiment.
+
+## Feedback direct-address and passive-mode check — October 30
+
+Two synthetic-discussion real Spark1.3 calls, maximum authorized working ceiling $0.15, no retry. Addressed recap in passive mode answered accurately with both supplied evidence IDs in2.412s; ambient discussion in passive mode returned no intervention in2.839s. Batch **$0.01088575**, unknown0. [Usage and responses](feedback-model-check.json). Combined tracked Muse **$1.81584750**, conditional unverified-$150 remainder **$148.18415250**. Existing provider/deployment activity outside this check is not inferred. No TTS provider call or platform join. Local narration and replay recording add zero model API calls.
+
+### Uncached speech validation (separate AWS infrastructure accounting)
+
+One synthetic, non-retrying SeamlessM4T-v2-large utterance without the old prefix completed. First PCM1.643s, total2.234s, output5.94seconds, cache miss. No playback or meeting join during the check. AWS infrastructure cost is **unknown**, not charged to the Muse grant in this ledger. The recorded output is used as an explicitly synthetic production-voice sample in the local demo draft. [Evidence](feedback-tts-check.json). No additional Muse call.

@@ -17,3 +17,6 @@ site.tar.gz
 
 # Also exclude local dependency symlinks used by worktrees.
 node_modules
+
+# Local narrated demo renders and Omnigent continuation artifacts.
+artifacts/feedback/

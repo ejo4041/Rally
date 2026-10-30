@@ -1,3 +1,4 @@
+import {moderationModeSchema} from "./moderation-policy.ts";
 import { randomUUID } from "node:crypto";
 import { z } from "zod";
 import { HttpError } from "./auth.ts";
@@ -6,6 +7,7 @@ import { planSchema } from "./contracts.ts";
 import type { Meeting, Providers, Turn, Plan } from "./contracts.ts";
 
 export const createMeetingSchema = z.object({
+  moderationMode:moderationModeSchema.default("balanced"),
   title: z.string().trim().min(1).max(160).default("Meeting"),
   agenda: z.string().trim().min(1).max(20000),
   durationMinutes: z.number().min(1).max(240),

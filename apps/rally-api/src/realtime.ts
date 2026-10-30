@@ -1,3 +1,4 @@
+import {addressedRequest} from "./moderation-policy.ts";
 import { assessmentSchema } from "./contracts.ts";
 import { assessmentContext } from "./assessment-context.ts";
 import { listSpeechDeliveries } from "./speech-delivery.ts";
@@ -69,6 +70,9 @@ export type LiveCheck = {
   evidenceProofs?: Record<string, import("./contracts.ts").EvidenceProof>;
 };
 export type LiveContext = {
+  moderationMode?: import("./moderation-policy.ts").ModerationMode;
+  addressedRequest?: import("./moderation-policy.ts").AddressedRequest | null;
+  hostRequested?: boolean;
   concerns?: Meeting["concerns"];
   focus?: Meeting["presenceFocus"];
   progress?: string;
@@ -223,7 +227,13 @@ export class LiveMonitor {
     );
   }
   context(s: Snapshot): LiveContext {
+    const finals=this.boundedFinals(s.turns);
+    const partials=[...(this.partials.get(s.meeting.id)?.values()??[])].slice(-2).map(p=>({...p,text:p.text.slice(-4000),prefixLength:p.text.length}));
+    const request=addressedRequest(finals,partials);
     return {
+      moderationMode:s.meeting.moderationMode??'balanced',
+      addressedRequest:request && !(s.meeting.addressedRequestsHandled??[]).includes(request.key)?request:null,
+      hostRequested:false,
       concerns: (s.meeting.concerns ?? [])
         .filter((c) =>
           this.presenceProofValid(s.meeting.id, c.evidenceProofs, s.turns),
@@ -310,6 +320,7 @@ export class LiveMonitor {
     current: () => Meeting,
     emit: (check: LiveCheck) => void,
     apply: (decision: LiveDecision, check: LiveCheck) => void,
+    hostRequested=false,
   ) {
     const id = s.meeting.id,
       now = Date.now();
@@ -328,6 +339,7 @@ export class LiveMonitor {
     };
     const generation = this.generation.get(id) ?? 0;
     const context = this.context(s);
+    context.hostRequested=hostRequested;
     check.forecast = this.forecast?.(context, s.meeting);
     const publish = () => {
       try {

@@ -1,0 +1,2 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {formatMoney} from '../src/format.ts';
+test('usage distinguishes zero, tiny real charges and unknown billing without long decimals',()=>{assert.equal(formatMoney(0),'$0.00');assert.equal(formatMoney(.000021),'<$0.01');assert.equal(formatMoney(1.234567),'$1.23');assert.equal(formatMoney(null),'Unknown');assert.equal(formatMoney(NaN),'Unknown');});

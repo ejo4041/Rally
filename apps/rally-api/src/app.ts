@@ -1,3 +1,4 @@
+import {installReportSharing} from "./report-sharing.ts";
 import { sceneFor } from "../../../packages/rally-presence/scene.ts";
 import { confirmExtension } from "./live-agenda.ts";
 import { recordSpeechDelivery } from "./speech-delivery.ts";
@@ -225,6 +226,7 @@ export function createApplication(
       );
     next();
   });
+  installReportSharing(app,store,meetings);
   app.post("/api/auth/logout", async (req, res) => {
     const owner = userForRequest(store, req).id;
     for (const m of meetings.list(owner))
@@ -502,6 +504,7 @@ export function createApplication(
     await meetings.prepare(m);
     res.json(meetings.get(m.id));
   });
+  app.patch('/api/meetings/:id/moderation',(req,res)=>{const m=owned(req),updated=engine.setModeration(m,req.body?.mode);audit(store,m.userId,'meeting.moderation_changed',m.id,{mode:updated.moderationMode});res.json(updated);});
   app.patch("/api/meetings/:id/plan", (req, res) =>
     res.json(engine.editPlan(owned(req), req.body)),
   );

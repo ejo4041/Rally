@@ -7,7 +7,8 @@
     <title>Rally · Make meetings matter</title>
     <link rel="stylesheet" href="/style.css" />
     <script type="module" src="/app.js"></script>
-  </head>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+</head>
   <body>
     <section id="auth-screen" class="auth-screen">
       <a class="brand" href="/">▥ rally<span>.</span></a>
@@ -56,7 +57,7 @@
         <form id="mfa-form" hidden>
           <h2 id="mfa-title">Verify your sign-in</h2>
           <div id="enrollment" hidden><p>Scan this QR code in your authenticator app, then enter the six-digit code.</p><img id="enrollment-qr" alt="Authenticator enrollment QR code" width="240" height="240" /><p>Manual setup key: <code id="enrollment-secret"></code></p></div>
-          <label>Authenticator or recovery code<input id="mfa-code" autocomplete="one-time-code" maxlength="80" required /></label>
+          <label>Authenticator or recovery code<input id="mfa-code" name="totp" type="text" inputmode="numeric" spellcheck="false" autocapitalize="off" aria-label="Verification code" placeholder="6-digit verification code" autocomplete="one-time-code" maxlength="80" required /></label>
           <button id="mfa-submit" type="submit" class="primary">Verify</button>
           <button id="use-recovery" type="button" class="text">Use a recovery code</button>
         </form>
@@ -86,8 +87,7 @@
           <button class="text" id="mobile-home">Meetings</button
           ><span id="breadcrumb">Workspace / Meetings</span
           ><button id="mobile-logout" class="text mobile-only">Sign out</button>
-          <button id="admin-open" class="pill" hidden>Admin</button>
-          <button id="usage-button" class="pill">Usage</button>
+          <details id="account-menu" class="account-menu"><summary>Account</summary><div><button id="admin-open" class="secondary" hidden>Administration</button><button id="usage-button" class="secondary">Usage</button></div></details>
         </header>
         <main>
           <section id="home">
@@ -212,7 +212,7 @@
               </div>
               <button id="refresh-history" class="text">Refresh</button>
             </div>
-            <div id="history" class="card"></div>
+            <div id="history" class="card"></div><section class="card"><h2>Shared with you</h2><p class="small muted">Read-only reports shared by other Rally users.</p><div id="shared-reports"></div></section>
           </section>
           <section id="meeting" hidden>
             <button id="back" class="text">← All meetings</button>
@@ -223,11 +223,12 @@
               </div>
               <div class="actions">
                 <span id="phase" class="pill"></span
-                ><button id="export" class="secondary">Export</button
+                ><button id="export" class="secondary">Export record</button
                 ><button id="delete" class="danger">Delete</button>
               </div>
             </div>
-            <section class="card"><label class="check"><input id="share-feedback" type="checkbox" disabled />Share this test’s transcript and report with the developer for feedback</label><p class="small muted">Optional, off by default. Inform participants before sharing. Administrators can read shared text; access is logged. Uncheck to withdraw future access. Basic usage, errors and processing costs are visible to the administrator regardless. No replayable audio is stored by this app.</p></section>
+            <div id="meeting-navigation" class="meeting-navigation" hidden><button id="open-plan" class="secondary">Plan</button><button id="open-conversation" class="secondary">Transcript</button><button id="open-settings" class="secondary">Settings</button></div>
+            <section class="card feedback-card"><label class="check"><input id="share-feedback" type="checkbox" disabled />Share this test’s transcript and report with the developer for feedback</label><p class="small muted">Optional, off by default. Inform participants before sharing. Administrators can read shared text; access is logged. Uncheck to withdraw future access. Basic usage, errors and processing costs are visible to the administrator regardless. No replayable audio is stored by this app.</p></section>
             <p id="record-error" class="banner error" role="alert" hidden></p>
             <p id="connection-status" class="banner" role="status" hidden></p>
             <section class="card setup" id="start-panel">
@@ -238,6 +239,7 @@
                 transcripts and reports are saved. Names and speaker labels can
                 need correction.
               </p>
+              <div id="moderation-control"><label>Rally’s approach<select id="moderation-mode"><option value="passive">Passive · observe, respond when asked</option><option value="balanced" selected>Balanced · occasional helpful nudges</option><option value="proactive">Proactive · actively guide the agenda</option></select></label><p class="small muted">Visual feedback stays active. Pause always takes priority; settings never authorize external actions.</p></div>
               <div class="input-options">
                 <label
                   >Meeting connection<select id="audio-mode">
@@ -291,8 +293,8 @@
                     You lead the meeting. Rally helps it move forward.
                   </p>
                   <p id="progress" class="small muted"></p>
-                  <div class="actions">
-                    <label class="check"
+                  <div class="actions" id="voice-controls">
+                    <label class="check" id="voice-toggle-label"
                       ><input id="spoken-prompts" type="checkbox" />Spoken
                       prompts</label
                     ><button id="test-voice" class="text" type="button">
@@ -309,7 +311,7 @@
                   <div id="rally-extension" class="rally-extension" hidden></div>
                   <details id="rally-history"><summary>Check history <span class="small muted">and agenda changes</span></summary><p id="rally-budget-forecast" class="small muted" hidden></p><div id="rally-history-items"></div><p id="rally-history-status" class="small muted" role="status"></p><button id="rally-history-more" class="text" type="button" hidden>Earlier checks</button></details>
                 </section>
-                <section class="card">
+                <section class="card conversation-card" id="conversation-panel">
                   <div class="card-heading">
                     <h2>Conversation</h2>
                     <span class="small muted" id="transcript-label"
@@ -325,7 +327,7 @@
                     <span id="report-status" class="pill"></span>
                   </div>
                   <div id="report-body"></div>
-                  <div class="report-actions">
+                  <div class="report-actions"><button id="export-pdf" class="secondary" disabled>Export PDF</button><button id="share-report" class="secondary" disabled>Share report</button>
                     <button id="draft-follow-up" class="secondary" hidden>
                       Draft WhatsApp follow-up
                     </button>
@@ -348,11 +350,12 @@
                 </section>
               </div>
               <aside class="meeting-aside">
-                <section class="card">
+                <section class="card" id="agenda-panel">
                   <div class="card-heading">
                     <h2>The plan</h2>
                     <button id="edit-plan" class="text">Edit</button>
                   </div>
+                  <details id="entered-agenda" open><summary>Your entered agenda</summary><p id="source-agenda" class="source-agenda"></p></details>
                   <div id="plan"></div>
                   <details id="plan-history">
                     <summary>Original plan & changes</summary>
@@ -386,6 +389,11 @@
         <footer>Thoughtful meetings, powered by Meta Muse.</footer>
       </div>
     </div>
+    <dialog id="plan-sheet" class="bottom-sheet"><div class="section-title"><h2>Meeting plan</h2><button data-close="plan-sheet" aria-label="Close plan">Close</button></div><div id="plan-sheet-content"></div></dialog>
+    <dialog id="conversation-sheet" class="bottom-sheet"><div class="section-title"><h2>Transcript</h2><button data-close="conversation-sheet" aria-label="Close transcript">Close</button></div><div id="conversation-sheet-content"></div></dialog>
+    <dialog id="meeting-settings" class="bottom-sheet"><div class="section-title"><h2>Meeting settings</h2><button data-close="meeting-settings" aria-label="Close settings">Close</button></div><div id="meeting-settings-content"></div></dialog>
+    <dialog id="report-sharing-dialog"><div class="section-title"><h2>Share report</h2><button data-close="report-sharing-dialog" aria-label="Close sharing">Close</button></div><p>Share this report and its cited transcript excerpts with a named Rally account. Recipients have read-only access to this report and future updates until you revoke access. This does not share the full transcript or private live history.</p><form id="report-share-form"><label>Rally username<input id="report-recipient" required pattern="[a-z0-9_-]{3,40}" autocomplete="off" /></label><button type="submit" class="primary">Grant access</button></form><p id="report-share-status" role="status"></p><div id="report-recipient-list"></div></dialog>
+    <dialog id="shared-report-dialog" class="shared-report-dialog"><div class="section-title"><h2 id="shared-report-title">Shared report</h2><button data-close="shared-report-dialog" aria-label="Close shared report">Close</button></div><a id="shared-report-pdf" class="secondary">Export PDF</a><div id="shared-report-body"></div></dialog>
     <dialog id="follow-up-dialog">
       <div class="section-title">
         <h2>Review your follow-up</h2>
@@ -424,14 +432,14 @@
     <dialog id="admin-dialog" class="admin-dialog">
       <div class="section-title"><h2>Administration</h2><button id="admin-close">Close</button></div>
       <p>Only explicitly shared transcripts and reports can be opened here. Content views and account changes are audited.</p>
-      <form id="admin-reauth"><h3>Admin security</h3><p>Confirm a fresh authenticator code and password before changing accounts.</p><label>Password<input id="admin-password" type="password" autocomplete="current-password" required /></label><label>MFA code<input id="admin-code" autocomplete="one-time-code" required pattern="[0-9]{6}" /></label><button type="submit">Confirm admin security</button></form>
+      <form id="admin-reauth"><h3>Admin security</h3><p>Confirm a fresh authenticator code and password before changing accounts.</p><label>Password<input id="admin-password" type="password" autocomplete="current-password" required /></label><label>MFA code<input id="admin-code" name="totp" inputmode="numeric" maxlength="6" autocomplete="one-time-code" required pattern="[0-9]{6}" /></label><button type="submit">Confirm admin security</button></form>
       <p id="admin-status" role="status"></p>
       <form id="admin-create"><h3>Invite user</h3><label>Username<input id="admin-new-username" required pattern="[a-z0-9_-]{3,40}" /></label><label>Role<select id="admin-new-role"><option value="user">User</option><option value="admin">Administrator</option></select></label><button type="submit">Create invitation</button></form>
       <pre id="admin-secret" aria-live="polite"></pre>
       <h3>Accounts</h3><div id="admin-users"></div><button id="admin-refresh">Refresh activity</button>
       <h3>Meeting activity</h3><div id="admin-activity"></div>
       <h3>Shared transcript and report</h3><pre id="admin-content"></pre>
-      <h3>Model usage</h3><pre id="admin-usage"></pre>
+      <h3>Model usage</h3><div id="admin-usage"></div>
       <h3>Audit events</h3><pre id="admin-events"></pre>
     </dialog>
     <dialog id="audio-check-dialog">
@@ -512,6 +520,7 @@
           Muse prepares an editable plan. This is a paid model action; audio
           starts separately after consent.
         </p>
+        <label>Rally’s approach<select name="moderationMode" id="create-moderation-mode"><option value="passive">Passive · respond when asked</option><option value="balanced" selected>Balanced</option><option value="proactive">Proactive</option></select></label>
         <p id="create-error" class="error" role="alert"></p>
         <button id="create-submit" class="primary" type="submit">
           Prepare with Muse
@@ -571,7 +580,7 @@
     <dialog id="speaker-dialog">
       <form id="speaker-form">
         <div class="section-title">
-          <h2>Name this speaker</h2>
+          <h2>Identify speaker</h2>
           <button
             type="button"
             class="text"

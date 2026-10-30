@@ -1,3 +1,7 @@
+**Feedback polish branch:** `feedback/demo-polish-20261030`, server worktree `/srv/hackathon/rally-feedback`. [Completed scope, checks, costs and remaining acceptance](feedback-2026-10-30.md); [three-minute review draft](demo-feedback-draft.md). Runtime deployment status follows in the final checkpoint.
+
+**Active feedback branch:** [October 30 feedback, priorities and progress](feedback-2026-10-30.md), worktree `/srv/hackathon/rally-feedback`. Existing deployment is unchanged while this work is in progress.
+
 ## Main integration — October 30
 
 The reviewed living-presence branch was fast-forwarded from remote main `1d988d0` to `b0d7e87` and pushed to `origin/main`. There were no merge conflicts or additional code changes. Integration used `/srv/hackathon/rally-main-integration` on `integrate/presence-main` because the original `/srv/hackathon/repo` workspace has an unborn local main with untracked files; those files and its branch/index were left untouched. Use the clean integration worktree or fetch remote main for subsequent development.

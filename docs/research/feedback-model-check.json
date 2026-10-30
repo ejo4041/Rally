@@ -1,0 +1,135 @@
+{
+  "at": "2026-10-30T21:25:49.344Z",
+  "budgetCeiling": 0.15,
+  "results": [
+    {
+      "scenario": "addressed recap in passive mode",
+      "latencyMs": 2412,
+      "decision": {
+        "affect": null,
+        "concerns": null,
+        "focus": null,
+        "agendaChange": null,
+        "extension": null,
+        "extensionConsent": null,
+        "health": null,
+        "feeling": "neutral",
+        "observation": "Asked for decision and rollback owner",
+        "progress": "Release decision is complete; rollback verification remains",
+        "concern": "",
+        "evidence": [
+          "probe:0",
+          "probe:1"
+        ],
+        "intervention": {
+          "text": "You decided to ship on Monday. Sam owns rollback verification, due Tuesday.",
+          "kind": "clarify"
+        }
+      },
+      "policy": {
+        "allowed": true,
+        "direct": true
+      },
+      "addressed": true
+    },
+    {
+      "scenario": "ambient discussion stays quiet in passive mode",
+      "latencyMs": 2839,
+      "decision": {
+        "affect": null,
+        "concerns": null,
+        "focus": {
+          "intendedTopicId": "actions",
+          "detour": "coffee chat",
+          "evidence": [
+            "probe:1"
+          ]
+        },
+        "agendaChange": null,
+        "extension": null,
+        "extensionConsent": null,
+        "health": 4,
+        "feeling": "neutral",
+        "observation": "Release decision recorded; brief coffee aside during Actions",
+        "progress": "Release decision is complete; rollback verification remains",
+        "concern": "Brief off-topic remark during Actions topic",
+        "evidence": [
+          "probe:0",
+          "probe:1"
+        ],
+        "intervention": null
+      },
+      "policy": {
+        "allowed": false,
+        "direct": false
+      },
+      "addressed": false
+    }
+  ],
+  "usage": [
+    {
+      "id": "a732f802-a1e1-4c7f-8b12-1e033880d4ab",
+      "status": "known",
+      "cost": 0.005412,
+      "estimate": 0.025859,
+      "at": 1793395544100,
+      "kind": "live",
+      "reasoningEffort": "minimal",
+      "maxOutputTokens": 2048,
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "requestId": "d4e8e7a1-270b-458d-ad8b-449ac9320b69",
+      "httpStatus": 200,
+      "finishReason": "stop",
+      "usage": {
+        "completion_tokens": 404,
+        "prompt_tokens": 2956,
+        "total_tokens": 3360,
+        "completion_tokens_details": {
+          "reasoning_tokens": 276
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "fd690483-a4fb-4d5a-b5af-2043aeb413dc",
+      "status": "known",
+      "cost": 0.00547375,
+      "estimate": 0.025629,
+      "at": 1793395546505,
+      "kind": "live",
+      "reasoningEffort": "minimal",
+      "maxOutputTokens": 2048,
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "requestId": "841fc01d-792f-48c5-8ffa-d1c53894c2d1",
+      "httpStatus": 200,
+      "finishReason": "stop",
+      "usage": {
+        "completion_tokens": 435,
+        "prompt_tokens": 2900,
+        "total_tokens": 3335,
+        "completion_tokens_details": {
+          "reasoning_tokens": 298
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    }
+  ],
+  "knownCost": 0.01088575,
+  "unknownCostCalls": 0
+}

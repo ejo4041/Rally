@@ -1,9 +1,9 @@
 import { HttpError } from './auth.ts';
 
 export const opening = 'Let\'s get back on track.';
-export function interventionSpeech(body: string) {
-  return opening + ' ' + body.replace(/^(?:Let[’']?s get back on track\.\s*)+/i, '').trim();
-}
+// Speak the approved wording exactly; cache optimization must not change intent.
+export function interventionSpeech(body: string) { return body.trim(); }
+
 export class SpeechError extends HttpError {
   retryAfter?: string;
   constructor(message: string, status: number, retryAfter?: string) { super(message, status); this.retryAfter = retryAfter; }

@@ -1,0 +1,16 @@
+{
+  "at": "2026-10-30T21:34:28.771Z",
+  "status": "completed",
+  "text": "Priya will verify rollback by Friday at noon. Accessibility ownership is still unresolved.",
+  "model": "facebook/seamless-m4t-v2-large",
+  "adapter": "seamless-aws",
+  "revision": null,
+  "firstByteMs": 1643,
+  "totalMs": 2234,
+  "seconds": 5.94,
+  "cached": false,
+  "cost": null,
+  "billing": "AWS infrastructure cost not supplied",
+  "playback": false,
+  "platformJoins": 0
+}

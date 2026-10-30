@@ -1,0 +1,37 @@
+[
+  {
+    "start": 0,
+    "end": 25,
+    "text": "Meet Rally. Meetings often end with a transcript, but no clear decision. Rally helps while the conversation is happening. It follows the agenda, notices when the discussion needs attention, and helps people leave with decisions, owners, and next steps. This walkthrough uses a clearly labeled synthetic meeting replay."
+  },
+  {
+    "start": 25,
+    "end": 50,
+    "text": "Start with your agenda, meeting length, and participants. Your original agenda stays visible beside the editable plan. Known users sign in with mandatory multi factor authentication. Choose how Rally should participate: passive observation, balanced nudges, or a more proactive guide. The host stays in control."
+  },
+  {
+    "start": 50,
+    "end": 80,
+    "text": "In a live meeting, Meta Muse Voice Transcribe turns streaming audio into the conversation record. Meta Muse Spark assesses the discussion against the goals and remaining time. Rally expresses its assessment through this living visual presence. The colors describe Rally, not the personalities or emotions of the people in the call."
+  },
+  {
+    "start": 88,
+    "end": 110,
+    "text": "You can address Rally by name and ask for a recap. Responses use the meeting evidence, without adding a canned get back on track message. Change the approach during the meeting, or pause Rally immediately. On a phone, keep the meeting in focus. Slide up the plan, transcript, or settings only when needed."
+  },
+  {
+    "start": 110,
+    "end": 140,
+    "text": "After the meeting, review the report: decisions, due outs, unresolved questions, and evidence linked to the transcript. Identify speakers when you recognize their voices. Unknown owners and dates stay unknown. Share the report with another Rally account, revoke access later, or download a real PDF. The full transcript is not shared automatically."
+  },
+  {
+    "start": 140,
+    "end": 165,
+    "text": "Rally combines three Meta services in the product: Muse Voice Transcribe for transcription, Muse Spark one point three for preparation, live guidance, and reports, and Seamless M four T for streamed speech. Teams receives Rally through the same controlled voice and video connection. This replay demonstrates the interface; real call acceptance is tracked separately."
+  },
+  {
+    "start": 165,
+    "end": 180,
+    "text": "Rally helps a team turn time together into clear action. A plan before the conversation. Useful guidance during it. And an evidence linked record afterward. This is a review draft, ready for the team to refine."
+  }
+]

@@ -1,3 +1,4 @@
+import {formatMoney} from "./format.ts";
 import { api, type User } from "./api.ts";
 const $ = <T extends HTMLElement = HTMLElement>(id: string) =>
   document.getElementById(id) as T;
@@ -36,6 +37,7 @@ export function setupSecurity(
     $("auth-error").textContent = "";
     $("enrollment").hidden = next !== "enroll";
     $("use-recovery").hidden = next !== "verify";
+    const code=$<HTMLInputElement>('mfa-code');code.inputMode=next==='recover'?'text':'numeric';code.autocomplete=next==='recover'?'off':'one-time-code';code.setAttribute('aria-label',next==='recover'?'Recovery code':'Verification code');code.name=next==='recover'?'recovery-code':'totp';code.maxLength=next==='recover'?80:6;code.pattern=next==='recover'?'.{6,80}':'[0-9]{6}';code.placeholder=next==='recover'?'Recovery code':'6-digit verification code';
     $("mfa-title").textContent =
       next === "enroll"
         ? "Set up your authenticator"
@@ -150,7 +152,7 @@ export function setupSecurity(
             `<div class="history-row"><span>${esc(m.username)} · ${esc(new Date(m.createdAt).toLocaleString())}<br>${esc(m.captureMode)} · ${esc(m.phase)} · ${Math.round(m.durationSeconds)} seconds · ${m.turnCount} transcript turns · report ${esc(m.reportStatus)}${m.error ? " · processing error" : ""}</span>${m.shared ? `<button data-transcript="${esc(m.id)}">View shared transcript/report</button>` : "<span>Transcript private</span>"}</div>`,
         )
         .join("") || "No meetings yet.";
-    $("admin-usage").textContent = JSON.stringify({muse:data.usage,speech:data.speechUsage}, null, 2);
+    $('admin-usage').innerHTML=`<h4>Muse usage</h4><div class="table-scroll"><table><thead><tr><th>User</th><th>Status</th><th>Calls</th><th>Recorded cost</th><th>Estimate</th></tr></thead><tbody>${data.usage.map((row:any)=>`<tr><td>${esc(row.username)}</td><td>${esc(row.status)}</td><td>${esc(row.calls)}</td><td>${esc(formatMoney(row.cost))}</td><td>${esc(formatMoney(row.estimate))}</td></tr>`).join('')}</tbody></table></div><h4>Speech usage</h4><div class="table-scroll"><table><thead><tr><th>User</th><th>Status</th><th>Calls</th><th>Audio seconds</th><th>Cost</th></tr></thead><tbody>${(data.speechUsage??[]).map((row:any)=>`<tr><td>${esc(row.username)}</td><td>${esc(row.status)}</td><td>${esc(row.calls)}</td><td>${row.seconds==null?'Unknown':Math.round(row.seconds)}</td><td>${row.unknownCostCalls?'Unknown':'See provider billing'}</td></tr>`).join('')}</tbody></table></div><p class="small muted">Recorded usage and estimates, not a verified billing balance. Small nonzero charges are shown as &lt;$0.01.</p>`;
     $("admin-events").textContent = data.events
       .map(
         (e: any) =>

@@ -21,6 +21,7 @@ export function assessmentContext(snapshot: Snapshot, now = Date.now()) {
   return {
     meeting: {
       title: m.title,
+      moderationMode:m.moderationMode??"balanced",
       plan: m.plan,
       startedAt: m.startedAt,
       originalDeadline:

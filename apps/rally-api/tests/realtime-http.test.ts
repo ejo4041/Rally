@@ -63,7 +63,7 @@ async function fixture(
           new ReadableStream({
             start(controller) {
               controller.enqueue(new Uint8Array(640));
-              if (options.holdSpeech) release = () => controller.close();
+              if (options.holdSpeech) release = () => {release=()=>{};try{controller.close();}catch(error){if((error as NodeJS.ErrnoException).code!=='ERR_INVALID_STATE')throw error;}};
               else controller.close();
             },
           }),

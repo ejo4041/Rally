@@ -27,6 +27,7 @@ const { dispose } = createRequire(
 const folder = await mkdtemp(join(tmpdir(), "rally-web-test-"));
 const config = {
   ...defaults,
+  realtimeEnabled:process.env.RALLY_TEST_FEEDBACK_DEMO==='1',
   mfaKey: "56".repeat(32),
   dbPath: join(folder, "fixture.sqlite"),
   origins: [`http://127.0.0.1:${process.env.RALLY_WEB_PORT || 5174}`],
@@ -92,7 +93,7 @@ const providers: Providers = {
             type: "final",
             sessionId,
             turnId: 0,
-            text: "Priya will verify rollback by Thursday at three.",
+            text: process.env.RALLY_TEST_FEEDBACK_DEMO==='1'?"Priya will verify rollback by Friday at noon.":"Priya will verify rollback by Thursday at three.",
             speaker: "A",
             startMs: 0,
             endMs: 500,
@@ -131,7 +132,7 @@ const providers: Providers = {
     reportAttempts++;
     reportedTurns = s.turns.length;
     await new Promise((r) => setTimeout(r, 1200));
-    if (reportAttempts === 1)
+    if (reportAttempts === 1 && process.env.RALLY_TEST_REPORT_SUCCESS!=="1")
       throw new HttpError("Fixture report failure; explicit retry required");
     return report(s);
   },
@@ -208,6 +209,10 @@ const syntheticSpeech: SpeechEngine = {
   },
   close() {},
 };
+if(process.env.RALLY_TEST_FEEDBACK_DEMO==='1')providers.checkLive=async context=>({
+ health:4,feeling:'focused',observation:'Reviewing release readiness',progress:'Rollback verification discussed; accessibility ownership is unresolved.',concern:'',evidence:[context.addressedRequest?.id??context.finals.at(-1)?.id??context.partials[0]?.id].filter(Boolean),
+ intervention:context.addressedRequest?{text:'Priya will verify rollback by Friday at noon. Accessibility ownership is still unresolved.',kind:'checkpoint'}:null,agendaChange:null,extension:null,extensionConsent:null
+});
 const localSpeech =
   process.env.RALLY_TEST_REAL_MMS === "1" ? configuredSpeech() : undefined;
 if (process.env.RALLY_TEST_REAL_MMS === "1" && !localSpeech)
@@ -327,6 +332,7 @@ const accountStore=new Store(config.dbPath);
 await createUser(accountStore,'frontend_test','fixture-password-only');
 await createUser(accountStore,'other_host','other-fixture-password');
 accountStore.close();
+if(process.env.RALLY_TEST_FEEDBACK_DEMO==='1')api.app.post('/api/test/demo-address',(req,res)=>{callbacks.get(req.body.meetingId)?.({type:'final',sessionId:'fixture-'+speechSessions,turnId:9,text:'Hey Rally, what did we decide and what is still unresolved?',speaker:'A',startMs:70000,endMs:73000});res.json({ok:true});});
 const server = api.app.listen(
   Number(process.env.RALLY_TEST_API_PORT || 3101),
   "127.0.0.1",

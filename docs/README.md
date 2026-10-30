@@ -1,3 +1,7 @@
+**Feedback polish branch:** `feedback/demo-polish-20261030`, server worktree `/srv/hackathon/rally-feedback`. [Completed scope, checks, costs and remaining acceptance](feedback-2026-10-30.md); [three-minute review draft](demo-feedback-draft.md). Runtime deployment status follows in the final checkpoint.
+
+**Active feedback branch:** [October 30 feedback, priorities and progress](feedback-2026-10-30.md), worktree `/srv/hackathon/rally-feedback`. Existing deployment is unchanged while this work is in progress.
+
 **Living presence:** [Merged implementation and validation](living-presence-implementation.md), [camera operations](living-presence-operations.md).
 
 **Continuous monitoring:** [Accepted design](realtime-monitoring-plan.md), [backend/API behavior](realtime-backend-notes.md), [review and validation](realtime-monitoring-validation.md), [Rally display](realtime-ui-notes.md).

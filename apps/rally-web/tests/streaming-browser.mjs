@@ -35,7 +35,7 @@ try{
  await page.waitForFunction(()=>[...document.querySelectorAll('audio')].some(a=>a.srcObject&&!a.paused&&a.currentTime>0));
  const snapshot=await(await page.request.get(base+`/api/meetings/${id}`)).json();
  assert.equal(snapshot.speechStatus.state,'playing');assert.equal(snapshot.audioExclusions.length,1);
- assert.match(await page.locator('#guidance').textContent(),/^Let's get back on track\./);
+ assert.doesNotMatch(await page.locator('#guidance').textContent(),/^Let's get back on track\./);
  await page.locator('#stop-speaking').click();
  await page.waitForFunction(()=>[...document.querySelectorAll('audio')].every(a=>a.paused||!a.srcObject));
  await page.waitForFunction(()=>document.querySelector('#speech-status').textContent.includes('canceled'));

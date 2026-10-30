@@ -64,6 +64,7 @@ try {
   assert.equal((await page.request.get(base + "/api/meetings")).status(), 401);
   await enroll(page);
   assert.equal(await page.locator("#recovery-codes").textContent(), "");
+  await page.locator("#account-menu").evaluate(el=>el.open=true);
   await page.locator("#admin-open").click();
   await page.locator("#admin-new-username").fill("judge_test");
   await page.locator("#admin-create button[type=submit]").click();
@@ -156,6 +157,7 @@ try {
   await page.locator("#admin-close").click();
   assert.equal(await page.locator("#admin-secret").textContent(), "");
   await page.setViewportSize({ width: 390, height: 844 });
+  await page.locator("#account-menu").evaluate(el=>el.open=true);
   await page.locator("#admin-open").click();
   await page.locator("#admin-close").waitFor({ state: "visible" });
   assert.equal(

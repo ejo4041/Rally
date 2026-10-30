@@ -160,6 +160,8 @@ export type Turn = {
   endMs: number | null;
 };
 export type Meeting = {
+  moderationMode?: import("./moderation-policy.ts").ModerationMode;
+  addressedRequestsHandled?: string[];
   topicSpentSeconds?: Record<string, number>;
   extension?: import("./live-agenda.ts").ExtensionProposal;
   monitor?: import("./realtime.ts").LiveCheck;
