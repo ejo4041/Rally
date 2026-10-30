@@ -160,3 +160,58 @@ test("a continuity notice clears transient output without ending capture or chan
   assert.equal(session.meeting.paused, false);
   assert.match(session.notice, /Source restarted/);
 });
+
+test("delayed finals preserve a newer scoped caption and late partials cannot resurrect finalized text", () => {
+  const session = new MeetingSession(fixture());
+  const turn = (sessionId: string, turnId: number) => ({
+    id: `${sessionId}:${turnId}`,
+    sessionId,
+    turnId,
+    revision: 1,
+    text: "Final words",
+    speaker: null,
+    startMs: null,
+    endMs: null,
+  });
+  session.apply(event("transcript.partial", {
+    sessionId: "new",
+    turnId: -3,
+    text: "Newer live words",
+  }));
+  session.apply(event("transcript.final", turn("new", 90)));
+  assert.equal(session.partial, "Newer live words");
+  // Turn numbers repeat across sessions; a different source cannot clear it.
+  session.apply(event("transcript.final", turn("old", -3)));
+  assert.equal(session.partial, "Newer live words");
+  session.apply(event("transcript.partial", {
+    sessionId: "new",
+    turnId: 90,
+    text: "Late old words",
+  }));
+  assert.equal(session.partial, "Newer live words");
+  session.apply(event("transcript.final", turn("new", -3)));
+  assert.equal(session.partial, "");
+  session.apply(event("transcript.partial", {
+    sessionId: "new",
+    turnId: -3,
+    text: "Late duplicate",
+  }));
+  assert.equal(session.partial, "");
+  session.apply(event("transcript.partial", {
+    sessionId: "third",
+    turnId: -3,
+    text: "Next session",
+  }));
+  session.replace({
+    ...session.meeting,
+    turns: [...session.meeting.turns, turn("third", -3)],
+  });
+  assert.equal(session.partial, "");
+  session.apply(event("transcript.partial", {
+    sessionId: "third",
+    turnId: 4,
+    text: "Interrupted",
+  }));
+  session.apply(event("capture.gap", { reason: "Audio disconnected" }));
+  assert.equal(session.partial, "");
+});

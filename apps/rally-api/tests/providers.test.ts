@@ -28,6 +28,12 @@ test("the Muse adapter normalizes speaker spans, timing, partials and out-of-ord
     audioProcessedMs: 500,
   });
   const finals = events.filter((e) => e.type === "final");
+  assert.deepEqual(events.find((e) => e.type === "partial"), {
+    type: "partial",
+    text: "hello",
+    sessionId: "s",
+    turnId: 1,
+  });
   assert.equal(finals.length, 2);
   assert.deepEqual(finals[1], {
     type: "final",

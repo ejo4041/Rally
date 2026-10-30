@@ -5,6 +5,11 @@ import type { RecordView, Turn } from "./api.ts";
 export class MeetingSession {
   meeting: RecordView;
   partial = "";
+  private partialTurn: string | null = null;
+  private clearPartial() {
+    this.partial = "";
+    this.partialTurn = null;
+  }
   intervention: { id: string; text: string; kind: string } | null = null;
   notice = "";
   private seen = new Set<string>();
@@ -41,7 +46,11 @@ export class MeetingSession {
     )
       this.intervention = null;
     this.meeting = meeting;
-    if (meeting.phase !== "live") this.partial = "";
+    if (
+      meeting.phase !== "live" ||
+      (this.partialTurn && meeting.turns.some((t) => t.id === this.partialTurn))
+    )
+      this.clearPartial();
   }
   apply(event: LiveEvent): boolean {
     if (
@@ -59,8 +68,17 @@ export class MeetingSession {
       data = event.data as any;
     switch (event.type) {
       case "transcript.partial":
-        if (m.phase === "live" && typeof data?.text === "string")
+        if (m.phase === "live" && typeof data?.text === "string") {
+          const key =
+            typeof data.sessionId === "string" &&
+            Number.isInteger(data.turnId)
+              ? `${data.sessionId}:${data.turnId}`
+              : null;
+          // Partial captions travel unreliably and can arrive after their final.
+          if (key && m.turns.some((turn) => turn.id === key)) return false;
           this.partial = data.text;
+          this.partialTurn = key;
+        }
         return false;
       case "transcript.final": {
         if (
@@ -74,7 +92,9 @@ export class MeetingSession {
           index = m.turns.findIndex((t) => t.id === turn.id);
         if (index < 0) m.turns.push(turn);
         else if (turn.revision > m.turns[index].revision) m.turns[index] = turn;
-        this.partial = "";
+        // Asynchronous completion of an older turn must not erase newer speech.
+        if (this.partialTurn === null || this.partialTurn === turn.id)
+          this.clearPartial();
         return true; // Fetch the authoritative ordering too.
       }
       case "intervention":
@@ -91,7 +111,7 @@ export class MeetingSession {
       case "assessment":
         return true; // The embedded recommendation is not an approved intervention.
       case "transcription.gap":
-        this.partial = "";
+        this.clearPartial();
         this.intervention = null;
         this.notice = String(
           data?.reason ||
@@ -99,6 +119,7 @@ export class MeetingSession {
         );
         return true;
       case "capture.gap":
+        this.clearPartial();
         this.notice = String(
           data?.reason ||
             "Audio was interrupted. Check the record and reconnect explicitly.",
@@ -111,7 +132,7 @@ export class MeetingSession {
         );
         return true;
       case "meeting.ended":
-        this.partial = "";
+        this.clearPartial();
         this.intervention = null;
         return true;
       case "speaker.updated":

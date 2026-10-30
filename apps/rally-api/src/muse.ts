@@ -404,7 +404,12 @@ export class TranscriptDecoder {
         turn.partial = v.transcript;
         this.publish(this.spanOwner!, turn);
       }
-      this.emit({ type: "partial", text: v.transcript });
+      this.emit({
+        type: "partial",
+        text: v.transcript,
+        sessionId: this.sessionId,
+        turnId: this.spanOwner,
+      });
     }
     if (v.type === "speaker") {
       const turn =
@@ -474,7 +479,12 @@ export class TranscriptDecoder {
           this.openTurns.delete(id);
           // Completion is asynchronous post-processing, not a speech boundary.
           if (!turn.text.trim() && this.spanOwner === id)
-            this.emit({ type: "partial", text: "" });
+            this.emit({
+              type: "partial",
+              text: "",
+              sessionId: this.sessionId,
+              turnId: id,
+            });
         }
         this.publish(id, turn);
       }

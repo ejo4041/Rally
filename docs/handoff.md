@@ -13,11 +13,12 @@ New overnight work:
 - [WhatsApp follow-up drafts](integrated-whatsapp-follow-up.md): host-selected report rows, preserved uncertainty, editable text, Copy and manual WhatsApp handoff. No recipient is preselected and no message was sent by tests.
 - Voice playback coverage windows are saved as upper bounds and shown as a report caveat; they are not evidence of participant silence.
 - Delayed moderator controls/prompts from older epochs cannot undo Resume or replace current guidance.
+- Scoped live captions survive older asynchronous completions; late partials cannot resurrect finalized words. Legacy unscoped adapters retain their existing clear-on-final behavior.
 - [Updated demo script](demo-script.md), [human rehearsal packet](integrated-rehearsal.md) and [submission/access observations](research/submission-access-check-2026-10-30.md).
 
 ## Validation and running check
 
-50 backend tests, eight frontend tests, both TypeScript checks and the frontend build pass. The full local HTTP/SQLite/LiveKit browser workflow passed with synthetic ASR/reasoning providers and actual pinned MMS speech. [Real speech/browser evidence](research/integrated-speech-browser-check.json) and [follow-up workflow evidence](research/integrated-follow-up-browser-check.json) identify test boundaries.
+50 backend tests, nine frontend tests, both TypeScript checks and the frontend build pass. The full local HTTP/SQLite/LiveKit browser workflow passed with synthetic ASR/reasoning providers and actual pinned MMS speech. [Real speech/browser evidence](research/integrated-speech-browser-check.json) and [follow-up workflow evidence](research/integrated-follow-up-browser-check.json) identify test boundaries.
 
 [Deployed HTTPS verification](research/asr-handoff-release-deployed.json) passes real MMS playback/Stop, distinct anonymous sessions, host name correction, stale warning, draft construction and annotation export. The setup used a temporary account and synthetic records, which were removed. No WhatsApp link was opened and no paid model call was made by these checks. Existing provider spending/Billing observations are separate; use the runtime usage view and [cost ledger](research/muse-cost-ledger.md).
 

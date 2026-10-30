@@ -57,7 +57,7 @@ Events use `{version:1,id,meetingId,type,data}` on topic `rally`:
 
 | Type | Data |
 | --- | --- |
-| `transcript.partial` | `{text}` replacing the previous partial; not evidence |
+| `transcript.partial` | `{text, sessionId?, turnId?}` transient caption; scoped finals clear only their own caption; not evidence |
 | `transcript.final` | Canonical turn with stable `id`, session/turn IDs, revision, text, speaker, nullable start/end milliseconds from meeting start |
 | `assessment` | Health, concerns, evidence, cumulative progress, and model recommendations; only `intervention` events authorize presentation as an intervention |
 | `intervention` | Approved `{id,at,text,kind}` after server cooldown/host checks |

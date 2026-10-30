@@ -125,7 +125,11 @@ export class Engine {
     const state = this.active.get(id);
     if (!state) return;
     if (e.type === "partial") {
-      this.emit(id, "transcript.partial", { text: e.text });
+      this.emit(id, "transcript.partial", {
+        text: e.text,
+        sessionId: e.sessionId,
+        turnId: e.turnId,
+      });
       return;
     }
     if (e.type !== "final") return;

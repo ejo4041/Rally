@@ -1,76 +1,77 @@
 # Model interfaces and configuration
 
-**Integrated Node app:** Muse `Providers` in `apps/rally-api/src/contracts.ts` owns transcription/reasoning; `SpeechEngine` in `src/speech.ts` owns voice generation. `RALLY_MODEL_CONFIG` selects compatible Muse models with explicit changed-model prices. The validated `speech` configuration selects a pinned compatible local MMS checkpoint; enable its runtime separately with `RALLY_MMS_ENABLED`. See [integrated speech](integrated-speech.md) for exact format, provisioning, cancellation and provenance checks. Normalized finals optionally carry `sourceOrder` from the source event sequence; provider IDs are opaque, and processing timestamps are not precise acoustic boundaries. The Muse adapter owns its documented event-span association and preserves unresolved attribution as unknown. Native platform transcripts are not used. The older Sites configuration and confirmation workflow described below remain specific to `apps/rally/`; the Node report uses reported agreement/proposal/unresolved interpretations.
-
-Rally separates meeting transport, model adapters and application policy. The Teams integration captures incoming meeting audio from the private PulseAudio speaker monitor and streams PCM to **Muse Voice Transcribe**. It does not read Teams captions, native transcription, meeting recap or a platform transcript feed.
+This page describes the integrated Node app in `apps/rally-api/` and `apps/rally-web/`. Muse Voice Transcribe supplies its canonical transcript. Teams, Zoom and WhatsApp capture surfaces do not supply native platform transcripts. Changing a model does not require changing the meeting UI when the replacement satisfies the same capability interface.
 
 ```mermaid
 flowchart LR
-  T[Teams incoming audio] --> A[Transcription adapter]
-  B[Browser microphone or selected meeting tab] --> A
+  B[Browser microphone or selected call tab] --> L[LiveKit media adapter]
+  L --> A[Muse ASR adapter]
   A --> F[Canonical finalized turns]
-  F --> M[Meeting state and evidence]
-  M --> R[Reasoning adapter]
-  R --> P[Validated proposals]
-  P --> H[Explicit host confirmation]
-  M --> S[Approved moderator utterance]
-  S --> Q[Speech queue]
-  Q --> V[Local Meta MMS adapter]
-  V --> O[Browser audio player]
+  F --> E[Meeting engine and evidence validation]
+  E --> R[Reasoning adapter]
+  R --> E
+  E --> G[Approved guidance]
+  G --> S[Speech output lifecycle]
+  S --> V[Local Meta MMS adapter]
+  V --> O[Optional host-browser playback]
+  F --> Q[Full report generation and validation]
+  Q --> H[Host review, corrections and manual follow-up]
 ```
 
-Browser capture uses `RallyAudioInput.acquire({mode, includeMicrophone, signal, onEnded})`, returning audio streams and a `close()` handle. Meeting-tab selection is explicit and browser-controlled; platform presets are metadata. The separate `check()` operation meters sources locally and never opens the ASR adapter. Cancellation closes current tracks and any late permission grant.
+Browser playback does not establish remote-call audibility. The separate Teams guest runner remains a bounded transcription experiment; the WhatsApp guest prototype is not an enabled production invite connector.
 
-The diagram describes the implemented boundaries. Connecting generated speech to the Teams virtual microphone remains a separate integration step; browser playback does not establish Teams spoken moderation.
+## Capability interfaces
 
-## Configuration
+[contracts.ts](../apps/rally-api/src/contracts.ts) defines `Providers`, `ASRSession` and `Media`. [speech.ts](../apps/rally-api/src/speech.ts) defines `SpeechEngine`. `createApplication({providers, media, speechEngine})` accepts injected implementations; provider overrides may replace individual capabilities. The default factories are Muse, LiveKit and optional local MMS. Offline tests use the same interfaces.
 
-Set the server-side `RALLY_MODEL_CONFIG` environment variable to a JSON object using [the example configuration](../config/models.example.json). Partial capability overrides are supported. Runtime validation and defaults live in [models.js](../apps/rally/src/models.js). The browser sees model/adapter identifiers through `/api/config`, never credentials. Keep the runtime API key in its existing secret binding.
-
-- `reasoning`: adapter ID, model ID, reasoning effort, output-token limit and input/cached-input/output prices per million tokens.
-- `transcription`: adapter ID, model ID and audio price per hour.
-- `speech`: adapter ID, model ID, pinned checkpoint revision and the bridge's sample rate.
-
-The current adapters are `meta-chat-json`, `meta-realtime-asr` and `mms-local`. Their defaults remain Muse Spark 1.3, Muse Voice Transcribe 1.0 and self-hosted Meta MMS English. A compatible model using the same protocol/schema can be selected in configuration. Another provider protocol needs an adapter implementation and validation registration; configuration does not make an incompatible API or output schema interchangeable.
-
-Changing a reasoning/transcription model requires explicit pricing. Unknown adapters, missing prices for a changed model, invalid prices and unsupported speech formats fail before a provider call. Model availability, rates, protocol compatibility and event eligibility still require verification before changing a production selection.
-
-Hosted configuration is set through Sites runtime environment tooling, followed by deployment. The local preview reads the same JSON variable. The MMS runner reads the root environment and the same capability parser; a model change also requires explicitly downloading the pinned checkpoint to the configured model directory and restarting the idle speech runner. Inference never downloads model weights.
-
-## Transcription port
-
-`openASR(env, callbacks)` returns a session with `send(bytes)`, `end()`, `close()`, `sessionId`, `sentSeconds` and `processedMs`. The current audio contract is mono PCM16 at 16 kHz. Consumers receive provider-independent events:
-
-| Event | Fields | Meaning |
+| Interface | Operations | Contract |
 | --- | --- | --- |
-| `partial` | `text` | Noncanonical live caption; not outcome evidence |
-| `final` | `sessionId`, `turnId`, `text`, `speaker` | Finalized source turn; identity may remain unknown |
-| `progress` | `processedMs` | Provider-reported processed duration |
+| `Providers` | `prepare(meeting)`, `assess(snapshot)`, `report(snapshot)`, `openASR(meeting, callbacks)` | Return normalized plans, assessments, reports and transcription sessions. Provider wire formats stay in adapters. |
+| `ASRSession` | `send(bytes)`, `end()`, `close()`; session ID, sent seconds and processed position | Accept mono PCM16 at 16 kHz; preserve pacing, bound buffering, drain final results and release resources. |
+| `Media` | `open(meeting, onAudio, onGap)` | Return connection credentials, event delivery and close operations; deliver normalized audio to the engine. |
+| `SpeechEngine` | `start()`, `synthesize(text, {signal})`, `close()`; optional identity | Return bounded PCM/WAV, duration, sample rate and actual model/revision; honor cancellation. |
 
-`onError`/`onClose` signal failure or closure. Provider event names are normalized inside the Meta adapter. Browser and Teams consumers do not parse Meta's raw event names. Final drain, cancellation, pacing and unknown-handshake accounting are adapter acceptance requirements.
+The engine owns moderation pause, evidence validation, capture ownership, session handoff, cooldowns and report lifecycle. Speech output owns approved prompt IDs/epochs, job expiry, playback coverage records and stale-result rejection. Adapters do not decide those policies. The browser never parses raw Muse events.
 
-The Teams backend reserves usage before opening a provider session and returns the selected transcription configuration to the runner. Completion uses the model and pricing stored in that reservation, even if server configuration changes during the call. Browser sessions capture their selected transcription configuration at session construction. Both paths retain actual model identifiers in usage records.
+## Transcription events
 
-## Reasoning port
+| Event | Normalized fields | Meaning |
+| --- | --- | --- |
+| `partial` | `text`, optional `sessionId` and `turnId` | Transient caption, never evidence. A scoped caption is cleared by its matching final rather than a delayed final for another turn. Legacy unscoped adapters retain clear-on-final behavior. |
+| `final` | `sessionId`, `turnId`, `text`, nullable `speaker`; optional `sourceOrder`, `startMs`, `endMs` | Canonical source turn or revision. IDs are opaque; source event order, when known, determines chronology. Unknown speaker/timing remains unknown. |
+| `progress` | `processedMs` | Provider-reported processing position; not a precise acoustic timestamp. |
 
-`moderate(env, meetingSnapshot, repository, options)` returns `{decision, usage}`. The application validates the decision's structure, cited turn IDs, source revisions and roster owners through the existing domain functions. Valid model output creates proposals; explicit host confirmation is a separate state transition.
+Muse speaker labels follow preceding spans in event order. They are session-local anonymous labels, not meeting roster names or verified human identities. Conflicting or unsupported association remains unknown. A room microphone can contain several people, and a voice can receive more than one label. See [speaker attribution](speaker-attribution.md).
 
-[model-services.js](../apps/rally/src/model-services.js) is the adapter registry used by live moderation and retrospective review. Test injection uses the same function signatures. Meeting timers, cooldowns, pause/override and evidence handling remain application behavior.
+`onError` and `onClose` signal failure or closure. The engine drains and replaces sessions according to [handoff policy](asr-session-handoff.md). A different provider must meet that lifecycle contract; a configuration change alone cannot translate a different wire protocol.
 
-Usage records include the actual model, adapter and pricing used. Forecasts and final usage calculations use the selected rate table. Retrospective-review fingerprints include model/control settings so a changed model is not mistaken for the previous cached review.
+## Runtime configuration
 
-## Speech port
+Set server-side `RALLY_MODEL_CONFIG` to JSON. The Node parser is `modelSettings()` in [muse.ts](../apps/rally-api/src/muse.ts); speech validation is in [speech-config.ts](../apps/rally-api/src/speech-config.ts). [models.example.json](../config/models.example.json) is an explicit example, not a complete dump of runtime defaults.
 
-The local speech engine exposes `start()`, `synthesize(text, {signal})` and `close()`. Its normalized output includes the actual model/revision, sample rate, PCM base64 and duration. The current bridge accepts bounded mono PCM16 at 16 kHz; an engine producing a different format must convert it at the adapter boundary.
+| Capability | Supported adapter | Configuration |
+| --- | --- | --- |
+| Reasoning | `meta-chat-json` | `model`, `reasoningEffort`, `maxOutputTokens`, and `rates` with `input`, `cachedInput`, `output`. |
+| Transcription | `meta-realtime-asr` | `model`, `usdPerAudioHour`. |
+| Report | Uses selected reasoning model | Separate `reasoningEffort` and `maxOutputTokens` under `report`. |
+| Speech | `mms-local` | `facebook/mms-tts-*` model, its own pinned 40-character revision and 16000 Hz sample rate. |
 
-The queue accepts only an existing current moderator utterance or a fixed diagnostic phrase. It does not accept arbitrary client text. The worker is advertised as ready only after loading and verifying the configured checkpoint. Host cancellation stops local generation and playback; stale meeting epochs are rejected before audio is served. [Playback implementation and operations](mms-playback.md).
+Compatible models can be selected through configuration. A changed reasoning/transcription model requires explicit prices; these are operator configuration, not a live price lookup. Unsupported adapters, malformed rates and incompatible speech formats fail validation. The current reasoning adapter also restricts model identifiers to supported Muse naming and disallows contributor data-sharing mode.
 
-## Verification boundary
+Preparation currently uses its own low-effort/4096-token policy. Live assessment uses `reasoning` settings; final analysis uses `report` settings. Do not assume the live token limit controls every operation.
 
-Configuration selection, canonical event mapping, pricing propagation and session pricing snapshots are covered by offline tests. Changed model IDs in those tests are synthetic identifiers and are not claims of available models. No additional Muse transcription/reasoning request was made for these tests. Live Teams pacing and real-device audio checks remain pending; the currently running Teams queue process must load the changed adapter code at an idle restart before testing it.
+Enable local speech separately with `RALLY_MMS_ENABLED=1`, plus the configured Python environment and model directory. Provision the pinned weights explicitly: inference does not download them. A changed speech model requires its own revision, matching local manifest/checksums and a validated compatible waveform. English is the checkpoint actually tested here. Configuration acceptance is not evidence that another language/model works. See [integrated speech](integrated-speech.md).
 
-New paid-provider adapters must reserve and reconcile usage through the same accounting boundary before production use. The current speech adapter runs MMS locally and makes no billed speech-provider request; adding an API-billed speech adapter requires explicit pricing and accounting support rather than inheriting the local adapter’s zero provider-call cost.
+## Replacing an adapter
 
-## Separate Node backend MVP
+Implement the capability interface and inject it at application construction. If production selection should use a new adapter name, extend configuration validation and the corresponding factory together. Keep protocol parsing, pacing and provider accounting inside that adapter; preserve the normalized schemas and engine lifecycle.
 
-The Node service in `apps/rally-api/` implements the same provider capability boundary with a separate full-report stage and session-scoped diarization. See [AI processing](ai-processing.md) and [API contract](backend-api.md). It does not replace or alter the private Sites Worker. Model changes require an explicit adapter and price configuration; paid calls are disabled by default. The backend output distinguishes reported agreement, proposals and unresolved items; these remain AI interpretations until reviewed by the host.
+A replacement reasoning adapter must return the existing plan/assessment/report schemas and preserve evidence IDs. A replacement ASR adapter must establish its own sessions, handle bounded audio and final drain, normalize uncertain speaker/timing metadata and report failure. A replacement speech adapter must report actual provenance, honor aborts and produce the supported bounded audio format or convert it internally.
+
+Paid adapters must reserve and reconcile usage through the accounting path before use. Current Muse requests record the selected model, adapter and rate table. Unknown costs block further paid work; failed calls are not automatically retried. Local MMS has no speech-provider API charge. An API-billed speech replacement needs explicit accounting support rather than inheriting that zero-call assumption.
+
+Run adapter tests, lifecycle tests, both type checks and the browser workflow after changing a capability. Keep live-provider verification explicit and reconcile actual usage before repetition. Synthetic model IDs in tests do not establish provider availability or hackathon eligibility.
+
+## Historical Sites implementation
+
+The older `apps/rally/` release has a separate JavaScript adapter registry in [model-services.js](../apps/rally/src/model-services.js) and configuration in [models.js](../apps/rally/src/models.js). It uses proposal/host-confirmation semantics and Sites runtime bindings. Those function signatures and deployment steps do not describe the integrated Node app. Its Teams queue and MMS bridge remain documented separately in [Teams integration research](research/teams-transcription-poc.md) and [MMS playback](mms-playback.md).

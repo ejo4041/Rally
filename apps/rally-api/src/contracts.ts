@@ -148,7 +148,7 @@ export type Snapshot = {
   elapsedSeconds: number;
 };
 export type TranscriptEvent =
-  | { type: "partial"; text: string }
+  | { type: "partial"; text: string; sessionId?: string; turnId?: number }
   | {
       type: "final";
       sessionId: string;
