@@ -25,7 +25,7 @@ New overnight work:
 
 An eight-hour local MMS reliability process started October 30 at 04:09 UTC, with a synthetic phrase every 30 minutes and periodic worker reloads. It is **running**, not an eight-hour pass, at this checkpoint. Its ignored local report is `experiments/meta-mms/test-results/overnight-check.json`; command and limits are in [integrated speech](integrated-speech.md). Do not terminate it as an abandoned browser fixture.
 
-A local [source draft/privacy manifest](research/source-draft-archive-check.json) and [clean-archive reproduction](research/source-draft-reproduction-check.json) pass. The archive is local only, from `3317f1f`; source is not claimed public.
+The refreshed local archive from `5e3da10` contains 404 filtered source files. Its [source draft/privacy manifest](research/latest-source-draft-archive-check.json) and [clean-archive reproduction](research/latest-source-draft-reproduction-check.json) pass: 50 backend, nine frontend and four WhatsApp prototype checks, type checks, build and the complete synthetic-provider browser workflow. The archive is local only; source is not claimed public. Earlier `3317f1f` archive evidence is retained as historical.
 
 [ASR handoff work and bounded capture experiments](asr-session-handoff.md) correct planned session continuation, pause, failure and ownership. The [two-hour MMS checkpoint](research/mms-soak-two-hour-checkpoint.json) remains a running eight-hour test, not a final pass.
 
