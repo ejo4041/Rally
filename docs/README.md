@@ -1,3 +1,5 @@
+**Streaming speech work in progress:** [implementation checkpoint and remaining work](streaming-speech-plan.md). New isolated worktree; not deployed.
+
 # Rally documentation
 
 Start with the [current handoff](handoff.md). The integrated Node app and the older Sites preview are separate releases. Historical records preserve their original checkpoints; their old “current” status and cost figures do not describe today's deployment or verified Billing.

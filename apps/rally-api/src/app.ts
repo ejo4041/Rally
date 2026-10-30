@@ -1,3 +1,5 @@
+import { SeamlessSpeech, SpeechError } from "./seamless.ts";
+import { once } from "node:events";
 import express from "express";
 import { retainLegacyNotes } from "./report-notes.ts";
 import { SpeechOutput, configuredSpeech, type SpeechEngine } from "./speech.ts";
@@ -30,6 +32,7 @@ export function createApplication(
     media?: Media;
     teamsRequest?: TeamsRequest;
     speechEngine?: SpeechEngine;
+    tts?: SeamlessSpeech;
   } = {},
 ) {
   const config = { ...defaults, ...options };
@@ -51,6 +54,7 @@ export function createApplication(
     meetings,
     options.teamsRequest || configuredTeamsRequest(),
   );
+  const tts = options.tts || new SeamlessSpeech(process.env.RALLY_TTS_TOKEN || "");
   const app = express();
   app.disable("x-powered-by");
   app.use((req, res, next) => {
@@ -177,6 +181,36 @@ export function createApplication(
     userForRequest(store, req);
     res.json(speech.status());
   });
+  for (const mode of ['generate', 'stream'] as const) {
+    app.post('/api/speech/' + mode, async (req, res, next) => {
+      userForRequest(store, req);
+      const input = z.object({input:z.string().min(1).max(1200),voice:z.literal('default').optional()}).strict().parse(req.body);
+      const controller = new AbortController();
+      const close = () => controller.abort();
+      res.once('close', close);
+      try {
+        if (mode === 'generate') {
+          res.type('audio/wav').send(await tts.synthesize(input, controller.signal));
+        } else {
+          res.setHeader('Content-Type','application/octet-stream');
+          res.setHeader('X-Audio-Format','pcm_s16le');
+          res.setHeader('X-Audio-Sample-Rate','16000');
+          res.setHeader('X-Audio-Channels','1');
+          for await (const bytes of tts.stream(input, controller.signal)) {
+            if (!res.write(bytes)) await once(res, 'drain', {signal:controller.signal});
+          }
+          res.end();
+        }
+      } catch (error) {
+        if (res.headersSent) res.destroy();
+        else {
+          res.removeHeader('Content-Type');
+          if (error instanceof SpeechError && error.retryAfter) res.setHeader('Retry-After',error.retryAfter);
+          next(error);
+        }
+      } finally { res.removeListener('close',close); }
+    });
+  }
   const diagnosticOwner = (req: express.Request) =>
     "diagnostic:" + userForRequest(store, req).id;
   app.post("/api/speech/test", (req, res) => {

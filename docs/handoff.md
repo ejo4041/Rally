@@ -1,3 +1,5 @@
+**Streaming speech work in progress:** [implementation checkpoint and remaining work](streaming-speech-plan.md). New isolated worktree; not deployed.
+
 # Rally handoff — October 30 current checkpoint
 
 The integrated Node app is deployed from `9202d1f` at [Rally](https://rally.tail703f9e.ts.net:8445). It requires Tailscale and its own app login. Source is pushed to `main`. The older restricted Sites app remains a separate release; do not mix its presenter, confirmation or demo-clock controls with the Node workflow.
