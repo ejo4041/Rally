@@ -94,3 +94,9 @@ Original 60.336-second synthetic single-voice meeting generated offline with Met
 ## Explicit realistic-report retry
 
 One report-only retry with maximum effort and 32,768 completion-token allowance completed, passed application evidence validation and the case-specific checks. No successful preparation/assessment was repeated. Cost **$0.08957025**, unknown **0**. Cumulative **$0.47338150**, conditional remainder **$149.52661850**. Run `report-retry-1793281702834`. The whole Astra follow-up spent **$0.28876035** across agenda examples, initial failed report, full audio test, and explicit successful retry.
+
+## October 30 — continuous monitoring production-schema smoke
+
+Four purpose-written text fixtures through the real `checkLive` adapter, Spark 1.3 minimal, 1,024 output tokens. [Results and per-call usage](realtime-model-benchmark.json). All four valid and below eight seconds (2.131–4.243 seconds). Identical exploratory input remained silent with twenty minutes available and prompted a redirect with three minutes available; on-topic input stayed silent and irrelevant drift prompted redirect. No retries, ASR, TTS or platform join. This small short-context batch is not a production p95 guarantee or near-limit context evaluation.
+
+Batch **$0.01176350**, unknown **0**. Development-ledger cumulative **$0.48514500**, conditional remainder **$149.51485500** against the unverified $150 grant. Separately recorded user-operated live meeting charges are not reconciled into this development ledger; this is not an actual Billing balance. Runtime accounting remains authoritative for those requests. Experiment maximum was $0.15, not an allowance consumed in full.
