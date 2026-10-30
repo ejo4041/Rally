@@ -44,6 +44,7 @@ const server = createServer(async (req, res) => {
       "/index.html": "text/html; charset=utf-8",
       "/style.css": "text/css; charset=utf-8",
       "/favicon.svg":"image/svg+xml",
+      "/theme-init.js":"text/javascript; charset=utf-8",
       "/renderer.html": "text/html; charset=utf-8",
       "/renderer.js": "text/javascript; charset=utf-8",
       "/app.js": "text/javascript; charset=utf-8",

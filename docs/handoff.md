@@ -1,3 +1,5 @@
+**Appearance/UI follow-up:** [Light/Dark/System and richer Meta showcase](appearance-and-meta-showcase.md). Prior feedback branch merged to main2c8c0f5; visual work isolated on polish/meta-showcase-20261030 in the same droplet workspace.
+
 **Phone continuation:** Omnigent droplet session **Rally · Teams wrap-up handoff** (`bc8e5295591d4b4ba6e18164f8c7fd49`), workspace `/srv/hackathon/rally-feedback`. History-only checkpoint; no second runner. Current application8054fb5.
 
 **Current application release8054fb5:** Graceful Teams wrap-up with13second minimum, verified rich summary hyperlink and confirmed Leave before camera teardown. [Implementation, live evidence, model costs and remaining user access confirmation](teams-wrapup.md). Branch `feedback/demo-polish-20261030`; no main merge.

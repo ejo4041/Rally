@@ -5,11 +5,13 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta name="theme-color" content="#f5f6f2" />
     <title>Rally · Make meetings matter</title>
+    <script src="/theme-init.js"></script>
     <link rel="stylesheet" href="/style.css" />
     <script type="module" src="/app.js"></script>
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 </head>
   <body>
+    <label class="auth-appearance appearance-control">Appearance<select data-theme-selector aria-label="Appearance"><option value="system">System</option><option value="light">Light</option><option value="dark">Dark</option></select></label>
     <section id="auth-screen" class="auth-screen">
       <a class="brand" href="/">▥ rally<span>.</span></a>
       <div class="auth-card">
@@ -74,7 +76,7 @@
         <a class="brand" href="#" id="brand">▥ rally<span>.</span></a>
         <div class="eyebrow">YOUR WORKSPACE</div>
         <button id="home-nav" class="nav active">▤ Meetings</button
-        ><button id="new-nav" class="nav">＋ New meeting</button>
+        ><button id="new-nav" class="nav">+ New meeting</button>
         <div class="eyebrow recent-label">RECENT</div>
         <div id="recent" class="recent"></div>
         <div class="sidebar-foot">
@@ -87,14 +89,14 @@
           <button class="text" id="mobile-home">Meetings</button
           ><span id="breadcrumb">Workspace / Meetings</span
           ><button id="mobile-logout" class="text mobile-only">Sign out</button>
-          <details id="account-menu" class="account-menu"><summary>Account</summary><div><button id="admin-open" class="secondary" hidden>Administration</button><button id="usage-button" class="secondary">Usage</button></div></details>
+          <div class="topbar-tools"><label class="appearance-control">Appearance<select data-theme-selector aria-label="Appearance"><option value="system">System</option><option value="light">Light</option><option value="dark">Dark</option></select></label><details id="account-menu" class="account-menu"><summary>Account</summary><div><button id="admin-open" class="secondary" hidden>Administration</button><button id="usage-button" class="secondary">Usage</button></div></details></div>
         </header>
         <main>
           <section id="home">
             <div class="hero">
               <div>
                 <div class="eyebrow">
-                  A LITTLE STRUCTURE. A LOT MORE PROGRESS.
+                  YOUR MEETING, WITH MOMENTUM.
                 </div>
                 <h1>Make the time<br /><span>together count.</span></h1>
                 <p class="muted">
@@ -102,21 +104,23 @@
                   grounded in what was said.
                 </p>
                 <button id="new-meeting" class="primary">
-                  ＋ Start a new meeting
+                  + Start a new meeting
                 </button>
               </div>
               <div class="hero-art" aria-hidden="true">
-                <div class="orbit"></div>
-                <div class="disc">▥</div>
-                <span class="float one">✓ Decision made</span
-                ><span class="float two">✓ Next step owned</span>
+                <div class="hero-halo"></div>
+                <svg class="hero-ribbon" viewBox="0 0 440 300" fill="none"><defs><linearGradient id="ribbon-light" x1="30" y1="30" x2="400" y2="260" gradientUnits="userSpaceOnUse"><stop stop-color="#a0f3d6"/><stop offset=".52" stop-color="#a6c1ff"/><stop offset="1" stop-color="#d2b5ff"/></linearGradient></defs><g stroke="url(#ribbon-light)"><path d="M35 160C98 4 158 29 220 149S347 289 405 130C343 17 287 18 220 149S98 283 35 160Z" stroke-width="2"/><path d="M48 157C105 29 163 39 220 149S339 270 393 134C336 38 282 34 220 149S106 264 48 157Z" stroke-width="10" opacity=".2"/><path d="M60 154C112 50 167 53 220 149S329 249 382 138C327 56 276 49 220 149S115 244 60 154Z" stroke-width="16" opacity=".25"/><path d="M75 152C121 71 172 69 220 149S319 229 369 142C316 76 270 65 220 149S126 224 75 152Z" stroke-width="8" opacity=".5"/></g></svg>
+                <span class="hero-float hero-float-plan">✦ A plan before the first word</span>
+                <span class="hero-float hero-float-action">↗ Clarity after the last</span>
+                <span class="hero-art-caption">A little focus changes everything.</span>
               </div>
             </div>
             <section class="meta-products" aria-label="Meta AI in Rally">
-              <h2>Built with Meta AI</h2><div class="meta-product-grid">
-                <div><span class="meta-badge">Meta · Muse Spark 1.3</span><p>Turns your agenda into a plan, guides the conversation and builds the final report.</p></div>
-                <div><span class="meta-badge">Meta · Muse Voice Transcribe</span><p>Transcribes the conversation, with anonymous speaker labels you can identify.</p></div>
-                <div><span class="meta-badge">Meta · SeamlessM4T + MMS</span><p>SeamlessM4T streams Rally’s voice; MMS provides the local browser voice option.</p></div>
+              <div class="meta-heading"><div><span class="eyebrow">THE INTELLIGENCE BEHIND RALLY</span><h2>Built with <span>Meta AI</span></h2></div><p>One conversation.<br />Intelligence at every step.</p></div>
+              <div class="meta-product-grid">
+                <div class="meta-model-card"><span class="model-symbol" aria-hidden="true">✦</span><span class="meta-badge">Meta · Muse Spark 1.3</span><h3>A sharper sense of direction.</h3><p>Turns your agenda into a plan, guides the conversation and builds the final report.</p><span class="model-role">PLAN <span aria-hidden="true">→</span> GUIDE <span aria-hidden="true">→</span> REVIEW</span></div>
+                <div class="meta-model-card"><span class="model-symbol" aria-hidden="true">≋</span><span class="meta-badge">Meta · Muse Voice Transcribe</span><h3>Keep the conversation.</h3><p>Transcribes what’s said, with anonymous speaker labels you can identify.</p><span class="model-role">STREAM <span aria-hidden="true">→</span> TRANSCRIBE</span></div>
+                <div class="meta-model-card"><span class="model-symbol" aria-hidden="true">◉</span><span class="meta-badge">Meta · SeamlessM4T + MMS</span><h3>Give useful guidance a voice.</h3><p>SeamlessM4T streams Rally’s voice; MMS provides the local browser voice option.</p><span class="model-role">RESPOND <span aria-hidden="true">→</span> SPEAK</span></div>
               </div>
             </section>
             <div class="benefits">
@@ -219,7 +223,7 @@
               </div>
               <button id="refresh-history" class="text">Refresh</button>
             </div>
-            <div id="history" class="card"></div><section class="card"><h2>Shared with you</h2><p class="small muted">Read-only reports shared by other Rally users.</p><div id="shared-reports"></div></section>
+            <div id="history" class="card"></div><section class="card shared-reports-card"><h2>Shared with you</h2><p class="small muted">Read-only reports shared by other Rally users.</p><div id="shared-reports"></div></section>
           </section>
           <section id="meeting" hidden>
             <button id="back" class="text">← All meetings</button>

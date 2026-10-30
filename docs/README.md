@@ -1,3 +1,5 @@
+**Appearance/UI follow-up:** [Light/Dark/System and richer Meta showcase](appearance-and-meta-showcase.md). Prior feedback branch merged to main2c8c0f5; visual work isolated on polish/meta-showcase-20261030 in the same droplet workspace.
+
 **Current application release8054fb5:** Graceful Teams wrap-up with13second minimum, verified rich summary hyperlink and confirmed Leave before camera teardown. [Implementation, live evidence, model costs and remaining user access confirmation](teams-wrapup.md). Branch `feedback/demo-polish-20261030`; no main merge.
 
 **Latest Teams follow-up:** [Graceful wrap-up, chat link,13-second hold and validation limits](teams-wrapup.md). Native Insert link path passes local browser tests; final remote admission/check pending. Earlier local-close-only success was rejected by the user and corrected with Teams leave acknowledgement.

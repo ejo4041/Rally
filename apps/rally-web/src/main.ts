@@ -1,3 +1,4 @@
+import {setupTheme} from "./theme.ts";
 import {rallyRepliesHTML} from "./rally-replies.ts";
 import {setupActionFeedback} from "./action-feedback.ts";
 import {formatMoney as formatCost} from "./format.ts";
@@ -1160,4 +1161,5 @@ input("share-feedback").onchange = () => {
 
 input('moderation-mode').onchange=()=>{const m=state.session?.meeting;if(!m)return;void api<Meeting>(`/meetings/${m.id}/moderation`,'PATCH',{mode:input('moderation-mode').value}).then(updated=>{mergeMeeting(updated);render();toast('Rally’s approach updated.');}).catch(fail);};
 
+setupTheme();
 setupActionFeedback();

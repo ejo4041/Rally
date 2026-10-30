@@ -10,7 +10,7 @@ await build({
   sourcemap: true,
 });
 await Promise.all(
-  ["index.html", "renderer.html", "style.css", "favicon.svg"].map((name) =>
+  ["index.html", "renderer.html", "style.css", "favicon.svg", "theme-init.js"].map((name) =>
     copyFile("src/" + name, "dist/" + name),
   ),
 );
