@@ -1,0 +1,15 @@
+{
+  "at": "2026-10-30T23:09:30.197Z",
+  "scope": "Authorized transport-only wrap-up check using prior private report",
+  "modelCalls": 0,
+  "paidCost": 0,
+  "meetingId": "98de2d2a-7280-4815-b3b4-11672ca94b99",
+  "finishMs": 13885,
+  "result": {
+    "chat": "sent",
+    "left": true
+  },
+  "passed": true,
+  "clickableLinkVerified": false,
+  "note": "Chat message confirmed; anchor presence not confirmed by bounded DOM watcher. User verification pending. Source hold13000ms not yet application-deployed."
+}

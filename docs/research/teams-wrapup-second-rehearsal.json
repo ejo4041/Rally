@@ -1,0 +1,27 @@
+{
+  "at": "2026-10-30T22:59:33.543Z",
+  "meetingId": "98de2d2a-7280-4815-b3b4-11672ca94b99",
+  "scope": "Authorized short Teams wrap-up rehearsal",
+  "passed": false,
+  "liveJoinAttempt": 1,
+  "moderationPaused": true,
+  "ttsEnabled": false,
+  "connected": true,
+  "endRequestMs": 4473,
+  "wrapUp": {
+    "state": "left",
+    "chat": "unknown",
+    "summaryUrl": "https://rally.tail703f9e.ts.net/#report/98de2d2a-7280-4815-b3b4-11672ca94b99",
+    "leaveConfirmed": true
+  },
+  "callState": "left",
+  "reportStatus": "ready",
+  "finalizedTurns": 1,
+  "sharedWithAdmin": true,
+  "unknownCostRows": 0,
+  "userObservation": "Animation followed by clean departure. Requested ten more seconds and clickable link.",
+  "deployment": "6df86ce",
+  "modelBatchKnownCost": 0.02693345,
+  "trackedMuseTotal": 1.86086795,
+  "conditional150Remainder": 148.13913205
+}

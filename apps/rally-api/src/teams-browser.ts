@@ -473,7 +473,7 @@ export const connectTeamsBrowser = async (
         const started=Date.now();
         const chat=await postTeamsSummary(page,summaryUrl);
         // Keep the camera rendering long enough to make the transition visible.
-        await delay(Math.max(0,3000-(Date.now()-started)),undefined,{signal});
+        await delay(Math.max(0,13000-(Date.now()-started)),undefined,{signal});
         onState('leaving');
         const left=await leaveTeamsMeeting(page);
         return {chat,left};

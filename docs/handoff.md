@@ -1,3 +1,5 @@
+**Latest Teams follow-up:** [Graceful wrap-up, chat link,13-second hold and validation limits](teams-wrapup.md). Native Insert link path passes local browser tests; final remote admission/check pending. Earlier local-close-only success was rejected by the user and corrected with Teams leave acknowledgement.
+
 **Teams wrap-up follow-up:** [Animation, authenticated chat summary link and graceful leave](teams-wrapup.md). Branch/worktree unchanged; read this before further call lifecycle changes.
 
 **Current UI asset release `7f2a634`:** Loading spinners, contextual Meta model labels and separate Rally response history deployed. [Public validation passes](research/loading-replies-deployed.json);17 frontend tests and browser/security checks pass. Static publication only: running API/media were not restarted, API source unchanged (`d5d2399`). Read [scope and limits](loading-and-rally-responses.md). Existing phone checkpoint remains valid; resume in this worktree.

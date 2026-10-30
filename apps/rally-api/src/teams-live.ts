@@ -177,7 +177,7 @@ export class TeamsLive {
       try{
         if(j.call?.alive()&&!j.abort.signal.aborted&&j.call.finish){
           let timer:ReturnType<typeof setTimeout>;
-          const result=await Promise.race([j.call.finish(url),new Promise<import('./teams-summary.ts').ChatResult>(resolve=>{timer=setTimeout(()=>resolve('unknown'),18000);})]).finally(()=>clearTimeout(timer!));
+          const result=await Promise.race([j.call.finish(url),new Promise<import('./teams-summary.ts').ChatResult>(resolve=>{timer=setTimeout(()=>resolve('unknown'),25000);})]).finally(()=>clearTimeout(timer!));
           chat=typeof result==='string'?result:result.chat;leaveConfirmed=typeof result==='object'&&result.left;
         }
       }catch{chat='failed';}

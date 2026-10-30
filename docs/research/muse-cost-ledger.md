@@ -154,3 +154,7 @@ One synthetic, non-retrying SeamlessM4T-v2-large utterance without the old prefi
 ## Teams wrap-up rehearsal — October30
 
 One authorized live join,25seconds captured by Muse Voice Transcribe and one Muse Spark report. Estimated ASR $0.00125000 + recorded report $0.01683700 = **$0.01808700**, unknown rows0, TTS disabled. Tracked cumulative **$1.83393450**; conditional unverified-$150 remainder **$148.16606550**, excludes unrelated runtime usage and AWS speech infrastructure. Report ready/private, explicit grant to rally_admin. Local stop returned3.5s and camera animation appeared, but user observed a frozen lingering participant; real departure acceptance failed. Chat click attempted, delivery unconfirmed; no automatic retry. Fix actual leave acknowledgement before further rehearsal.
+
+## Teams leave acknowledgement rehearsal — October30
+
+One live join,26processed ASR seconds estimated $0.00130000 and one report $0.02563345. Batch **$0.02693345**, unknown0, TTS disabled. Tracked total **$1.86086795**; conditional unverified-$150 remainder **$148.13913205**. Client reached post-call UI and closed both peers before camera teardown; user confirmed clean departure. Chat message appeared as plain text, confirmed by user; clickable URL formatting requires follow-up. Both reports grant rally_admin; user reports denial under their signed-in account, account/URL clarification pending.
