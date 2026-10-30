@@ -1,0 +1,25 @@
+{
+  "at": "2026-10-30T21:56:34.999Z",
+  "passed": true,
+  "scope": "Public HTTPS and deployed API/PDF sandbox with disposable synthetic accounts/report",
+  "modelCalls": 0,
+  "platformJoins": 0,
+  "mfaLogin": true,
+  "semanticOTP": true,
+  "secureCookie": true,
+  "closedRegistration": true,
+  "favicon": true,
+  "deployedPDF": true,
+  "accountSharing": true,
+  "fullMeetingDenied": true,
+  "revocation": true,
+  "temporaryRecordsRemoved": true,
+  "deployment": {
+    "release": "d5d2399",
+    "previous": "d0a5364",
+    "backup": "/srv/hackathon/rally-deployed/backups/feedback-final-20261030T215618Z.sqlite",
+    "idle": true,
+    "at": "2026-10-30T21:56:18.698613+00:00",
+    "stagingIncident": "Initial incomplete staging caused brief API interruption; rolled back, completed physical-path copy and validated files before final switch."
+  }
+}
