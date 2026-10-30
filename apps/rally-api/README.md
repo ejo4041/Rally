@@ -31,7 +31,9 @@ Default seed users are `demo` and `demo2`; passwords come only from `RALLY_DEMO_
 | `RALLY_ASSESSMENT_MS`, `RALLY_COOLDOWN_MS` | `10000`, `60000` |
 | `RALLY_CAPACITY` | `5` |
 | `RALLY_MEETING_BUDGET`, `RALLY_BUILD_BUDGET` | `$2`, `$5` cumulative for this database |
-| `RALLY_MODEL_CONFIG` | Existing capability config, plus optional `report` effort/token settings |
+| `RALLY_MODEL_CONFIG` | Validated reasoning/transcription settings, optional `report` settings and pinned compatible `speech` settings |
+| `RALLY_MMS_ENABLED` | `0`; set `1` after offline model provisioning |
+| `RALLY_MMS_PYTHON`, `RALLY_MMS_MODEL_DIR` | Host Python/model locations; override for another machine |
 
 Use separate API/media ports and databases for worktrees. The launcher binds LiveKit to loopback with development credentials; it is not a production hosting recipe. Run a single API process per database.
 
@@ -50,3 +52,5 @@ npm run test:media  # local synthetic browser/Node audio; no model calls
 See [API contract](../../docs/backend-api.md), [AI processing](../../docs/ai-processing.md), [plan](../../docs/backend-plan.md), and [implementation evidence](../../docs/backend-implementation-status.md).
 
 The final report uses maximum reasoning effort with a 32,768-token completion allowance, including reasoning tokens. A realistic 19-turn test exhausted the earlier 16,384 allowance; output truncation is a visible failed report, never accepted partial JSON. There is no automatic paid retry.
+
+See [speech lifecycle/routes](../../docs/integrated-speech.md) and [speaker corrections/report annotations](../../docs/speaker-attribution.md) for the October 30 additions. Model weights/Python are optional for an API-only setup and are never downloaded during inference.

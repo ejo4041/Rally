@@ -25,6 +25,9 @@ If the API is already running, use `npm run dev` from this package. Production a
 
 ## Implemented workflow
 
+October 30 additions: [free local audio check](../../docs/audio-preflight.md), [opt-in host-browser MMS/free voice test](../../docs/integrated-speech.md), [reversible session speaker labels and stale-report handling](../../docs/speaker-attribution.md), durable host correction notes and [reviewed manual WhatsApp drafts](../../docs/integrated-whatsapp-follow-up.md). Speech is host-side; remote call audibility needs rehearsal.
+
+
 - Sign up, sign in/out, owner-isolated history and session-expiry cleanup.
 - Prepare an agenda with Muse, inspect/edit objective, topics, status and budgets before recording; preparation failures remain visible and retryable.
 - Consent-gated microphone or meeting-tab audio with optional host microphone. Permissions are acquired before asking the backend to start a model session. Partial/canceled selections close tracks; stopping sharing ends capture and asks the backend to finish the meeting.
@@ -60,3 +63,5 @@ The Meetings page includes the existing three-minute Teams transcription-test fl
 ## Remaining work
 
 Remote deployment, physical microphone/speaker behavior, real multi-person/room attribution and a complete human rehearsal remain unverified. Generated moderator speech is a subsequent backend integration; subscribing to an audio track does not provide TTS. Existing Sites features such as its free local audio meter, presenter view and WhatsApp sharing remain in that separate app. No final submission has been made.
+
+To exercise actual local MMS in the browser fixture after provisioning, set `RALLY_TEST_REAL_MMS=1 RALLY_MMS_ENABLED=1` when running `npm run test:browser`. Reasoning/ASR remain deterministic injected fixtures; no paid model request is made. The default speech fixture is a synthetic WAV.

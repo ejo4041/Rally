@@ -1,117 +1,47 @@
 # Rally documentation
 
-**Integrated rehearsal:** [Device and three-person rehearsal packet](integrated-rehearsal.md) · [demo script and future-platform close](demo-script.md) · [current submission/access observations](research/submission-access-check-2026-10-30.md). Final submission remains on hold.
+Start with the [current handoff](handoff.md). The integrated Node app and the older Sites preview are separate releases. Historical records preserve their original checkpoints; their old “current” status and cost figures do not describe today's deployment or verified Billing.
 
-**Speaker correction:** [Anonymous session labels, reversible host names and stale-report handling](speaker-attribution.md). Shared-room identity remains uncertain; naming does not trigger model processing.
+## Current integrated product
 
-**Integrated spoken guidance:** [Meta MMS lifecycle, free voice check and validation](integrated-speech.md). Real local MMS browser playback passes; remote call audibility still needs rehearsal.
+| Topic | Documents |
+| --- | --- |
+| Open/run/operate | [Deployment, access and rollback](integrated-deployment.md), [frontend setup](../apps/rally-web/README.md), [API setup](../apps/rally-api/README.md) |
+| Latest validation | [Deployed HTTPS measurement](research/integrated-overnight-deployed.json), [real MMS/browser workflow](research/integrated-speech-browser-check.json), [follow-up browser workflow](research/integrated-follow-up-browser-check.json) |
+| Speech | [Meta MMS integration, configuration, lifecycle and eight-hour check](integrated-speech.md), [model/runtime provisioning](../experiments/meta-mms/README.md) |
+| Speaker identity | [Anonymous sessions, reversible labels, stale reports and durable host notes](speaker-attribution.md) |
+| Input checks | [Free local tab/microphone preflight](audio-preflight.md) |
+| Follow-through | [Reviewed manual WhatsApp drafts](integrated-whatsapp-follow-up.md), [official-source check and device limits](research/whatsapp-manual-draft-check-2026-10-30.md) |
+| Meeting connectors | [Teams invitation UI and bounds](teams-integrated-ui.md), [WhatsApp guest prototype](whatsapp-guest-prototype.md), [Meta call integration research](research/meta-call-integration-options-2026-10-30.md) |
+| Demonstration | [Rehearsal packet](integrated-rehearsal.md), [three-minute script and future-platform close](demo-script.md), [current access observations](research/submission-access-check-2026-10-30.md) |
 
-**Free audio preflight:** [Integrated local tab/microphone check and validation](audio-preflight.md). Verify separate input signals before opening paid transcription.
+## Backend and AI contracts
 
-**WhatsApp guest prototype:** [Preparation and local audio evidence](whatsapp-guest-prototype.md). Isolated audio routing passes; a fresh call link and host admission are needed for actual guest joining. No enabled WhatsApp invite UI is deployed.
+- [Backend team handoff](backend-team-handoff.md), [frontend API/streaming contract](backend-api.md), [AI processing diagram/rules](ai-processing.md), [actual agenda/outcome/score/tip examples](backend-ai-examples.md).
+- [Model interfaces and configuration](model-interfaces.md): Muse transcription, reasoning, local MMS and normalized capability boundaries.
+- [Backend implementation checkpoint](backend-implementation-status.md), [Astra review/fixes](backend-astra-review.md), [backend streaming research](research/backend-streaming.md), [initial implementation plan](backend-plan.md).
+- [API budget](api-budget.md), [cost ledger](research/muse-cost-ledger.md), [credentials setup](credentials-setup.md). Credentials remain in ignored local/runtime configuration.
 
-**Next Meta meeting integration:** [WhatsApp guest calls, LiveKit connector constraints and comparison](research/meta-call-integration-options-2026-10-30.md). Research recommends a bounded guest transport test; no new adapter is claimed.
+## Product and submission drafts
 
-**Teams invite UI:** [Meeting links, ownership, transcription-test limits and validation](teams-integrated-ui.md). The Meetings page now has a Teams link field plus a distinct browser-tab setup path for other calls.
+- [Participant guide](hackathon-participant-guide.md), [requirements/model-eligibility review](research/submission-requirements-meta-audit-2026-10-29.md), [submission draft](submission-package.md). Final submission is on hold.
+- [Planning interview](planning-interview.md), [roadmap](rally-roadmap.md), [implementation backlog](implementation-backlog.md), [initial architecture](rally-architecture.md), [reliability/cost model](reliability-and-cost-model.md).
+- [Original walkthrough](demo-walkthrough.md) includes earlier product controls; use the updated [integrated script](demo-script.md) for today's app. No complete human/device rehearsal or published video is established by automated tests.
 
-**Integrated deployment:** [Open and test the Node/LiveKit app](integrated-deployment.md) · [deployed verification](research/integrated-deployment-check.json).
+## Earlier Sites release and checkpoints
 
-**Frontend integration:** [Node API frontend, validation and current limits](frontend-integration.md). Local workflow is implemented in `apps/rally-web`; use `node scripts/dev-rally.mjs` after setup. Remote deployment and human rehearsal remain pending; the restricted Site is unchanged.
+- [Version 12](releases/2026-10-29-v12.md), [build progress](build-progress.md), [platform handoff](platform-progress-2026-10-29.md).
+- [Sites browser-call instructions](browser-meetings.md), [presenter view](presenter-view.md), [MMS hosted playback](mms-playback.md), [capture verification](research/browser-capture-reliability.md).
+- [October 29 morning reliability](morning-reliability-2026-10-29.md), [earlier morning rehearsal](morning-rehearsal.md), [overnight build](overnight-build-2026-10-29.md), [offline progress](offline-progress-2026-10-29.md), [October 28 handoff/incident](tonight-handoff-2026-10-28.md).
+- [Teams transcription deployment result](research/teams-transcription-deployment-result.md), [first live incident](research/teams-transcription-first-live-incident.md), [normal web-client audio spike](research/teams-web-client-spike.md).
 
-**Backend team handoff:** [start here](backend-team-handoff.md). Backend MVP and Astra fixes are committed on `main`; frontend integration and deployment remain separate.
+## Research and evaluation records
 
-Backend deeper validation: [Astra review and fixes](backend-astra-review.md) · [actual AI input/output examples](backend-ai-examples.md).
+These distinguish documented capability, access experiments, actual model measurements and synthetic tests. A research proposal is not proof of deployed functionality.
 
-Backend MVP: [implementation status](backend-implementation-status.md) · [API contract](backend-api.md) · [AI processing](ai-processing.md) · [streaming decision](research/backend-streaming.md) · [review results](backend-review.md).
-
-
-
-**Browser platform handoff:** [Current features, evidence and first call checks](platform-progress-2026-10-29.md).
-
-**Morning update:** [Speech reliability fixes and isolated audio measurement](morning-reliability-2026-10-29.md) · [rehearsal checklist](morning-rehearsal.md). The app is version 12; live browser-call and Teams speech validation are pending.
-
-**Current release:** [Version 12 — browser meetings, a free audio check, presenter view and WhatsApp follow-up](releases/2026-10-29-v12.md) is live on the existing restricted Site. WhatsApp Web, Zoom Web, Meet and Jitsi presets use host-selected tab audio; real call compatibility remains unverified. Earlier version-7/local-only entries below are historical. Teams spoken output and fresh live pacing retry remain pending; final submission is on hold.
-
-**Earlier October 29 build:** [Retrospective Teams review, measured Meta MMS speech, and submission audit](overnight-build-2026-10-29.md). Source changes are tested locally; deployed Site is still version 7. Live Teams/MMS playback validation remains pending.
-
-**October 29 offline checkpoint:** [Teams saved-history implementation, tests, documentation and Git state](offline-progress-2026-10-29.md). New history code is local, not deployed. Live pacing-fix retry remains pending; no live test or paid call was run tonight.
-
-**Earlier remote-access handoff:** [October 28 tonight handoff](tonight-handoff-2026-10-28.md) — personal/work account distinction, current deployment, live-test incident and fix, service commands, costs and next test. Consult the current release and morning update above first.
-
-## First live transcription stop — investigation
-
-The first user test ended ~26.5 seconds before its deadline with an ASR failure; the runner did not crash. A timer-drift/backlog defect was reproduced offline and fixed on the server, with sanitized termination diagnostics added. Exact original trigger was not retained and remains unproven. The idle runner was restarted and is ready; a fresh consented live retry is pending. [Evidence, fix and costs](research/teams-transcription-first-live-incident.md). Tracked spend $0.15263115; conditional grant remainder $149.84736885.
-
-## Teams transcription POC — publication completed
-
-Version 7 was published through the personal Codex session on the droplet and uses the normal Teams runner. [Deployment result](research/teams-transcription-deployment-result.md). The earlier [staging notes](research/teams-transcription-poc.md) describe a resolved workspace publishing blocker; consult the tonight handoff for post-deployment live-test findings and current costs.
-
-Start with [current handoff](handoff.md) for status and next actions.
-
-Current release: [Teams transcription POC deployment result](research/teams-transcription-deployment-result.md). Existing Site version 7 is live with the normal guest-browser queue runner; no ACS/app registration needed for this POC. The first live test worked initially and ended early; a server pacing fix is now installed, awaiting a consented retry.
-
-Current conversation: [recovered session context and ACS transport clarification](session-continuation.md).
-
-Current independent work: [overnight review list](overnight-plan.md) and [results checkpoint](overnight-results.md).
-
-First implementation is built and privately deployed: [build verification](build-progress.md). App source: `apps/rally/`. Start morning review with [the current handoff](handoff.md), then open the private preview linked in the build report.
-
-## Scope and rules
-
-- [Hackathon participant guide](hackathon-participant-guide.md): supplied rules, dates, and rubric.
-- [Brainstorm notes](brainstorm-notes.md): original ideas; not all are committed scope.
-- [Planning interview](planning-interview.md): user decisions and follow-ups.
-- [One-week roadmap](rally-roadmap.md): committed scope, daily gates, and deferred features.
-- [Architecture recommendation](rally-architecture.md): module boundaries, meeting/utterance state, confirmation/evidence contract and persistence.
-- [Ordered build backlog](implementation-backlog.md): small implementation tasks, dependencies, acceptance criteria and estimates.
-- [Reliability and cost model](reliability-and-cost-model.md): failure/recovery behavior and transparent per-meeting forecasts.
-- [Latency test plan](latency-test-plan.md): performance acceptance spike; no measured results yet.
-- [Demo script draft](demo-script.md): three-minute presenter/participant script, future-platform closing and longer show-and-tell outline. Final submission remains on hold.
-- [Demonstration walkthrough](demo-walkthrough.md): three-minute walkthrough and validation checklist.
-- [API budget](api-budget.md) and [cost ledger](research/muse-cost-ledger.md): conservative limits, tracked costs, and conditional credit remainder.
-
-## Research
-
-Latest live Teams evidence: [normal Teams web client with working two-way server audio](research/teams-web-client-spike.md). This guest route needs no custom app registration or ACS resource; hosted Invite controls still use the separate ACS runner until adapted.
-
-Local setup: [credentials instructions](credentials-setup.md). Store actual keys only in ignored `.env.local`, never in these documents.
-
-Teams participant setup: [Azure calling credential instructions](teams-setup.md) and [deployed Site/runner integration](research/teams-site-integration.md). The phone-on-table browser mode remains the fallback; Teams participant work is the priority.
-
-For discussions with a Microsoft/Azure administrator, use [the connection explanation and shareable admin brief](teams-admin-brief.md), including app-registration alternatives and actual implementation limits.
-
-For the separate ACS runner: [app registration setup](teams-app-registration-setup.md), with [Microsoft-source fit and RBAC research](research/teams-app-registration-fit.md). App-registration authentication is implemented and retains its ACS resource requirement. The normal-client guest experiment above has neither prerequisite.
-
-- [Initial feasibility](research/rally-feasibility.md).
-- [Speech and Teams](research/rally-speech-and-teams.md), including the subsequent acceptance of existing GPT models.
-- [Latency technical notes](research/rally-latency-technical-notes.md).
-- [Measured latency results](research/latency-results.md): real reasoning tests and limited transcription access checks, with remaining gaps explicit.
-- [Public reference-audio benchmark](research/public-audio-benchmark.md): real-time transcription accuracy and finalization delay against licensed LibriSpeech reference text; single-speaker baseline.
-- [Connected ASR → moderator benchmark](research/connected-loop-benchmark.md): actual pipeline timing while audio continues; audible speech still untested.
-- [Browser implementation research](research/browser-audio-implementation.md): capture/resampling, TTS, host controls and unrun device checks.
-- [Teams implementation research](research/teams-implementation-plan.md): managed transport choice, cost, constraints and go/no-go spike.
-- [Teams SDK local spike](research/teams-sdk-local-spike.md): installed Microsoft Calling SDK, successful server virtual-audio test and prepared meeting harness; real Teams join pending.
-- [Teams SDK platform verification](research/teams-sdk-platform-verification.md): Linux/Windows requirements, ACS interoperability and current lifecycle guidance.
-- [Related products and Meta integrations](research/meta-integration-options.md): related-product sources, integration requirements and multi-speaker audio fixtures.
-- [AMI four-speaker diagnostic](research/ami-benchmark.md): licensed 50-second meeting excerpt, reference comparison, overlap/scoring caveats and actual costs.
-- [Build code review](research/build-code-review.md): independent Standards/Spec findings and fixes.
-
-Research documentation is not proof of actual account access or runtime performance. Record completed experiments and measurements separately.
-
-## Browser meeting inputs
-
-- [Presenter view](presenter-view.md): a clean call display, retained host controls and manual audio-sharing research.
-- [Use Rally with browser meetings](browser-meetings.md): meeting-tab audio, optional microphone and WhatsApp follow-up drafts.
-- [Free platform research](research/free-platform-options-2026-10-29.md): primary sources, chosen paths and real-call validation limits.
-- [Capture verification](research/browser-capture-reliability.md): native browser evidence, protected local metering, lifecycle tests and long-duration fixture.
-
-## Model boundaries
-
-- [Model interfaces and configuration](model-interfaces.md): Muse audio transcription, normalized adapter ports, configurable models and pricing.
-- [MMS speech queue and browser playback](mms-playback.md): approved text, cancellation, local measurement and deployment requirements.
-
-## Repository tooling
-
-- [AI Hero skills installation](aihero-skills.md): requested workflows, supporting skills, pinned source, and verification.
-
-- [Remote access and home preflight](remote-access.md) — local SSH, Omnigent setup, and pending phone/test steps.
+- [Initial feasibility](research/rally-feasibility.md), [speech/Teams options](research/rally-speech-and-teams.md), [related products/Meta integrations](research/meta-integration-options.md), [free platform options](research/free-platform-options-2026-10-29.md).
+- [Latency test plan](latency-test-plan.md), [technical notes](research/rally-latency-technical-notes.md), [actual latency results](research/latency-results.md), [connected ASR/moderation benchmark](research/connected-loop-benchmark.md).
+- [Licensed single-speaker audio benchmark](research/public-audio-benchmark.md), [AMI four-speaker diagnostic](research/ami-benchmark.md), [independent build review](research/build-code-review.md).
+- [Browser implementation](research/browser-audio-implementation.md), [Teams implementation plan](research/teams-implementation-plan.md), [Teams SDK local spike](research/teams-sdk-local-spike.md), [platform verification](research/teams-sdk-platform-verification.md).
+- [Earlier ACS setup](teams-setup.md), [Teams admin brief](teams-admin-brief.md), [app-registration setup](teams-app-registration-setup.md), [RBAC research](research/teams-app-registration-fit.md), [earlier Site integration](research/teams-site-integration.md). The normal guest runner has different prerequisites from ACS.
+- [Remote access](remote-access.md), [repository skills/tooling](aihero-skills.md).

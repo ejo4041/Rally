@@ -1,5 +1,7 @@
 # Integrated Rally deployment
 
+**October 30 current release:** `b690607` includes local MMS speech, session speaker correction, durable report annotations and reviewed WhatsApp follow-up drafts. API restart followed an idle-meeting check and SQLite backup. [Actual deployed HTTPS check](research/integrated-overnight-deployed.json) passed with temporary synthetic records and zero paid calls. All test records were removed. The speech/attribution/sharing paths are detailed in the [current handoff](handoff.md); the paragraphs below preserve earlier deployment checkpoints.
+
 **Speech update:** Release `ebf308d` adds [opt-in host-browser Meta MMS speech and a free voice check](integrated-speech.md). Deployed HTTPS playback and Stop pass with the actual pinned local model, no paid calls and no live meetings interrupted. [Measurement](research/integrated-speech-deployed.json). API restarted after a database backup; existing accounts and records are preserved.
 
 **Audio check update:** Frontend release `7f22954` adds [free local audio preflight](audio-preflight.md). The API/media services continue without restart; runtime configuration and existing accounts are preserved.

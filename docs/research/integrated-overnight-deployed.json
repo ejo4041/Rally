@@ -1,0 +1,18 @@
+{
+  "testedAt": "2026-10-30T04:36:27.482Z",
+  "passed": true,
+  "release": "b690607",
+  "deployedHTTPS": true,
+  "realPinnedMMS": true,
+  "actualBrowserPlayback": true,
+  "stopPausedAllAudio": true,
+  "distinctAnonymousSessions": true,
+  "hostSpeakerCorrection": true,
+  "staleReportWarning": true,
+  "reviewedWhatsAppDraft": true,
+  "whatsappLinkOpened": false,
+  "messageSent": false,
+  "hostNoteExported": true,
+  "paidModelCalls": 0,
+  "remoteCallAudibilityTested": false
+}

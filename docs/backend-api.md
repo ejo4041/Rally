@@ -1,5 +1,7 @@
 # Rally Node backend — frontend contract v1
 
+**October 30 additions:** [Speech routes/lifecycle](integrated-speech.md), [reversible speaker labels and durable annotations](speaker-attribution.md). Meeting snapshots optionally include `reportStale` and `reportNotes`; missing fields on older records are supported. Speaker `name: null` clears a label. Report status includes `stale`; ready stale reports can be explicitly reanalyzed through the existing retry route. Intervention events include the approving `epoch`; clients reject older control/prompt epochs. `speech.cancel` revokes pending output after revised evidence.
+
 The frontend is implemented separately. Start with [local setup](../apps/rally-api/README.md). Payload types and validation schemas live in [contracts.ts](../apps/rally-api/src/contracts.ts). The API is separate from the existing hosted Worker routes.
 
 ## Authentication and HTTP
@@ -20,7 +22,7 @@ Use `credentials: 'include'` for fetch. Use the same hostname for frontend and A
 | `POST /meetings/:id/connection` | Fresh room credentials for an active meeting. |
 | `POST /meetings/:id/reconnect` | `{consented:true}` → explicitly replace failed capture/ASR with a new session; labels restart and transcript remains saved. |
 | `POST /meetings/:id/commands` | `{type:'pause'|'resume'|'dismiss'|'request_guidance'}` → meeting. Pause affects moderation, not capture. |
-| `PATCH /meetings/:id/speakers` | `{speakerId,name}` → corrected label mapping. |
+| `PATCH /meetings/:id/speakers` | `{speakerId,name}` → corrected label mapping; `name` is trimmed 1–100 characters or `null` to clear. Changes during report processing return 409. |
 | `POST /meetings/:id/end` | Stop/drain ASR, save, start final analysis; HTTP 202. Stop publishing microphone audio when ending. |
 | `GET /meetings/:id/report` | `{status,report,error}`. Status: none/processing/ready/failed. |
 | `POST /meetings/:id/report/retry` | Explicit background retry. Unknown accounting blocks paid calls. |

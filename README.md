@@ -1,68 +1,58 @@
 # Rally
 
-**Integrated app:** [Open Rally](https://rally.tail703f9e.ts.net:8445) with Tailscale connected, then create an app account or sign in. [Deployment and test steps](docs/integrated-deployment.md). The older Sites preview below remains a separate version.
+Rally helps a host keep a decision meeting moving and retain the evidence for what happens next. It combines Muse transcription and reasoning with self-hosted Meta MMS voice. Outcomes remain labeled as reported agreement, proposal or unresolved, with source links and host corrections.
 
-**Node API frontend:** [Local setup and integration](apps/rally-web/README.md) · [Validation and next steps](docs/frontend-integration.md). This is a separate integrated frontend for the new backend; the private Site below remains its earlier release.
+**Integrated app:** [Open Rally](https://rally.tail703f9e.ts.net:8445) with Tailscale connected, then create an app account or sign in. [Current handoff](docs/handoff.md) · [Deployment](docs/integrated-deployment.md) · [Demo draft](docs/demo-script.md). This private deployment is not a public judge-access endpoint.
 
-A meeting moderator that helps a host keep a decision meeting moving and produces transcript-evidenced outcomes. The integrated app labels AI conclusions as reported agreement, proposal or unresolved.
+## Run the integrated app
 
-**Earlier Sites release: version 12.** Browser meeting input, a free local audio check and presenter view are available.
-
-**Private preview:** https://rally-meeting-moderator.excavator3496.chatgpt.site — sign in with the account used for this workspace.
-
-Start with **Try a walkthrough** for a clearly labeled, zero-cost example. For real audio, create a meeting, enter an agenda/roster, confirm participant consent, and start the microphone. Muse handles transcription and reasoning. Self-hosted Meta MMS English now provides browser speech through the protected app. Unavailable speech leaves prompts visible. Speech into Teams remains pending. Review proposals before confirming them.
-
-## Teams live-transcription POC
-
-On the existing Site, scroll to **Invite Rally to Teams**, paste a fresh work/school meeting invite, confirm participant consent and check **Transcribe this test**. Admit **Rally audio test** from the lobby. Live text starts after admission; select **Leave meeting** and download the transcript before starting another test. The server runner is active and uses the normal Teams browser guest route, with no ACS resource/app registration required for this POC.
-
-Tests stop after three minutes including preparation/lobby time. Version 9 includes Teams transcript history and retrospective review. Teams output is still transcript-only; spoken Teams moderation remains pending. Use **Save to meeting history** for completed tests, with reload, Markdown export and deletion. Saved Teams records now also have host agenda/roster editing, paid-consent retrospective Muse review, source-linked proposals, explicit confirmation, speaker correction and dismissal. These controls are deployed in version 9. The first integrated live test transcribed speech but stopped about 26.5 seconds early. A server audio-pacing fix is installed and passes offline regression tests; a fresh consented live retry is pending. Phone-on-table browser capture remains the baseline; MMS browser playback is deployed; Teams output is still being connected.
-
-[Deployment result, verification and rollback](docs/research/teams-transcription-deployment-result.md) · [Current handoff](docs/handoff.md). Deployment incurred **$0** in Muse calls. Current tracked estimate **$0.15263115**, conditional remaining credit **$149.84736885** if the full $150 grant is applied and no other usage exists; actual Billing remains unverified.
-
-## Browser meeting inputs
-
-Choose **Meeting browser tab** when creating a meeting to capture a user-selected WhatsApp Web, Zoom Web, Google Meet, Jitsi or other browser call, with an optional host microphone. Use **Check audio · free** to verify separate input levels locally before starting Muse transcription. Prompts stay with the host; this route does not add Rally as a call participant. [Presenter view](docs/presenter-view.md) provides a clean call display. **Share confirmed outcomes** prepares a manual WhatsApp draft after the meeting. No additional connector subscription is used; real Muse calls retain their existing costs. [Instructions and validation limits](docs/browser-meetings.md) · [Platform handoff](docs/platform-progress-2026-10-29.md).
-
-## Meta model use and competition voice
-
-Runtime transcription uses **Muse Voice Transcribe** and reasoning uses **Muse Spark 1.3** via Meta Model API. The additional voice adapter uses **Meta MMS English `facebook/mms-tts-eng`**, pinned to `c71de0fe7204c83f1c10820a7d696d0b450048ba`, **self-hosted on the Rally Ubuntu CPU host**. Its weights are **CC BY-NC 4.0**; model files stay outside this repository. [Adapter, attribution and reproduction](experiments/meta-mms/README.md) · [actual CPU measurements](docs/research/mms-cpu-benchmark.json).
-
-The organizer FAQ supplied by the user permits self-hosted MMS and excludes third-party TTS models. No GPT/third-party TTS is used for the competition path. Legacy browser/OS voice diagnostics are disabled by default in the new app code; local voice execution alone is not proof of Meta model origin. MMS is connected to the deployed browser player in version 9. Protected hosted playback and Stop passed with synthetic text; physical listening and Teams audio output remain unverified.
-
-[Model interfaces and configuration](docs/model-interfaces.md) · [MMS playback](docs/mms-playback.md) · [Current release](docs/releases/2026-10-29-v12.md) · [Earlier build checkpoint](docs/overnight-build-2026-10-29.md) · [submission requirements and model eligibility review](docs/research/submission-requirements-meta-audit-2026-10-29.md) · [submission draft](docs/submission-package.md).
-
-## Run locally
-
-Node.js 24+ is required:
+Use Node 24+ with npm on PATH:
 
 ```bash
-cd apps/rally
-npm ci
-npm run build
-npm run dev
+npm ci --prefix apps/rally-api
+npm ci --prefix apps/rally-web
+cd apps/rally-api
+npm run setup:media
+cd ../..
+node scripts/dev-rally.mjs
 ```
 
-The default local server disables paid calls. To enable real Muse locally, configure `MODEL_API_KEY` in the ignored root `.env.local` and run `RALLY_PAID_ENABLED=1 npm run dev`. Never commit the key. The dev server binds loopback; use HTTPS for phone microphone tests.
+Open `http://127.0.0.1:5173`. Sign up for a local account. Paid processing defaults off: accounts/history work, but agenda preparation saves a draft with a visible error until real provider access is deliberately enabled. No synthetic output is substituted for a model response. For real processing configure the server-side `MODEL_API_KEY`, explicitly enable `RALLY_PAID_ENABLED=1`, and review the [budget policy](docs/api-budget.md). Optional offline MMS needs separately provisioned Python/model files and `RALLY_MMS_ENABLED=1`.
 
-## Review the build
+[Frontend setup](apps/rally-web/README.md) · [API setup](apps/rally-api/README.md) · [MMS provisioning and license](experiments/meta-mms/README.md). Keep credentials in ignored local/runtime configuration. The browser never receives the model key.
 
-- [Build verification and limits](docs/build-progress.md)
-- [Current handoff](docs/handoff.md)
-- [Roadmap](docs/rally-roadmap.md) and [implementation backlog](docs/implementation-backlog.md)
-- [Documentation index](docs/README.md)
-- [API budget](docs/api-budget.md) and [tracked cost ledger](docs/research/muse-cost-ledger.md)
+## Workflow and integration boundaries
 
-The baseline implemented flow includes live transcription/moderation, host controls, proposed outcomes with explicit host confirmation, saved history, export/deletion, wrap-up timing, and visible cost estimates. The walkthrough is scripted and is never represented as a live model demonstration.
+- Prepare/review an agenda; obtain participant consent; check local input with **Check audio · free** before starting Muse processing.
+- Capture a room microphone or a host-selected meeting browser tab with optional microphone. The host joins the call normally. WhatsApp Web, Zoom Web, Meet and Jitsi compatibility must be checked on the intended device; a tab preset is not an automatic participant connector.
+- Receive finalized Muse transcript turns, agenda/progress assessments and approved moderator prompts. Host mute, pause/resume, dismiss, guidance request and end remain available.
+- Enable [spoken prompts](docs/integrated-speech.md) for host-browser Meta MMS output. **Test voice · free** checks a fixed phrase before a live meeting. Input is shielded during playback; remote call audibility is not automatic.
+- Correct anonymous [session-scoped speaker labels](docs/speaker-attribution.md). A roster or room display name does not establish a person's identity. Clearing a host label is supported.
+- End and review the complete transcript-grounded report, unresolved details, source evidence and speaker suggestions. Save host annotations, export and reopen history. Label changes mark prior conclusions as stale; reanalysis is explicit and charged.
+- Build a [reviewed WhatsApp follow-up draft](docs/integrated-whatsapp-follow-up.md) from selected report rows. Edit it, then choose recipients and send manually in WhatsApp. No message is sent by Rally.
 
-Phone hardware, room echo, automatic voice identity and the fixed Teams transcription flow still require real-device/live checks. The normal Teams client previously exchanged real meeting audio; see the deployment result for the boundary between that proof and the new queue/transcription integration.
+The [Teams invitation bridge](docs/teams-integrated-ui.md) is a separate bounded transcription test, with fresh link, consent and host admission. It uses the existing guest runner and Muse, not Teams native transcription. The [WhatsApp guest prototype](docs/whatsapp-guest-prototype.md) has isolated audio-routing evidence but still needs a fresh call admission/audio trial; an enabled WhatsApp invite connector is not deployed.
 
-## Submission source
+## Meta models and replaceable capabilities
 
-The event requires a public repository. Source and documentation were pushed to [ejo4041/Rally](https://github.com/ejo4041/Rally) on October 29 with user authorization. The initial source checkpoint is `0668cf2` on `main`; repository visibility and outside-viewer access have not been verified. The sanitized publishing checkout is `/srv/hackathon/rally-source-checkpoint`; see [tonight's offline work](docs/offline-progress-2026-10-29.md). The Sites helper owns a nested source checkout at `apps/rally`; a sanitized export avoids nested-Git, credentials, local database and dependency files:
+| Model | Role | Execution |
+| --- | --- | --- |
+| Muse Voice Transcribe | Streaming transcription and anonymous speaker labels | Meta Model API |
+| Muse Spark 1.3 | Agenda, guidance and complete report reasoning | Meta Model API |
+| `facebook/mms-tts-eng` | Approved moderator voice | Self-hosted offline on Rally's CPU host |
 
-```bash
-python3 scripts/export_submission.py --out /tmp/rally-submission-source.zip
-```
+MMS defaults to revision `c71de0fe7204c83f1c10820a7d696d0b450048ba`. Its weights use **CC BY-NC 4.0**, separate from library and project-source licensing; review the model license before commercial use. The organizer FAQ supplied by the user permits self-hosted MMS and excludes third-party TTS. Model weights and runtime secrets are not distributed in this repo. A root project-source license remains to be selected.
 
-The export is a source snapshot, not a deployed product or submission. Its hosting manifest omits this workspace’s Site identity. Preserve third-party fixture attribution in the research docs. Only claim features/code actually built during the hackathon; see the supplied [participant guide](docs/hackathon-participant-guide.md).
+[Capability interfaces/configuration](docs/model-interfaces.md) separate audio transport, transcription, reasoning, speech generation and application policy. Compatible model changes require validated protocol/audio support, explicit checkpoint provenance and changed-model pricing where applicable. Native platform transcripts and third-party TTS are not used for the competition path.
+
+## Validation and contribution
+
+The Node implementation uses Express, SQLite and self-hosted LiveKit. Rally's application work includes the meeting lifecycle, canonical transcript/evidence handling, moderation policy, budget accounting, report semantics, model adapters, authenticated frontend, correction/sharing controls and guest-transport experiments. External models, libraries and meeting platforms retain their own attribution and licenses; see [the submission draft](docs/submission-package.md) for contribution details pending final contributor verification.
+
+Run backend and frontend type checks/tests from their package scripts. The frontend browser test also needs Chromium and LiveKit; it uses injected ASR/reasoning fixtures, with optional actual local MMS. [Current validation and limitations](docs/handoff.md) identify real model measurements, synthetic checks and pending human rehearsal. No finished demo or final hackathon entry is claimed.
+
+## Documentation and earlier preview
+
+[Documentation index](docs/README.md) · [Backend handoff](docs/backend-team-handoff.md) · [API contract](docs/backend-api.md) · [AI processing](docs/ai-processing.md) · [actual AI examples](docs/backend-ai-examples.md) · [rehearsal packet](docs/integrated-rehearsal.md).
+
+The earlier Sites application in `apps/rally/` remains separately hosted at the restricted [Sites preview](https://rally-meeting-moderator.excavator3496.chatgpt.site), version 12. It has different confirmation, presenter, demo-clock and sharing controls. [Earlier release](docs/releases/2026-10-29-v12.md). Follow its own setup when inspecting it; the integrated app above uses `apps/rally-web` and `apps/rally-api`.
