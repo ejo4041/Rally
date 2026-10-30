@@ -23,6 +23,7 @@ export interface SpeechEngine {
   }>;
   close(): void;
 }
+export type SpeechShield = { id: string; start: number; end: number };
 export function configuredSpeech(): SpeechEngine | undefined {
   if (process.env.RALLY_MMS_ENABLED !== "1") return;
   const identity = speechSettingsSchema.parse(
@@ -77,13 +78,16 @@ export class SpeechOutput {
   private generating = false;
   private ready = false;
   private closed = false;
+  private onShield: (meetingId: string, shield: SpeechShield) => void;
   constructor(
     engine: SpeechEngine | undefined,
     current: (id: string) => Meeting,
+    onShield: (meetingId: string, shield: SpeechShield) => void = () => {},
   ) {
     this.engine = engine;
     this.identity = engine?.identity || defaultSpeech;
     this.current = current;
+    this.onShield = onShield;
     if (engine)
       void engine
         .start()
@@ -258,8 +262,12 @@ export class SpeechOutput {
       if (job.state === "playing") return this.view(job);
       if (job.state !== "ready")
         throw new HttpError("Speech is not ready.", 409);
+      const start = Date.now(),
+        end = start + (job.seconds ?? 30) * 1000 + 2000;
+      if (!this.diagnostics.has(meetingId))
+        this.onShield(meetingId, { id: job.id, start, end });
       job.state = "playing";
-      job.shieldUntil = Date.now() + (job.seconds ?? 30) * 1000 + 2000;
+      job.shieldUntil = end;
     } else {
       if (job.state === "playing")
         job.shieldUntil = Math.min(job.shieldUntil, Date.now() + 800);

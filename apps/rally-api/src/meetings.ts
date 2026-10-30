@@ -26,6 +26,22 @@ export class Meetings {
       )
       .run(m.id, m.userId, JSON.stringify(m));
   }
+  recordAudioExclusion(
+    id: string,
+    shield: { id: string; start: number; end: number },
+  ) {
+    const m = this.get(id);
+    if (m.startedAt === null) return;
+    const exclusions = (m.audioExclusions ??= []);
+    if (exclusions.some((item) => item.id === shield.id)) return;
+    exclusions.push({
+      id: shield.id,
+      startMs: Math.max(0, shield.start - m.startedAt),
+      maxEndMs: Math.max(0, shield.end - m.startedAt),
+      reason: "moderator_speech",
+    });
+    this.save(m);
+  }
   get(id: string, userId?: string): Meeting {
     const row = this.store.db
       .prepare("SELECT user_id,body FROM meetings WHERE id=?")

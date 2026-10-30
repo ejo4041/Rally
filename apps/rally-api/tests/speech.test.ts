@@ -3,7 +3,12 @@ import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 import { createApplication } from "../src/app.ts";
 import { SpeechOutput, type SpeechEngine } from "../src/speech.ts";
-import type { Meeting, TranscriptEvent, Media } from "../src/contracts.ts";
+import type {
+  Meeting,
+  TranscriptEvent,
+  Media,
+  Snapshot,
+} from "../src/contracts.ts";
 import { defaultSpeech, speechSettingsSchema } from "../src/speech-config.ts";
 import { modelSettings } from "../src/muse.ts";
 function audio() {
@@ -214,11 +219,48 @@ test("canceled jobs expire and an older expiry cannot revoke a replacement job",
   assert.throws(() => output.get(m.id, old.id), /not found/);
   output.close();
 });
+
+test("a coverage-record failure prevents playback acknowledgement and input shielding", async () => {
+  const m = meeting("m");
+  const output = new SpeechOutput(
+    {
+      async start() {},
+      async synthesize() {
+        return audio();
+      },
+      close() {},
+    },
+    () => m,
+    () => {
+      throw Error("Coverage storage failed");
+    },
+  );
+  await settle();
+  const p = {
+    id: randomUUID(),
+    at: Date.now(),
+    text: "Approved prompt",
+    kind: "clarify",
+    epoch: 1,
+  };
+  m.interventions.push(p);
+  output.offer(m.id, p);
+  const job = output.create(m.id, p.id, 1);
+  await settle();
+  assert.throws(
+    () => output.playback(m.id, job.id, "playing"),
+    /Coverage storage failed/,
+  );
+  assert.equal(output.shielded(m.id), false);
+  assert.equal(output.get(m.id, job.id).state, "ready");
+  output.close();
+});
 test("HTTP speech is owner isolated, generated only from approved text, shields audio and stops on host pause/end", async (t) => {
   let onAudio: (bytes: Uint8Array) => void = () => {},
     final: (e: TranscriptEvent) => void = () => {},
     lastPCM: Uint8Array | undefined,
     spoken = "";
+  let reportInput: Snapshot | undefined;
   const plan = {
     objective: "Decide",
     topics: [
@@ -290,7 +332,8 @@ test("HTTP speech is owner isolated, generated only from approved text, shields 
           planReason: "",
         };
       },
-      async report() {
+      async report(s: Snapshot) {
+        reportInput = s;
         throw Error("No paid fixture report");
       },
     },
@@ -352,6 +395,21 @@ test("HTTP speech is owner isolated, generated only from approved text, shields 
     (await req(`/speech/test/${diagnostic.id}/audio`, "GET", undefined, alice))
       .status,
     200,
+  );
+  assert.equal(
+    (
+      await req(
+        `/speech/test/${diagnostic.id}/playback`,
+        "POST",
+        { state: "playing" },
+        alice,
+      )
+    ).status,
+    200,
+  );
+  assert.deepEqual(
+    await (await req("/meetings", "GET", undefined, alice)).json(),
+    [],
   );
   await req(
     `/speech/test/${diagnostic.id}/playback`,
@@ -466,6 +524,27 @@ test("HTTP speech is owner isolated, generated only from approved text, shields 
     { state: "playing" },
     alice,
   );
+  let withShield = await (
+    await req(`/meetings/${m.id}`, "GET", undefined, alice)
+  ).json();
+  assert.equal(withShield.audioExclusions.length, 1);
+  assert.equal(withShield.audioExclusions[0].id, job.id);
+  assert.equal(withShield.audioExclusions[0].reason, "moderator_speech");
+  assert.equal(
+    withShield.audioExclusions[0].maxEndMs -
+      withShield.audioExclusions[0].startMs,
+    3000,
+  );
+  await req(
+    `/meetings/${m.id}/speech/${job.id}/playback`,
+    "POST",
+    { state: "playing" },
+    alice,
+  );
+  withShield = await (
+    await req(`/meetings/${m.id}`, "GET", undefined, alice)
+  ).json();
+  assert.equal(withShield.audioExclusions.length, 1);
   onAudio(new Uint8Array([10, 20, 30, 40]));
   assert.deepEqual(lastPCM, new Uint8Array(4));
   await req(`/meetings/${m.id}/commands`, "POST", { type: "pause" }, alice);
@@ -488,4 +567,7 @@ test("HTTP speech is owner isolated, generated only from approved text, shields 
   onAudio(new Uint8Array([10, 20]));
   assert.deepEqual(lastPCM, new Uint8Array([10, 20]));
   await req(`/meetings/${m.id}/end`, "POST", {}, alice);
+  await settle();
+  assert.equal(reportInput?.meeting.audioExclusions?.[0].id, job.id);
+  assert.equal(reportInput?.meeting.audioExclusions?.length, 1);
 });

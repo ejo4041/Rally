@@ -43,6 +43,7 @@ export function createApplication(
   const speech = new SpeechOutput(
     options.speechEngine || configuredSpeech(),
     (id) => meetings.get(id),
+    (id, shield) => meetings.recordAudioExclusion(id, shield),
   );
   const engine = new Engine(meetings, media, config, speech);
   const teams = new TeamsBridge(

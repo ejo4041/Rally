@@ -562,6 +562,10 @@ try {
   assert.match(await page.locator("#report-body").textContent(), /Unknown/);
   assert.match(
     await page.locator("#report-body").textContent(),
+    /Input was shielded for Rally’s voice playback/,
+  );
+  assert.match(
+    await page.locator("#report-body").textContent(),
     /Reported agreement/,
   );
   assert.ok(

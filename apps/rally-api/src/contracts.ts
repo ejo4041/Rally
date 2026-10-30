@@ -134,6 +134,12 @@ export type Meeting = {
   report: Report | null;
   error: string | null;
   gaps: { at: number; reason: string }[];
+  audioExclusions?: {
+    id: string;
+    startMs: number;
+    maxEndMs: number;
+    reason: "moderator_speech";
+  }[];
 };
 export type Snapshot = {
   meeting: Meeting;
