@@ -15,20 +15,28 @@ export async function createGuest({seconds=180}={}){
  const env={...process.env};
  const close=()=>closePromise||=(async()=>{closed=true;clearTimeout(timer);await browser?.close().catch(()=>{});for(const p of [xvfb,pulse])if(p&&p.exitCode===null)p.kill('SIGTERM');await new Promise(r=>setTimeout(r,200));await rm(dir,{recursive:true,force:true,maxRetries:10,retryDelay:100});process.removeListener('SIGTERM',signal);process.removeListener('SIGINT',signal);})();
  const signal=()=>void close();process.once('SIGTERM',signal);process.once('SIGINT',signal);
+ const ensureOpen=()=>{if(closed)throw Error('Test canceled.');};
+ timer=setTimeout(()=>void close(),seconds*1000);timer.unref();
  try{
   const socket=join(dir,'pulse'),config=join(dir,'pulse.pa');
   await writeFile(config,`load-module module-native-protocol-unix socket=${socket} auth-anonymous=0\nload-module module-null-sink sink_name=rally_whatsapp_in rate=48000 channels=1 channel_map=mono\nload-module module-null-sink sink_name=rally_whatsapp_out rate=48000 channels=1 channel_map=mono\nload-module module-remap-source master=rally_whatsapp_out.monitor source_name=rally_whatsapp_mic channels=1 master_channel_map=mono channel_map=mono source_properties=device.description=Rally_WhatsApp_Microphone\nset-default-sink rally_whatsapp_in\nset-default-source rally_whatsapp_mic\n`,{mode:0o600});
+  ensureOpen();
   pulse=spawn('pulseaudio',['-n','--file='+config,'--daemonize=no','--exit-idle-time=-1','--use-pid-file=no'],{stdio:'ignore'});pulse.on('error',()=>{});
   Object.assign(env,{PULSE_SERVER:'unix:'+socket,PULSE_SINK:'rally_whatsapp_in',PULSE_SOURCE:'rally_whatsapp_mic'});
-  for(let i=0;;i++){try{execFileSync('pactl',['info'],{env,stdio:'ignore'});break;}catch{if(i>=40||closed)throw Error('Private audio startup failed.');await new Promise(r=>setTimeout(r,100));}}
+  for(let i=0;;i++){ensureOpen();try{execFileSync('pactl',['info'],{env,stdio:'ignore'});break;}catch{if(i>=40||closed)throw Error('Private audio startup failed.');await new Promise(r=>setTimeout(r,100));}}
+  ensureOpen();
   xvfb=spawn('Xvfb',['-displayfd','3','-screen','0','1440x900x24','-nolisten','tcp'],{stdio:['ignore','ignore','ignore','pipe']});
   env.DISPLAY=await new Promise((resolve,reject)=>{const timeout=setTimeout(()=>reject(Error('Display startup timed out')),5000);xvfb.once('error',reject);xvfb.stdio[3].once('data',b=>{clearTimeout(timeout);resolve(':'+b.toString().trim());});});
   if(closed)throw Error('Test canceled.');
-  browser=await chromium.launch({headless:false,executablePath:process.env.PLAYWRIGHT_CHROMIUM||chromium.executablePath(),env,args:['--no-sandbox','--disable-dev-shm-usage','--autoplay-policy=no-user-gesture-required','--use-fake-ui-for-media-stream']});
+  const launched=await chromium.launch({headless:false,executablePath:process.env.PLAYWRIGHT_CHROMIUM||chromium.executablePath(),env,args:['--no-sandbox','--disable-dev-shm-usage','--autoplay-policy=no-user-gesture-required','--use-fake-ui-for-media-stream']});
+  // A launch promise can resolve after normal cleanup has already completed.
+  // Dispose that late resource directly; reusing closePromise cannot see it.
+  if(closed){await launched.close().catch(()=>{});throw Error('Test canceled.');}
+  browser=launched;
   const context=await browser.newContext({permissions:['microphone'],viewport:{width:1440,height:900}});
+  ensureOpen();
   // New ephemeral context, no personal accounts, camera grant, CDP listener or model keys.
-  const page=await context.newPage();page.setDefaultTimeout(5000);
-  timer=setTimeout(()=>void close(),seconds*1000);timer.unref();
+  const page=await context.newPage();ensureOpen();page.setDefaultTimeout(5000);
   return{page,context,env,dir,browser,close,closed:()=>closed};
  }catch(error){await close();throw error;}
  finally{if(closed){process.removeListener('SIGTERM',signal);process.removeListener('SIGINT',signal);}}

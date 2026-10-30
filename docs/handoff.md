@@ -11,6 +11,7 @@ New overnight work:
 - [Meta MMS speech](integrated-speech.md): approved prompt IDs/epochs, offline pinned local voice, optional host-browser playback, free fixed-phrase voice test, Stop/pause/dismiss/end cancellation, bounded input shielding and text fallback. Compatible MMS checkpoint configuration is validated against adapter provenance and actual local model files.
 - [Speaker correction](speaker-attribution.md): anonymous session numbers, reversible host labels, no-op saves, processing conflict protection, stale-report warning and explicit reanalysis. Host annotations survive regeneration separately from model evidence; older correction segments retain a legacy marker.
 - [WhatsApp follow-up drafts](integrated-whatsapp-follow-up.md): host-selected report rows, preserved uncertainty, editable text, Copy and manual WhatsApp handoff. No recipient is preselected and no message was sent by tests.
+- The WhatsApp guest prototype closes late browser launches after cancellation and applies its deadline during startup; four local tests and isolated audio routing pass. Actual guest admission is still pending.
 - Voice playback coverage windows are saved as upper bounds and shown as a report caveat; they are not evidence of participant silence.
 - Delayed moderator controls/prompts from older epochs cannot undo Resume or replace current guidance.
 - Scoped live captions survive older asynchronous completions; late partials cannot resurrect finalized words. Legacy unscoped adapters retain their existing clear-on-final behavior.

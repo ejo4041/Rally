@@ -1,0 +1,17 @@
+{
+  "testedAt": "2026-10-30T06:53:57.123Z",
+  "passed": true,
+  "microphone": {
+    "rms": 0.14137823202519628,
+    "peakHz": 441.4306640625
+  },
+  "incoming": {
+    "rms": 0.14146185022331847,
+    "amplitude880": 0.2000841039597613
+  },
+  "microphoneAfterStopRms": 0,
+  "whatsappCallJoined": false,
+  "paidModelCalls": 0,
+  "rawAudioSaved": false,
+  "source": "synthetic local tones in the isolated WhatsApp browser/audio runner"
+}

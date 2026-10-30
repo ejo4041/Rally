@@ -26,8 +26,12 @@ This is an operator-only prototype. The call page is remote, untrusted content. 
 ```bash
 node --test experiments/whatsapp-guest/guest.test.mjs
 XDG_RUNTIME_DIR=/run/user/1000 LD_LIBRARY_PATH=/srv/hackathon/tools/browser-libs \
+node --test experiments/whatsapp-guest/lifecycle.test.mjs
+XDG_RUNTIME_DIR=/run/user/1000 LD_LIBRARY_PATH=/srv/hackathon/tools/browser-libs \
 node experiments/whatsapp-guest/audio-check.mjs
 ```
+
+The deadline includes audio/display/browser startup. Cancellation checks prevent later startup stages from reopening resources, and a browser launch that completes after cleanup is closed directly. Local lifecycle tests delay launch deterministically to reproduce that race; they also exercise an actual Chromium deadline and repeated close. PulseAudio/Xvfb and Playwright dependencies are required for these tests. No platform page is opened.
 
 The audio check uses synthetic tones and writes its temporary waveform inside the disposable directory; it is deleted on cleanup. No real call or meeting audio is recorded. Existing Teams services and the deployed app are not restarted or modified.
 
