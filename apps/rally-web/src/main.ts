@@ -297,9 +297,13 @@ function topicHTML(plan: Plan | null) {
 }
 function speakerName(id: string | null) {
   if (!id) return "Unknown speaker";
+  const sessions = [
+    ...new Set(state.session?.meeting.turns.map((t) => t.sessionId) || []),
+  ];
+  const session = sessions.indexOf(id.slice(0, id.lastIndexOf(":"))) + 1;
   return (
     state.session?.meeting.speakerNames[id] ||
-    `Speaker ${id.slice(id.lastIndexOf(":") + 1)}`
+    `Speaker ${id.slice(id.lastIndexOf(":") + 1)} · session ${session || "?"}`
   );
 }
 function evidence(ids: string[]) {
@@ -427,12 +431,17 @@ function renderReport() {
   const m = state.session!.meeting,
     r = m.report;
   const current = r && m.reportStatus === "ready";
-  $("report-status").textContent = label(m.reportStatus);
+  $("report-status").textContent =
+    label(m.reportStatus) + (m.reportStale ? " · labels changed" : "");
   button("retry-report").hidden = !(
     m.reportStatus === "failed" ||
+    (m.reportStatus === "ready" && !!m.reportStale) ||
     (m.phase === "interrupted" && m.reportStatus === "none")
   );
   button("retry-report").disabled = state.busy;
+  button("retry-report").textContent = m.reportStale
+    ? "Reanalyze · uses Muse"
+    : "Retry analysis";
   $("correction-form").hidden = !current;
   if (!current) {
     $("report-body").innerHTML =
@@ -443,6 +452,11 @@ function renderReport() {
     `<h3>${title}</h3>${rows.length ? rows.map((o) => `<div class="report-item"><p><strong>${escape(o.text)}</strong></p><span class="pill">${escape(label(o.status))}</span><p class="muted small">Owner: ${escape(o.owner || "Unresolved")} · Due: ${escape(o.dueDate || "Unresolved")}</p>${evidence(o.evidence)}${o.followup !== "none" ? `<p class="small">Draft ${escape(o.followup)}: ${escape(o.followupPrompt || "No draft text")}</p>` : ""}</div>`).join("") : '<p class="muted small">None identified.</p>'}`;
   $("report-body").innerHTML =
     `<p class="small muted">AI interpretations grounded in the transcript. Reported agreement is expressed in speech; it is not host confirmation. Follow-ups are drafts.</p><p class="summary">${escape(r.summary)}</p><h3>Overall ${r.overall == null ? "Unscored" : `${r.overall}/5`} · ${r.coverage}/5 categories assessed</h3><div class="score-list">${r.scores.map((s) => `<div class="score"><span>${escape(label(s.category))}</span><strong>${s.score == null ? "Unknown" : `${s.score}/5`}</strong><p>${escape(s.reason)}</p>${evidence(s.evidence)}</div>`).join("")}</div>${items("Decisions", r.decisions)}${items("Due-outs", r.actions)}<h3>Still unresolved</h3>${r.unresolved.length ? `<ul>${r.unresolved.map((v) => `<li>${escape(v)}</li>`).join("")}</ul>` : '<p class="muted small">None identified.</p>'}<h3>Speaker suggestions</h3>${r.speakerTips.length ? r.speakerTips.map((s) => `<div class="report-item"><strong>${escape(speakerName(s.speakerId))}</strong>${s.tips.map((t) => `<p>${escape(t.text)}</p>${evidence(t.evidence)}`).join("")}</div>`).join("") : '<p class="muted small">No attributable suggestions.</p>'}<details><summary>Approximate focus time</summary><p>On topic: ${r.focusTime.onTopicSeconds ?? "Unknown"} seconds · Off topic: ${r.focusTime.offTopicSeconds ?? "Unknown"} seconds · Unknown: ${r.focusTime.unknownSeconds ?? "Unknown"} seconds</p><p>${escape(r.focusTime.note)}</p></details>`;
+  if (m.reportStale)
+    $("report-body").insertAdjacentHTML(
+      "afterbegin",
+      '<p class="notice" role="status">Speaker labels changed after this report was generated. Transcript labels are current; names in existing conclusions may be outdated. Reanalyze explicitly to update conclusions. This uses Muse processing.</p>',
+    );
 }
 async function perform(task: () => Promise<void>) {
   if (state.busy) return;
@@ -727,7 +741,7 @@ $("speaker-form").onsubmit = async (event) => {
           "PATCH",
           {
             speakerId: state.speakerId,
-            name: input("speaker-name").value.trim(),
+            name: input("speaker-name").value.trim() || null,
           },
         ),
       );

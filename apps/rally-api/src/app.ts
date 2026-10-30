@@ -260,7 +260,12 @@ export function createApplication(
   );
   app.get("/api/meetings/:id/report", (req, res) => {
     const m = owned(req);
-    res.json({ status: m.reportStatus, report: m.report, error: m.error });
+    res.json({
+      status: m.reportStatus,
+      report: m.report,
+      stale: !!m.reportStale,
+      error: m.error,
+    });
   });
   app.post("/api/meetings/:id/report/retry", (req, res) => {
     const m = owned(req);

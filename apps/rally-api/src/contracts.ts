@@ -129,6 +129,7 @@ export type Meeting = {
   assessment: Assessment | null;
   interventions: { id: string; at: number; text: string; kind: string }[];
   reportStatus: "none" | "processing" | "ready" | "failed";
+  reportStale?: boolean;
   report: Report | null;
   error: string | null;
   gaps: { at: number; reason: string }[];

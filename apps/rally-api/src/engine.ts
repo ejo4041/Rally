@@ -391,12 +391,20 @@ export class Engine {
     const { speakerId, name } = z
       .object({
         speakerId: z.string(),
-        name: z.string().trim().min(1).max(100),
+        name: z.string().trim().min(1).max(100).nullable(),
       })
       .parse(input);
     if (!this.meetings.turns(m.id).some((t) => t.speaker === speakerId))
       throw new HttpError("Unknown speaker label");
-    m.speakerNames[speakerId] = name;
+    if ((m.speakerNames[speakerId] ?? null) === name) return m;
+    if (m.reportStatus === "processing")
+      throw new HttpError(
+        "Wait for analysis to finish before changing speaker labels.",
+        409,
+      );
+    if (name === null) delete m.speakerNames[speakerId];
+    else m.speakerNames[speakerId] = name;
+    if (m.report) m.reportStale = true;
     this.speech?.cancel(m.id);
     m.epoch++;
     this.meetings.save(m);
@@ -485,6 +493,7 @@ export class Engine {
           throw new HttpError("Meeting changed during analysis; retry report");
         current.report = report;
         current.reportStatus = "ready";
+        current.reportStale = false;
         current.error = null;
         this.meetings.save(current);
         this.emit(m.id, "report.ready", { reportStatus: "ready" });

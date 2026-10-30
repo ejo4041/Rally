@@ -415,3 +415,83 @@ test("deletion is rejected while end drains final speech, and the report receive
   assert.equal(reviewed?.turns.at(-1)?.text, "The final decision is Friday.");
   assert.equal((await f.request(`/meetings/${m.id}`)).status, 200);
 });
+
+test("speaker names can be cleared without extra analysis; processing is stable and completed reports disclose stale labels", async (t) => {
+  const reporting = deferred<void>(),
+    release = deferred<void>();
+  let calls = 0;
+  const f = await fixture(t, {
+    providers: {
+      report: async (s) => {
+        calls++;
+        if (calls === 1) {
+          reporting.resolve();
+          await release.promise;
+        }
+        return {
+          ...report(s),
+          summary:
+            "Speaker: " + (s.meeting.speakerNames["session:A"] || "Unknown"),
+        };
+      },
+    },
+  });
+  const m = await f.create();
+  await f.start(m.id);
+  f.emit(m.id, 0, "I can handle the release.");
+  const name = (value: unknown, session?: string) =>
+    f.request(
+      `/meetings/${m.id}/speakers`,
+      "PATCH",
+      { speakerId: "session:A", name: value },
+      session,
+    );
+  let saved = await (await name("  Alex  ")).json();
+  assert.equal(saved.speakerNames["session:A"], "Alex");
+  const epoch = saved.epoch;
+  assert.equal((await (await name("Alex")).json()).epoch, epoch);
+  const bravo = await f.signup("bravo");
+  assert.equal((await name(null, bravo)).status, 404);
+  assert.equal(
+    (
+      await f.request(`/meetings/${m.id}/speakers`, "PATCH", {
+        speakerId: "other-session:A",
+        name: "Wrong",
+      })
+    ).status,
+    400,
+  );
+  saved = await (await name(null)).json();
+  assert.equal(saved.speakerNames["session:A"], undefined);
+  assert.equal(calls, 0);
+  assert.equal((await name("")).status, 400);
+  await name("Alex");
+  await f.request(`/meetings/${m.id}/end`, "POST", {});
+  await reporting.promise;
+  assert.equal((await name(null)).status, 409);
+  release.resolve();
+  async function ready() {
+    for (let i = 0; i < 100; i++) {
+      const r = await (await f.request(`/meetings/${m.id}`)).json();
+      if (r.reportStatus === "ready") return r;
+      await new Promise((r) => setTimeout(r, 5));
+    }
+    throw Error("Report timeout");
+  }
+  saved = await ready();
+  assert.equal(saved.reportStale, false);
+  assert.equal(saved.report.summary, "Speaker: Alex");
+  saved = await (await name(null)).json();
+  assert.equal(saved.reportStale, true);
+  assert.equal(saved.report.summary, "Speaker: Alex");
+  assert.equal(calls, 1);
+  assert.equal(
+    (await (await f.request(`/meetings/${m.id}/report`)).json()).stale,
+    true,
+  );
+  await f.request(`/meetings/${m.id}/report/retry`, "POST", {});
+  saved = await ready();
+  assert.equal(calls, 2);
+  assert.equal(saved.reportStale, false);
+  assert.equal(saved.report.summary, "Speaker: Unknown");
+});

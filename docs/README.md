@@ -1,5 +1,7 @@
 # Rally documentation
 
+**Speaker correction:** [Anonymous session labels, reversible host names and stale-report handling](speaker-attribution.md). Shared-room identity remains uncertain; naming does not trigger model processing.
+
 **Integrated spoken guidance:** [Meta MMS lifecycle, free voice check and validation](integrated-speech.md). Real local MMS browser playback passes; remote call audibility still needs rehearsal.
 
 **Free audio preflight:** [Integrated local tab/microphone check and validation](audio-preflight.md). Verify separate input signals before opening paid transcription.

@@ -1,0 +1,13 @@
+# Speaker attribution in integrated Rally
+
+Muse Voice Transcribe supplies anonymous voice labels. Rally does not read platform captions or native transcripts and does not automatically know a participant's Teams, WhatsApp or Zoom display name. An entered roster offers suggestions for host labeling; it does not identify voices.
+
+Each label is keyed by transcription session and provider label. Anonymous UI labels include a session number so `A` after reconnect is distinguishable from `A` before reconnect. The host can assign a label to a recognized voice, or leave the name field empty to remove an assignment. Clearing restores the anonymous label and does not merge transcript turns or alter their text. Duplicate save requests with the same value do not advance the moderation epoch.
+
+A shared room connection can contain multiple speakers. Muse may separate some voices, merge voices, split one person into several labels, or return no speaker. A room's platform display name identifies the connection, not the people in it. Assign individual names only when recognizable; otherwise retain anonymous labels or a truthful shared-room label. Reliable person-level identification in shared rooms has not been established by the current experiments. Voice labels are not biometric identity verification.
+
+Changing labels during final report processing is rejected so a paid result is not invalidated mid-flight. Changing them after a report is ready marks `reportStale=true`; existing conclusions retain their original wording and the UI warns that names may be outdated. Transcript display labels update immediately. No model request is made by naming or clearing a speaker. **Reanalyze · uses Muse** is an explicit request through the existing budget gates; a successful report clears the flag. Export includes the mappings, raw session-scoped labels and stale flag. Existing records without this optional field are treated as current until a label changes.
+
+`PATCH /api/meetings/:id/speakers` accepts `{speakerId, name}` where `name` is a trimmed 1–100 character string or `null` to clear. Unknown labels and another owner's meeting are rejected. `GET /api/meetings/:id/report` also exposes `stale`. The report itself remains an AI interpretation grounded in final transcript evidence.
+
+Backend validation covers clear/no-op behavior, ownership, unknown labels, processing conflicts, stale results and explicit regeneration. Browser validation covers assignment, clearing, anonymous session display, reload persistence, warning/export and the absence of automatic analysis. A human multi-speaker rehearsal remains the quality gate.

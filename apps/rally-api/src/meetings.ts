@@ -89,6 +89,7 @@ export class Meetings {
       assessment: null,
       interventions: [],
       reportStatus: "none",
+      reportStale: false,
       report: null,
       error: null,
       gaps: [],

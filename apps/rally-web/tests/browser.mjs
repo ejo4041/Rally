@@ -348,6 +348,18 @@ try {
     await page.locator(".turn-meta strong").first().textContent(),
     /Priya/,
   );
+  await page.locator("#speakers [data-speaker]").first().click();
+  await page.locator("#speaker-name").fill("");
+  await page.locator("#speaker-form [type=submit]").click();
+  await page.locator("#speaker-dialog").waitFor({ state: "hidden" });
+  assert.match(
+    await page.locator(".turn-meta strong").first().textContent(),
+    /Speaker A · session 1/,
+  );
+  await page.locator("#speakers [data-speaker]").first().click();
+  await page.locator("#speaker-name").fill("Priya");
+  await page.locator("#speaker-form [type=submit]").click();
+  await page.locator("#speaker-dialog").waitFor({ state: "hidden" });
   const snapshot = await (
     await page.request.get(base + `/api/meetings/${id}`)
   ).json();
@@ -601,6 +613,48 @@ try {
   ).json();
   assert.equal(exported.turns.length, 2);
   assert.ok(exported.report.summary.includes("Host correction:"));
+  const reportsBeforeCorrection = (
+    await (await page.request.get(base + "/api/test/state")).json()
+  ).reportAttempts;
+  await page.locator("#speakers [data-speaker]").first().click();
+  await page.locator("#speaker-name").fill("");
+  await page.locator("#speaker-form [type=submit]").click();
+  await page.locator("#speaker-dialog").waitFor({ state: "hidden" });
+  await page.waitForFunction(() =>
+    document
+      .querySelector("#report-status")
+      .textContent.includes("labels changed"),
+  );
+  assert.match(
+    await page.locator("#report-body").textContent(),
+    /names in existing conclusions may be outdated/,
+  );
+  assert.equal(
+    (await (await page.request.get(base + "/api/test/state")).json())
+      .reportAttempts,
+    reportsBeforeCorrection,
+  );
+  await page.reload();
+  await page.locator("#retry-report").waitFor({ state: "visible" });
+  assert.match(await page.locator("#retry-report").textContent(), /uses Muse/);
+  assert.match(
+    await page.locator(".turn-meta strong").first().textContent(),
+    /Speaker A · session 1/,
+  );
+  assert.equal(
+    (await (await page.request.get(base + `/api/meetings/${id}/export`)).json())
+      .reportStale,
+    true,
+  );
+  await page.locator("#retry-report").click();
+  await page.waitForFunction(
+    () => document.querySelector("#report-status").textContent === "Ready",
+  );
+  assert.equal(
+    (await (await page.request.get(base + "/api/test/state")).json())
+      .reportAttempts,
+    reportsBeforeCorrection + 1,
+  );
   // A different real cookie session cannot retrieve this meeting.
   const other = await browser.newContext();
   const otherPage = await other.newPage();
@@ -810,7 +864,7 @@ try {
       "agenda edit and failed preparation retry",
       "actual browser audio reaches backend",
       "reload reconnects without duplicating ASR sessions",
-      "canonical final revisions and manual session-scoped speaker name",
+      "canonical final revisions, reversible session-scoped names, stale-report disclosure and explicit reanalysis",
       "approved intervention only, pause/dismiss and mute",
       "end stops tracks and drains final turn into complete report",
       "visible report failure and explicit retry",

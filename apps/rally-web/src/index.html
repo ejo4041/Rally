@@ -504,15 +504,19 @@
         </div>
         <p id="speaker-label" class="small muted"></p>
         <label
-          >Verified name<input
+          >Host label<input
             id="speaker-name"
             maxlength="100"
-            list="participant-names"
-            required /><datalist id="participant-names"></datalist
+            list="participant-names" /><datalist
+            id="participant-names"
+          ></datalist
         ></label>
         <p class="small muted">
-          Only assign a name you can verify. Several people sharing one room
-          connection may have different voice labels.
+          Assign a name only when you recognize the speaker. This is your label,
+          not automatic identity verification. Leave blank to restore the
+          anonymous label. Several people in one room can have different voice
+          labels, and one person may receive more than one. Reconnects start a
+          new label session.
         </p>
         <p id="speaker-error" class="error" role="alert"></p>
         <button class="primary" type="submit">Save name</button>
