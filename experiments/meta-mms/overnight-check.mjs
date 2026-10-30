@@ -1,7 +1,7 @@
 // Long-running local model check. Explicit synthetic phrases only; no platform,
 // provider API, waveform file or production meeting record is used.
 import { MMSSpeech, MODEL, REVISION } from "./speech.mjs";
-import { writeFile, mkdir } from "node:fs/promises";
+import { writeFile, mkdir, readFile } from "node:fs/promises";
 const durationMinutes = Number(process.env.RALLY_SPEECH_SOAK_MINUTES || 480),
   intervalMinutes = Number(process.env.RALLY_SPEECH_SOAK_INTERVAL || 30);
 if (
@@ -20,6 +20,10 @@ const engine = new MMSSpeech({
     process.env.RALLY_MMS_MODEL_DIR || "/srv/hackathon/models/mms-tts-eng",
 });
 const dir = new URL("./test-results/", import.meta.url);
+const reportName =
+  process.env.RALLY_SPEECH_SOAK_REPORT_NAME || "overnight-check.json";
+if (!/^[a-z0-9-]{1,70}\.json$/i.test(reportName))
+  throw Error("Use a JSON report basename.");
 await mkdir(dir, { recursive: true });
 const report = {
   startedAt: new Date().toISOString(),
@@ -43,12 +47,9 @@ const stop = () => {
 process.once("SIGTERM", stop);
 process.once("SIGINT", stop);
 const save = () =>
-  writeFile(
-    new URL("overnight-check.json", dir),
-    JSON.stringify(report, null, 2) + "\n",
-  );
+  writeFile(new URL(reportName, dir), JSON.stringify(report, null, 2) + "\n");
 try {
-  const started = Date.now(),
+  const started = performance.now(),
     deadline = started + durationMinutes * 60000;
   while (!stopping) {
     const before = performance.now(),
@@ -68,21 +69,28 @@ try {
       audio.seconds > 30
     )
       throw Error("Invalid local speech waveform");
+    const workerPid = engine.child?.pid;
+    const workerStatus = workerPid
+      ? await readFile(`/proc/${workerPid}/status`, "utf8").catch(() => null)
+      : null;
+    const workerKb = workerStatus?.match(/^VmRSS:\s+(\d+) kB$/m)?.[1];
     report.checks.push({
       at: new Date().toISOString(),
-      elapsedMinutes: Math.round((Date.now() - started) / 6000) / 10,
+      elapsedMinutes: Math.round((performance.now() - started) / 6000) / 10,
       requestMs: Math.round(performance.now() - before),
       seconds: audio.seconds,
       rms,
+      workerPid: workerPid ?? null,
+      workerRssMB: workerKb ? Math.round(Number(workerKb) / 1024) : null,
       controllerRssMB: Math.round(process.memoryUsage().rss / 1048576),
     });
     await save();
     console.log(JSON.stringify(report.checks.at(-1)));
-    if (Date.now() >= deadline) break;
+    if (performance.now() >= deadline) break;
     await new Promise((resolve) => {
       const timer = setTimeout(
         resolve,
-        Math.min(intervalMinutes * 60000, deadline - Date.now()),
+        Math.min(intervalMinutes * 60000, deadline - performance.now()),
       );
       wake = () => {
         clearTimeout(timer);
@@ -94,10 +102,12 @@ try {
   }
   report.state = stopping ? "stopped" : "passed";
 } catch (error) {
-  report.state = "failed";
-  report.error =
-    error instanceof Error ? error.message : "Local speech failure";
-  process.exitCode = 1;
+  report.state = stopping ? "stopped" : "failed";
+  if (!stopping) {
+    report.error =
+      error instanceof Error ? error.message : "Local speech failure";
+    process.exitCode = 1;
+  }
 } finally {
   engine.close();
   report.endedAt = new Date().toISOString();

@@ -1,0 +1,60 @@
+{
+  "startedAt": "2026-10-30T04:53:00.044Z",
+  "endedAt": "2026-10-30T04:57:03.572Z",
+  "state": "passed",
+  "model": "facebook/mms-tts-eng",
+  "revision": "c71de0fe7204c83f1c10820a7d696d0b450048ba",
+  "durationMinutes": 4,
+  "intervalMinutes": 1,
+  "paidModelCalls": 0,
+  "realMeeting": false,
+  "rawAudioSaved": false,
+  "workerReloadObserved": true,
+  "checks": [
+    {
+      "at": "2026-10-30T04:53:03.636Z",
+      "elapsedMinutes": 0.1,
+      "requestMs": 3591,
+      "seconds": 2.992,
+      "rms": 0.12543726677684844,
+      "workerRssMB": 599,
+      "controllerRssMB": 61
+    },
+    {
+      "at": "2026-10-30T04:54:04.329Z",
+      "elapsedMinutes": 1.1,
+      "requestMs": 691,
+      "seconds": 2.992,
+      "rms": 0.12543726677684844,
+      "workerRssMB": 617,
+      "controllerRssMB": 62
+    },
+    {
+      "at": "2026-10-30T04:55:04.989Z",
+      "elapsedMinutes": 2.1,
+      "requestMs": 653,
+      "seconds": 2.992,
+      "rms": 0.12543726677684844,
+      "workerRssMB": 599,
+      "controllerRssMB": 62
+    },
+    {
+      "at": "2026-10-30T04:56:05.608Z",
+      "elapsedMinutes": 3.1,
+      "requestMs": 615,
+      "seconds": 2.992,
+      "rms": 0.12543726677684844,
+      "workerRssMB": 605,
+      "controllerRssMB": 63
+    },
+    {
+      "at": "2026-10-30T04:57:03.571Z",
+      "elapsedMinutes": 4.1,
+      "requestMs": 3524,
+      "seconds": 2.992,
+      "rms": 0.12543726677684844,
+      "workerRssMB": 591,
+      "controllerRssMB": 63
+    }
+  ]
+}

@@ -38,3 +38,9 @@ The eight-hour local reliability check runs `node experiments/meta-mms/overnight
 ## Deployed checkpoint
 
 Release `ebf308d` is live at the [private integrated app](https://rally.tail703f9e.ts.net:8445). A temporary account and synthetic ready meeting verified authenticated model readiness, real browser WAV playback, Stop and unchanged empty paid usage through the deployed HTTPS endpoint. Test records were removed. [Measurement](research/integrated-speech-deployed.json). The eight-hour soak is still running as of this deployment checkpoint.
+
+## Local worker reload check
+
+A separate four-minute schedule completed five real-model requests, including the periodic worker close/cold reload. [Measurement](research/mms-worker-restart-check.json). The controller remained about 61–63 MB RSS and sampled Python worker RSS was 591–617 MB. Warm requests took 615–691 ms; startup/reload requests took about 3.5–3.6 seconds. These are local synthetic generation/IPC measurements, not physical audible latency or peak memory. No waveforms were saved and no paid requests were made. The eight-hour process remains separate and running.
+
+For a shorter independent run use `RALLY_SPEECH_SOAK_MINUTES=4 RALLY_SPEECH_SOAK_INTERVAL=1 RALLY_SPEECH_SOAK_REPORT_NAME=restart-check.json node experiments/meta-mms/overnight-check.mjs`. Distinct validated report basenames prevent overwriting the overnight result. The current helper uses a monotonic duration, samples Linux worker RSS when available, and records operator-requested stops separately from failures.
