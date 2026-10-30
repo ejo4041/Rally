@@ -1,0 +1,35 @@
+{
+  "adapterSourceSha256": "004aafc96df44089b0d20c0e48e78637612b16833c2b9786d157d59eeb029271",
+  "startedAt": "2026-10-30T07:06:05.072Z",
+  "model": "facebook/mms-tts-eng",
+  "revision": "c71de0fe7204c83f1c10820a7d696d0b450048ba",
+  "state": "passed",
+  "checks": [
+    {
+      "stage": "startup",
+      "canceled": true,
+      "workerExited": true,
+      "requestMs": 4,
+      "workerPid": 309502
+    },
+    {
+      "stage": "pending-request",
+      "canceled": true,
+      "workerExited": true,
+      "requestMs": 35,
+      "workerPid": 309503
+    },
+    {
+      "stage": "recovery",
+      "passed": true,
+      "requestMs": 3666,
+      "workerPid": 309575,
+      "seconds": 2.992,
+      "rms": 0.12543726677684844
+    }
+  ],
+  "paidModelCalls": 0,
+  "realMeeting": false,
+  "rawAudioSaved": false,
+  "endedAt": "2026-10-30T07:06:11.742Z"
+}

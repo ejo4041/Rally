@@ -63,3 +63,7 @@ Next: warm the adapter before advertising readiness; connect only server-approve
 `output.mjs` provides generation/host-state checks, immediate playback cancellation and a short potential-echo window behind the common speech-engine interface. `pulsePlayback` requires an explicit sink and streams bounded PCM through stdin. The controller is not yet wired to the active Teams meeting runner. [Morning reliability report](../../docs/morning-reliability-2026-10-29.md).
 
 Run `node --test experiments/meta-mms/output.test.mjs experiments/meta-mms/runner.test.mjs` for deterministic failure checks, and `node experiments/meta-mms/pulse-probe.mjs` for real synthetic MMS playback through a temporary private PulseAudio daemon. The latter does not access the existing Teams devices or save captured audio.
+
+## Real cancellation and recovery check
+
+Run `node experiments/meta-mms/cancellation-check.mjs` with the provisioned pinned weights and Python environment. It uses synthetic text, cancels startup and a warm pending request, waits for each child to exit, and verifies a fresh worker produces a valid waveform. Its ignored JSON result contains the adapter source hash, process IDs and aggregate timings; no waveform is saved and no provider call is made. This is separate from the eight-hour schedule and does not establish physical audibility. The adapter ignores buffered events from superseded processes so they cannot close a replacement.

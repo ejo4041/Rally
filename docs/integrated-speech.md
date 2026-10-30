@@ -52,3 +52,9 @@ Before acknowledging a meeting playback, the server records an `audioExclusions`
 These records are preserved in snapshots, report input and export. The report UI always notes that participant speech may be absent from playback windows, and the reasoning instructions treat them as coverage gaps rather than evidence of silence/disengagement. Bounds must be clipped to actual meeting duration when interpreted. This improves transparency; it does not reconstruct excluded speech or validate a participation score. Older records without this field have no inferred/backfilled windows.
 
 HTTP tests verify diagnostic isolation, one window per acknowledgement, known bounds, server-side suppression, cancellation and coverage reaching the complete-report input. A real-MMS browser workflow also verifies the visible report caveat. No paid model request was used to test the revised prompt.
+
+## Real-worker cancellation and replacement ownership
+
+`node experiments/meta-mms/cancellation-check.mjs` exercises the pinned local worker directly with synthetic text. [Measurement](research/mms-cancellation-recovery-check.json) records cancellation while startup is pending, cancellation of a warm pending request, process exit and a successful fresh-worker waveform. It records the adapter source hash and saves no waveform. The pending-request observation does not establish the exact point reached inside Python inference, and the timings are not physical audible latency.
+
+A separate deterministic adapter test reproduced buffered output from a canceled child closing its replacement. The reader now ignores every event from a child that no longer owns the adapter; startup timeout cleanup also checks ownership. Five adapter tests and ten output/queue tests pass. The existing eight-hour process loaded its adapter before this correction and continues separately; its eventual result must not be presented as an eight-hour test of the new ownership guard.

@@ -21,10 +21,11 @@ export class MMSSpeech {
   if(this.ready)return this.ready;
   const child=spawn(this.python,[this.worker,'--model-directory',this.modelDirectory,'--model-id',this.model,'--model-revision',this.revision],{stdio:['pipe','pipe','ignore'],env:{...process.env,HF_HUB_OFFLINE:'1',TOKENIZERS_PARALLELISM:'false'}});this.child=child;
   this.ready=new Promise((resolve,reject)=>{
-   const timer=setTimeout(()=>{reject(new Error('MMS startup timed out.'));this.close();},this.startTimeoutMs);
+   const timer=setTimeout(()=>{reject(new Error('MMS startup timed out.'));if(this.child===child)this.close();},this.startTimeoutMs);
    const fail=()=>{clearTimeout(timer);reject(new Error('MMS process stopped.'));if(this.child===child){this.child=null;this.ready=null;this.pending?.reject(new Error('MMS process stopped.'));this.pending=null;}};
    child.once('error',fail);child.once('exit',fail);
    createInterface({input:child.stdout}).on('line',line=>{
+    if(this.child!==child)return;
     try{
      if(line.length>1400000)throw new Error('MMS response limit exceeded.');
      const message=JSON.parse(line);

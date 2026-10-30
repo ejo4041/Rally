@@ -27,3 +27,22 @@ test('wrong model output is refused and timed out synthesis is terminated',async
  const invalid=await fixture(t,{invalid:true});await assert.rejects(invalid.synthesize('Test'),/Invalid MMS/);assert.equal(invalid.child,null);
  const slow=await fixture(t);await slow.start();slow.synthesisTimeoutMs=20;await assert.rejects(slow.synthesize('slow'),/timed out/);assert.equal(slow.child,null);
 });
+
+test('late output from a canceled worker cannot reject or terminate its replacement',async t=>{
+ const engine=await fixture(t);
+ await engine.start();
+ const old=engine.child,controller=new AbortController();
+ const first=engine.synthesize('slow',{signal:controller.signal});
+ const canceled=assert.rejects(first,/canceled|stopped/);
+ controller.abort();await canceled;
+ const replacement=engine.synthesize('Fresh speech.');
+ const current=engine.child;
+ assert.notEqual(current,old);
+ // A killed process can still have stdout buffered for delivery. Exercise the
+ // existing reader on that old stream after a replacement has taken ownership.
+ old.stdout.emit('data',Buffer.from('not-valid-json\n'));
+ const result=await replacement;
+ assert.equal(result.seconds,.01);
+ assert.equal(engine.child,current);
+ assert.equal(current.killed,false);
+});
