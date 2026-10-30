@@ -9,3 +9,5 @@ Teams local playback progress comes from PCM observed on the private output sink
 Input shielding and exclusion recording remain enabled unless the explicit Teams duplex flag is enabled. The flag requires a real overlapping-speech/remote-echo rehearsal; isolated routing and normalized fixture tests cannot prove accurate remote overlap transcription.
 
 Validation: normalized LiveSpeech tests cover finish-once-started, superseded evidence, explicit cancellation and invalid evidence before first playback. Local PCM clock test covers silence and split sample reconstruction. No provider/model calls or live meeting joins were made for these checks.
+
+A real isolated PulseAudio sink/monitor check observed 1,020.25 ms for a 1,000 ms synthetic tone, across 202 observations. [Evidence](research/realtime-local-playout-check.json). The fixture needed an isolated D-Bus address to avoid competing with the existing user daemon; no production audio configuration changed. This validates local monitor timing, not Teams remote audio or simultaneous participant transcription.
