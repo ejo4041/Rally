@@ -1,3 +1,5 @@
+**Teams startup correction, October 30:** Integrated API runtime now includes the Chromium library path used by the original Sites runner. Actual headed-browser launch passes in an equivalent production sandbox. See [incident and validation](teams-startup-incident.md). Fresh user admission retry remains pending.
+
 # Rally MFA/admin security release — October 30
 
 **Current app: https://rally.tail703f9e.ts.net/**, deployed application `ca539a5`. Source: `/srv/hackathon/rally-security`, branch `security/mfa-admin-20261030`, based on streaming checkpoint `e779d8d`. This supersedes earlier signup/login access instructions below. Public signup is closed. Existing accounts keep their passwords but must enroll MFA; password-only sessions were revoked on migration.

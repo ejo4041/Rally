@@ -56,3 +56,5 @@ These distinguish documented capability, access experiments, actual model measur
 - [Remote access](remote-access.md), [repository skills/tooling](aihero-skills.md).
 
 Teams voice preparation: [Meta MMS output and remaining live moderation connection](teams-mms-output.md).
+
+[Integrated Teams startup configuration incident](teams-startup-incident.md): missing Chromium library path, production-sandbox reproduction and correction.
