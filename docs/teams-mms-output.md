@@ -23,3 +23,7 @@ Nine offline tests cover permission refusal, permission lost during generation, 
 Use a fresh consenting host-created invite and an admission window. Explicitly enable the fixed diagnostic for that bounded run. Verify the host hears MMS, Stop/Leave and removal stop it, the virtual microphone is selected/unmuted, incoming speech reaches Muse, and Rally's own phrase does not become participant evidence. Reconcile actual transcription usage before repeating. Disable the diagnostic after the test.
 
 Automatic meeting-specific replies still require owner-scoped live transcript/agenda state, validated Muse assessment and approved prompt IDs/epochs delivered to this controller, with host pause/dismiss and durable playback coverage records. Those are not supplied by this fixed diagnostic. The common `present(utterance)` operation is available for that connection but callers must establish approval and revocation; its presence is not evidence the integration exists.
+
+## Installed checkpoint
+
+Source `22c3671` is pushed to `main`. The idle normal Teams runner was stopped, its five affected runtime files backed up outside source and replaced with tested versions, then restarted. Runtime files match the tested source; queue status reports online with `teams-web` transport and transcription ready. The browser client remains inactive, the previous queue job is terminal, and `RALLY_TEAMS_MMS_TEST` remains disabled. No join or speech occurred during installation. [Installation measurement](research/teams-mms-install-check.json).

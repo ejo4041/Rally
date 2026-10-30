@@ -46,3 +46,7 @@ Work this checkpoint used `/srv/hackathon/rally-whatsapp-guest` on `rally-spoken
 ## Historical records
 
 Earlier Sites release: [version 12](releases/2026-10-29-v12.md), [October 29 morning reliability](morning-reliability-2026-10-29.md), [October 28 incident/handoff](tonight-handoff-2026-10-28.md), [remote access](remote-access.md). Backend initial delivery/review: [implementation status](backend-implementation-status.md), [Astra validation](backend-astra-review.md). Historical status and cost figures in those records are dated observations, not the current deployment or verified Billing balance.
+
+## Teams MMS output preparation
+
+[Teams MMS output](teams-mms-output.md) is installed in the idle normal Teams runner from source `22c3671`, with the diagnostic disabled. Nine offline checks and a real-MMS disposable virtual-microphone measurement pass, including Stop/silence and incoming-audio isolation. No meeting was joined. A fixed diagnostic can be explicitly enabled for the next live trial; automatic agenda-based spoken replies still need a live moderation connection.

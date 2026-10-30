@@ -1,0 +1,14 @@
+{
+  "checkedAt": "2026-10-30T11:39:56.085283+00:00",
+  "sourceCommit": "22c3671",
+  "installedRuntimeFilesMatch": true,
+  "runnerActive": true,
+  "browserClientActive": false,
+  "queueOnline": true,
+  "transport": "teams-web",
+  "transcriptionReady": true,
+  "previousJobState": "failed",
+  "diagnosticEnabled": false,
+  "meetingJoined": false,
+  "paidModelCalls": 0
+}
