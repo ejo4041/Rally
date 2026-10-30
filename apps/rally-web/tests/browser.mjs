@@ -655,6 +655,10 @@ try {
       .reportAttempts,
     reportsBeforeCorrection + 1,
   );
+  assert.match(
+    await page.locator("#report-body").textContent(),
+    /Host correction: Host verified the final deadline is Friday at noon/,
+  );
   const modelCountsBeforeDraft = await (
     await page.request.get(base + "/api/test/state")
   ).json();

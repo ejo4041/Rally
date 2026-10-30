@@ -423,6 +423,8 @@ test("speaker names can be cleared without extra analysis; processing is stable 
   const f = await fixture(t, {
     providers: {
       report: async (s) => {
+        assert.equal(s.meeting.report, null);
+        assert.deepEqual(s.meeting.reportNotes, []);
         calls++;
         if (calls === 1) {
           reporting.resolve();
@@ -481,9 +483,33 @@ test("speaker names can be cleared without extra analysis; processing is stable 
   saved = await ready();
   assert.equal(saved.reportStale, false);
   assert.equal(saved.report.summary, "Speaker: Alex");
+  assert.equal(
+    (await f.request(`/meetings/${m.id}/report`, "PATCH", { note: "  " }))
+      .status,
+    400,
+  );
+  assert.equal(
+    (
+      await f.request(
+        `/meetings/${m.id}/report`,
+        "PATCH",
+        { note: "Corrected by host" },
+        bravo,
+      )
+    ).status,
+    404,
+  );
+  await f.request(`/meetings/${m.id}/report`, "PATCH", {
+    note: "  Corrected by host  ",
+  });
   saved = await (await name(null)).json();
+  assert.equal(saved.reportNotes.length, 1);
+  assert.equal(saved.reportNotes[0].text, "Corrected by host");
   assert.equal(saved.reportStale, true);
-  assert.equal(saved.report.summary, "Speaker: Alex");
+  assert.equal(
+    saved.report.summary,
+    "Speaker: Alex\nHost correction: Corrected by host",
+  );
   assert.equal(calls, 1);
   assert.equal(
     (await (await f.request(`/meetings/${m.id}/report`)).json()).stale,
@@ -493,5 +519,9 @@ test("speaker names can be cleared without extra analysis; processing is stable 
   saved = await ready();
   assert.equal(calls, 2);
   assert.equal(saved.reportStale, false);
-  assert.equal(saved.report.summary, "Speaker: Unknown");
+  assert.equal(
+    saved.report.summary,
+    "Speaker: Unknown\nHost correction: Corrected by host",
+  );
+  assert.equal(saved.reportNotes.length, 1);
 });

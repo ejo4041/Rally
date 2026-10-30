@@ -1,4 +1,5 @@
 import express from "express";
+import { retainLegacyNotes } from "./report-notes.ts";
 import { SpeechOutput, configuredSpeech, type SpeechEngine } from "./speech.ts";
 import {
   TeamsBridge,
@@ -277,8 +278,15 @@ export function createApplication(
     if (m.reportStatus !== "ready")
       throw new HttpError("No completed report", 409);
     const { note } = z
-      .object({ note: z.string().min(1).max(4000) })
+      .object({ note: z.string().trim().min(1).max(4000) })
       .parse(req.body);
+    retainLegacyNotes(m);
+    if ((m.reportNotes?.length || 0) >= 50)
+      throw new HttpError(
+        "This meeting has reached its correction note limit.",
+        409,
+      );
+    (m.reportNotes ??= []).push({ at: Date.now(), text: note });
     m.report!.summary += "\nHost correction: " + note;
     meetings.save(m);
     res.json(m.report);

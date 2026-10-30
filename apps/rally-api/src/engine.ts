@@ -1,4 +1,5 @@
 import type { SpeechOutput } from "./speech.ts";
+import { retainLegacyNotes } from "./report-notes.ts";
 import { randomUUID } from "node:crypto";
 import { z } from "zod";
 import { HttpError } from "./auth.ts";
@@ -438,6 +439,7 @@ export class Engine {
       throw new HttpError("Report already processing", 409);
     if (!["ended", "interrupted"].includes(m.phase))
       throw new HttpError("End the meeting first", 409);
+    retainLegacyNotes(m);
     m.reportStatus = "processing";
     m.error = null;
     this.meetings.save(m);
@@ -448,7 +450,12 @@ export class Engine {
         if (!snapshot.turns.length)
           throw new HttpError("No finalized speech to review");
         const raw = reportSchema.parse(
-          await this.meetings.providers.report(snapshot),
+          await this.meetings.providers.report({
+            ...snapshot,
+            // Reanalyze source evidence, not the previous model's conclusions.
+            // Host annotations are preserved separately after generation.
+            meeting: { ...snapshot.meeting, report: null, reportNotes: [] },
+          }),
         );
         validateEvidence(raw, snapshot.turns);
         if (
@@ -491,6 +498,8 @@ export class Engine {
         const current = this.meetings.get(m.id);
         if (current.epoch !== epoch)
           throw new HttpError("Meeting changed during analysis; retry report");
+        for (const note of current.reportNotes || [])
+          report.summary += "\nHost correction: " + note.text;
         current.report = report;
         current.reportStatus = "ready";
         current.reportStale = false;

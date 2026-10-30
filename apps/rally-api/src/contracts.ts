@@ -130,6 +130,7 @@ export type Meeting = {
   interventions: { id: string; at: number; text: string; kind: string }[];
   reportStatus: "none" | "processing" | "ready" | "failed";
   reportStale?: boolean;
+  reportNotes?: { at: number | null; text: string; legacy?: true }[];
   report: Report | null;
   error: string | null;
   gaps: { at: number; reason: string }[];
