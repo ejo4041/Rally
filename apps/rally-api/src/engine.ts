@@ -125,6 +125,12 @@ export class Engine {
       id: key,
       sessionId: e.sessionId,
       turnId: e.turnId,
+      sourceOrder:
+        typeof e.sourceOrder === "number" &&
+        Number.isSafeInteger(e.sourceOrder) &&
+        e.sourceOrder >= 0
+          ? e.sourceOrder
+          : undefined,
       revision: (old?.revision || 0) + 1,
       text: e.text,
       speaker: e.speaker ? `${e.sessionId}:${e.speaker}` : null,
@@ -135,6 +141,7 @@ export class Engine {
       old &&
       old.text === turn.text &&
       old.speaker === turn.speaker &&
+      old.sourceOrder === turn.sourceOrder &&
       old.startMs === turn.startMs &&
       old.endMs === turn.endMs
     )

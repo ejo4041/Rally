@@ -102,6 +102,7 @@ export type Turn = {
   id: string;
   sessionId: string;
   turnId: number;
+  sourceOrder?: number;
   revision: number;
   text: string;
   speaker: string | null;
@@ -152,6 +153,7 @@ export type TranscriptEvent =
       type: "final";
       sessionId: string;
       turnId: number;
+      sourceOrder?: number;
       text: string;
       speaker: string | null;
       startMs?: number | null;

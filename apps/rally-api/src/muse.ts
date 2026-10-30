@@ -315,7 +315,13 @@ export function createMuse(
 type DecodedTurn = {
   start: number | null;
   end: number | null;
-  labels: Map<string, Set<number>>;
+  labels: Set<string>;
+  started: boolean;
+  ended: boolean;
+  uncertain: boolean;
+  pendingSpan: boolean;
+  partial?: string;
+  sourceOrder?: number;
   text?: string;
   emitted?: string;
 };
@@ -323,28 +329,50 @@ export class TranscriptDecoder {
   sessionId: string;
   emit: (event: TranscriptEvent) => void;
   turns = new Map<number, DecodedTurn>();
+  private spanOwner?: number;
+  private openTurns = new Set<number>();
+  private nextOrder = 0;
   constructor(sessionId: string, emit: (event: TranscriptEvent) => void) {
     this.sessionId = sessionId;
     this.emit = emit;
   }
+  private turn(id: number) {
+    let turn = this.turns.get(id);
+    if (!turn) {
+      turn = {
+        start: null,
+        end: null,
+        labels: new Set(),
+        started: false,
+        ended: false,
+        uncertain: false,
+        pendingSpan: true,
+      };
+      this.turns.set(id, turn);
+    }
+    return turn;
+  }
+  private doubt(...ids: (number | undefined)[]) {
+    for (const id of ids) {
+      const turn = id === undefined ? undefined : this.turns.get(id);
+      if (turn) {
+        turn.uncertain = true;
+        this.publish(id!, turn);
+      }
+    }
+  }
   private publish(turnId: number, turn: DecodedTurn) {
     if (typeof turn.text !== "string" || !turn.text.trim()) return;
-    const labels = [...turn.labels]
-      .filter(([, times]) =>
-        [...times].some(
-          (time) =>
-            turn.start !== null &&
-            time >= turn.start &&
-            (turn.end === null || time <= turn.end),
-        ),
-      )
-      .map(([label]) => label);
     const event: Extract<TranscriptEvent, { type: "final" }> = {
       type: "final",
       sessionId: this.sessionId,
       turnId,
+      sourceOrder: turn.sourceOrder,
       text: turn.text,
-      speaker: labels.length === 1 ? labels[0] : null,
+      speaker:
+        !turn.uncertain && !turn.pendingSpan && turn.labels.size === 1
+          ? [...turn.labels][0]
+          : null,
       startMs: turn.start,
       endMs: turn.end,
     };
@@ -356,53 +384,105 @@ export class TranscriptDecoder {
   accept(v: Record<string, unknown>) {
     const time =
       typeof v.audioProcessedMs === "number" &&
-      Number.isFinite(v.audioProcessedMs) &&
+      Number.isSafeInteger(v.audioProcessedMs) &&
       v.audioProcessedMs >= 0
         ? v.audioProcessedMs
         : null;
-    if (v.type === "transcript" && typeof v.transcript === "string")
+    const validId =
+      typeof v.turnId === "number" &&
+      Number.isInteger(v.turnId) &&
+      v.turnId >= -2147483648 &&
+      v.turnId <= 2147483647;
+    if (v.type === "transcript" && typeof v.transcript === "string") {
+      const turn =
+        this.spanOwner === undefined
+          ? undefined
+          : this.turns.get(this.spanOwner);
+      if (turn) {
+        if (v.transcript.trim() && v.transcript !== turn.partial)
+          turn.pendingSpan = true;
+        turn.partial = v.transcript;
+        this.publish(this.spanOwner!, turn);
+      }
       this.emit({ type: "partial", text: v.transcript });
-    if (
-      v.type === "speaker" &&
-      typeof v.label === "string" &&
-      v.label.trim() &&
-      time !== null
-    ) {
-      const candidates = [...this.turns.entries()].filter(
-        ([, t]) =>
-          t.start !== null &&
-          t.start <= time &&
-          (t.end === null || t.end >= time),
-      );
-      if (candidates.length === 1) {
-        const [turnId, turn] = candidates[0];
-        const times = turn.labels.get(v.label) || new Set<number>();
-        times.add(time);
-        turn.labels.set(v.label, times);
-        this.publish(turnId, turn);
+    }
+    if (v.type === "speaker") {
+      const turn =
+        this.spanOwner === undefined
+          ? undefined
+          : this.turns.get(this.spanOwner);
+      if (
+        !turn ||
+        typeof v.label !== "string" ||
+        !v.label.trim() ||
+        time === null
+      ) {
+        this.doubt(this.spanOwner, ...this.openTurns);
+      } else {
+        // A speaker labels the preceding transcript span in event order. Its
+        // processing timestamp is not an interval key or an acoustic boundary.
+        if (
+          this.openTurns.size > 1 ||
+          (turn.text !== undefined && !turn.labels.has(v.label))
+        )
+          turn.uncertain = true;
+        turn.labels.add(v.label);
+        turn.pendingSpan = false;
+        this.publish(this.spanOwner!, turn);
       }
     }
     if (
-      typeof v.turnId === "number" &&
-      Number.isSafeInteger(v.turnId) &&
-      v.turnId >= 0
+      ["speechStart", "speechEnd", "speechComplete"].includes(String(v.type))
     ) {
-      let turn = this.turns.get(v.turnId);
-      if (!turn) {
-        turn = { start: null, end: null, labels: new Map() };
-        this.turns.set(v.turnId, turn);
+      if (!validId) {
+        this.doubt(this.spanOwner, ...this.openTurns);
+        if (v.type === "speechStart") this.spanOwner = undefined;
+      } else {
+        const id = v.turnId as number,
+          turn = this.turn(id);
+        if (v.type === "speechStart") {
+          if (!turn.started) {
+            if (turn.text === undefined && !turn.ended)
+              turn.sourceOrder = this.nextOrder++;
+            else turn.uncertain = true;
+            if (this.openTurns.size) {
+              this.doubt(...this.openTurns);
+              turn.uncertain = true;
+            }
+            turn.started = true;
+            if (!turn.ended && turn.text === undefined) this.openTurns.add(id);
+            this.spanOwner = id;
+          } else if (
+            time !== null &&
+            turn.start !== null &&
+            time !== turn.start
+          )
+            turn.uncertain = true;
+          if (time !== null) turn.start = time;
+          else turn.uncertain = true;
+        }
+        if (v.type === "speechEnd") {
+          if (time !== null && turn.end !== null && time !== turn.end)
+            turn.uncertain = true;
+          if (time !== null) turn.end = time;
+          turn.ended = true;
+          this.openTurns.delete(id);
+        }
+        if (v.type === "speechComplete" && typeof v.transcript === "string") {
+          turn.text = v.transcript;
+          turn.ended = true;
+          this.openTurns.delete(id);
+          // Completion is asynchronous post-processing, not a speech boundary.
+          if (!turn.text.trim() && this.spanOwner === id)
+            this.emit({ type: "partial", text: "" });
+        }
+        this.publish(id, turn);
       }
-      if (v.type === "speechStart" && time !== null) turn.start = time;
-      if (v.type === "speechEnd" && time !== null) turn.end = time;
-      if (v.type === "speechComplete" && typeof v.transcript === "string") {
-        turn.text = v.transcript;
-        turn.end ??= time;
-      }
-      this.publish(v.turnId, turn);
     }
     if (time !== null) this.emit({ type: "progress", processedMs: time });
   }
 }
+
 async function openMuseASR({
   m,
   key,

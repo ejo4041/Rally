@@ -1,5 +1,7 @@
 # Rally Node backend — frontend contract v1
 
+Final transcript records may include `sourceOrder`, an adapter-normalized speech-start order within a session. It is independent of opaque provider `turnId`; do not sort IDs numerically. Missing detected speech end stays null. Saved legacy records use available processing positions/insertion order as a fallback, without reconstructing missing chronology. [Speaker contract and limitations](speaker-attribution.md).
+
 **October 30 additions:** [Speech routes/lifecycle](integrated-speech.md), [reversible speaker labels and durable annotations](speaker-attribution.md). Meeting snapshots optionally include `reportStale`, `reportNotes` and `audioExclusions`; missing fields on older records are supported. Speaker `name: null` clears a label. Report status includes `stale`; ready stale reports can be explicitly reanalyzed after capture has ended or been interrupted through the existing retry route. Resuming capture marks an existing report stale without automatically analyzing it; failed starts preserve its status. Intervention events include the approving `epoch`; clients reject older control/prompt epochs. `speech.cancel` revokes pending output after revised evidence.
 
 The frontend is implemented separately. Start with [local setup](../apps/rally-api/README.md). Payload types and validation schemas live in [contracts.ts](../apps/rally-api/src/contracts.ts). The API is separate from the existing hosted Worker routes.

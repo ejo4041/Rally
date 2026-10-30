@@ -74,15 +74,24 @@ export class Meetings {
         .prepare("SELECT body FROM turns WHERE meeting_id=? ORDER BY rowid")
         .all(id) as { body: string }[]
     ).map((row) => JSON.parse(row.body));
-    // Source session/turn sequence is authoritative even when provider timing is absent.
+    // Source event order is independent of opaque provider turn IDs. Older
+    // records fall back to processing-position timestamps, then insertion order.
     const sessions = new Map<string, number>();
+    const inserted = new Map(turns.map((t, i) => [t.id, i]));
     for (const turn of turns)
       if (!sessions.has(turn.sessionId))
         sessions.set(turn.sessionId, sessions.size);
+    const rank = (t: Turn) =>
+      t.sourceOrder !== undefined
+        ? [0, t.sourceOrder]
+        : t.startMs !== null
+          ? [1, t.startMs]
+          : [2, inserted.get(t.id)!];
     return turns.sort(
       (a, b) =>
         sessions.get(a.sessionId)! - sessions.get(b.sessionId)! ||
-        a.turnId - b.turnId,
+        rank(a)[0] - rank(b)[0] ||
+        rank(a)[1] - rank(b)[1],
     );
   }
   async create(userId: string, input: unknown) {

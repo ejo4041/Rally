@@ -33,6 +33,7 @@ test("the Muse adapter normalizes speaker spans, timing, partials and out-of-ord
     type: "final",
     sessionId: "s",
     turnId: 1,
+    sourceOrder: 0,
     text: "First.",
     speaker: "A",
     startMs: 100,
@@ -139,7 +140,7 @@ test("the streaming adapter drains final speech and records known audio usage th
   new UsageLedger(store, defaults).check("meeting", 0.01);
 });
 
-test("late speaker and timing metadata revise the same finalized turn, preserving ambiguity without duplicates", () => {
+test("unsupported post-completion speaker labels remain uncertain while metadata revisions keep the same turn", () => {
   const events: TranscriptEvent[] = [];
   const decoder = new TranscriptDecoder("session-late", (event) =>
     events.push(event),
@@ -159,7 +160,7 @@ test("late speaker and timing metadata revise the same finalized turn, preservin
   const finals = events.filter((e) => e.type === "final");
   assert.deepEqual(
     finals.map((e) => e.speaker),
-    [null, "A", null, null],
+    [null, null],
   );
   assert.ok(
     finals.every(
@@ -177,7 +178,7 @@ test("blank finals and malformed metadata cannot become speech evidence or erase
   const decoder = new TranscriptDecoder("safe", (event) => events.push(event));
   decoder.accept({
     type: "speechComplete",
-    turnId: -1,
+    turnId: 1.5,
     transcript: "Invalid turn",
   });
   decoder.accept({ type: "speechComplete", turnId: 1, transcript: "  " });
@@ -203,7 +204,7 @@ test("blank finals and malformed metadata cannot become speech evidence or erase
   );
 });
 
-test("a timing correction removes a label whose evidence falls outside the corrected turn", () => {
+test("a conflicting timing correction leaves earlier attribution uncertain", () => {
   const events: TranscriptEvent[] = [];
   const decoder = new TranscriptDecoder("bounded", (e) => events.push(e));
   decoder.accept({ type: "speechStart", turnId: 0, audioProcessedMs: 0 });
@@ -222,4 +223,112 @@ test("a timing correction removes a label whose evidence falls outside the corre
     ["A", null],
   );
   assert.equal(finals[1].endMs, 900);
+});
+
+test("speaker labels follow preceding event spans even when their processing position is outside detected turn bounds", () => {
+  const events: TranscriptEvent[] = [];
+  const d = new TranscriptDecoder("spans", (e) => events.push(e));
+  for (const event of [
+    { type: "speechStart", turnId: 90, audioProcessedMs: 0 },
+    { type: "transcript", transcript: "First words." },
+    { type: "speechEnd", turnId: 90, audioProcessedMs: 100 },
+    { type: "speaker", label: "A", audioProcessedMs: 700 },
+    { type: "speechStart", turnId: -3, audioProcessedMs: 200 },
+    { type: "transcript", transcript: "Second words." },
+    { type: "speaker", label: "B", audioProcessedMs: 210 },
+    { type: "speechEnd", turnId: -3, audioProcessedMs: 250 },
+    {
+      type: "speechComplete",
+      turnId: -3,
+      transcript: "Second words.",
+      audioProcessedMs: 800,
+    },
+    {
+      type: "speechComplete",
+      turnId: 90,
+      transcript: "First words.",
+      audioProcessedMs: 1000,
+    },
+  ])
+    d.accept(event);
+  const finals = events.filter((e) => e.type === "final");
+  assert.deepEqual(
+    finals.map((e) => [e.turnId, e.speaker, e.sourceOrder]),
+    [
+      [-3, "B", 1],
+      [90, "A", 0],
+    ],
+  );
+  assert.equal(finals[1].endMs, 100);
+});
+
+test("overlapping or unlabeled spans cannot inherit a confidently retained earlier voice", () => {
+  function decode(input: Record<string, unknown>[]) {
+    const events: TranscriptEvent[] = [];
+    const d = new TranscriptDecoder("ambiguous", (e) => events.push(e));
+    for (const event of input) d.accept(event);
+    return events.filter((e) => e.type === "final");
+  }
+  const start = { type: "speechStart", turnId: 1, audioProcessedMs: 0 },
+    a = { type: "speaker", label: "A", audioProcessedMs: 10 };
+  const complete = {
+    type: "speechComplete",
+    turnId: 1,
+    transcript: "A complete turn.",
+    audioProcessedMs: 50,
+  };
+  const overlapping = decode([
+    start,
+    a,
+    { type: "speechStart", turnId: 2, audioProcessedMs: 20 },
+    { type: "speaker", label: "B", audioProcessedMs: 30 },
+    { type: "speechEnd", turnId: 1, audioProcessedMs: 40 },
+    complete,
+    { type: "speechEnd", turnId: 2, audioProcessedMs: 45 },
+    { ...complete, turnId: 2 },
+  ]);
+  assert.deepEqual(
+    overlapping.map((e) => e.speaker),
+    [null, null],
+  );
+  for (const uncertain of [
+    { type: "speaker", label: " ", audioProcessedMs: 20 },
+    { type: "speaker", label: "B", audioProcessedMs: NaN },
+    { type: "transcript", transcript: "New unlabeled words." },
+  ])
+    assert.equal(decode([start, a, uncertain, complete])[0].speaker, null);
+  const covered = decode([
+    start,
+    { type: "transcript", transcript: "First" },
+    a,
+    { type: "transcript", transcript: "First and second" },
+    a,
+    complete,
+  ]);
+  assert.equal(covered[0].speaker, "A");
+});
+
+test("completion processing position never fills a missing speech-end boundary", () => {
+  const events: TranscriptEvent[] = [];
+  const d = new TranscriptDecoder("missing-end", (e) => events.push(e));
+  d.accept({ type: "speechStart", turnId: 7, audioProcessedMs: 0 });
+  d.accept({ type: "speaker", label: "A", audioProcessedMs: 40 });
+  d.accept({
+    type: "speechComplete",
+    turnId: 7,
+    transcript: "Complete words.",
+    audioProcessedMs: 900,
+  });
+  d.accept({ type: "speechStart", turnId: 2, audioProcessedMs: 1000 });
+  d.accept({ type: "speaker", label: "B", audioProcessedMs: 1100 });
+  d.accept({
+    type: "speechComplete",
+    turnId: 2,
+    transcript: "Next turn.",
+    audioProcessedMs: 1200,
+  });
+  const finals = events.filter((e) => e.type === "final");
+  assert.equal(finals[0].endMs, null);
+  assert.equal(finals[1].speaker, "B");
+  assert.equal(finals[1].sourceOrder, 1);
 });

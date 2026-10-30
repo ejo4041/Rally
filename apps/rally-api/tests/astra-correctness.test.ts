@@ -141,11 +141,19 @@ async function fixture(
   };
   const start = (id: string, session = cookie) =>
     request(`/meetings/${id}/start`, "POST", { consented: true }, session);
-  const emit = (id: string, turnId: number, text: string, timing = true) =>
+  // Fixture statements declare their source position; IDs and order can differ.
+  const emit = (
+    id: string,
+    turnId: number,
+    text: string,
+    timing = true,
+    sourceOrder = turnId,
+  ) =>
     events.get(id)!({
       type: "final",
       sessionId: "session",
       turnId,
+      sourceOrder,
       text,
       speaker: "A",
       ...(timing ? { startMs: turnId * 1000, endMs: turnId * 1000 + 500 } : {}),
@@ -603,4 +611,17 @@ test("resuming a reviewed interrupted meeting keeps the old report but marks it 
   assert.match(saved.report.summary, /Report covers 2 final turns/);
   assert.match(saved.report.summary, /Keep this host annotation/);
   assert.equal(reports, 2);
+});
+
+test("canonical history orders by explicit source position independently of opaque turn IDs", async (t) => {
+  const f = await fixture(t);
+  const m = await f.create();
+  await f.start(m.id);
+  f.emit(m.id, -3, "Second in source", false, 1);
+  f.emit(m.id, 90, "First in source", false, 0);
+  const saved = await (await f.request(`/meetings/${m.id}`)).json();
+  assert.deepEqual(
+    saved.turns.map((turn: { turnId: number }) => turn.turnId),
+    [90, -3],
+  );
 });
