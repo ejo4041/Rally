@@ -1,3 +1,5 @@
+**Current UI asset release `7f2a634`:** Loading spinners, contextual Meta model labels and separate Rally response history deployed. [Public validation passes](research/loading-replies-deployed.json);17 frontend tests and browser/security checks pass. Static publication only: running API/media were not restarted, API source unchanged (`d5d2399`). Read [scope and limits](loading-and-rally-responses.md). Existing phone checkpoint remains valid; resume in this worktree.
+
 **Latest UI follow-up:** [Loading indicators, Meta model attribution and Rally response history](loading-and-rally-responses.md). Same droplet worktree/branch; no new paid calls. See deployment evidence for current asset release.
 
 **Phone continuation:** Open the droplet host in Omnigent and select **Rally feedback · ready for review** (session `ece55172f6a44ce385a6ee3b35d8759b`). History-only handoff, no duplicate runner; workspace `/srv/hackathon/rally-feedback`. The older “in progress” checkpoint remains historical. Final source/operator/docs branch checkpoint `03d2de7` (subsequent commit adds this pointer only); runtime application `d5d2399`.

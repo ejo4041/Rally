@@ -11,3 +11,9 @@ Conversation includes a clearly separated Rally response log, also in the mobile
 Validation:17 frontend tests pass, including retained responses across stale refresh, deduplication, stale-event rejection, escaped response text and conservative playback labeling. Typecheck/build pass. Browser workflow passes with synthetic providers, including gated delayed preparation/PDF, failed prepare followed by retry, duplicate submit suppression, actual PDF/sharing/revocation and visible Rally text separate from participant transcript. Security browser regression passes. No paid model calls or platform joins. Actual Bitwarden extension and remote Teams acceptance remain manual checks inherited from previous release.
 
 Deployment evidence is recorded in research/loading-replies-deployed.json when finalized. Existing narrated video is an earlier review draft; it has not been rerecorded for these UI additions. No upload/submission.
+
+## Deployed
+
+Static assets `7f2a634` are active at https://rally.tail703f9e.ts.net/. Physical-path staging completed and built assets matched the tested worktree before switching. API source is byte-identical to d5d2399 and its process/media were not restarted; existing call/report work was preserved. SQLite backup `/srv/hackathon/rally-deployed/backups/ui-feedback-20261030T224459Z.sqlite`.
+
+Public browser probe passed real MFA/secure cookie/closed signup, Meta model cards, gated spinner/duplicate-submit/failure cleanup, persisted synthetic Rally response with cancellation state, actual PDF and account grant/denial/revoke. Synthetic accounts/records removed. Preparation was intercepted in the browser (no model request); no paid calls/platform joins by these checks. The earlier video stays a review draft of the preceding UI.
