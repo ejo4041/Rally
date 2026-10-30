@@ -150,14 +150,17 @@ export function createApplication(
     res.sendStatus(204);
   });
   app.get("/api/auth/me", (req, res) => res.json(userForRequest(store, req)));
-  app.get("/api/teams/status", async (req, res) =>
-    res.json(await teams.status(userForRequest(store, req).id)),
-  );
-  app.post("/api/teams/join", async (req, res) =>
-    res
+  app.get("/api/teams/status", async (req, res) => {
+    const user=userForRequest(store,req);
+    res.json(process.env.RALLY_TEAMS_LIVE_ENABLED==='1'?{enabled:false,online:false,busy:false,uncertain:false,job:null}:await teams.status(user.id));
+  });
+  app.post("/api/teams/join", async (req, res) => {
+    userForRequest(store,req);
+    if(process.env.RALLY_TEAMS_LIVE_ENABLED==='1')throw new HttpError('Join live Teams from a prepared meeting',409);
+    return res
       .status(201)
-      .json(await teams.join(userForRequest(store, req).id, req.body)),
-  );
+      .json(await teams.join(userForRequest(store, req).id, req.body));
+  });
   app.post("/api/teams/leave", async (req, res) =>
     res.json(
       await teams.leave(

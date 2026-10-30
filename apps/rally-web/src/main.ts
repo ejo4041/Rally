@@ -165,6 +165,8 @@ async function signedIn(user: User) {
   input("password").value = "";
   await loadHistory();
   await teams.refresh();
+  const voice=await api<{transport?:string}>("/speech/status");
+  button("test-voice").hidden=voice.transport==='livekit';
   await route();
 }
 async function loadHistory() {
