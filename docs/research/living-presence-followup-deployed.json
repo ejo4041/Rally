@@ -1,0 +1,20 @@
+{
+  "at": "2026-10-30T19:28:35.385Z",
+  "release": "d0a5364",
+  "authenticatedWeb": true,
+  "existingMFASession": true,
+  "closedRegistration": true,
+  "renderer": true,
+  "publicWeb": "pass via public DNS ingress; login page HTTP200",
+  "activeCaps": {
+    "meeting": 6,
+    "total": 20
+  },
+  "backendTests": 125,
+  "frontendTests": 14,
+  "typechecks": true,
+  "frontendBuild": true,
+  "browserWorkflow": "pass with synthetic providers",
+  "paidCalls": 0,
+  "remoteCameraCorrectionRetest": false
+}

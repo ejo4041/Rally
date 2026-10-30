@@ -1,6 +1,6 @@
 # Rally living presence
 
-Current integration combines the supplied silk with the deployed MFA, streaming speech and [continuous-monitoring specification](realtime-monitoring-plan.md). Source worktree: `rally-whatsapp-guest`. Merged release `a686843` is active; the user reported the first remote test worked well, with a browser-shell framing defect. The follow-up fix remains pending release. Deployed MFA/closed signup checks passed before joining.
+Current integration combines the supplied silk with the deployed MFA, streaming speech and [continuous-monitoring specification](realtime-monitoring-plan.md). Source worktree: `rally-whatsapp-guest`. Follow-up release `d0a5364` is active; the user reported the first remote test worked well, with a browser-shell framing defect. The follow-up camera correction is deployed and locally verified; a renewed remote framing check remains pending. Deployed MFA/closed signup checks passed before joining.
 
 ## Continuous emotions and AI
 

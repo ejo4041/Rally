@@ -68,3 +68,5 @@ Teams voice preparation: [Meta MMS output and remaining live moderation connecti
 - [Live presence prompt caching: measured baseline, implementation and pending verification](research/living-presence-caching.md)
 
 - [Living presence follow-up review and acceptance limits](research/living-presence-followup-review.md)
+
+- [Deployed living-presence follow-up verification](research/living-presence-followup-deployed.json)
