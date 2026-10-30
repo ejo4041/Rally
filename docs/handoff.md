@@ -1,5 +1,7 @@
 # Rally handoff — current checkpoint
 
+**WhatsApp guest prototype:** [Preparation and local audio evidence](whatsapp-guest-prototype.md). Isolated audio routing passes; a fresh call link and host admission are needed for actual guest joining. No enabled WhatsApp invite UI is deployed.
+
 **Teams invite UI:** [Meeting links, ownership, transcription-test limits and validation](teams-integrated-ui.md). The Meetings page now has a Teams link field plus a distinct browser-tab setup path for other calls.
 
 **Integrated app deployed:** [Private HTTPS URL, test steps and service operations](integrated-deployment.md). Frontend/API/LiveKit run on the existing host. Sign in or create an app account with Tailscale connected. Muse is enabled with existing budget gates; generated speech is still pending.
