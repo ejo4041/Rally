@@ -436,22 +436,26 @@ function renderReport() {
   const m = state.session!.meeting,
     r = m.report;
   const current = r && m.reportStatus === "ready";
-  button("draft-follow-up").hidden = !current;
+  button("draft-follow-up").hidden = !current || m.phase === "live";
   $("report-status").textContent =
-    label(m.reportStatus) + (m.reportStale ? " · labels changed" : "");
+    label(m.reportStatus) +
+    (current && m.reportStale ? " · needs refresh" : "");
   button("retry-report").hidden = !(
-    m.reportStatus === "failed" ||
-    (m.reportStatus === "ready" && !!m.reportStale) ||
-    (m.phase === "interrupted" && m.reportStatus === "none")
+    ["ended", "interrupted"].includes(m.phase) &&
+    (m.reportStatus === "failed" ||
+      m.reportStatus === "none" ||
+      (m.reportStatus === "ready" && !!m.reportStale))
   );
   button("retry-report").disabled = state.busy;
   button("retry-report").textContent = m.reportStale
     ? "Reanalyze · uses Muse"
-    : "Retry analysis";
+    : m.reportStatus === "none"
+      ? "Analyze · uses Muse"
+      : "Retry analysis · uses Muse";
   $("correction-form").hidden = !current;
   if (!current) {
     $("report-body").innerHTML =
-      `<p class="muted">${m.reportStatus === "processing" ? "Analyzing the complete transcript. You can return to your meetings; this report continues in the background." : m.reportStatus === "failed" ? "Analysis failed. Check usage and retry explicitly when ready." : "End the meeting to prepare the full report."}</p>`;
+      `<p class="muted">${m.reportStatus === "processing" ? "Analyzing the complete transcript. You can return to your meetings; this report continues in the background." : m.reportStatus === "failed" ? "Analysis failed. Check usage and retry explicitly when ready." : ["ended", "interrupted"].includes(m.phase) ? "No full analysis yet. Review usage, then explicitly analyze the saved transcript when ready." : "End the meeting to prepare the full report."}</p>`;
     return;
   }
   const items = (title: string, rows: typeof r.actions) =>
@@ -466,7 +470,9 @@ function renderReport() {
   if (m.reportStale)
     $("report-body").insertAdjacentHTML(
       "afterbegin",
-      '<p class="notice" role="status">Speaker labels changed after this report was generated. Transcript labels are current; names in existing conclusions may be outdated. Reanalyze explicitly to update conclusions. This uses Muse processing.</p>',
+      m.phase === "live"
+        ? '<p class="notice" role="status">This report covers an earlier transcript. Capture has resumed; end the meeting to analyze the complete conversation. Existing conclusions may be outdated.</p>'
+        : '<p class="notice" role="status">The meeting changed after this report was generated. Transcript labels are current; names in existing conclusions may be outdated, and newer speech may be missing. Reanalyze explicitly to update conclusions. This uses Muse processing.</p>',
     );
 }
 async function perform(task: () => Promise<void>) {

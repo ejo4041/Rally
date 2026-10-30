@@ -193,6 +193,11 @@ try {
   );
   assert.equal(await page.locator(".turn").count(), 1);
   assert.equal(await page.locator("#report-status").textContent(), "None");
+  assert.equal(await page.locator("#retry-report").isVisible(), true);
+  assert.match(
+    await page.locator("#retry-report").textContent(),
+    /Analyze · uses Muse/,
+  );
   assert.ok(
     !(await page.locator("#transcript").textContent()).includes(
       "Do not save partial",
@@ -627,7 +632,7 @@ try {
   await page.waitForFunction(() =>
     document
       .querySelector("#report-status")
-      .textContent.includes("labels changed"),
+      .textContent.includes("needs refresh"),
   );
   assert.match(
     await page.locator("#report-body").textContent(),
@@ -842,6 +847,23 @@ try {
   const beforeRestart = (
     await (await page.request.get(base + "/api/test/state")).json()
   ).speechSessions;
+  await page.locator("#logout").click();
+  await page.locator("#auth-screen").waitFor({ state: "visible" });
+  await page.locator("#username").fill("frontend_test");
+  await page.locator("#password").fill("fixture-password-only");
+  await page.locator("#auth-submit").click();
+  await page.locator("#workspace").waitFor({ state: "visible" });
+  await page.goto(base + "/#meeting/" + tabId);
+  await page.locator("#retry-report").waitFor({ state: "visible" });
+  await page.locator("#retry-report").click();
+  await page.waitForFunction(
+    () => document.querySelector("#report-status").textContent === "Ready",
+  );
+  await page.locator("#audio-mode").selectOption("tab");
+  await page.evaluate(() => {
+    fixtureAudio.displayMode = "tab";
+    fixtureAudio.streams = [];
+  });
   await page.locator("#consent").check();
   await page.locator("#start").click();
   await page.waitForFunction(() =>
@@ -855,6 +877,17 @@ try {
       .speechSessions,
     beforeRestart + 1,
   );
+  assert.match(
+    await page.locator("#report-status").textContent(),
+    /needs refresh/,
+  );
+  assert.match(
+    await page.locator("#report-body").textContent(),
+    /earlier transcript/,
+  );
+  assert.equal(await page.locator("#retry-report").isVisible(), false);
+  assert.equal(await page.locator("#draft-follow-up").isVisible(), false);
+
   assert.match(await page.locator("#speakers").textContent(), /Speaker A/);
   assert.equal(
     await page.locator("#speakers [data-speaker]").count(),
@@ -880,6 +913,9 @@ try {
       ),
     ),
     true,
+  );
+  await page.waitForFunction(
+    () => document.querySelector("#report-status").textContent === "Ready",
   );
   await context.clearCookies();
   await page.evaluate(() => document.querySelector("#usage-button").click());
@@ -934,6 +970,7 @@ try {
       "Teams invite validation, lobby, leave and finalized transcript import via injected bridge",
       "tab rejection/cancellation stops tracks before ASR",
       "capture gap stops audio; explicit restart uses new speaker session",
+      "reviewing an interrupted capture then resuming marks the prior report stale and withholds follow-up/reanalysis until capture ends",
       "stopping tab sharing ends capture and finalizes the meeting",
     ],
   };

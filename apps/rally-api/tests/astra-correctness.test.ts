@@ -525,3 +525,82 @@ test("speaker names can be cleared without extra analysis; processing is stable 
   );
   assert.equal(saved.reportNotes.length, 1);
 });
+
+test("resuming a reviewed interrupted meeting keeps the old report but marks it stale only after audio starts successfully", async (t) => {
+  let failConnection = false,
+    reports = 0;
+  const f = await fixture(t, {
+    media: {
+      async open() {
+        return {
+          async connection() {
+            if (failConnection) throw Error("Fixture connection failure");
+            return { room: "fixture", url: "ws://fixture", token: "fixture" };
+          },
+          async send() {},
+          async close() {},
+        };
+      },
+    },
+    providers: {
+      async report(s) {
+        reports++;
+        return {
+          ...report(s),
+          summary: `Report covers ${s.turns.length} final turns.`,
+        };
+      },
+    },
+  });
+  const m = await f.create();
+  await f.start(m.id);
+  f.emit(m.id, 0, "First captured sentence.");
+  assert.equal((await f.request("/auth/logout", "POST", {})).status, 204);
+  const login = await f.request("/auth/login", "POST", {
+    username: "alice",
+    password: "a-demo-password",
+  });
+  assert.equal(login.status, 200);
+  const cookie = login.headers.get("set-cookie")!.split(";")[0];
+  const req = (path: string, method = "GET", body?: unknown) =>
+    f.request(path, method, body, cookie);
+  async function ready() {
+    for (let i = 0; i < 100; i++) {
+      const r = await (await req(`/meetings/${m.id}`)).json();
+      if (r.reportStatus === "ready") return r;
+      await new Promise((r) => setTimeout(r, 5));
+    }
+    throw Error("Report timeout");
+  }
+  await req(`/meetings/${m.id}/report/retry`, "POST", {});
+  let saved = await ready();
+  assert.equal(saved.phase, "interrupted");
+  assert.equal(reports, 1);
+  await req(`/meetings/${m.id}/report`, "PATCH", {
+    note: "Keep this host annotation",
+  });
+  failConnection = true;
+  assert.equal((await f.start(m.id, cookie)).status, 500);
+  saved = await (await req(`/meetings/${m.id}`)).json();
+  assert.equal(saved.phase, "interrupted");
+  assert.equal(saved.reportStale, false);
+  assert.match(saved.report.summary, /Keep this host annotation/);
+  failConnection = false;
+  assert.equal((await f.start(m.id, cookie)).status, 200);
+  saved = await (await req(`/meetings/${m.id}`)).json();
+  assert.equal(saved.phase, "live");
+  assert.equal(saved.reportStale, true);
+  assert.match(saved.report.summary, /Report covers 1 final turns/);
+  assert.equal(reports, 1);
+  assert.equal(
+    (await req(`/meetings/${m.id}/report/retry`, "POST", {})).status,
+    409,
+  );
+  f.emit(m.id, 1, "New captured sentence.");
+  await req(`/meetings/${m.id}/end`, "POST", {});
+  saved = await ready();
+  assert.equal(saved.reportStale, false);
+  assert.match(saved.report.summary, /Report covers 2 final turns/);
+  assert.match(saved.report.summary, /Keep this host annotation/);
+  assert.equal(reports, 2);
+});

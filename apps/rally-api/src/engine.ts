@@ -223,6 +223,12 @@ export class Engine {
         (reason) => this.gap(m.id, reason),
       );
       state.asr = await this.openASR(m, state);
+      const connection = await state.media.connection();
+      const current = this.meetings.get(m.id);
+      if (current.report) {
+        current.reportStale = true;
+        this.meetings.save(current);
+      }
       state.timer = setInterval(
         () => void this.tick(m.id).catch(() => {}),
         this.config.assessmentMs,
@@ -230,10 +236,11 @@ export class Engine {
       state.timer.unref();
       return {
         meeting: this.meetings.get(m.id),
-        connection: await state.media.connection(),
+        connection,
       };
     } catch (error) {
       state.ending = true;
+      clearInterval(state.timer);
       state.asr?.close();
       await state.media?.close();
       this.active.delete(m.id);

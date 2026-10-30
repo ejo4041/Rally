@@ -88,12 +88,12 @@ export function setupFollowUp(current: () => Meeting | undefined) {
   document.getElementById("draft-follow-up")!.onclick = () => {
     clear();
     const m = current();
-    if (!m?.report || m.reportStatus !== "ready") return;
+    if (!m?.report || m.reportStatus !== "ready" || m.phase === "live") return;
     sourceId = m.id;
     sourceReport = signature(m);
     const rows = [...m.report.decisions, ...m.report.actions];
     warning.textContent = m.reportStale
-      ? "Speaker labels changed after analysis. Names in conclusions may be outdated; correct them in the draft before sharing."
+      ? "The meeting changed after analysis. Conclusions may contain older names or omit newer speech; review the draft before sharing."
       : "";
     if (!rows.length)
       choices.textContent =
@@ -126,6 +126,7 @@ export function setupFollowUp(current: () => Meeting | undefined) {
         sourceId &&
         (m?.id !== sourceId ||
           m.reportStatus !== "ready" ||
+          m.phase === "live" ||
           signature(m) !== sourceReport)
       )
         clear();
