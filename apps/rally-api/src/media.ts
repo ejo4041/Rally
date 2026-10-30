@@ -1,4 +1,5 @@
-import { AccessToken } from "livekit-server-sdk";
+import { randomUUID } from "node:crypto";
+import { AccessToken, RoomServiceClient } from "livekit-server-sdk";
 import {
   Room,
   RoomEvent,
@@ -26,7 +27,7 @@ export class LiveKitMedia implements Media {
     onGap: (reason: string) => void,
   ): Promise<MediaSession> {
     const room = new Room(),
-      roomName = `rally-${meeting.id}`,
+      roomName = `rally-${meeting.id}-${randomUUID()}`,
       host = `host-${meeting.id}`;
     let stopped = false,
       reader: ReadableStreamDefaultReader<AudioFrame> | undefined,
@@ -136,6 +137,7 @@ export class LiveKitMedia implements Media {
       for (const publication of participant.trackPublications.values())
         subscribe(publication, participant);
     }
+    const admin = new RoomServiceClient(this.config.livekitUrl.replace(/^ws/, "http"),this.config.livekitKey,this.config.livekitSecret);
     return {
       connection: async () => ({
         url: this.config.livekitPublicUrl || this.config.livekitUrl,
@@ -164,7 +166,7 @@ export class LiveKitMedia implements Media {
         if (stopped) return;
         stopped = true;
         await reader?.cancel().catch(() => {});
-        await room.disconnect();
+        try { await admin.deleteRoom(roomName); } finally { await room.disconnect(); }
       },
     };
   }

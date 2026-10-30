@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createApplication} from '../src/app.ts';
+import {createApplication} from './support/application.ts';
 import {SeamlessSpeech} from '../src/seamless.ts';
 test('HTTP speech is authenticated and delivers first PCM before upstream completes',async(t)=>{
  let finish!:()=>void;
@@ -10,7 +10,7 @@ test('HTTP speech is authenticated and delivers first PCM before upstream comple
  const base=`http://127.0.0.1:${(server.address() as any).port}/api`;let cookie='';
  const req=(path:string,body?:unknown,origin?:string)=>fetch(base+path,{method:body?'POST':'GET',headers:{cookie,'Content-Type':'application/json',...(origin?{Origin:origin}:{})},body:body?JSON.stringify(body):undefined});
  assert.equal((await req('/speech/stream',{input:'Hello.'})).status,401);
- const signup=await req('/auth/signup',{username:'speech-http',password:'test-password'});cookie=signup.headers.get('set-cookie')!.split(';')[0];
+ const signup=await req('/fixture/signup',{username:'speech-http',password:'test-password'});cookie=signup.headers.get('set-cookie')!.split(';')[0];
  assert.equal((await req('/speech/stream',{input:'Hello.'},'https://foreign.test')).status,403);
  const response=await req('/speech/stream',{input:'Hello.'});assert.equal(response.status,200);
  const reader=response.body!.getReader();const first=await reader.read();assert.deepEqual([...first.value!],[1,2]);finish();

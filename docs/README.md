@@ -1,3 +1,5 @@
+**MFA and judge access:** [Closed registration, enrollment, admin controls and opt-in transcript review](mfa-admin-judge-audit.md).
+
 # Rally documentation
 
 Start with the [current handoff](handoff.md). The integrated Node app and the older Sites preview are separate releases. Historical records preserve their original checkpoints; their old “current” status and cost figures do not describe today's deployment or verified Billing.

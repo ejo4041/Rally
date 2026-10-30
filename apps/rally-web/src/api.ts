@@ -6,7 +6,7 @@ import type {
 } from "../../rally-api/src/contracts.ts";
 export type { Meeting, Turn, Plan, Report };
 export type RecordView = Meeting & { turns: Turn[] };
-export type User = { id: string; username: string };
+export type User = { id: string; username: string; role?: string };
 export type Summary = Pick<
   Meeting,
   "id" | "title" | "createdAt" | "phase" | "reportStatus"
@@ -41,8 +41,7 @@ export async function api<T>(
   }));
   if (
     response.status === 401 &&
-    path !== "/auth/me" &&
-    path !== "/auth/login" &&
+    !path.startsWith("/auth/") &&
     typeof window !== "undefined"
   )
     window.dispatchEvent(new Event("rally:session-expired"));

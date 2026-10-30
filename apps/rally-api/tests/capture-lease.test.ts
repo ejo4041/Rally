@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createApplication} from '../src/app.ts';
+import {createApplication} from './support/application.ts';
 test('browser lease authenticates renewals and expires paused capture without another model call',async(t)=>{
  t.mock.timers.enable({apis:['Date'],now:1000000});let drains=0,assessments=0;
  const api=createApplication({dbPath:':memory:',assessmentMs:100000,captureLeaseMs:90000,
@@ -10,7 +10,7 @@ test('browser lease authenticates renewals and expires paused capture without an
  t.after(async()=>{await api.close();await new Promise<void>(r=>server.close(()=>r()));});
  const base=`http://127.0.0.1:${(server.address() as any).port}/api`;let cookie='';
  const req=(path:string,body?:unknown)=>fetch(base+path,{method:body?'POST':'GET',headers:{cookie,'Content-Type':'application/json'},body:body?JSON.stringify(body):undefined});
- const signup=await req('/auth/signup',{username:'lease-test',password:'test-password'});cookie=signup.headers.get('set-cookie')!.split(';')[0];
+ const signup=await req('/fixture/signup',{username:'lease-test',password:'test-password'});cookie=signup.headers.get('set-cookie')!.split(';')[0];
  const m=await(await req('/meetings',{agenda:'Test',durationMinutes:10})).json();const path=`/meetings/${m.id}`;
  const start=await(await req(path+'/start',{consented:true})).json();assert.ok(start.connection.captureToken);
  assert.equal((await req(path+'/heartbeat',{captureToken:'wrong'})).status,409);

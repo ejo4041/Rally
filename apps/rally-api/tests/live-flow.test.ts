@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createApplication} from '../src/app.ts';
+import {createApplication} from './support/application.ts';
 import type {TranscriptEvent, LiveEvent} from '../src/contracts.ts';
 import {SeamlessSpeech} from '../src/seamless.ts';
 
@@ -19,7 +19,7 @@ for(const capture of ['browser','teams'] as const) test(`HTTP ${capture} meeting
  t.after(async()=>{await api.close();await new Promise<void>(r=>server.close(()=>r()));});
  const base=`http://127.0.0.1:${(server.address() as any).port}/api`;let cookie='';
  const req=(path:string,body?:unknown)=>fetch(base+path,{method:body?'POST':'GET',headers:{cookie,'Content-Type':'application/json'},body:body?JSON.stringify(body):undefined});
- const signup=await req('/auth/signup',{username:'live-test',password:'test-password'});cookie=signup.headers.get('set-cookie')!.split(';')[0];
+ const signup=await req('/fixture/signup',{username:'live-test',password:'test-password'});cookie=signup.headers.get('set-cookie')!.split(';')[0];
  const created=await req('/meetings',{title:'Planning',agenda:'Choose owner',durationMinutes:10,participants:['Alice']});
  const meeting=await created.json();assert.equal(created.status,201);
  await req(`/meetings/${meeting.id}/prepare`,{});
@@ -37,7 +37,7 @@ for(const capture of ['browser','teams'] as const) test(`HTTP ${capture} meeting
  assert.ok(events.slice(before).some(e=>e.type==='meeting.status'&&(e.data as any).paused===true));
  if(capture==='teams') {
   await req('/auth/logout',{});
-  const login=await req('/auth/login',{username:'live-test',password:'test-password'});cookie=login.headers.get('set-cookie')!.split(';')[0];
+  const login=await req('/fixture/login',{username:'live-test',password:'test-password'});cookie=login.headers.get('set-cookie')!.split(';')[0];
   assert.equal((await(await req(`/meetings/${meeting.id}`)).json()).phase,'live');
   assert.equal((await req(`/meetings/${meeting.id}/teams/leave`,{})).status,200);
   assert.equal((await(await req(`/meetings/${meeting.id}`)).json()).phase,'ended');

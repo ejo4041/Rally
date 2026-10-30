@@ -1,4 +1,4 @@
-import { AuthLimit } from "./auth-limit.ts";
+import { installSecurity, audit } from './security.ts';
 import { TeamsLive, type TeamsConnector } from "./teams-live.ts";
 import { connectTeamsBrowser } from "./teams-browser.ts";
 import { SpeechService, configuredTTS, type TextToSpeech } from "./speech-service.ts";
@@ -23,9 +23,6 @@ import { Meetings } from "./meetings.ts";
 import { Engine } from "./engine.ts";
 import type { Media, Providers } from "./contracts.ts";
 import {
-  createUser,
-  authenticate,
-  issueSession,
   revokeSession,
   userForRequest,
   HttpError,
@@ -42,6 +39,7 @@ export function createApplication(
   } = {},
 ) {
   const config = { ...defaults, ...options };
+  if(!/^[a-f0-9]{64}$/i.test(config.mfaKey)) throw new Error("Set a persistent random RALLY_MFA_KEY (32 bytes, hex) before starting Rally");
   const store = new Store(config.dbPath);
   const providers: Providers = {
     ...createMuse(store, config),
@@ -120,32 +118,27 @@ export function createApplication(
     next();
   });
   app.use(express.json({ limit: "256kb" }));
-  const credentials = z.object({
-    username: z
-      .string()
-      .trim()
-      .toLowerCase()
-      .regex(/^[a-z0-9_-]{3,40}$/),
-    password: z.string().min(10).max(200),
-  });
   app.get("/api/health", (_req, res) => res.json({ ok: true }));
-  const authLimit=new AuthLimit();
-  app.post("/api/auth/signup", async (req, res) => {
-    const input = credentials.parse(req.body);
-    const release=authLimit.enter("signup",input.username);
-    let user;try{user=await createUser(store,input.username,input.password);}finally{release();}
-    issueSession(store, res, user, config.secureCookies);
-    res.status(201).json(user);
-  });
-  app.post("/api/auth/login", async (req, res) => {
-    const input = credentials.parse(req.body);
-    const release=authLimit.enter("login",input.username);
-    let user;try{user=await authenticate(store,input.username,input.password);}finally{release();}
-    issueSession(store, res, user, config.secureCookies);
-    res.json(user);
+  installSecurity(app,store,meetings,{secure:config.secureCookies,key:config.mfaKey,disconnect:async(id)=>{
+    for(const m of meetings.list(id))await liveTeams.stop(m.id);
+    await engine.revokeUser(id);
+    if(process.env.RALLY_TEAMS_LIVE_ENABLED!=='1') {
+      const status=await teams.status(id);
+      if(status.job?.id && !["left","failed"].includes(status.job.state)) await teams.leave(id,status.job.id);
+    }
+  }});
+  // Record operational events without meeting content or invite URLs.
+  app.use('/api', (req,res,next)=>{
+    let actor:string|null=null;
+    try {actor=userForRequest(store,req).id;}catch {}
+    const match=req.path.match(/^\/meetings\/([a-f0-9-]+)\/(start|end|reconnect|commands|report\/retry|teams\/connect|teams\/leave)$/);
+    const feature=req.path.match(/^\/(teams\/(join|leave|save)|speech\/test)$/);
+    if(actor && (match || feature)) res.on('finish',()=>audit(store,actor!,match?'meeting.'+match[2]:'feature.'+feature![1],match?.[1]||null,{status:res.statusCode,mode:match?.[2]==='teams/connect'?'teams':match?.[2]==='start'?'browser':undefined}));
+    next();
   });
   app.post("/api/auth/logout", async (req, res) => {
     await engine.disconnectUser(userForRequest(store, req).id);
+    audit(store,userForRequest(store,req).id,"logout");
     revokeSession(store, req, res, config.secureCookies);
     res.sendStatus(204);
   });
@@ -414,6 +407,7 @@ export function createApplication(
           : err instanceof z.ZodError
             ? 400
             : 500;
+      try {audit(store,userForRequest(store,_req).id,"request.failed",null,{route:_req.route?.path||"unknown",status});}catch {}
       res.status(status).json({
         error:
           err instanceof z.ZodError

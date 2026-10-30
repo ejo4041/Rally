@@ -1,3 +1,7 @@
+# MFA and judge activity security update — prepared October 30
+
+Implementation and local/server validation are complete on `security/mfa-admin-20261030`; deployment is pending. See [account and audit operations](mfa-admin-judge-audit.md). Existing usernames/passwords and meeting ownership are preserved; password-only sessions will be revoked on migration. No audio recording is added. 71 backend tests, nine frontend tests, both type checks, build and three browser regression workflows pass with synthetic providers and zero paid calls.
+
 # Rally handoff — streaming speech release, October 30
 
 The integrated Node app is deployed from `c20261d` at **https://rally.tail703f9e.ts.net/**. It is public HTTPS with backend signup/login. Work is committed on the isolated `rally-streaming-speech` branch based on main `1d988d0`; it has not been merged or pushed. The separate private Sites release is unchanged.

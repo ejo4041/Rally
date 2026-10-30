@@ -1,3 +1,4 @@
+import { setupSecurity } from './security.ts';
 import {
   api,
   APIError,
@@ -67,6 +68,7 @@ const speech = createSpeechPlayer({
       $("capture-label").textContent = "Audio shielded while Rally speaks";
   },
 });
+const security = setupSecurity(signedIn, canNavigate);
 const audioCheck = setupAudioCheck();
 const followUp = setupFollowUp(() => state.session?.meeting);
 const teams = setupTeams((id) => {
@@ -113,6 +115,7 @@ async function signOutLocal() {
   $("meeting").hidden = true;
   $("home").hidden = false;
   state.user = null;
+  security.setUser(null);
   state.generation++;
   state.selecting?.abort();
   state.selecting = null;
@@ -159,6 +162,7 @@ async function signedIn(user: User) {
   button("auth-toggle").textContent = "Create an account";
   input("password").autocomplete = "current-password";
   state.user = user;
+  security.setUser(user);
   $("auth-screen").hidden = true;
   $("workspace").hidden = false;
   $("current-user").textContent = user.username;
@@ -228,6 +232,8 @@ async function route() {
   const meeting = await api<RecordView>(`/meetings/${id}`);
   if (generation !== state.generation) return;
   state.session = new MeetingSession(meeting);
+  input("share-feedback").dataset.meeting=id;
+  void security.sharing(id).catch(fail);
   for (const d of document.querySelectorAll("dialog")) d.close();
   state.ending = false;
   input("restart-session").checked = false;
@@ -826,37 +832,6 @@ $("create-form").onsubmit = async (event) => {
     button("create-submit").disabled = false;
   }
 };
-$("auth-form").onsubmit = async (event) => {
-  event.preventDefault();
-  button("auth-submit").disabled = true;
-  $("auth-error").textContent = "";
-  try {
-    await signedIn(
-      await api<User>(`/auth/${state.authMode}`, "POST", {
-        username: input("username").value,
-        password: input("password").value,
-      }),
-    );
-  } catch (error) {
-    $("auth-error").textContent =
-      error instanceof Error ? error.message : "Sign-in failed.";
-  } finally {
-    button("auth-submit").disabled = false;
-  }
-};
-button("auth-toggle").onclick = () => {
-  state.authMode = state.authMode === "login" ? "signup" : "login";
-  $("auth-title").textContent =
-    state.authMode === "login" ? "Welcome back" : "Create your workspace";
-  button("auth-submit").textContent =
-    state.authMode === "login" ? "Sign in" : "Create account";
-  button("auth-toggle").textContent =
-    state.authMode === "login"
-      ? "Create an account"
-      : "Already have an account? Sign in";
-  input("password").autocomplete =
-    state.authMode === "login" ? "current-password" : "new-password";
-};
 button("mobile-logout").onclick = () => button("logout").click();
 button("logout").onclick = () =>
   void perform(async () => {
@@ -1016,6 +991,7 @@ void api<User>("/auth/me")
   .then(signedIn)
   .catch((error) => {
     showAuth();
+    if(error instanceof APIError && error.status===401)void security.resume();
     if (!(error instanceof APIError && error.status === 401))
       $("auth-error").textContent =
         "Rally API is unavailable. Start the API and refresh.";
@@ -1067,3 +1043,10 @@ button("stop-speaking").onclick = () => {
 };
 
 button("test-voice").onclick = () => void speech.test();
+
+input('share-feedback').onchange=()=>{
+  const field=input('share-feedback'),id=field.dataset.meeting,enabled=field.checked;
+  if(!id)return;
+  field.disabled=true;
+  void api(`/meetings/${id}/sharing`,'PATCH',{enabled}).then(()=>toast(enabled?'Transcript and report shared with the developer.':'Developer access withdrawn.')).catch(e=>{field.checked=!enabled;fail(e);}).finally(()=>field.disabled=false);
+};

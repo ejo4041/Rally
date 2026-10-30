@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { createApplication } from "../src/app.ts";
+import { createApplication } from "./support/application.ts";
 import type {
   Providers,
   TranscriptEvent,
@@ -70,7 +70,7 @@ test("pause cancels pending guidance, hosts run independently, and logout stops 
     });
   const signup = async (username: string) =>
     (
-      await req("", "/auth/signup", "POST", {
+      await req("", "/fixture/signup", "POST", {
         username,
         password: "a-demo-password",
       })
@@ -170,7 +170,7 @@ test("pause cancels pending guidance, hosts run independently, and logout stops 
     0,
   );
   await req(alice, "/auth/logout", "POST");
-  const signin = await req("", "/auth/login", "POST", {
+  const signin = await req("", "/fixture/login", "POST", {
     username: "alice",
     password: "a-demo-password",
   });

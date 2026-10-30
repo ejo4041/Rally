@@ -1,3 +1,5 @@
+import {createRequire} from 'node:module';
+const {TOTP,Secret}=createRequire(new URL('../../rally-api/package.json',import.meta.url))('otpauth');
 // Actual browser + Express + SQLite + LiveKit. Synthetic audio/providers only.
 import {chromium} from 'playwright';
 import {spawn} from 'node:child_process';
@@ -15,9 +17,13 @@ try{
  const page=await browser.newPage();const errors=[];page.on('pageerror',e=>errors.push(e.message));
  await page.addInitScript(()=>{Object.defineProperty(navigator.mediaDevices,'getUserMedia',{value:async()=>{const context=new AudioContext();const osc=context.createOscillator();const dest=context.createMediaStreamDestination();osc.connect(dest);osc.start();await context.resume();return dest.stream;}});});
  await page.goto(base);
+ await page.locator('#username').fill('frontend_test');await page.locator('#password').fill('fixture-password-only');await page.locator('#auth-submit').click();
+ await page.locator('#enrollment-secret').waitFor({state:'visible'});await page.waitForFunction(()=>document.querySelector('#enrollment-secret').textContent.length>0);
+ const secret=await page.locator('#enrollment-secret').textContent();
+ await page.locator('#mfa-code').fill(new TOTP({secret:Secret.fromBase32(secret),digits:6,period:30,algorithm:'SHA1'}).generate());await page.locator('#mfa-submit').click();
+ await page.locator('#recovery-continue').waitFor({state:'visible'});await page.locator('#recovery-continue').click();await page.locator('#workspace').waitFor({state:'visible'});
  const id=await page.evaluate(async()=>{
   const req=async(path,body)=>{const r=await fetch('/api'+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});if(!r.ok)throw Error(path+': '+r.status);return r.json();};
-  await req('/auth/signup',{username:'stream-browser',password:'fixture-password'});
   const m=await req('/meetings',{title:'Streaming test',agenda:'Agree owner',participants:['Alice'],durationMinutes:10});await req(`/meetings/${m.id}/prepare`,{});return m.id;
  });
  await page.goto(base+'/#meeting/'+id);await page.reload();

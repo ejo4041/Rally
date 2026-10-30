@@ -282,7 +282,9 @@ export class Engine {
         },
         (reason) => this.gap(m.id, reason),
       );
+      if(state.ending || this.active.get(m.id)!==state) throw new HttpError("Session revoked during startup",401);
       state.asr = await this.openASR(m, state);
+      if(state.ending || this.active.get(m.id)!==state) throw new HttpError("Session revoked during startup",401);
       const connection = await state.media.connection();
       const current = this.meetings.get(m.id);
       if (current.report) {
@@ -688,6 +690,19 @@ export class Engine {
     m.phase = "interrupted";
     m.error = "Capture stopped; reconnect explicitly.";
     this.meetings.save(m);
+  }
+  // Security revocation also covers Teams and pending startup. Ordinary logout
+  // retains its existing behavior for independently hosted Teams meetings.
+  async revokeUser(userId:string) {
+    for(const [id,state] of this.active) {
+      const m=this.meetings.get(id);if(m.userId!==userId)continue;
+      const wasEnding=state.ending;state.ending=true;clearInterval(state.timer);
+      this.cancelSpeech(m);state.asr?.close();
+      await state.media?.close();
+      if(!wasEnding) {
+        this.active.delete(id);m.epoch++;m.phase='interrupted';m.error='Account access changed. Sign in again before reconnecting.';this.meetings.save(m);
+      }
+    }
   }
   async disconnectUser(userId: string) {
     for (const id of this.active.keys()) {

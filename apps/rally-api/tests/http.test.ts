@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { createApplication } from "../src/app.ts";
+import { createApplication } from "./support/application.ts";
 
 test("meeting plans and history are private to their owner and survive restart", async (t) => {
   const { mkdtemp, rm } = await import("node:fs/promises");
@@ -47,12 +47,12 @@ test("meeting plans and history are private to their owner and survive restart",
       body: body ? JSON.stringify(body) : undefined,
     });
   }
-  const signup = await request("/auth/signup", "POST", {
+  const signup = await request("/fixture/signup", "POST", {
     username: "alice",
     password: "demo-password",
   });
   const alice = signup.headers.get("set-cookie")!.split(";")[0];
-  const b = await request("/auth/signup", "POST", {
+  const b = await request("/fixture/signup", "POST", {
     username: "bravo",
     password: "demo-password",
   });
@@ -94,7 +94,7 @@ test("meeting plans and history are private to their owner and survive restart",
   );
 });
 
-test("a host signs up, stays signed in, and logs out; passwords never leave the API", async (t) => {
+test("a fixture host stays signed in and logout revokes its cookie; meeting tests omit the MFA UI", async (t) => {
   const api = createApplication({ dbPath: ":memory:" });
   const server = api.app.listen(0, "127.0.0.1");
   await new Promise<void>((resolve) => server.once("listening", resolve));
@@ -105,7 +105,7 @@ test("a host signs up, stays signed in, and logs out; passwords never leave the 
   const address = server.address();
   assert.ok(address && typeof address !== "string");
   const url = `http://127.0.0.1:${address.port}/api`;
-  const signup = await fetch(`${url}/auth/signup`, {
+  const signup = await fetch(`${url}/fixture/signup`, {
     method: "POST",
     headers: { "content-type": "application/json" },
     body: JSON.stringify({ username: "alice", password: "a-demo-password" }),

@@ -29,6 +29,7 @@ export const defaults = {
   dbPath: ".data/rally.sqlite",
   origins: ["http://localhost:5173", "http://127.0.0.1:5173"],
   secureCookies: false,
+  mfaKey: "",
   assessmentMs: 10000,
   cooldownMs: 60000,
   asrRotationMs: 55 * 60000,
@@ -58,6 +59,7 @@ export function environmentConfig(): Configuration {
       process.env.RALLY_ALLOWED_ORIGINS?.split(",").map((s) => s.trim()) ||
       defaults.origins,
     secureCookies: process.env.RALLY_SECURE_COOKIES === "1",
+    mfaKey: process.env.RALLY_MFA_KEY || "",
     paidEnabled: process.env.RALLY_PAID_ENABLED === "1",
     assessmentMs: number("RALLY_ASSESSMENT_MS", 10000),
     cooldownMs: number("RALLY_COOLDOWN_MS", 60000),

@@ -947,3 +947,8 @@ dialog::backdrop {
   overflow-y: auto;
   margin-bottom: 16px;
 }
+
+.admin-dialog { width: min(1100px, 95vw); max-width: 95vw; }
+.admin-dialog pre, #recovery-codes { white-space: pre-wrap; overflow-wrap: anywhere; max-height: 26rem; overflow-y: auto; }
+#enrollment-secret { overflow-wrap: anywhere; user-select: all; }
+#enrollment-qr { max-width: 100%; height: auto; }

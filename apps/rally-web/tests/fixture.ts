@@ -15,7 +15,8 @@ import type {
   Snapshot,
 } from "../../rally-api/src/contracts.ts";
 import { categories } from "../../rally-api/src/contracts.ts";
-import { HttpError } from "../../rally-api/src/auth.ts";
+import { Store } from "../../rally-api/src/store.ts";
+import { HttpError, createUser } from "../../rally-api/src/auth.ts";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -26,6 +27,7 @@ const { dispose } = createRequire(
 const folder = await mkdtemp(join(tmpdir(), "rally-web-test-"));
 const config = {
   ...defaults,
+  mfaKey: "56".repeat(32),
   dbPath: join(folder, "fixture.sqlite"),
   origins: [`http://127.0.0.1:${process.env.RALLY_WEB_PORT || 5174}`],
   assessmentMs: Number(process.env.RALLY_TEST_ASSESSMENT_MS || 60000),
@@ -321,6 +323,10 @@ api.app.post("/api/test/revision", (req, res) => {
   });
   res.json({ ok: true });
 });
+const accountStore=new Store(config.dbPath);
+await createUser(accountStore,'frontend_test','fixture-password-only');
+await createUser(accountStore,'other_host','other-fixture-password');
+accountStore.close();
 const server = api.app.listen(
   Number(process.env.RALLY_TEST_API_PORT || 3101),
   "127.0.0.1",
