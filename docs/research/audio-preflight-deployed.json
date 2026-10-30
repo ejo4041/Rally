@@ -1,0 +1,11 @@
+{
+  "testedAt": "2026-10-30T03:55:02.852Z",
+  "passed": true,
+  "release": "7f22954",
+  "deployedHTTPS": true,
+  "syntheticMicrophone": true,
+  "signalDetected": true,
+  "stopClosedTracks": true,
+  "meetingPhaseUnchanged": true,
+  "paidModelCalls": 0
+}

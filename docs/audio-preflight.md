@@ -9,3 +9,7 @@ This uses the same source acquisition as the integrated live workflow. Backend/p
 Validation: frontend typecheck/build and four state tests pass. The full browser test uses real local HTTP/SQLite/LiveKit with injected model providers and synthetic audio. Both meters detect signals; manual and automatic stops close all tracks; missing consent opens no check; canceled picker grants close; the ASR session count stays unchanged during preflight. The subsequent complete meeting/report workflow also passes. No real model call was made. [Browser result](research/frontend-browser-check.json).
 
 Next overnight priorities: connect approved Meta MMS speech to the Node backend with pause/dismiss/end cancellation and echo handling; verify shared-room attribution without equating voice labels with people; complete the WhatsApp guest admission/audio trial when a host supplies a fresh link; rehearse the three-person decision loop before recording. Actual human/device/platform validation remains necessary.
+
+## Deployment
+
+Frontend release `7f22954` is live at the existing private app URL. Refresh and open a prepared meeting to use **Check audio · free**. The static release was updated without restarting API/media processes. The deployed HTTPS check used a temporary synthetic meeting/account and microphone stream: signal detection and Stop passed, the meeting stayed ready, and usage stayed empty. Synthetic records were deleted. [Deployment measurement](research/audio-preflight-deployed.json). No model calls or live meetings were initiated.
