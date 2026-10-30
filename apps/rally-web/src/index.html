@@ -282,11 +282,12 @@
             </section>
             <div class="meeting-grid">
               <div class="main-column">
-                <section class="rally-card" aria-live="polite">
+                <section id="rally-display" class="rally-card" data-feeling="neutral" aria-label="Rally live assessment">
                   <div class="eyebrow">
-                    ▥ RALLY <span id="health" class="pill"></span>
+                    ▥ RALLY <span id="rally-feeling" class="rally-feeling">Listening</span> <span id="health" class="pill"></span>
                   </div>
-                  <p id="guidance">
+                  <p id="rally-freshness" class="small muted" role="status"></p>
+                  <p id="guidance" aria-live="off">
                     You lead the meeting. Rally helps it move forward.
                   </p>
                   <p id="progress" class="small muted"></p>
@@ -302,7 +303,10 @@
                     </button>
                   </div>
                   <p id="speech-status" class="small muted" role="status"></p>
-                  <p id="assessment-note" class="small muted"></p>
+                  <p id="readalong-note" class="small muted" hidden>Approximate read-along</p>
+                  <div class="rally-observation"><span class="eyebrow">Current observation</span><p id="assessment-note" class="small" aria-live="polite"></p></div>
+                  <div id="rally-extension" class="rally-extension" hidden></div>
+                  <details id="rally-history"><summary>Check history <span class="small muted">and agenda changes</span></summary><div id="rally-history-items"></div><p id="rally-history-status" class="small muted" role="status"></p><button id="rally-history-more" class="text" type="button" hidden>Earlier checks</button></details>
                 </section>
                 <section class="card">
                   <div class="card-heading">

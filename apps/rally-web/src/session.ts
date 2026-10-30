@@ -1,5 +1,21 @@
 import type { LiveEvent } from "../../rally-api/src/contracts.ts";
 import type { RecordView, Turn } from "./api.ts";
+function newerSpeech(incoming: RecordView['speechStatus'], current: RecordView['speechStatus']) {
+  if(!incoming)return false;
+  if(!current)return true;
+  if(incoming.epoch!==current.epoch)return incoming.epoch>current.epoch;
+  if(incoming.at<current.at)return false;
+  if(incoming.id!==current.id)return incoming.at>=current.at;
+  if(['completed','canceled','failed'].includes(current.state)&&['preparing','playing'].includes(incoming.state))return false;
+  return incoming.at>current.at||(incoming.playedMs??0)>=(current.playedMs??0);
+}
+function newerCheck(incoming: RecordView['monitor'], current: RecordView['monitor']) {
+  if(!incoming)return false;
+  if(!current)return true;
+  if(incoming.sequence!==current.sequence)return incoming.sequence>current.sequence;
+  if(current.status!=='checking'&&incoming.status==='checking')return false;
+  return (incoming.completedAt??incoming.capturedAt)>=(current.completedAt??current.capturedAt);
+}
 // Events are transient notifications; an HTTP snapshot replaces canonical state.
 // Partial text never becomes a turn, and old revisions cannot overwrite new ones.
 export class MeetingSession {
@@ -45,6 +61,14 @@ export class MeetingSession {
       meeting.phase !== "live"
     )
       this.intervention = null;
+    if(!newerCheck(meeting.monitor,this.meeting.monitor)) {
+      meeting={...meeting,monitor:this.meeting.monitor};
+    }
+    if((meeting.revisions?.length??0)<(this.meeting.revisions?.length??0)) {
+      meeting={...meeting,plan:this.meeting.plan,revisions:this.meeting.revisions};
+    }
+    const oldSpeech=this.meeting.speechStatus,incomingSpeech=meeting.speechStatus;
+    if(oldSpeech && !newerSpeech(incomingSpeech,oldSpeech))meeting={...meeting,speechStatus:oldSpeech};
     this.meeting = meeting;
     if (
       meeting.phase !== "live" ||
@@ -108,8 +132,11 @@ export class MeetingSession {
         if (data?.type === "pause") m.paused = true;
         if (data?.type === "resume") m.paused = false;
         return true;
+      case "meeting.check":
+        if(data?.epoch===m.epoch && Number.isSafeInteger(data?.sequence) && newerCheck(data,m.monitor))m.monitor=data;
+        return false;
       case "speech.status":
-        if(data?.epoch >= m.epoch) m.speechStatus=data;
+        if(data?.epoch >= m.epoch && newerSpeech(data,m.speechStatus))m.speechStatus=data;
         return false;
       case "meeting.status":
         if(data?.epoch < m.epoch)return false;

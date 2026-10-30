@@ -1,3 +1,4 @@
+import { RallyDisplay } from './rally-display.ts';
 import { setupSecurity } from './security.ts';
 import {
   api,
@@ -71,6 +72,7 @@ const speech = createSpeechPlayer({
 const security = setupSecurity(signedIn, canNavigate);
 const audioCheck = setupAudioCheck();
 const followUp = setupFollowUp(() => state.session?.meeting);
+const rallyDisplay = new RallyDisplay(refresh, fail);
 const teams = setupTeams((id) => {
   void loadHistory().catch(fail);
   location.hash = `meeting/${id}`;
@@ -106,6 +108,7 @@ function showAuth() {
   $("workspace").hidden = true;
 }
 async function signOutLocal() {
+  rallyDisplay.clear();
   speech.cancel();
   followUp.clear();
   input("spoken-prompts").checked = false;
@@ -392,6 +395,7 @@ function render() {
   $("assessment-note").textContent = m.assessment
     ? `${m.assessmentAt ? "Assessed " + Math.floor((Date.now()-m.assessmentAt)/1000) + "s ago · " : ""}${m.assessment.reason}${m.assessment.issues.length ? " · " + m.assessment.issues.map(label).join(", ") : ""}`
     : "";
+  rallyDisplay.render(m);
   renderTranscript();
   $("partial").textContent = session.partial;
   const speakerIds = [
@@ -597,9 +601,7 @@ async function start() {
             );
           if (
             event.type === "speech.cancel" ||
-            event.type === "transcription.gap" ||
             event.type === "moderator.control" ||
-            event.type === "plan.updated" ||
             event.type === "meeting.ended" ||
             event.type === "capture.gap"
           ) {
@@ -607,6 +609,7 @@ async function start() {
             state.media?.stopSpeech();
           }
           if (session.apply(event)) scheduleRefresh();
+          rallyDisplay.event(event);
           if (
             event.type === "intervention" &&
             input("spoken-prompts").checked
@@ -640,6 +643,7 @@ async function start() {
           render();
         },
         () => scheduleRefresh(),
+        (id,playedMs,running) => rallyDisplay.playback(id,playedMs,running),
       );
       state.media = media;
       await media.connect(connection, capture);
@@ -1036,6 +1040,7 @@ input("spoken-prompts").onchange = () => {
       .catch(fail);
 };
 button("stop-speaking").onclick = () => {
+  rallyDisplay.stop();
   state.media?.stopSpeech(undefined,true);
 
   speech.cancel();

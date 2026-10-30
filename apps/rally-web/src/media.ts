@@ -122,8 +122,10 @@ export class MeetingMedia {
   private audio: AudioInput | null = null;
   private leaseTimer?:ReturnType<typeof setInterval>;
   private muted = false;
+  private mediaConnected=false;
   private shielded = false;
   private elements = new Set<HTMLMediaElement>();
+  private playbackClocks = new Map<HTMLMediaElement,{timer:ReturnType<typeof setInterval>;id:string;origin:number|null}>();
   private revokedSpeech = new Set<string>();
   private activeSpeech: string | null = null;
   private eligibleSpeech: string | null = null;
@@ -143,6 +145,7 @@ export class MeetingMedia {
     private onEvent: (event: LiveEvent) => void,
     private onStatus: (status: string) => void,
     private onRecovered: () => void,
+    private onPlayback: (id:string,playedMs:number,running:boolean)=>void = ()=>{},
   ) {}
   async connect(connection: Connection, audio: AudioInput | null) {
     this.audio = audio;
@@ -177,13 +180,17 @@ export class MeetingMedia {
       }
     });
     room.on(RoomEvent.Reconnecting, () => {
+      this.mediaConnected=false;
+      for(const clock of this.playbackClocks.values())this.onPlayback(clock.id,0,false);
       this.onStatus("Reconnecting media. Live updates may be delayed.");
     });
     room.on(RoomEvent.Reconnected, () => {
+      this.mediaConnected=true;
       this.onStatus("Connected");
       this.onRecovered();
     });
     room.on(RoomEvent.Disconnected, () => {
+      this.mediaConnected=false;
       if (this.room !== room) return;
       this.stopCapture();
       this.onStatus(
@@ -205,10 +212,27 @@ export class MeetingMedia {
         element.hidden = true;
         document.body.append(element);
         this.elements.add(element);
+        const speechId=parts[0]==='rally-speech'?parts[2]:null;
+        if(speechId) {
+          const clock={id:speechId,origin:null as number|null,timer:undefined as unknown as ReturnType<typeof setInterval>};
+          let stalled=true,lastTime=element.currentTime,playedMs=0,wasRunning=false;
+          const progress=()=>{
+            const running=this.mediaConnected&&!stalled&&!element.paused&&!element.ended&&element.readyState>=2;
+            const now=element.currentTime;
+            if(running&&wasRunning)playedMs+=Math.max(0,(now-lastTime)*1000);
+            if(running&&clock.origin===null)clock.origin=now;
+            lastTime=now;wasRunning=running;
+            this.onPlayback(speechId,playedMs,running);
+          };
+          element.addEventListener('playing',()=>{stalled=false;progress();});
+          for(const event of ['waiting','stalled','pause','ended','emptied'])element.addEventListener(event,()=>{stalled=true;progress();});
+          clock.timer=setInterval(progress,100);this.playbackClocks.set(element,clock);
+        }
       }
     });
     room.on(RoomEvent.TrackUnsubscribed, (track) => {
       for (const element of track.detach()) {
+        const clock=this.playbackClocks.get(element);if(clock){clearInterval(clock.timer);this.onPlayback(clock.id,0,false);this.playbackClocks.delete(element);}
         element.remove();
         this.elements.delete(element);
       }
@@ -235,6 +259,7 @@ export class MeetingMedia {
       )
         throw new Error("Audio sharing ended during publication.");
       }
+      this.mediaConnected=true;
       await room.startAudio();
       this.onStatus("Connected");
       if(audio && connection.captureToken) {
@@ -287,10 +312,13 @@ export class MeetingMedia {
     this.track = null;
   }
   async close() {
+    this.mediaConnected=false;
     this.stopCapture();
     const room = this.room;
     this.room = null;
     await room?.disconnect();
+    for(const [element,clock] of this.playbackClocks){clearInterval(clock.timer);this.onPlayback(clock.id,0,false);element.pause();}
+    this.playbackClocks.clear();
     for (const element of this.elements) element.remove();
     this.elements.clear();
   }
