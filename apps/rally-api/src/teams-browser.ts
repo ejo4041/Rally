@@ -1,3 +1,4 @@
+import { PlayoutClock } from './playout-clock.ts';
 import {spawn, type ChildProcess} from 'node:child_process';
 import {mkdtemp,readFile,writeFile,rm} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
@@ -17,7 +18,7 @@ export const connectTeamsBrowser:TeamsConnector=async(url,signal,onState)=>{
  let closed=false,connected=false,checking=false;
  const audioEnv:NodeJS.ProcessEnv={...process.env};
  const kill=async(proc:ChildProcess|undefined)=>{
-  if(!proc || proc.exitCode!==null || proc.signalCode!==null)return;
+  if(!proc || !proc.pid || proc.exitCode!==null || proc.signalCode!==null)return;
   proc.kill('SIGTERM');
   const timer=setTimeout(()=>proc.kill('SIGKILL'),2000);
   await once(proc,'exit').catch(()=>{});clearTimeout(timer);
@@ -83,17 +84,22 @@ export const connectTeamsBrowser:TeamsConnector=async(url,signal,onState)=>{
     receiver.on('exit',()=>{if(!closed){connected=false;gap('Teams audio capture stopped');}});
     return ()=>{void kill(receiver);};
    },
-   async play(chunks,playSignal,beforeAudio){
+   async play(chunks,playSignal,beforeAudio,onProgress){
     if(closed||!connected)throw new Error('Teams disconnected');
+    const clock=new PlayoutClock();
+    let measured=0,lastProgress=0,written=0;
+    const monitor=onProgress?spawn('parec',['--device=rally_teams_out.monitor','--raw','--format=s16le','--rate=16000','--channels=1','--latency-msec=20'],{env:audioEnv,stdio:['ignore','pipe','ignore']}):undefined;
+    monitor?.on('error',()=>{});
+    monitor?.stdout!.on('data',(data:Buffer)=>{const value=clock.observe(data);if(value===undefined||playSignal.aborted)return;measured=Math.min(value,written/32);if(performance.now()-lastProgress>=200){lastProgress=performance.now();onProgress?.(measured);}});
     const proc=spawn('paplay',['--device=rally_teams_out','--raw','--format=s16le','--rate=16000','--channels=1','--latency-msec=20'],{env:audioEnv,stdio:['pipe','ignore','ignore']});player=proc;
     let failed:Error|undefined;proc.on('error',e=>failed=e);proc.stdin!.on('error',e=>failed=e);
     const completion=once(proc,'exit');void completion.catch(()=>{});
     const stop=()=>{proc.kill('SIGTERM');};playSignal.addEventListener('abort',stop,{once:true});
     try{
      let started=false;
-     for await(const part of chunks){playSignal.throwIfAborted();if(!connected||closed||failed)throw failed||new Error('Teams disconnected');if(!started){beforeAudio();started=true;}if(!proc.stdin!.write(part))await once(proc.stdin!,'drain',{signal:playSignal});}
-     proc.stdin!.end();const [code]=await completion;if(code!==0||failed)throw failed||new Error('Teams playback failed');
-    }finally{playSignal.removeEventListener('abort',stop);await kill(proc);if(player===proc)player=undefined;}
+     for await(const part of chunks){playSignal.throwIfAborted();if(!connected||closed||failed)throw failed||new Error('Teams disconnected');if(!started){beforeAudio();started=true;}written+=part.length;if(!proc.stdin!.write(part))await once(proc.stdin!,'drain',{signal:playSignal});}
+     proc.stdin!.end();const [code]=await completion;if(measured>0)onProgress?.(measured);if(code!==0||failed)throw failed||new Error('Teams playback failed');
+    }finally{playSignal.removeEventListener('abort',stop);await kill(proc);await kill(monitor);if(player===proc)player=undefined;}
    },close,
   };
  }catch(error){await close();throw error;}

@@ -3,7 +3,7 @@ import type { Meeting } from './contracts.ts';
 export interface CallAudio {
  alive():boolean;
  receive(audio:(bytes:Uint8Array)=>void,gap:(reason:string)=>void):()=>void;
- play(chunks:AsyncIterable<Buffer>,signal:AbortSignal,beforeAudio:()=>void):Promise<void>;
+ play(chunks:AsyncIterable<Buffer>,signal:AbortSignal,beforeAudio:()=>void,onProgress?:(playedMs:number)=>void):Promise<void>;
  close():Promise<void>;
 }
 export type TeamsConnector = (url:string,signal:AbortSignal,onState:(state:string)=>void)=>Promise<CallAudio>;
@@ -48,7 +48,7 @@ export class TeamsLive {
   await j.call?.close();this.update(j,'failed');j.failing=false;if(!j.starting)this.occupied=false;
  }
  attach(id:string,audio:(bytes:Uint8Array)=>void,gap:(reason:string)=>void){const call=this.jobs.get(id)?.call;if(!call)throw new HttpError('Teams audio unavailable',503);return call.receive(audio,gap);}
- async play(id:string,chunks:AsyncIterable<Buffer>,signal:AbortSignal,beforeAudio:()=>void){const j=this.jobs.get(id);if(!j?.call||j.state!=='connected'||!j.call.alive())throw new HttpError('Teams not connected',409);await j.call.play(chunks,AbortSignal.any([signal,j.abort.signal]),beforeAudio);}
+ async play(id:string,chunks:AsyncIterable<Buffer>,signal:AbortSignal,beforeAudio:()=>void,onProgress?:(playedMs:number)=>void){const j=this.jobs.get(id);if(!j?.call||j.state!=='connected'||!j.call.alive())throw new HttpError('Teams not connected',409);await j.call.play(chunks,AbortSignal.any([signal,j.abort.signal]),beforeAudio,onProgress);}
  async stop(id:string){const j=this.jobs.get(id);if(!j)return;j.abort.abort();clearInterval(j.watch);await j.call?.close();if(j.state!=='failed'&&!j.failing)this.update(j,'left');if(!j.starting&&!j.failing)this.occupied=false;}
  async leave(id:string){await this.stop(id);const j=this.jobs.get(id);await j?.task;const m=this.hooks.current(id);if(m.phase==='live'||(m.phase==='interrupted'&&m.startedAt!=null))await this.hooks.end(m);return this.status(id);}
  async close(){for(const id of this.jobs.keys())await this.stop(id);await Promise.allSettled([...this.jobs.values()].map(j=>j.task));}

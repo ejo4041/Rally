@@ -51,7 +51,7 @@ export function configuredSpeech(): SpeechEngine | undefined {
   });
   return Object.assign(engine, { identity });
 }
-type Offer = { id: string; text: string; epoch: number; at: number };
+type Offer = import("./live-speech.ts").SpeechOffer;
 type Job = {
   id: string;
   meetingId: string;
