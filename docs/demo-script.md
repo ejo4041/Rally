@@ -1,51 +1,37 @@
 # Rally demonstration script — draft
 
-Draft prepared October 29, 2026. No recording or final submission has been made. This version reserves the final 30 seconds for the longer-term product vision. [Demonstration requirements](demo-walkthrough.md) and [current release](releases/2026-10-29-v12.md) determine what can be recorded as working behavior.
+Updated October 30 for the [integrated Node app](integrated-deployment.md), including [Meta MMS speech](integrated-speech.md) and [speaker correction](speaker-attribution.md). No recording or final submission has been made. The earlier Sites preview is a separate release with different confirmation, presenter and sharing controls; this script describes the integrated app.
 
-## Narrative
+Start with the concrete meeting problem, demonstrate the working loop, then spend the closing 30 seconds on the future meeting-platform vision. A useful prototype makes that vision credible. Describe future capabilities as future work, and let the observed interaction carry the demonstration.
 
-Show a complete useful interaction, then explain the broader problem it suggests. The near-term product helps a small software team make and confirm a decision inside its existing meeting. The longer-term concept is a meeting workspace with preparation, facilitation and follow-through built into the experience. That platform is a future direction, not an implemented release or an expansion of this week's committed scope.
+## Three-minute rehearsal script
 
-Use the Meta services that support each job. Current execution evidence covers Muse transcription, Spark reasoning and hosted MMS browser playback. WhatsApp follow-through is implemented as a host-reviewed draft: the host chooses the recipient and sends manually. Other ideas, including Wonder review and multimodal agenda capture, remain proposed integrations. Present those roles as possibilities rather than promising every Meta service in one product.
-
-## Three-minute version
-
-| Time | Presenter and participant draft | What to show |
+| Time | Presenter and participants | Product behavior to capture |
 | --- | --- | --- |
-| 0:00–0:15 | Presenter: “A meeting can have a transcript and still end without a decision. We’re building Rally to help a team stay focused, confirm the next step, and keep the words that support it.” | Actual product, one concrete release decision and the demonstrated release label. |
-| 0:15–0:35 | Presenter: “This is a rehearsed release-planning discussion with consenting participants. Our goal is a release decision and an owner for the rollback check.” Participants confirm consent. | Agenda, roster, consent, active input and real finalized transcript. |
-| 0:35–1:05 | Alex: “We need to decide whether Friday’s release can proceed.” Sam: “I spent the weekend comparing mountain bikes.” Priya: “We should compare bike frames and holiday routes too.” Presenter leaves room for the actual moderator response. | Actual off-agenda turns and actual model behavior at normal speed. The response is not prerecorded or required to match a particular sentence. |
-| 1:05–1:40 | Alex: “We’ll release only after rollback is verified.” Priya: “I’ll run the rollback check.” If clarification is needed, Priya adds: “I’ll finish by Thursday at three.” Presenter: “These remain proposals until the host reviews and confirms them.” | Proposed decision/action, missing information when present, explicit host confirmation and the linked source turns. |
-| 1:40–2:05 | Presenter: “The host stays in control.” Pause or dismiss an actual intervention. For the separate wrap-up check: “I’m advancing the demo clock to the wrap-up checkpoint.” | Real output cancellation and a visibly labeled clock advance; otherwise show only the controls actually verified. |
-| 2:05–2:30 | Presenter: “The record keeps what we confirmed and what is still unresolved, with a path back to the source. Muse handles transcription and reasoning. Meta MMS is our self-hosted voice adapter.” | Persisted record, evidence navigation, export and the exact model roles. Browser MMS playback is verified; identify Teams speech output as pending until the live route passes validation. |
-| 2:30–3:00 | Presenter: “This prototype is the starting point. Longer term, I want to build a meeting space around the work itself: arrive with an agenda, get help when a decision stalls, and leave with confirmed next steps. Meta models could connect preparation, conversation and follow-through. We’re starting with one promise: make it clear what was decided, who owns it, and why.” | A clearly labeled “Future direction” slide, followed by the working product and project links. |
+| 0:00–0:15 | Presenter: “A transcript tells us what was said. A team still needs to decide what happens next. Rally helps a host keep a decision meeting moving, then keeps the source for its conclusions.” | Prepared agenda: decide whether Friday's release can proceed and who owns the rollback check. Identify the demonstrated release. |
+| 0:15–0:30 | Presenter: “This is a rehearsed discussion with consenting participants. Muse transcribes our audio; it does not use the meeting platform's transcript.” Participants confirm consent. | Show the real capture state and finalized transcript. Complete the free audio/voice checks before the timed take. |
+| 0:30–1:05 | Alex: “Can we ship Friday?” Sam: “Before that, I spent all weekend comparing mountain bikes.” Priya: “We could compare bike frames and holiday routes.” Pause for the actual response. | Actual agenda-related guidance and opt-in local Meta MMS playback at normal speed. If using Ask Rally, show the click and describe it as a host request. Never substitute a prepared model response. |
+| 1:05–1:35 | Alex: “Release only after rollback is verified.” Priya: “I'll run the rollback check.” If asked for a deadline, Priya: “Thursday at three.” | Actual clarification, if produced; current plan/progress and evidence-bearing finalized speech. If the model does not ask, the host can ask directly and the record should reflect that. |
+| 1:35–1:50 | Presenter: “The host keeps the floor.” Use Stop speaking during an actual prompt, or pause Rally and then resume. | Immediate local playback stop and restored listening. Explain that speech input is shielded while Rally speaks. Remote call participants hearing the prompt requires a separately verified output route. |
+| 1:50–2:30 | Presenter: “After we end, Rally reviews the complete transcript. These are its interpretations: reported agreement, proposal or unresolved. Here is the source. I can correct a name or add a correction note.” | End meeting and show the actual asynchronous report when ready; follow a source link, inspect a due-out and an unknown owner/date if present, then export/reopen history. If useful, show a [reviewed WhatsApp draft](integrated-whatsapp-follow-up.md) without sending. Identify Muse reasoning and self-hosted Meta MMS voice. |
+| 2:30–3:00 | Presenter: “This is the starting point. I want to build a meeting space around the work itself: arrive with an agenda, get help when a decision stalls, and leave with clear next steps. Meta models could connect preparation, conversation and follow-through. We're starting with one promise: make it clear what was decided, who owns it, and why.” | Clearly labeled **Future direction**, then return to the actual product and project links. |
 
-## Recording readiness
+The table is a rehearsal target, not a promise about response latency. If the complete report does not fit the take, record the actual wait or use a clearly identified later capture from the same meeting. Preserve ordinary speed during the key live model interaction. A transition must make elapsed time clear. Do not claim a real three-minute end-to-end turnaround unless measured.
 
-The complete live moderation sequence is a recording target, not a result established by this script. Teams pacing retry, connected MMS output, echo isolation, host cancellation and the three-person run remain validation gates. Use the room-microphone surface only after it has passed the equivalent audio/control checks. Do not edit missing functionality into the walkthrough.
+## Participant notes
 
-If those gates are still open at recording time, show the actual transcript/history/review workflow and describe live speech integration as work in progress. The built-in scripted walkthrough is a separate, explicitly labeled product tour, not a recording of live model behavior. A retrospective review should be described as processing a saved transcript.
+Use three people, ideally on the intended recording devices. Prepare the scenario and words; model output remains what actually happens. Leave a short pause between speakers, avoid talking over the moderator, and use Stop speaking to interrupt it. Have each speaker introduce themselves, then assign a host label only if recognizable. A shared room name does not identify the individuals in it. Keep mistakes visible enough to explain the correction path.
 
-Read the presenter copy aloud and trim narration around real response timing. The participant scenario is prepared; model responses remain actual observed output. Obtain permission for participants and footage. Keep processing and playback at normal speed, label clock changes, and verify the spoken model declaration against the release being recorded.
+For a browser call, the host selects the call tab with Share tab audio and can include their microphone. WhatsApp Web is a possible Meta-owned call surface only if its call works on the actual browser/device; the selection preset alone proves nothing about platform support. Zoom Web, Meet or Jitsi use the same capture boundary. Rally is not automatically a participant in these calls. Do not promise remote audibility of its host-browser voice. Use a room microphone for the main take if that is the surface the team has actually rehearsed successfully.
 
-## Longer show-and-tell version
+The Teams invitation remains a bounded transcription test. The WhatsApp guest prototype still needs a fresh link and admission/audio validation. Neither should become the main demonstration until its full intended path has been observed.
 
-For a separate six-to-eight-minute talk, allow time for discussion:
+## Longer show-and-tell
 
-1. One minute: the team's meeting problem and the concrete decision it needs.
-2. Three minutes: the actual prototype workflow, including a source correction or host override.
-3. One minute: model responsibilities, one measured result and current limits.
-4. One to two minutes: the meeting-platform concept and why it follows from the prototype.
-5. Remaining time: feedback about the workflow and the audience's own meeting problems.
+For a separate six-to-eight-minute talk, use one minute on the team problem, three on the prototype, one on architecture and observed limits, then one to two on the future platform. Expand the source/correction example and invite feedback about real meeting habits. Keep this talk distinct from the required three-minute submission video. No adoption, revenue, accuracy or time-savings claim has been established by the current tests.
 
-The longer talk is distinct from the three-minute submission video. Keep future features visibly labeled and separate product feedback from claims about adoption, revenue or measured time savings, which have not been established.
+The implemented Meta responsibilities are complementary: Muse Voice Transcribe supplies speech evidence, Muse Spark reasons about agenda/progress/outcomes, and the local MMS adapter makes approved prompts audible. Future services should solve a clear user need and retain replaceable capability boundaries. The pitch does not require claiming every Meta service is integrated.
 
-## Browser meeting variant
+## Before recording
 
-After a consenting device rehearsal, use WhatsApp Web as the Meta meeting surface, or Zoom Web/Meet/Jitsi when the team already uses it. Before recording, run the free local audio check and verify remote and host audio separately. The platform label is a preset for browser capture; Rally does not join these calls as a bot. Muse produces the transcript from captured audio, with no native platform transcript feed.
-
-For the three-minute edit, replace part of the 2:05–2:30 export narration with: “Here are the outcomes I confirmed, without the rest of the transcript. I can review them and open a WhatsApp draft.” Show the actual preview. Sending a message is optional and requires an intended recipient; previewing it is enough to demonstrate the feature. If using the scripted walkthrough, retain its visible label and describe these as example outcomes.
-
-In the closing future-platform pitch, the present-day bridge is concrete: work inside existing calls, help the host reach a decision, and carry confirmed next steps into their existing chat. Building the meeting platform itself remains the future direction.
-
-Presenter view is available for the browser-call variant. It keeps the current prompt and confirmed outcomes in view while hiding the workspace history, full transcript and proposals. Preserve its example/clock labels. Stop call-side sharing before returning to the workspace. Outgoing tab-audio sharing still needs a platform/device check; the view alone does not demonstrate remote speech.
+Use the [integrated rehearsal packet](integrated-rehearsal.md). Verify physical sound, microphone/remote input, cancellation and the complete report on the chosen devices. Keep real consent, errors, pauses and model timing accurate. The eight-hour synthetic speech check is reliability evidence, not a participant meeting or a demo recording. Submission remains on hold.

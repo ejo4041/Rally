@@ -1,5 +1,7 @@
 # Rally handoff — current checkpoint
 
+**Integrated rehearsal:** [Device and three-person rehearsal packet](integrated-rehearsal.md) · [demo script and future-platform close](demo-script.md) · [current submission/access observations](research/submission-access-check-2026-10-30.md). Final submission remains on hold.
+
 **Speaker correction:** [Anonymous session labels, reversible host names and stale-report handling](speaker-attribution.md). Shared-room identity remains uncertain; naming does not trigger model processing.
 
 **Integrated spoken guidance:** [Meta MMS lifecycle, free voice check and validation](integrated-speech.md). Real local MMS browser playback passes; remote call audibility still needs rehearsal.
