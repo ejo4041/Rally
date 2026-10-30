@@ -15,6 +15,8 @@ Start with the [current handoff](handoff.md). The integrated Node app and the ol
 | Meeting connectors | [Teams invitation UI and bounds](teams-integrated-ui.md), [WhatsApp guest prototype](whatsapp-guest-prototype.md), [Meta call integration research](research/meta-call-integration-options-2026-10-30.md) |
 | Demonstration | [Rehearsal packet](integrated-rehearsal.md), [three-minute script and future-platform close](demo-script.md), [current access observations](research/submission-access-check-2026-10-30.md) |
 
+[Local draft archive/privacy check](research/source-draft-archive-check.json) · [clean source reproduction](research/source-draft-reproduction-check.json). These are local preparation evidence, not a submitted entry.
+
 ## Backend and AI contracts
 
 - [Backend team handoff](backend-team-handoff.md), [frontend API/streaming contract](backend-api.md), [AI processing diagram/rules](ai-processing.md), [actual agenda/outcome/score/tip examples](backend-ai-examples.md).

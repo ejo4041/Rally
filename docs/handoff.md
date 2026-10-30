@@ -22,6 +22,8 @@ New overnight work:
 
 An eight-hour local MMS reliability process started October 30 at 04:09 UTC, with a synthetic phrase every 30 minutes and periodic worker reloads. It is **running**, not an eight-hour pass, at this checkpoint. Its ignored local report is `experiments/meta-mms/test-results/overnight-check.json`; command and limits are in [integrated speech](integrated-speech.md). Do not terminate it as an abandoned browser fixture.
 
+A local [source draft/privacy manifest](research/source-draft-archive-check.json) and [clean-archive reproduction](research/source-draft-reproduction-check.json) pass. The archive is local only, from `3317f1f`; source is not claimed public.
+
 ## Next work and boundaries
 
 1. Read the running soak result; investigate a failure before claiming reliability. Record its final state when it completes around 12:09 UTC.
