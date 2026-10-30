@@ -1,5 +1,7 @@
 # Integrated Rally deployment
 
+**Speech update:** Release `ebf308d` adds [opt-in host-browser Meta MMS speech and a free voice check](integrated-speech.md). Deployed HTTPS playback and Stop pass with the actual pinned local model, no paid calls and no live meetings interrupted. [Measurement](research/integrated-speech-deployed.json). API restarted after a database backup; existing accounts and records are preserved.
+
 **Audio check update:** Frontend release `7f22954` adds [free local audio preflight](audio-preflight.md). The API/media services continue without restart; runtime configuration and existing accounts are preserved.
 
 **Teams UI update:** Application release `35ad395` now includes [the owned Teams invite-link bridge](teams-integrated-ui.md) at this same URL. Runtime configuration includes the existing server-only Sites service credential. Refresh and return to Meetings to see the new connection choices. Existing app accounts/data are preserved. The deployment details below describe the initial integration release where they identify `64fed29`.
@@ -14,7 +16,7 @@ Deployed October 29, 2026 from application commit `64fed291b404f1c3a220bc92f76e4
 2. Create a short meeting with an agenda, duration and participant names. **Prepare with Muse** makes a real model request. Review/edit the generated plan.
 3. Inform participants and confirm consent. Select Room microphone, or Meeting browser tab with optional host microphone. For a call tab, enable Share tab audio and use headphones.
 4. Start the meeting, speak a known sentence and check finalized text. Speaker labels are anonymous/session-scoped until corrected; roster entry does not identify voices automatically.
-5. Use Ask Rally for a deliberate guidance request, and exercise mute, pause/resume and dismiss. Guidance is visible text in this release; generated moderator speech has not yet been integrated into this backend.
+5. Use Ask Rally for a deliberate guidance request, and exercise mute, pause/resume and dismiss. Guidance appears as text. Enable Spoken prompts for local host-browser voice; Test voice is available before starting. Remote participants do not automatically hear this output.
 6. End the meeting. Recording stops, final words drain, and the full report processes in the background. Reported agreements are model interpretations. Unknown scores/owners remain unknown. Check source links, correction notes, export and saved history. Failed analysis offers an explicit paid retry.
 
 Muse processing is enabled for the user's test with the backend's existing conservative gates: $2 estimated per meeting and $5 cumulative for this deployment database. These are application gates, not provider Billing limits. There are no new connector subscriptions. Unknown costs block further processing. No final hackathon submission was performed.
@@ -45,7 +47,7 @@ The deployed HTTPS frontend and compiled bundle load. A temporary account comple
 
 These checks ran from the server through the actual HTTPS endpoints. They do not establish a remote phone/work-network connection, physical microphone behavior, real multi-speaker quality or human meeting success. They made zero Meta model calls. Existing backend/provider experiments remain separate evidence; the deployment check did not repeat them or claim new ASR/report accuracy.
 
-Prior verification remains 25 backend tests, four frontend state tests, frontend build/typecheck and the isolated full HTTP/LiveKit browser workflow. The deployed source is exactly the tested integration commit. Generated speech, remote platform participant joining and automatic platform display-name attribution remain pending.
+Prior verification remains 25 backend tests, four frontend state tests, frontend build/typecheck and the isolated full HTTP/LiveKit browser workflow. The deployed source is exactly the tested integration commit. See the speech update above for host-browser output. Remote participant speech delivery and automatic platform display-name attribution remain pending.
 
 ## Operations and rollback
 

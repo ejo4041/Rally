@@ -1,0 +1,12 @@
+{
+  "testedAt": "2026-10-30T04:16:20.207Z",
+  "passed": true,
+  "release": "ebf308d",
+  "deployedHTTPS": true,
+  "realPinnedMMS": true,
+  "actualBrowserPlayback": true,
+  "stopPausedAllAudio": true,
+  "meetingPhaseUnchanged": true,
+  "paidModelCalls": 0,
+  "remoteCallAudibilityTested": false
+}

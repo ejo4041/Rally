@@ -32,3 +32,7 @@ Diagnostic jobs use the same status/audio/playback suffixes under `/api/speech/t
 Backend tests cover approved text, duplicate requests, cancellation before a late result, epoch changes, global synthesis contention, provenance validation, bounded shields, account isolation, fixed diagnostics, rate limits and pause/end behavior. Browser tests use real Express/SQLite/LiveKit with injected reasoning/ASR; speech can use either synthetic WAV or the actual pinned local MMS process. They exercise actual browser playback, Stop, pause, completion, autoplay rejection and restored capture. These tests do not establish remote participant audibility or human speaker accuracy.
 
 The eight-hour local reliability check runs `node experiments/meta-mms/overnight-check.mjs`, synthesizes a fixed synthetic phrase every 30 minutes and periodically restarts the worker. Its ignored local report is `experiments/meta-mms/test-results/overnight-check.json`. A running report is not an eight-hour pass. No platform meeting, saved waveform or paid model request is used.
+
+## Deployed checkpoint
+
+Release `ebf308d` is live at the [private integrated app](https://rally.tail703f9e.ts.net:8445). A temporary account and synthetic ready meeting verified authenticated model readiness, real browser WAV playback, Stop and unchanged empty paid usage through the deployed HTTPS endpoint. Test records were removed. [Measurement](research/integrated-speech-deployed.json). The eight-hour soak is still running as of this deployment checkpoint.
