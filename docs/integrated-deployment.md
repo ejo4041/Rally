@@ -1,5 +1,7 @@
 # Integrated Rally deployment
 
+**Late attribution update:** `a8b9423` is now active. Late Muse speaker/timing metadata revises the same canonical turn and invalidates speech based on older evidence. 38 backend tests pass, including local WebSocket drain and revision/cancellation cases. A new [deployed HTTPS check](research/late-speaker-release-deployed.json) verifies startup, real MMS playback and unchanged app controls using synthetic records and no paid calls; it does not measure real Muse diarization.
+
 **October 30 current release:** `b690607` includes local MMS speech, session speaker correction, durable report annotations and reviewed WhatsApp follow-up drafts. API restart followed an idle-meeting check and SQLite backup. [Actual deployed HTTPS check](research/integrated-overnight-deployed.json) passed with temporary synthetic records and zero paid calls. All test records were removed. The speech/attribution/sharing paths are detailed in the [current handoff](handoff.md); the paragraphs below preserve earlier deployment checkpoints.
 
 **Speech update:** Release `ebf308d` adds [opt-in host-browser Meta MMS speech and a free voice check](integrated-speech.md). Deployed HTTPS playback and Stop pass with the actual pinned local model, no paid calls and no live meetings interrupted. [Measurement](research/integrated-speech-deployed.json). API restarted after a database backup; existing accounts and records are preserved.
