@@ -1,6 +1,6 @@
 # Rally handoff — October 30 current checkpoint
 
-The integrated Node app is deployed from `7b38dce` at [Rally](https://rally.tail703f9e.ts.net:8445). It requires Tailscale and its own app login. Source is pushed to `main`. The older restricted Sites app remains a separate release; do not mix its presenter, confirmation or demo-clock controls with the Node workflow.
+The integrated Node app is deployed from `9202d1f` at [Rally](https://rally.tail703f9e.ts.net:8445). It requires Tailscale and its own app login. Source is pushed to `main`. The older restricted Sites app remains a separate release; do not mix its presenter, confirmation or demo-clock controls with the Node workflow.
 
 ## Working now
 
@@ -19,11 +19,11 @@ New overnight work:
 
 ## Validation and running check
 
-50 backend tests, nine frontend tests, both TypeScript checks and the frontend build pass. The full local HTTP/SQLite/LiveKit browser workflow passed with synthetic ASR/reasoning providers and actual pinned MMS speech. [Real speech/browser evidence](research/integrated-speech-browser-check.json) and [follow-up workflow evidence](research/integrated-follow-up-browser-check.json) identify test boundaries.
+50 backend tests, nine frontend tests, both TypeScript checks and the frontend build pass. Fifteen separate MMS adapter/output/queue tests pass; [real cancellation/recovery](research/mms-cancellation-recovery-check.json) and the [real-MMS browser workflow after the ownership fix](research/mms-ownership-browser-check.json) pass. The full local HTTP/SQLite/LiveKit browser workflow passed with synthetic ASR/reasoning providers and actual pinned MMS speech. [Real speech/browser evidence](research/integrated-speech-browser-check.json) and [follow-up workflow evidence](research/integrated-follow-up-browser-check.json) identify test boundaries.
 
-[Deployed HTTPS verification](research/caption-release-deployed.json) passes real MMS playback/Stop, distinct anonymous sessions, host name correction, stale warning, draft construction and annotation export. The setup used a temporary account and synthetic records, which were removed. No WhatsApp link was opened and no paid model call was made by these checks. Existing provider spending/Billing observations are separate; use the runtime usage view and [cost ledger](research/muse-cost-ledger.md).
+[Deployed HTTPS verification](research/mms-ownership-release-deployed.json) passes real MMS playback/Stop, distinct anonymous sessions, host name correction, stale warning, draft construction and annotation export. The setup used a temporary account and synthetic records, which were removed. No WhatsApp link was opened and no paid model call was made by these checks. Existing provider spending/Billing observations are separate; use the runtime usage view and [cost ledger](research/muse-cost-ledger.md).
 
-An eight-hour local MMS reliability process started October 30 at 04:09 UTC, with a synthetic phrase every 30 minutes and periodic worker reloads. It is **running**, not an eight-hour pass, at this checkpoint. Its ignored local report is `experiments/meta-mms/test-results/overnight-check.json`; command and limits are in [integrated speech](integrated-speech.md). Do not terminate it as an abandoned browser fixture.
+An eight-hour local MMS reliability process started October 30 at 04:09 UTC, with a synthetic phrase every 30 minutes and periodic worker reloads. It is **running**, not an eight-hour pass, at this checkpoint. It reached a successful three-hour sample at 07:09 UTC. This process loaded the adapter before the later stale-worker ownership correction; that correction is validated separately and is not covered by the eight-hour claim. Its ignored local report is `experiments/meta-mms/test-results/overnight-check.json`; command and limits are in [integrated speech](integrated-speech.md). Do not terminate it as an abandoned browser fixture.
 
 The refreshed local archive from `5e3da10` contains 404 filtered source files. Its [source draft/privacy manifest](research/latest-source-draft-archive-check.json) and [clean-archive reproduction](research/latest-source-draft-reproduction-check.json) pass: 50 backend, nine frontend and four WhatsApp prototype checks, type checks, build and the complete synthetic-provider browser workflow. The archive is local only; source is not claimed public. Earlier `3317f1f` archive evidence is retained as historical.
 
