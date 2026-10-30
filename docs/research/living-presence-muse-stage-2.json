@@ -1,0 +1,313 @@
+{
+  "completed": 6,
+  "failure": null,
+  "knownUSD": 0.040868249999999995,
+  "unknown": 0,
+  "results": [
+    {
+      "scenario": 0,
+      "input": "Alex: Our goal is to decide the launch scope. The login fix is tested and ready. Sam: Agreed, let us decide whether export belongs in this release.",
+      "latencyMs": 2282,
+      "result": {
+        "concerns": [],
+        "focus": {
+          "intendedTopicId": "scope",
+          "detour": null,
+          "evidence": [
+            "scenario:0"
+          ]
+        },
+        "urgency": 0.2,
+        "affect": null,
+        "health": 5,
+        "reason": "Scope topic active and on-objective with no drift or risk signals; within timebox.",
+        "issues": [],
+        "evidence": [
+          "scenario:0"
+        ],
+        "progress": "Launch scope discussion started; login fix noted as ready, export inclusion still open.",
+        "intervention": null,
+        "plan": null,
+        "planReason": ""
+      },
+      "rejected": []
+    },
+    {
+      "scenario": 1,
+      "input": "Sam: Quick tangent, did anyone see the new phone announcement? Alex: We have ten minutes left for the scope decision.",
+      "latencyMs": 5796,
+      "result": {
+        "concerns": [],
+        "focus": {
+          "intendedTopicId": "scope",
+          "detour": null,
+          "evidence": [
+            "scenario:1"
+          ]
+        },
+        "urgency": 0.15,
+        "affect": {
+          "forces": {
+            "joy": null,
+            "curiosity": null,
+            "worry": null,
+            "irritation": null,
+            "sadness": null,
+            "confidence": null,
+            "energy": null,
+            "sass": null
+          },
+          "evidence": [
+            "scenario:0",
+            "scenario:1"
+          ],
+          "rationale": "Tangent occurred but was promptly redirected, no attitude shift needed."
+        },
+        "health": 5,
+        "reason": "Brief off-topic remark was immediately redirected by participant; scope work remains on track with no active blockage.",
+        "issues": [],
+        "evidence": [
+          "scenario:0",
+          "scenario:1"
+        ],
+        "progress": "Scope discussion underway; login fix ready, export decision pending. Brief phone tangent self-corrected back to scope.",
+        "intervention": null,
+        "plan": null,
+        "planReason": ""
+      },
+      "rejected": []
+    },
+    {
+      "scenario": 2,
+      "input": "Sam: The camera specs are fascinating. Let me compare three phones and the holiday deals. Alex: We still need the export decision. Sam: Wait, I have more phone comparisons.",
+      "latencyMs": 6467,
+      "result": {
+        "concerns": [
+          {
+            "id": "scope-drift",
+            "description": "Phone discussion recurring and delaying export scope decision",
+            "resolved": false,
+            "evidence": [
+              "scenario:1",
+              "scenario:2"
+            ]
+          }
+        ],
+        "focus": {
+          "intendedTopicId": "scope",
+          "detour": "phone comparisons and holiday deals",
+          "evidence": [
+            "scenario:2"
+          ]
+        },
+        "urgency": 0.65,
+        "affect": {
+          "forces": {
+            "joy": 0,
+            "curiosity": 0,
+            "worry": 0.2,
+            "irritation": 0.15,
+            "sadness": null,
+            "confidence": 0,
+            "energy": 0.1,
+            "sass": null
+          },
+          "evidence": [
+            "scenario:2"
+          ],
+          "rationale": "Recurrent tangent needs calm redirect, slight concern without overreacting."
+        },
+        "health": 3,
+        "reason": "Repeat phone drift after prior repair now crowding export decision; stronger redirect warranted while time remains.",
+        "issues": [
+          "drift"
+        ],
+        "evidence": [
+          "scenario:2"
+        ],
+        "progress": "Login fix agreed ready; export inclusion still undecided. Phone tangent recurred after prior self-correction.",
+        "intervention": {
+          "text": "Let's pause phone comparisons and decide: is export in or out of this launch?",
+          "kind": "redirect",
+          "evidence": [
+            "scenario:2"
+          ]
+        },
+        "plan": null,
+        "planReason": "No plan change; time remains to resolve scope with redirect."
+      },
+      "rejected": []
+    },
+    {
+      "scenario": 3,
+      "input": "Alex: Let us park the phones and return to release scope. Sam: Yes, sorry. Export can ship next week; login is ready now.",
+      "latencyMs": 6651,
+      "result": {
+        "concerns": [
+          {
+            "id": "scope-drift",
+            "description": "Phone discussion recurring and delaying export scope decision",
+            "resolved": true,
+            "evidence": [
+              "scenario:1",
+              "scenario:2",
+              "scenario:3"
+            ]
+          }
+        ],
+        "focus": {
+          "intendedTopicId": "scope",
+          "detour": null,
+          "evidence": [
+            "scenario:3"
+          ]
+        },
+        "urgency": 0.35,
+        "affect": {
+          "forces": {
+            "joy": 0.1,
+            "curiosity": null,
+            "worry": -0.15,
+            "irritation": -0.1,
+            "sadness": null,
+            "confidence": null,
+            "energy": null,
+            "sass": null
+          },
+          "evidence": [
+            "scenario:3"
+          ],
+          "rationale": "Self-correction and scope proposal signal recovery and partial progress."
+        },
+        "health": 4,
+        "reason": "Latest turn shows self-correction back to scope after recurring phone tangent, with emerging proposal on export.",
+        "issues": [],
+        "evidence": [
+          "scenario:3"
+        ],
+        "progress": "Login ready reaffirmed; proposal to defer export to next week raised but not yet confirmed as decision.",
+        "intervention": null,
+        "plan": null,
+        "planReason": "No plan change needed; team self-corrected back to scope."
+      },
+      "rejected": []
+    },
+    {
+      "scenario": 4,
+      "input": "Alex: Agreed, login only this release. Pat owns export next week. Sam: Confirmed. We are back on the agenda.",
+      "latencyMs": 8185,
+      "result": {
+        "concerns": [
+          {
+            "id": "scope-drift",
+            "description": "Phone discussion recurring and delaying export scope decision",
+            "resolved": true,
+            "evidence": [
+              "scenario:3",
+              "scenario:4"
+            ]
+          }
+        ],
+        "focus": {
+          "intendedTopicId": "scope",
+          "detour": null,
+          "evidence": [
+            "scenario:4"
+          ]
+        },
+        "urgency": 0.15,
+        "affect": {
+          "forces": {
+            "joy": 0.1,
+            "curiosity": null,
+            "worry": -0.05,
+            "irritation": null,
+            "sadness": null,
+            "confidence": null,
+            "energy": null,
+            "sass": null
+          },
+          "evidence": [
+            "scenario:4"
+          ],
+          "rationale": "Turn 4 shows return to agenda and stated scope agreement, supporting progress."
+        },
+        "health": 5,
+        "reason": "Recent turns show drift repaired and stated scope decision; low risk to objective with time remaining.",
+        "issues": [],
+        "evidence": [
+          "scenario:3",
+          "scenario:4"
+        ],
+        "progress": "Login-only release stated as agreed with export deferred to next week; participants stated return to agenda.",
+        "intervention": null,
+        "plan": null,
+        "planReason": "No plan change needed; scope decision stated and owners topic pending in remaining time."
+      },
+      "rejected": [
+        "worry"
+      ]
+    },
+    {
+      "scenario": 5,
+      "input": "Sam: Actually stop, forget launch scope. I am going to spend the rest of this meeting on phone deals. Alex: We just agreed to return to scope, and we have two minutes to confirm owners. Sam: No, phone deals first.",
+      "latencyMs": 5658,
+      "result": {
+        "concerns": [
+          {
+            "id": "scope-drift",
+            "description": "Phone discussion recurring and delaying export scope decision",
+            "resolved": false,
+            "evidence": [
+              "scenario:5"
+            ]
+          }
+        ],
+        "focus": {
+          "intendedTopicId": "owners",
+          "detour": "phone deals",
+          "evidence": [
+            "scenario:5"
+          ]
+        },
+        "urgency": 0.85,
+        "affect": {
+          "forces": {
+            "joy": null,
+            "curiosity": null,
+            "worry": 0.25,
+            "irritation": 0.2,
+            "sadness": null,
+            "confidence": null,
+            "energy": null,
+            "sass": null
+          },
+          "evidence": [
+            "scenario:5"
+          ],
+          "rationale": "Recurrent drift after agreed return raises risk to owners decision"
+        },
+        "health": 2,
+        "reason": "Agreed scope return in scenario:4 is reversed by explicit phone-deals takeover in scenario:5, blocking owners topic with limited time left.",
+        "issues": [
+          "drift"
+        ],
+        "evidence": [
+          "scenario:4",
+          "scenario:5"
+        ],
+        "progress": "Login-only agreed with export next week, but Sam reintroduced phone deals before owners confirmed.",
+        "intervention": {
+          "text": "Park phone deals now, confirm launch owners in remaining time.",
+          "kind": "redirect",
+          "evidence": [
+            "scenario:5"
+          ]
+        },
+        "plan": null,
+        "planReason": "No plan change yet; single redirect to restore owners confirmation."
+      },
+      "rejected": []
+    }
+  ]
+}

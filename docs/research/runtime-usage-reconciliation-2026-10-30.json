@@ -1,0 +1,2707 @@
+{
+  "at": "2026-10-30T18:18:57.611164+00:00",
+  "source": "private integrated runtime usage ledger",
+  "distinctCalls": 105,
+  "knownUSD": 0.8591306,
+  "unknown": 0,
+  "billingVerified": false,
+  "calls": [
+    {
+      "id": "343d0cba-0aef-45c3-bc58-a5dbb8ba2111",
+      "status": "known",
+      "cost": 0.00332825,
+      "estimate": 0.020673,
+      "at": 1793316230015,
+      "kind": "prepare",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 629,
+        "prompt_tokens": 524,
+        "total_tokens": 1153,
+        "completion_tokens_details": {
+          "reasoning_tokens": 560
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "c8a38268-8220-4815-854f-e8453941f7d0",
+      "status": "known",
+      "cost": 0.00366175,
+      "estimate": 0.0206905,
+      "at": 1793375006777,
+      "kind": "prepare",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 706,
+        "prompt_tokens": 529,
+        "total_tokens": 1235,
+        "completion_tokens_details": {
+          "reasoning_tokens": 629
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "0960c3c9-e610-4a8a-a593-049a9b775991",
+      "status": "known",
+      "cost": 0.00452,
+      "estimate": 0.02075925,
+      "at": 1793375311518,
+      "kind": "prepare",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 905,
+        "prompt_tokens": 539,
+        "total_tokens": 1444,
+        "completion_tokens_details": {
+          "reasoning_tokens": 751
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "cb7b4a34-167b-44f6-bc29-c35e53232168",
+      "status": "known",
+      "cost": 0.15,
+      "estimate": 0.1515,
+      "at": 1793375725627,
+      "kind": "transcription",
+      "model": "muse-voice-transcribe-1.0",
+      "adapter": "meta-realtime-asr",
+      "pricing": {
+        "usdPerAudioHour": 0.18
+      },
+      "sentSeconds": 3000.02,
+      "processedMs": 2999920
+    },
+    {
+      "id": "e2d9523a-bd44-4da1-a004-8a6eaf224345",
+      "status": "known",
+      "cost": 0.0046635,
+      "estimate": 0.0175315,
+      "at": 1793375826674,
+      "kind": "assess",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 642,
+        "prompt_tokens": 1548,
+        "total_tokens": 2190,
+        "completion_tokens_details": {
+          "reasoning_tokens": 445
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "9e55305c-05eb-4a4a-b756-33567e376592",
+      "status": "known",
+      "cost": 0.00415525,
+      "estimate": 0.0193765,
+      "at": 1793375846672,
+      "kind": "assess",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 403,
+        "prompt_tokens": 1954,
+        "total_tokens": 2357,
+        "completion_tokens_details": {
+          "reasoning_tokens": 269
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "7fbc48ea-66fc-4bba-ae4c-d305bb2bb42b",
+      "status": "known",
+      "cost": 0.0049935,
+      "estimate": 0.01911525,
+      "at": 1793375906672,
+      "kind": "assess",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 617,
+        "prompt_tokens": 1897,
+        "total_tokens": 2514,
+        "completion_tokens_details": {
+          "reasoning_tokens": 464
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "9bc771ab-9738-4252-82b7-749b8d55010f",
+      "status": "known",
+      "cost": 0.00501725,
+      "estimate": 0.01926775,
+      "at": 1793375966672,
+      "kind": "assess",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 617,
+        "prompt_tokens": 1916,
+        "total_tokens": 2533,
+        "completion_tokens_details": {
+          "reasoning_tokens": 467
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "2775385c-f9f6-4eae-8a23-51c0345c33a7",
+      "status": "known",
+      "cost": 0.004379,
+      "estimate": 0.01920775,
+      "at": 1793376026672,
+      "kind": "assess",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 468,
+        "prompt_tokens": 1912,
+        "total_tokens": 2380,
+        "completion_tokens_details": {
+          "reasoning_tokens": 317
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "8c91563b-b2ef-4d7e-9b48-a756d1d841e9",
+      "status": "known",
+      "cost": 0.00540625,
+      "estimate": 0.0192165,
+      "at": 1793376086671,
+      "kind": "assess",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 710,
+        "prompt_tokens": 1911,
+        "total_tokens": 2621,
+        "completion_tokens_details": {
+          "reasoning_tokens": 560
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "6345661a-9082-43a0-a2f4-04d8d5e8b609",
+      "status": "known",
+      "cost": 0.00423625,
+      "estimate": 0.019214,
+      "at": 1793376146672,
+      "kind": "assess",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 435,
+        "prompt_tokens": 1910,
+        "total_tokens": 2345,
+        "completion_tokens_details": {
+          "reasoning_tokens": 285
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "294fbae5-8cf5-46c3-b01a-6c76024d3ff4",
+      "status": "known",
+      "cost": 0.0042563,
+      "estimate": 0.019214,
+      "at": 1793376206671,
+      "kind": "assess",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 734,
+        "prompt_tokens": 1910,
+        "total_tokens": 2644,
+        "completion_tokens_details": {
+          "reasoning_tokens": 522
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 1137
+        }
+      }
+    },
+    {
+      "id": "68cd5357-0d32-476b-8ff6-73e83959e5b9",
+      "status": "known",
+      "cost": 0.00334805,
+      "estimate": 0.01987275,
+      "at": 1793376266672,
+      "kind": "assess",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 470,
+        "prompt_tokens": 2081,
+        "total_tokens": 2551,
+        "completion_tokens_details": {
+          "reasoning_tokens": 325
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 1137
+        }
+      }
+    },
+    {
+      "id": "03a9615a-c8a6-4467-8c19-6e6675f6b64e",
+      "status": "known",
+      "cost": 0.00442475,
+      "estimate": 0.019624,
+      "at": 1793376326673,
+      "kind": "assess",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 447,
+        "prompt_tokens": 2020,
+        "total_tokens": 2467,
+        "completion_tokens_details": {
+          "reasoning_tokens": 221
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "33bf8f3b-e15d-49d7-8291-1b120ccd8c79",
+      "status": "known",
+      "cost": 0.00516175,
+      "estimate": 0.02041275,
+      "at": 1793376386672,
+      "kind": "assess",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 561,
+        "prompt_tokens": 2222,
+        "total_tokens": 2783,
+        "completion_tokens_details": {
+          "reasoning_tokens": 407
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "fe5c5de5-ee9e-4a98-9f3c-5fbf000cc821",
+      "status": "known",
+      "cost": 0.0045735,
+      "estimate": 0.020134,
+      "at": 1793376446671,
+      "kind": "assess",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 442,
+        "prompt_tokens": 2156,
+        "total_tokens": 2598,
+        "completion_tokens_details": {
+          "reasoning_tokens": 284
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "620284cd-94a0-4038-a4c4-c7d8e02390c9",
+      "status": "known",
+      "cost": 0.005148,
+      "estimate": 0.020174,
+      "at": 1793376506672,
+      "kind": "assess",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 576,
+        "prompt_tokens": 2160,
+        "total_tokens": 2736,
+        "completion_tokens_details": {
+          "reasoning_tokens": 424
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "2766373e-379f-46dc-9c4b-01561237c0ed",
+      "status": "known",
+      "cost": 0.0043585,
+      "estimate": 0.02012025,
+      "at": 1793376566672,
+      "kind": "assess",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 392,
+        "prompt_tokens": 2154,
+        "total_tokens": 2546,
+        "completion_tokens_details": {
+          "reasoning_tokens": 240
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "3e6f5bfb-8a19-4dc2-8a62-012adec434ca",
+      "status": "known",
+      "cost": 0.00464325,
+      "estimate": 0.02012025,
+      "at": 1793376626671,
+      "kind": "assess",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 459,
+        "prompt_tokens": 2154,
+        "total_tokens": 2613,
+        "completion_tokens_details": {
+          "reasoning_tokens": 306
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "37c5106f-29bd-4674-ab39-a6282f2a84a7",
+      "status": "known",
+      "cost": 0.0044745,
+      "estimate": 0.020119,
+      "at": 1793376686671,
+      "kind": "assess",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 419,
+        "prompt_tokens": 2155,
+        "total_tokens": 2574,
+        "completion_tokens_details": {
+          "reasoning_tokens": 266
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "3c34d29c-b7ef-484d-ae14-ae5d49c453db",
+      "status": "known",
+      "cost": 0.0043015,
+      "estimate": 0.02012025,
+      "at": 1793376746672,
+      "kind": "assess",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 378,
+        "prompt_tokens": 2156,
+        "total_tokens": 2534,
+        "completion_tokens_details": {
+          "reasoning_tokens": 225
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "0c27c67b-4fe1-4d99-9fba-e289ad57e227",
+      "status": "known",
+      "cost": 0.00421225,
+      "estimate": 0.02012025,
+      "at": 1793376806674,
+      "kind": "assess",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 357,
+        "prompt_tokens": 2156,
+        "total_tokens": 2513,
+        "completion_tokens_details": {
+          "reasoning_tokens": 204
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "27d4bd40-2933-40b2-b0b0-ee1d74f2482c",
+      "status": "known",
+      "cost": 0.0045225,
+      "estimate": 0.02012025,
+      "at": 1793376866674,
+      "kind": "assess",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 430,
+        "prompt_tokens": 2156,
+        "total_tokens": 2586,
+        "completion_tokens_details": {
+          "reasoning_tokens": 273
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "b92814f5-ae45-4f5a-8f7d-f7df80cc0608",
+      "status": "known",
+      "cost": 0.00460275,
+      "estimate": 0.0201515,
+      "at": 1793376926674,
+      "kind": "assess",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 448,
+        "prompt_tokens": 2159,
+        "total_tokens": 2607,
+        "completion_tokens_details": {
+          "reasoning_tokens": 291
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "35484570-eada-458e-b4b6-3a60e2624ae2",
+      "status": "known",
+      "cost": 0.00439875,
+      "estimate": 0.0201515,
+      "at": 1793376986674,
+      "kind": "assess",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 400,
+        "prompt_tokens": 2159,
+        "total_tokens": 2559,
+        "completion_tokens_details": {
+          "reasoning_tokens": 243
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "4ccc26e9-fc83-4807-a3d3-971344eacff0",
+      "status": "known",
+      "cost": 0.0050065,
+      "estimate": 0.0201515,
+      "at": 1793377046675,
+      "kind": "assess",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 543,
+        "prompt_tokens": 2159,
+        "total_tokens": 2702,
+        "completion_tokens_details": {
+          "reasoning_tokens": 386
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "5fc74595-b944-44c3-8e71-a55f3b52f18b",
+      "status": "known",
+      "cost": 0.0040375,
+      "estimate": 0.0201515,
+      "at": 1793377106676,
+      "kind": "assess",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 315,
+        "prompt_tokens": 2159,
+        "total_tokens": 2474,
+        "completion_tokens_details": {
+          "reasoning_tokens": 159
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "2017f095-0731-4aaf-9106-2f50dbde17a7",
+      "status": "known",
+      "cost": 0.0040180500000000004,
+      "estimate": 0.02013525,
+      "at": 1793377166679,
+      "kind": "assess",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 605,
+        "prompt_tokens": 2158,
+        "total_tokens": 2763,
+        "completion_tokens_details": {
+          "reasoning_tokens": 381
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 1137
+        }
+      }
+    },
+    {
+      "id": "cf6dc5fe-d215-4382-b55e-902606e5cc76",
+      "status": "known",
+      "cost": 0.004524,
+      "estimate": 0.02092275,
+      "at": 1793377226679,
+      "kind": "assess",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 373,
+        "prompt_tokens": 2351,
+        "total_tokens": 2724,
+        "completion_tokens_details": {
+          "reasoning_tokens": 214
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "6b7afc48-2360-4ab3-b236-8c83c31181b8",
+      "status": "known",
+      "cost": 0.00474775,
+      "estimate": 0.02064025,
+      "at": 1793377286679,
+      "kind": "assess",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 443,
+        "prompt_tokens": 2292,
+        "total_tokens": 2735,
+        "completion_tokens_details": {
+          "reasoning_tokens": 279
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "1c7a31bf-7b52-4a15-b9bf-c747498621ff",
+      "status": "known",
+      "cost": 0.00457325,
+      "estimate": 0.0207065,
+      "at": 1793377346683,
+      "kind": "assess",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 399,
+        "prompt_tokens": 2302,
+        "total_tokens": 2701,
+        "completion_tokens_details": {
+          "reasoning_tokens": 240
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "cf0b359c-19bc-411e-a3ba-d0a01ae86bc6",
+      "status": "known",
+      "cost": 0.00504775,
+      "estimate": 0.0206415,
+      "at": 1793377406684,
+      "kind": "assess",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 513,
+        "prompt_tokens": 2294,
+        "total_tokens": 2807,
+        "completion_tokens_details": {
+          "reasoning_tokens": 288
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "7cd9be59-fe74-4f3d-8186-ed4643c5e9b6",
+      "status": "known",
+      "cost": 0.00494925,
+      "estimate": 0.021399,
+      "at": 1793377466684,
+      "kind": "assess",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 436,
+        "prompt_tokens": 2477,
+        "total_tokens": 2913,
+        "completion_tokens_details": {
+          "reasoning_tokens": 198
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "e5d32162-edb6-4d78-a892-b93c05cfc72a",
+      "status": "known",
+      "cost": 0.0054465,
+      "estimate": 0.021924,
+      "at": 1793377526685,
+      "kind": "assess",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 513,
+        "prompt_tokens": 2613,
+        "total_tokens": 3126,
+        "completion_tokens_details": {
+          "reasoning_tokens": 342
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "49aeec8f-7035-4a6e-b670-56ddbbf8b803",
+      "status": "known",
+      "cost": 0.0049805,
+      "estimate": 0.0217065,
+      "at": 1793377586686,
+      "kind": "assess",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 421,
+        "prompt_tokens": 2553,
+        "total_tokens": 2974,
+        "completion_tokens_details": {
+          "reasoning_tokens": 250
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "be6bae68-1c32-4b7c-b0e4-7fa3c6a01d25",
+      "status": "known",
+      "cost": 0.004683,
+      "estimate": 0.0217065,
+      "at": 1793377646686,
+      "kind": "assess",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 351,
+        "prompt_tokens": 2553,
+        "total_tokens": 2904,
+        "completion_tokens_details": {
+          "reasoning_tokens": 183
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "29fc873c-1e51-4026-a86a-e11e0814d0ab",
+      "status": "known",
+      "cost": 0.00546125,
+      "estimate": 0.02168025,
+      "at": 1793377706688,
+      "kind": "assess",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 535,
+        "prompt_tokens": 2550,
+        "total_tokens": 3085,
+        "completion_tokens_details": {
+          "reasoning_tokens": 367
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "d9d8ba89-641c-4359-8135-c22351403b30",
+      "status": "known",
+      "cost": 0.00508725,
+      "estimate": 0.02168025,
+      "at": 1793377766688,
+      "kind": "assess",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 447,
+        "prompt_tokens": 2550,
+        "total_tokens": 2997,
+        "completion_tokens_details": {
+          "reasoning_tokens": 282
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "bc132482-269b-49bc-bc8a-9d6a27aff552",
+      "status": "known",
+      "cost": 0.0048085,
+      "estimate": 0.0216665,
+      "at": 1793377826689,
+      "kind": "assess",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 382,
+        "prompt_tokens": 2548,
+        "total_tokens": 2930,
+        "completion_tokens_details": {
+          "reasoning_tokens": 217
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "ebae3f80-4db8-4d27-a8f6-e537e1617b1d",
+      "status": "known",
+      "cost": 0.00528025,
+      "estimate": 0.0216665,
+      "at": 1793377886690,
+      "kind": "assess",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 493,
+        "prompt_tokens": 2548,
+        "total_tokens": 3041,
+        "completion_tokens_details": {
+          "reasoning_tokens": 317
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "59e57fb6-f644-4a2f-9346-48af9eb2e355",
+      "status": "known",
+      "cost": 0.00504325,
+      "estimate": 0.0217215,
+      "at": 1793377946690,
+      "kind": "assess",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 434,
+        "prompt_tokens": 2559,
+        "total_tokens": 2993,
+        "completion_tokens_details": {
+          "reasoning_tokens": 189
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "9c618483-59fe-4f02-b101-317a23148472",
+      "status": "known",
+      "cost": 0.00559425,
+      "estimate": 0.02239525,
+      "at": 1793378006694,
+      "kind": "assess",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 506,
+        "prompt_tokens": 2755,
+        "total_tokens": 3261,
+        "completion_tokens_details": {
+          "reasoning_tokens": 332
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "3ec1ae3d-e426-4646-9813-d85d2fbf9840",
+      "status": "known",
+      "cost": 0.00562925,
+      "estimate": 0.02214275,
+      "at": 1793378066702,
+      "kind": "assess",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 536,
+        "prompt_tokens": 2681,
+        "total_tokens": 3217,
+        "completion_tokens_details": {
+          "reasoning_tokens": 363
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "488deb71-afd3-44c2-b415-abaebfeb73d0",
+      "status": "known",
+      "cost": 0.00581925,
+      "estimate": 0.0221365,
+      "at": 1793378126704,
+      "kind": "assess",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 581,
+        "prompt_tokens": 2680,
+        "total_tokens": 3261,
+        "completion_tokens_details": {
+          "reasoning_tokens": 364
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "b0cbb7da-3f26-4fa8-91bb-8e9be50117cd",
+      "status": "known",
+      "cost": 0.00545575,
+      "estimate": 0.02269525,
+      "at": 1793378186708,
+      "kind": "assess",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 449,
+        "prompt_tokens": 2838,
+        "total_tokens": 3287,
+        "completion_tokens_details": {
+          "reasoning_tokens": 223
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "504839ae-ea0b-48b8-97be-3b8ec8f6c7d4",
+      "status": "known",
+      "cost": 0.00593,
+      "estimate": 0.02317025,
+      "at": 1793378246714,
+      "kind": "assess",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 520,
+        "prompt_tokens": 2976,
+        "total_tokens": 3496,
+        "completion_tokens_details": {
+          "reasoning_tokens": 283
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "f4cd9b47-97c4-48f9-88e6-4b74caa1995c",
+      "status": "known",
+      "cost": 0.00668325,
+      "estimate": 0.023734,
+      "at": 1793378306715,
+      "kind": "assess",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 654,
+        "prompt_tokens": 3123,
+        "total_tokens": 3777,
+        "completion_tokens_details": {
+          "reasoning_tokens": 476
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "d51869ab-921d-4707-8f86-f20f88848930",
+      "status": "known",
+      "cost": 0.00711425,
+      "estimate": 0.02356275,
+      "at": 1793378366716,
+      "kind": "assess",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 771,
+        "prompt_tokens": 3070,
+        "total_tokens": 3841,
+        "completion_tokens_details": {
+          "reasoning_tokens": 597
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "827e5600-1fdf-4bec-84db-cb8fdadeca25",
+      "status": "known",
+      "cost": 0.00584275,
+      "estimate": 0.0235365,
+      "at": 1793378426716,
+      "kind": "assess",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 473,
+        "prompt_tokens": 3066,
+        "total_tokens": 3539,
+        "completion_tokens_details": {
+          "reasoning_tokens": 301
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "7fb4daf0-31e8-4c59-b45e-87c4653e9a7f",
+      "status": "known",
+      "cost": 0.005819,
+      "estimate": 0.02352275,
+      "at": 1793378486719,
+      "kind": "assess",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 468,
+        "prompt_tokens": 3064,
+        "total_tokens": 3532,
+        "completion_tokens_details": {
+          "reasoning_tokens": 287
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "aa1c5fca-ca22-4c2c-abc6-8d631deb04f6",
+      "status": "known",
+      "cost": 0.00654425,
+      "estimate": 0.023564,
+      "at": 1793378546720,
+      "kind": "assess",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 636,
+        "prompt_tokens": 3073,
+        "total_tokens": 3709,
+        "completion_tokens_details": {
+          "reasoning_tokens": 385
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "8f035b32-fb0e-48d6-8664-05a178a9f0ba",
+      "status": "known",
+      "cost": 0.006015,
+      "estimate": 0.0243165,
+      "at": 1793378606722,
+      "kind": "assess",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 450,
+        "prompt_tokens": 3282,
+        "total_tokens": 3732,
+        "completion_tokens_details": {
+          "reasoning_tokens": 195
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "123440f1-bc20-49ee-ae33-a81cc162f014",
+      "status": "known",
+      "cost": 0.0065265,
+      "estimate": 0.02517275,
+      "at": 1793378656724,
+      "kind": "assess",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 503,
+        "prompt_tokens": 3511,
+        "total_tokens": 4014,
+        "completion_tokens_details": {
+          "reasoning_tokens": 329
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "e4dc0c60-d95d-442e-be8b-5621da0e5e46",
+      "status": "known",
+      "cost": 0.006301,
+      "estimate": 0.02487525,
+      "at": 1793378666725,
+      "kind": "assess",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 472,
+        "prompt_tokens": 3436,
+        "total_tokens": 3908,
+        "completion_tokens_details": {
+          "reasoning_tokens": 298
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "a73147eb-ad71-4a28-8dc5-7076c75bbb95",
+      "status": "known",
+      "cost": 0.0071635,
+      "estimate": 0.025249,
+      "at": 1793378716726,
+      "kind": "assess",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 642,
+        "prompt_tokens": 3548,
+        "total_tokens": 4190,
+        "completion_tokens_details": {
+          "reasoning_tokens": 416
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "a795e0bb-c9aa-4101-884d-76e160eb9507",
+      "status": "known",
+      "cost": 0.006172,
+      "estimate": 0.02538525,
+      "at": 1793378726726,
+      "kind": "assess",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 394,
+        "prompt_tokens": 3598,
+        "total_tokens": 3992,
+        "completion_tokens_details": {
+          "reasoning_tokens": 168
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "addcf089-a979-41b9-bc99-42c85f3b6ac5",
+      "status": "known",
+      "cost": 0.0080685,
+      "estimate": 0.03129275,
+      "at": 1793378786727,
+      "kind": "assess",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 527,
+        "prompt_tokens": 4663,
+        "total_tokens": 5190,
+        "completion_tokens_details": {
+          "reasoning_tokens": 306
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "65e47b2c-b014-4fb8-bbe9-8fd007482fe1",
+      "status": "known",
+      "cost": 0.00823025,
+      "estimate": 0.034804,
+      "at": 1793378846728,
+      "kind": "assess",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 378,
+        "prompt_tokens": 5299,
+        "total_tokens": 5677,
+        "completion_tokens_details": {
+          "reasoning_tokens": 159
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "011dc37d-4c7e-402a-ba57-9bcb72cf5786",
+      "status": "known",
+      "cost": 0.00899275,
+      "estimate": 0.0348015,
+      "at": 1793378906727,
+      "kind": "assess",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 558,
+        "prompt_tokens": 5297,
+        "total_tokens": 5855,
+        "completion_tokens_details": {
+          "reasoning_tokens": 337
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "3f5ed778-5768-4e63-8283-16ffc7870302",
+      "status": "known",
+      "cost": 0.00970075,
+      "estimate": 0.034814,
+      "at": 1793378966726,
+      "kind": "assess",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 724,
+        "prompt_tokens": 5299,
+        "total_tokens": 6023,
+        "completion_tokens_details": {
+          "reasoning_tokens": 383
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "0ecd4428-5001-4538-99b7-5010bc2cfb7a",
+      "status": "known",
+      "cost": 0.03335,
+      "estimate": 0.0348,
+      "at": 1793379026728,
+      "kind": "transcription",
+      "model": "muse-voice-transcribe-1.0",
+      "adapter": "meta-realtime-asr",
+      "pricing": {
+        "usdPerAudioHour": 0.18
+      },
+      "sentSeconds": 667,
+      "processedMs": 667040
+    },
+    {
+      "id": "b58a0de8-edbc-4b7b-8a99-f0e4286f7269",
+      "status": "known",
+      "cost": 0.00923875,
+      "estimate": 0.035744,
+      "at": 1793379027207,
+      "kind": "assess",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 545,
+        "prompt_tokens": 5538,
+        "total_tokens": 6083,
+        "completion_tokens_details": {
+          "reasoning_tokens": 207
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "bb7d81d1-a58d-48ba-aa1b-24f44a7b7b7f",
+      "status": "known",
+      "cost": 0.0087725,
+      "estimate": 0.03621775,
+      "at": 1793379086731,
+      "kind": "assess",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 395,
+        "prompt_tokens": 5675,
+        "total_tokens": 6070,
+        "completion_tokens_details": {
+          "reasoning_tokens": 170
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "33c8f107-0732-4a31-923c-41d253d5ca7a",
+      "status": "known",
+      "cost": 0.009167,
+      "estimate": 0.0358065,
+      "at": 1793379146731,
+      "kind": "assess",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 519,
+        "prompt_tokens": 5569,
+        "total_tokens": 6088,
+        "completion_tokens_details": {
+          "reasoning_tokens": 214
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "99431ca6-4ee1-475a-b02f-6181ebd2aa90",
+      "status": "known",
+      "cost": 0.0104755,
+      "estimate": 0.03659525,
+      "at": 1793379206731,
+      "kind": "assess",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 766,
+        "prompt_tokens": 5776,
+        "total_tokens": 6542,
+        "completion_tokens_details": {
+          "reasoning_tokens": 521
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "c4537517-a174-4856-9920-33575d8e00bf",
+      "status": "known",
+      "cost": 0.00981075,
+      "estimate": 0.03644775,
+      "at": 1793379266731,
+      "kind": "assess",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 624,
+        "prompt_tokens": 5727,
+        "total_tokens": 6351,
+        "completion_tokens_details": {
+          "reasoning_tokens": 379
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "4dc3e69d-e6c8-4b92-8e92-ddabb59e3323",
+      "status": "known",
+      "cost": 0.00907975,
+      "estimate": 0.03644775,
+      "at": 1793379326732,
+      "kind": "assess",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 452,
+        "prompt_tokens": 5727,
+        "total_tokens": 6179,
+        "completion_tokens_details": {
+          "reasoning_tokens": 223
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "c8815e5c-161a-403d-88bb-abe289fe20cd",
+      "status": "known",
+      "cost": 0.00959825,
+      "estimate": 0.03638525,
+      "at": 1793379386732,
+      "kind": "assess",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 579,
+        "prompt_tokens": 5710,
+        "total_tokens": 6289,
+        "completion_tokens_details": {
+          "reasoning_tokens": 350
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "a9b4ce18-7c65-486d-9d2a-d064038d96a4",
+      "status": "known",
+      "cost": 0.00870575,
+      "estimate": 0.03638525,
+      "at": 1793379446732,
+      "kind": "assess",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 369,
+        "prompt_tokens": 5710,
+        "total_tokens": 6079,
+        "completion_tokens_details": {
+          "reasoning_tokens": 143
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "74a0d829-db18-4b61-959e-bcb8493cc8cf",
+      "status": "known",
+      "cost": 0.00973475,
+      "estimate": 0.036359,
+      "at": 1793379506732,
+      "kind": "assess",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 612,
+        "prompt_tokens": 5707,
+        "total_tokens": 6319,
+        "completion_tokens_details": {
+          "reasoning_tokens": 383
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "b6b96ab0-06b1-4cdb-ac60-02fa1e2026fc",
+      "status": "known",
+      "cost": 0.0095745,
+      "estimate": 0.0363865,
+      "at": 1793379566735,
+      "kind": "assess",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 574,
+        "prompt_tokens": 5708,
+        "total_tokens": 6282,
+        "completion_tokens_details": {
+          "reasoning_tokens": 234
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "69cce370-a25d-4cc8-b668-f8312ca64fea",
+      "status": "known",
+      "cost": 0.009625,
+      "estimate": 0.0370965,
+      "at": 1793379626737,
+      "kind": "assess",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 520,
+        "prompt_tokens": 5932,
+        "total_tokens": 6452,
+        "completion_tokens_details": {
+          "reasoning_tokens": 178
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "a58027be-ee41-4181-acdc-07d598447f47",
+      "status": "known",
+      "cost": 0.00970425,
+      "estimate": 0.03768025,
+      "at": 1793379686737,
+      "kind": "assess",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 496,
+        "prompt_tokens": 6077,
+        "total_tokens": 6573,
+        "completion_tokens_details": {
+          "reasoning_tokens": 287
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "f961397c-94fe-42e1-bb06-a815fcf9116b",
+      "status": "known",
+      "cost": 0.0574985,
+      "estimate": 0.1714615,
+      "at": 1793379694345,
+      "kind": "report",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 11597,
+        "prompt_tokens": 6569,
+        "total_tokens": 18166,
+        "completion_tokens_details": {
+          "reasoning_tokens": 10011
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "5f7acec3-d9ab-4e47-854e-c21050caa8ea",
+      "status": "known",
+      "cost": 0.0029825,
+      "estimate": 0.0208155,
+      "at": 1793381497416,
+      "kind": "prepare",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 540,
+        "prompt_tokens": 550,
+        "total_tokens": 1090,
+        "completion_tokens_details": {
+          "reasoning_tokens": 394
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "830f840d-70d2-4d65-8a78-67af9521b91f",
+      "status": "known",
+      "cost": 0.014750000000000001,
+      "estimate": 0.01625,
+      "at": 1793381559007,
+      "kind": "transcription",
+      "model": "muse-voice-transcribe-1.0",
+      "adapter": "meta-realtime-asr",
+      "pricing": {
+        "usdPerAudioHour": 0.18
+      },
+      "sentSeconds": 295.54,
+      "processedMs": 295600
+    },
+    {
+      "id": "b4ea88f2-6f64-4246-bba0-562483aab626",
+      "status": "known",
+      "cost": 0.00327525,
+      "estimate": 0.01208825,
+      "at": 1793381579444,
+      "kind": "live",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 388,
+        "prompt_tokens": 1301,
+        "total_tokens": 1689,
+        "completion_tokens_details": {
+          "reasoning_tokens": 279
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "5f3ee429-b0c7-4c73-b3a2-ea22cc6a55ed",
+      "status": "known",
+      "cost": 0.00273975,
+      "estimate": 0.012692,
+      "at": 1793381589444,
+      "kind": "live",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 232,
+        "prompt_tokens": 1403,
+        "total_tokens": 1635,
+        "completion_tokens_details": {
+          "reasoning_tokens": 123
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "ed080d2f-d236-49a4-82aa-f80e9d7bea68",
+      "status": "known",
+      "cost": 0.00420325,
+      "estimate": 0.01324825,
+      "at": 1793381599445,
+      "kind": "live",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 534,
+        "prompt_tokens": 1547,
+        "total_tokens": 2081,
+        "completion_tokens_details": {
+          "reasoning_tokens": 308
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "32ce0173-88e5-4bb0-a4ab-a623f57a3fee",
+      "status": "known",
+      "cost": 0.00332125,
+      "estimate": 0.013992,
+      "at": 1793381609446,
+      "kind": "live",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 280,
+        "prompt_tokens": 1705,
+        "total_tokens": 1985,
+        "completion_tokens_details": {
+          "reasoning_tokens": 137
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "1084f79d-e210-40d7-933c-dcb389c378d9",
+      "status": "known",
+      "cost": 0.0031715,
+      "estimate": 0.01409075,
+      "at": 1793381619448,
+      "kind": "live",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 233,
+        "prompt_tokens": 1745,
+        "total_tokens": 1978,
+        "completion_tokens_details": {
+          "reasoning_tokens": 92
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "6436adc7-a8ea-4c79-b96d-497a958bbeb9",
+      "status": "known",
+      "cost": 0.00337925,
+      "estimate": 0.01422825,
+      "at": 1793381629445,
+      "kind": "live",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 276,
+        "prompt_tokens": 1765,
+        "total_tokens": 2041,
+        "completion_tokens_details": {
+          "reasoning_tokens": 106
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "07bb101d-bf69-4d03-9aa4-f27719ecbea9",
+      "status": "known",
+      "cost": 0.0035535,
+      "estimate": 0.0145095,
+      "at": 1793381639446,
+      "kind": "live",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 302,
+        "prompt_tokens": 1816,
+        "total_tokens": 2118,
+        "completion_tokens_details": {
+          "reasoning_tokens": 132
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "734d3c5c-68eb-4f1c-9521-152370e4e5c0",
+      "status": "known",
+      "cost": 0.003654,
+      "estimate": 0.01466825,
+      "at": 1793381649446,
+      "kind": "live",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 318,
+        "prompt_tokens": 1842,
+        "total_tokens": 2160,
+        "completion_tokens_details": {
+          "reasoning_tokens": 155
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "c78afca9-c1bb-474d-918c-f3ceecec670b",
+      "status": "known",
+      "cost": 0.003938,
+      "estimate": 0.01483575,
+      "at": 1793381659447,
+      "kind": "live",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 376,
+        "prompt_tokens": 1872,
+        "total_tokens": 2248,
+        "completion_tokens_details": {
+          "reasoning_tokens": 214
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "78beeb94-1abb-4f0a-a4fa-29279465764c",
+      "status": "known",
+      "cost": 0.0035905,
+      "estimate": 0.0150245,
+      "at": 1793381669446,
+      "kind": "live",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 286,
+        "prompt_tokens": 1900,
+        "total_tokens": 2186,
+        "completion_tokens_details": {
+          "reasoning_tokens": 124
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "a12f2a4d-62b6-417e-9acc-0bba4147cbf4",
+      "status": "known",
+      "cost": 0.0024125500000000003,
+      "estimate": 0.0151945,
+      "at": 1793381679447,
+      "kind": "live",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 294,
+        "prompt_tokens": 1931,
+        "total_tokens": 2225,
+        "completion_tokens_details": {
+          "reasoning_tokens": 133
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 1137
+        }
+      }
+    },
+    {
+      "id": "4cf09a60-d4f5-4f0e-b61f-2e767c5c1511",
+      "status": "known",
+      "cost": 0.0038415,
+      "estimate": 0.0153595,
+      "at": 1793381689448,
+      "kind": "live",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 328,
+        "prompt_tokens": 1958,
+        "total_tokens": 2286,
+        "completion_tokens_details": {
+          "reasoning_tokens": 167
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "32cffb30-2550-4ff2-8ded-b7b24ce7b7cc",
+      "status": "known",
+      "cost": 0.00373175,
+      "estimate": 0.015487,
+      "at": 1793381699445,
+      "kind": "live",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 296,
+        "prompt_tokens": 1979,
+        "total_tokens": 2275,
+        "completion_tokens_details": {
+          "reasoning_tokens": 135
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "e541645f-02c8-4598-bdec-a51084ce3c54",
+      "status": "known",
+      "cost": 0.00345835,
+      "estimate": 0.01608575,
+      "at": 1793381709447,
+      "kind": "live",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 449,
+        "prompt_tokens": 2128,
+        "total_tokens": 2577,
+        "completion_tokens_details": {
+          "reasoning_tokens": 241
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 1009
+        }
+      }
+    },
+    {
+      "id": "9fde51d7-b2a6-4ac7-8def-7614bd625cd0",
+      "status": "known",
+      "cost": 0.00538375,
+      "estimate": 0.01848325,
+      "at": 1793381719447,
+      "kind": "live",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 460,
+        "prompt_tokens": 2743,
+        "total_tokens": 3203,
+        "completion_tokens_details": {
+          "reasoning_tokens": 315
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "7d89f8f3-0161-4db9-9dd5-53d14b82659c",
+      "status": "known",
+      "cost": 0.00607025,
+      "estimate": 0.01846825,
+      "at": 1793381729447,
+      "kind": "live",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 618,
+        "prompt_tokens": 2755,
+        "total_tokens": 3373,
+        "completion_tokens_details": {
+          "reasoning_tokens": 430
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "b68e3e3b-c71b-4868-9747-83792b299b45",
+      "status": "known",
+      "cost": 0.005098,
+      "estimate": 0.01886075,
+      "at": 1793381739447,
+      "kind": "live",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 366,
+        "prompt_tokens": 2834,
+        "total_tokens": 3200,
+        "completion_tokens_details": {
+          "reasoning_tokens": 164
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "04d1bb02-f733-4ecd-a827-9c619966b712",
+      "status": "known",
+      "cost": 0.00719825,
+      "estimate": 0.02009325,
+      "at": 1793381749450,
+      "kind": "live",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 774,
+        "prompt_tokens": 3127,
+        "total_tokens": 3901,
+        "completion_tokens_details": {
+          "reasoning_tokens": 632
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "ab8c9d10-3762-4d93-9f06-96b36ee9adf0",
+      "status": "known",
+      "cost": 0.00568375,
+      "estimate": 0.0204145,
+      "at": 1793381759449,
+      "kind": "live",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 385,
+        "prompt_tokens": 3238,
+        "total_tokens": 3623,
+        "completion_tokens_details": {
+          "reasoning_tokens": 202
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "cf5a2e91-d6dc-483a-b8a2-eb62be447140",
+      "status": "known",
+      "cost": 0.00696975,
+      "estimate": 0.02057075,
+      "at": 1793381769612,
+      "kind": "live",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 677,
+        "prompt_tokens": 3274,
+        "total_tokens": 3951,
+        "completion_tokens_details": {
+          "reasoning_tokens": 492
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "e1b14214-fed0-42e3-b07d-2203d38f79a8",
+      "status": "known",
+      "cost": 0.006837,
+      "estimate": 0.0205745,
+      "at": 1793381779448,
+      "kind": "live",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 644,
+        "prompt_tokens": 3280,
+        "total_tokens": 3924,
+        "completion_tokens_details": {
+          "reasoning_tokens": 501
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "cf01d3f0-1308-4c39-a43f-930b63ead711",
+      "status": "known",
+      "cost": 0.005918,
+      "estimate": 0.020402,
+      "at": 1793381789448,
+      "kind": "live",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 441,
+        "prompt_tokens": 3235,
+        "total_tokens": 3676,
+        "completion_tokens_details": {
+          "reasoning_tokens": 286
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "9921696e-5826-48f0-9e6b-1ddb0579329d",
+      "status": "known",
+      "cost": 0.00620575,
+      "estimate": 0.020492,
+      "at": 1793381799451,
+      "kind": "live",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 504,
+        "prompt_tokens": 3251,
+        "total_tokens": 3755,
+        "completion_tokens_details": {
+          "reasoning_tokens": 319
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "3d793c91-05fa-4596-8fda-4a3ac7a90f2e",
+      "status": "known",
+      "cost": 0.0071785,
+      "estimate": 0.02145825,
+      "at": 1793381809450,
+      "kind": "live",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 657,
+        "prompt_tokens": 3509,
+        "total_tokens": 4166,
+        "completion_tokens_details": {
+          "reasoning_tokens": 500
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "783b4512-2d00-49bd-a3fe-401d0df6dfdb",
+      "status": "known",
+      "cost": 0.006731,
+      "estimate": 0.0213795,
+      "at": 1793381819450,
+      "kind": "live",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 557,
+        "prompt_tokens": 3491,
+        "total_tokens": 4048,
+        "completion_tokens_details": {
+          "reasoning_tokens": 375
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "62bd2ff6-b67d-4070-b31e-a80053e0c04b",
+      "status": "known",
+      "cost": 0.00666325,
+      "estimate": 0.02143825,
+      "at": 1793381829449,
+      "kind": "live",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 534,
+        "prompt_tokens": 3515,
+        "total_tokens": 4049,
+        "completion_tokens_details": {
+          "reasoning_tokens": 334
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "872dc33e-131f-45db-a6d8-76e9689f9f52",
+      "status": "known",
+      "cost": 0.0059720500000000004,
+      "estimate": 0.02254325,
+      "at": 1793381839448,
+      "kind": "live",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 588,
+        "prompt_tokens": 3779,
+        "total_tokens": 4367,
+        "completion_tokens_details": {
+          "reasoning_tokens": 431
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 1137
+        }
+      }
+    },
+    {
+      "id": "b9526eaf-5068-4a8a-b7f0-f605bd9d99b0",
+      "status": "known",
+      "cost": 0.00677625,
+      "estimate": 0.02241325,
+      "at": 1793381849447,
+      "kind": "live",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 490,
+        "prompt_tokens": 3755,
+        "total_tokens": 4245,
+        "completion_tokens_details": {
+          "reasoning_tokens": 334
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "11d85a58-17b3-4178-9ab5-4626f4fbc498",
+      "status": "known",
+      "cost": 0.03802275,
+      "estimate": 0.15728275,
+      "at": 1793381855118,
+      "kind": "report",
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "usage": {
+        "completion_tokens": 7923,
+        "prompt_tokens": 3480,
+        "total_tokens": 11403,
+        "completion_tokens_details": {
+          "reasoning_tokens": 6451
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    }
+  ]
+}

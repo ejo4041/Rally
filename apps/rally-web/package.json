@@ -15,12 +15,13 @@
     "test:endurance": "node tests/endurance.mjs"
   },
   "dependencies": {
-    "livekit-client": "2.23.0"
+    "livekit-client": "2.23.0",
+    "living-silk": "file:../../packages/living-silk"
   },
   "devDependencies": {
+    "@types/node": "24.19.2",
     "esbuild": "0.28.2",
-    "typescript": "7.0.2",
     "playwright": "1.64.1",
-    "@types/node": "24.19.2"
+    "typescript": "7.0.2"
   }
 }

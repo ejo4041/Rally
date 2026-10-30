@@ -27,7 +27,10 @@ export class LiveKitMedia implements Media {
   ): Promise<MediaSession> {
     const room = new Room(),
       roomName = `rally-${meeting.id}`,
-      host = `host-${meeting.id}`;
+      host = `host-${meeting.id}`,
+      capture =
+        meeting.captureMode === "teams" ? `capture-${meeting.id}` : host,
+      renderer = `renderer-${meeting.id}`;
     let stopped = false,
       reader: ReadableStreamDefaultReader<AudioFrame> | undefined,
       trackId: string | undefined;
@@ -40,10 +43,10 @@ export class LiveKitMedia implements Media {
       access.addGrant({
         room: roomName,
         roomJoin: true,
-        canSubscribe: true,
-        canPublish: !backend,
-        canPublishData: backend,
-        canPublishSources: backend ? [] : [2],
+        canSubscribe: identity !== renderer,
+        canPublish: identity === capture,
+        canPublishData: backend || identity === capture,
+        canPublishSources: identity === capture ? [2] : [],
       });
       return access.toJwt();
     };
@@ -52,7 +55,7 @@ export class LiveKitMedia implements Media {
       participant: RemoteParticipant,
     ) => {
       if (
-        participant.identity === host &&
+        participant.identity === capture &&
         publication.kind === TrackKind.KIND_AUDIO &&
         publication.source === TrackSource.SOURCE_MICROPHONE &&
         !trackId
@@ -63,7 +66,8 @@ export class LiveKitMedia implements Media {
     };
     room.on(RoomEvent.TrackPublished, subscribe);
     room.on(RoomEvent.TrackSubscribed, (track, publication, participant) => {
-      if (participant.identity !== host || publication.sid !== trackId) return;
+      if (participant.identity !== capture || publication.sid !== trackId)
+        return;
       void (async () => {
         const current = new AudioStream(track, {
           sampleRate: 16000,
@@ -111,7 +115,7 @@ export class LiveKitMedia implements Media {
       }
     });
     room.on(RoomEvent.ParticipantDisconnected, (p) => {
-      if (p.identity === host && !stopped)
+      if (p.identity === capture && !stopped)
         onGap("Browser disconnected; recording contains a gap.");
     });
     room.on(RoomEvent.Reconnecting, () =>
@@ -136,9 +140,12 @@ export class LiveKitMedia implements Media {
         subscribe(publication, participant);
     }
     return {
-      connection: async () => ({
+      connection: async (role = "host") => ({
         url: this.config.livekitUrl,
-        token: await token(host, false),
+        token: await token(
+          role === "renderer" ? renderer : role === "capture" ? capture : host,
+          false,
+        ),
         room: roomName,
       }),
       async send(event: LiveEvent) {
@@ -155,7 +162,10 @@ export class LiveKitMedia implements Media {
         await room.localParticipant.publishData(encoded, {
           reliable: event.type !== "transcript.partial",
           topic: "rally",
-          destination_identities: [host],
+          destination_identities:
+            event.type === "presence.scene"
+              ? [...new Set([host, renderer, capture])]
+              : [...new Set([host, capture])],
         });
       },
       async close() {

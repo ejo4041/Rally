@@ -50,3 +50,11 @@ Earlier Sites release: [version 12](releases/2026-10-29-v12.md), [October 29 mor
 ## Teams MMS output preparation
 
 [Teams MMS output](teams-mms-output.md) is installed in the idle normal Teams runner from source `22c3671`, with the diagnostic disabled. Nine offline checks and a real-MMS disposable virtual-microphone measurement pass, including Stop/silence and incoming-audio isolation. No meeting was joined. A fixed diagnostic can be explicitly enabled for the next live trial; automatic agenda-based spoken replies still need a live moderation connection.
+
+## Living Silk implementation checkpoint
+
+[Local foundation and remaining implementation](living-presence-implementation.md): bounded controller, additive Muse affect contract and browser surface are implemented locally;60 backend/9 frontend tests, both typechecks and frontend build pass. No deployment, paid call or Teams video validation. Full reviewed plan remains unfinished; read explicit gaps before continuing. Existing capture-lease work was preserved.
+
+## Living presence completion and remote acceptance
+
+[Implementation](living-presence-implementation.md) and [operations](living-presence-operations.md) now cover continuous emotional actuation, adaptive Muse assessment, speech articulation, shared browser/camera scene, captions/topics/progress, and the owned native Teams runner. Final local regression: 71 backend tests, 10 frontend tests, both typechecks and frontend build pass. Actual MMS browser/audio and 1080p WebRTC camera checks pass; measured distinct-frame rate is approximately 29 fps. Targeted independent spec and standards reviews checked caption ownership, capture epochs, observer reconnect, native Stop, renderer failure and process locking; identified fixes were applied. The existing capture-lease dependency is preserved. Live remote Teams acceptance remains pending; do not equate local transport checks with a remote call pass. Calibration costs and runtime reconciliation are in the central ledger.

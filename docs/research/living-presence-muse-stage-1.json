@@ -1,0 +1,36 @@
+{
+  "completed": 1,
+  "failure": null,
+  "knownUSD": 0.00407575,
+  "unknown": 0,
+  "results": [
+    {
+      "scenario": 0,
+      "input": "Alex: Our goal is to decide the launch scope. The login fix is tested and ready. Sam: Agreed, let us decide whether export belongs in this release.",
+      "latencyMs": 2282,
+      "result": {
+        "concerns": [],
+        "focus": {
+          "intendedTopicId": "scope",
+          "detour": null,
+          "evidence": [
+            "scenario:0"
+          ]
+        },
+        "urgency": 0.2,
+        "affect": null,
+        "health": 5,
+        "reason": "Scope topic active and on-objective with no drift or risk signals; within timebox.",
+        "issues": [],
+        "evidence": [
+          "scenario:0"
+        ],
+        "progress": "Launch scope discussion started; login fix noted as ready, export inclusion still open.",
+        "intervention": null,
+        "plan": null,
+        "planReason": ""
+      },
+      "rejected": []
+    }
+  ]
+}

@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { createApplication } from "../src/app.ts";
 import type { ASRSession, LiveEvent, Providers } from "../src/contracts.ts";
 
-async function fixture(t: TestContext, assessmentMs = 100000) {
+async function fixture(t: TestContext, assessmentMs = 100000, captureLeaseMs = 120 * 60000) {
   t.mock.timers.enable({ apis: ["Date"], now: Date.now() });
   let transportGap: (reason: string) => void = () => {};
   let audio: (bytes: Uint8Array) => void = () => {},
@@ -23,6 +23,7 @@ async function fixture(t: TestContext, assessmentMs = 100000) {
   const api = createApplication({
     dbPath: ":memory:",
     assessmentMs,
+    captureLeaseMs,
     providers: {
       async prepare() {
         return {
@@ -155,11 +156,12 @@ async function fixture(t: TestContext, assessmentMs = 100000) {
     })
   ).json();
   const path = `/meetings/${m.id}`;
-  await req(path + "/start", "POST", { consented: true });
+  const started = await (await req(path + "/start", "POST", { consented: true })).json();
   audio(new Uint8Array([1, 2]));
   return {
     req,
     path,
+    captureToken: started.connection.captureToken as string,
     events,
     streams,
     audio: (bytes: Uint8Array) => audio(bytes),
@@ -329,4 +331,89 @@ test("repeated capture failures are briefly coalesced rather than hidden permane
   f.advanceBy(2000);
   f.transportGap("Synthetic input lost");
   assert.equal(f.events.filter((e) => e.type === "capture.gap").length, 2);
+});
+
+
+test("an abandoned browser capture closes transcription without automatic analysis or another assessment", async (t) => {
+  const f = await fixture(t, 100000, 90000);
+  f.transportGap("Browser disconnected; recording contains a gap.");
+  f.advanceBy(90001);
+  await f.req(f.path + "/commands", "POST", { type: "request_guidance" });
+  const m = await (await f.req(f.path)).json();
+  assert.equal(f.streams[0].closed, true);
+  assert.equal(m.phase, "interrupted");
+  assert.equal(f.assessments(), 0);
+  assert.notEqual(m.reportStatus, "processing");
+  assert.ok(m.turns.some((turn: { turnId: number }) => turn.turnId === 1));
+});
+
+test("only a current publishing token renews the capture lease; snapshots and room credentials do not", async (t) => {
+  const f = await fixture(t, 100000, 90000);
+  f.advanceBy(60000);
+  assert.equal((await f.req(f.path)).status, 200);
+  assert.equal((await f.req(f.path + "/connection", "POST", {})).status, 200);
+  assert.equal((await f.req(f.path + "/heartbeat", "POST", {})).status, 409);
+  assert.equal((await f.req(f.path + "/heartbeat", "POST", { captureToken: "wrong" })).status, 409);
+  f.advanceBy(30001);
+  assert.equal((await f.req(f.path + "/heartbeat", "POST", { captureToken: f.captureToken })).status, 409);
+  assert.equal((await f.req(f.path + "/connection", "POST", {})).status, 409);
+  await f.req(f.path + "/commands", "POST", { type: "request_guidance" });
+  assert.equal(f.streams[0].closed, true);
+});
+
+test("renewal preserves a live capture beyond its original deadline; pause does not keep an abandoned capture alive", async (t) => {
+  const f = await fixture(t, 100000, 90000);
+  f.advanceBy(60000);
+  assert.equal((await f.req(f.path + "/heartbeat", "POST", { captureToken: f.captureToken })).status, 200);
+  f.advanceBy(60000);
+  await f.req(f.path + "/commands", "POST", { type: "request_guidance" });
+  assert.equal((await (await f.req(f.path)).json()).phase, "live");
+  assert.equal(f.streams[0].closed, false);
+  await f.req(f.path + "/commands", "POST", { type: "pause" });
+  const assessments = f.assessments();
+  f.advanceBy(90001);
+  await f.req(f.path + "/commands", "POST", { type: "request_guidance" });
+  assert.equal((await (await f.req(f.path)).json()).phase, "interrupted");
+  assert.equal(f.assessments(), assessments);
+});
+
+test("the scheduler expires a capture without a browser request or automatic report", async (t) => {
+  const f = await fixture(t, 20, 90000);
+  await f.req(f.path + "/commands", "POST", { type: "pause" });
+  const assessments = f.assessments();
+  f.advanceBy(90001);
+  let saved;
+  for (let i = 0; i < 100; i++) {
+    saved = await (await f.req(f.path)).json();
+    if (saved.phase === "interrupted") break;
+    await new Promise((resolve) => setTimeout(resolve, 2));
+  }
+  assert.equal(saved.phase, "interrupted");
+  assert.equal(saved.reportStatus, "none");
+  assert.equal(f.streams[0].closed, true);
+  assert.equal(f.assessments(), assessments);
+});
+
+test("explicit reconnect rotates the capture token so an old browser cannot renew its replacement", async (t) => {
+  const f = await fixture(t);
+  const reconnect = f.req(f.path + "/reconnect", "POST", { consented: true });
+  await f.pending();
+  f.resolve();
+  const result = await (await reconnect).json();
+  assert.notEqual(result.connection.captureToken, f.captureToken);
+  assert.equal((await f.req(f.path + "/heartbeat", "POST", { captureToken: f.captureToken })).status, 409);
+  assert.equal((await f.req(f.path + "/heartbeat", "POST", { captureToken: result.connection.captureToken })).status, 200);
+});
+
+test("lease expiry stops a pending handoff and discards the replacement when it arrives", async (t) => {
+  const f = await fixture(t), pending = f.rotate();
+  await f.pending();
+  f.advanceBy(120 * 60000);
+  await f.req(f.path + "/commands", "POST", { type: "request_guidance" });
+  assert.equal((await (await f.req(f.path)).json()).phase, "interrupted");
+  f.resolve();
+  await pending;
+  assert.equal(f.streams[1].closed, true);
+  assert.ok(!f.events.some((event) => event.type === "transcript.final" &&
+    (event.data as { sessionId: string }).sessionId === "source-2"));
 });

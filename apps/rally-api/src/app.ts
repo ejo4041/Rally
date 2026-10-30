@@ -1,3 +1,4 @@
+import { installPresenceAccess } from "./presence-access.ts";
 import express from "express";
 import { retainLegacyNotes } from "./report-notes.ts";
 import { SpeechOutput, configuredSpeech, type SpeechEngine } from "./speech.ts";
@@ -46,6 +47,18 @@ export function createApplication(
     (id, shield) => meetings.recordAudioExclusion(id, shield),
   );
   const engine = new Engine(meetings, media, config, speech);
+  speech.onPlayback = (id, playback) => {
+    try {
+      const m = meetings.get(id);
+      m.playback = playback;
+      m.lastSpokenEnd = speech.lastEnd(id);
+      m.sceneRevision = (m.sceneRevision ?? 0) + 1;
+      meetings.save(m);
+      engine.emit(id, "speech.playback", { ...playback, epoch: m.epoch });
+    } catch {
+      /* Deleted meeting. */
+    }
+  };
   const teams = new TeamsBridge(
     store,
     meetings,
@@ -55,6 +68,7 @@ export function createApplication(
   app.disable("x-powered-by");
   app.use((req, res, next) => {
     res.setHeader("Cache-Control", "no-store");
+    res.setHeader("X-Rally-Time", String(Date.now()));
     res.setHeader("X-Content-Type-Options", "nosniff");
     const origin = req.headers.origin;
     if (origin && !config.origins.includes(origin))
@@ -103,7 +117,9 @@ export function createApplication(
     res.json(user);
   });
   app.post("/api/auth/logout", async (req, res) => {
-    await engine.disconnectUser(userForRequest(store, req).id);
+    const userId = userForRequest(store, req).id;
+    presenceAccess.cancelUser(userId);
+    await engine.disconnectUser(userId);
     revokeSession(store, req, res, config.secureCookies);
     res.sendStatus(204);
   });
@@ -198,7 +214,7 @@ export function createApplication(
   );
   app.post("/api/speech/test/:job/playback", (req, res) => {
     const data = z
-      .object({ state: z.enum(["playing", "completed", "canceled"]) })
+      .object({ state: z.enum(["armed", "playing", "completed", "canceled"]) })
       .parse(req.body);
     res.json(
       speech.playback(diagnosticOwner(req), String(req.params.job), data.state),
@@ -206,6 +222,8 @@ export function createApplication(
   });
   app.post("/api/meetings/:id/speech", (req, res) => {
     const m = owned(req);
+    if (m.captureMode === "teams")
+      throw new HttpError("The Teams runner owns speech", 409);
     const data = z
       .object({
         interventionId: z.string().uuid(),
@@ -223,12 +241,19 @@ export function createApplication(
   });
   app.post("/api/meetings/:id/speech/:job/playback", (req, res) => {
     const data = z
-      .object({ state: z.enum(["playing", "completed", "canceled"]) })
+      .object({ state: z.enum(["armed", "playing", "completed", "canceled"]) })
       .parse(req.body);
     res.json(
       speech.playback(owned(req).id, String(req.params.job), data.state),
     );
   });
+  const presenceAccess = installPresenceAccess(
+    app,
+    meetings,
+    engine,
+    speech,
+    owned,
+  );
   app.post("/api/meetings/:id/prepare", async (req, res) => {
     const m = owned(req);
     await meetings.prepare(m);
@@ -253,6 +278,9 @@ export function createApplication(
   });
   app.post("/api/meetings/:id/connection", async (req, res) =>
     res.json(await engine.connection(owned(req))),
+  );
+  app.post("/api/meetings/:id/heartbeat", (req, res) =>
+    res.json(engine.heartbeat(owned(req), req.body?.captureToken)),
   );
   app.post("/api/meetings/:id/commands", async (req, res) =>
     res.json(await engine.command(owned(req), req.body)),

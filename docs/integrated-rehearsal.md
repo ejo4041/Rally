@@ -7,7 +7,8 @@ The current target is the [private Node/LiveKit app](integrated-deployment.md), 
 1. Connect Tailscale and open the app in the intended Chrome/Edge laptop browser. Sign in with an app account. Do not put credentials or private meeting URLs in the recording.
 2. Inform everyone and obtain consent before any capture. In a prepared meeting, use **Check audio · free**. A remote participant speaks while the host is quiet; then the host speaks. Check each source separately. Use headphones for a call. Stop the check and confirm sharing closes. This does not start Muse.
 3. Use **Test voice · free**. Confirm a person can actually hear the sentence, then stop it mid-sentence. This is host-browser playback. A remote listener must separately verify any intended call-side audio-sharing arrangement; it is not provided automatically.
-4. Confirm no previous live meeting needs to be ended. Have a backup microphone and a rehearsed room-microphone surface available if tab capture fails. Do not switch to a platform's built-in transcript as a substitute for Muse.
+4. Keep the chosen call and Rally tabs in the intended foreground/background arrangement for at least two minutes. Verify capture remains live; device sleep or a suspended tab can require reconnecting. The [capture lease](capture-lease.md) stops an abandoned session rather than leaving transcription open.
+5. Confirm no previous live meeting needs to be ended. Have a backup microphone and a rehearsed room-microphone surface available if tab capture fails. Do not switch to a platform's built-in transcript as a substitute for Muse.
 
 ## Consented live run
 

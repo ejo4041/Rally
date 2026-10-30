@@ -1,6 +1,6 @@
 import { Room, RoomEvent, LocalAudioTrack, Track } from "livekit-client";
 import type { LiveEvent } from "../../rally-api/src/contracts.ts";
-import type { Connection } from "./api.ts";
+import { api, APIError, type Connection } from "./api.ts";
 export type AudioInput = {
   stream: MediaStream;
   sources: { kind: "tab" | "microphone"; stream: MediaStream }[];
@@ -123,6 +123,8 @@ export class MeetingMedia {
   private muted = false;
   private shielded = false;
   private elements = new Set<HTMLMediaElement>();
+  private heartbeatTimer?: ReturnType<typeof setInterval>;
+  private heartbeatAbort?: AbortController;
   constructor(
     private meetingId: string,
     private onEvent: (event: LiveEvent) => void,
@@ -200,6 +202,7 @@ export class MeetingMedia {
         throw new Error("Audio sharing ended during publication.");
       await room.startAudio();
       this.onStatus("Connected");
+      this.startHeartbeat(connection);
     } catch (error) {
       await this.close();
       throw error;
@@ -208,6 +211,33 @@ export class MeetingMedia {
   setMuted(muted: boolean) {
     this.muted = muted;
     this.updateGate();
+  }
+  private startHeartbeat(connection: Connection) {
+    const renew = async () => {
+      if (!this.track || this.track.mediaStreamTrack.readyState !== "live" || this.heartbeatAbort)
+        return;
+      const controller = new AbortController();
+      this.heartbeatAbort = controller;
+      const timeout = setTimeout(() => controller.abort(), 5000);
+      try {
+        await api(`/meetings/${this.meetingId}/heartbeat`, "POST", {
+          captureToken: connection.captureToken,
+        }, controller.signal);
+      } catch (error) {
+        if (!this.track || controller.signal.aborted) return;
+        if (error instanceof APIError && [401, 409].includes(error.status)) {
+          this.stopCapture();
+          this.onStatus("Audio disconnected. Refresh the record, then reconnect explicitly.");
+        } else {
+          this.onStatus("Connection check unavailable. Audio will stop if the connection cannot be restored.");
+        }
+      } finally {
+        clearTimeout(timeout);
+        if (this.heartbeatAbort === controller) this.heartbeatAbort = undefined;
+      }
+    };
+    void renew();
+    this.heartbeatTimer = setInterval(() => void renew(), 20000);
   }
   setShielded(value: boolean) {
     this.shielded = value;
@@ -218,6 +248,10 @@ export class MeetingMedia {
       this.track.mediaStreamTrack.enabled = !(this.muted || this.shielded);
   }
   stopCapture() {
+    clearInterval(this.heartbeatTimer);
+    this.heartbeatTimer = undefined;
+    this.heartbeatAbort?.abort();
+    this.heartbeatAbort = undefined;
     this.audio?.close();
     this.audio = null;
     this.track?.stop();

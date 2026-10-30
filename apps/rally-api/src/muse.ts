@@ -1,3 +1,4 @@
+import {assessmentContext} from "./assessment-context.ts";
 import { prompts } from "./prompts.ts";
 import { speechSettingsSchema } from "./speech-config.ts";
 import { randomUUID } from "node:crypto";
@@ -295,7 +296,7 @@ export function createMuse(
         },
         planSchema,
       ),
-    assess: (s) => json(s.meeting, "assess", s, assessmentSchema),
+    assess: (s) => json(s.meeting, "assess", assessmentContext(s), assessmentSchema.required({affect: true, concerns: true, focus: true, urgency: true})),
     report: (s) => json(s.meeting, "report", s, reportSchema),
     async openASR(m, callbacks) {
       enabled();

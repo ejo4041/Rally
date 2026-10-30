@@ -56,7 +56,13 @@ type Job = {
   meetingId: string;
   offer: Offer;
   state:
-    "preparing" | "ready" | "playing" | "completed" | "canceled" | "failed";
+    | "preparing"
+    | "ready"
+    | "armed"
+    | "playing"
+    | "completed"
+    | "canceled"
+    | "failed";
   abort: AbortController;
   audio?: Buffer;
   seconds?: number;
@@ -66,6 +72,30 @@ type Job = {
 // Only Engine-approved interventions enter this bounded in-memory output queue.
 // There is no client-supplied text, retry loop, persisted waveform or external TTS.
 export class SpeechOutput {
+  onPlayback: (
+    meetingId: string,
+    playback: NonNullable<Meeting["playback"]>,
+  ) => void = () => {};
+  private ended = new Map<string, number>();
+  lastEnd(meetingId: string) {
+    return this.ended.get(meetingId) ?? 0;
+  }
+  activity(meetingId: string) {
+    const job = this.jobs.get(meetingId);
+    if (!job) return null;
+    return {
+      id: job.id,
+      interventionId: job.offer.id,
+      text: job.offer.text,
+      state: job.state,
+      at: Date.now(),
+      until: job.shieldUntil,
+    };
+  }
+  private notify(job: Job) {
+    if (!this.diagnostics.has(job.meetingId))
+      this.onPlayback(job.meetingId, this.activity(job.meetingId)!);
+  }
   private engine: SpeechEngine | undefined;
   private identity: SpeechIdentity;
   private current: (id: string) => Meeting;
@@ -248,33 +278,46 @@ export class SpeechOutput {
   }
   audio(meetingId: string, id: string) {
     const job = this.find(meetingId, id);
-    if (!["ready", "playing"].includes(job.state) || !job.audio)
+    if (!["ready", "armed", "playing"].includes(job.state) || !job.audio)
       throw new HttpError("Speech is no longer available.", 409);
     return job.audio;
   }
   playback(
     meetingId: string,
     id: string,
-    state: "playing" | "completed" | "canceled",
+    state: "armed" | "playing" | "completed" | "canceled",
   ) {
     const job = this.find(meetingId, id);
-    if (state === "playing") {
-      if (job.state === "playing") return this.view(job);
-      if (job.state !== "ready")
+    if (state === "armed" || state === "playing") {
+      if (job.state === state) return this.view(job);
+      if (
+        !(
+          job.state === "ready" ||
+          (state === "playing" && job.state === "armed")
+        )
+      )
         throw new HttpError("Speech is not ready.", 409);
       const start = Date.now(),
         end = start + (job.seconds ?? 30) * 1000 + 2000;
       if (!this.diagnostics.has(meetingId))
         this.onShield(meetingId, { id: job.id, start, end });
-      job.state = "playing";
+      job.state = state;
       job.shieldUntil = end;
+      if (state === "playing")
+        this.ended.set(meetingId, start + (job.seconds ?? 30) * 1000);
     } else {
-      if (job.state === "playing")
+      if (job.state === "completed" || job.state === "canceled")
+        return this.view(job);
+      if (state === "completed" && job.state !== "playing")
+        throw new HttpError("Speech has not played.", 409);
+      if (job.state === "playing") this.ended.set(meetingId, Date.now());
+      if (["playing", "armed"].includes(job.state))
         job.shieldUntil = Math.min(job.shieldUntil, Date.now() + 800);
       job.state = state;
       job.audio = undefined;
       job.abort.abort();
     }
+    this.notify(job);
     return this.view(job);
   }
   shielded(meetingId: string) {
@@ -286,10 +329,12 @@ export class SpeechOutput {
     const job = this.jobs.get(meetingId);
     if (!job) return;
     job.abort.abort();
-    if (job.state === "playing")
+    if (job.state === "playing") this.ended.set(meetingId, Date.now());
+    if (["playing", "armed"].includes(job.state))
       job.shieldUntil = Math.min(job.shieldUntil, Date.now() + 800);
     job.state = "canceled";
     job.audio = undefined;
+    this.notify(job);
   }
   forget(meetingId: string) {
     const job = this.jobs.get(meetingId);

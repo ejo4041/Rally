@@ -8,6 +8,7 @@ type Job = {
 };
 type Prompt = { id: string; text: string; epoch: number };
 export function createSpeechPlayer(options: {
+  playback?: (audio: HTMLAudioElement | null, text: string | null) => void;
   current: (prompt: Prompt) => boolean;
   status: (message: string, shielded: boolean) => void;
 }) {
@@ -39,6 +40,7 @@ export function createSpeechPlayer(options: {
     previous.finished = true;
     previous.abort.abort();
     previous.audio.pause();
+    options.playback?.(null, null);
     previous.audio.removeAttribute("src");
     previous.audio.load();
     if (previous.url) URL.revokeObjectURL(previous.url);
@@ -134,7 +136,7 @@ export function createSpeechPlayer(options: {
       await api(
         `${path}/${created.id}/playback`,
         "POST",
-        { state: "playing" },
+        { state: "armed" },
         job.abort.signal,
       );
       if (!valid()) return;
@@ -150,7 +152,28 @@ export function createSpeechPlayer(options: {
           resolve();
         };
         job.abort.signal.addEventListener("abort", abort, { once: true });
-        void job.audio.play().catch(reject);
+        void job.audio
+          .play()
+          .then(async () => {
+            if (!valid()) {
+              job.audio.pause();
+              resolve();
+              return;
+            }
+            options.playback?.(job.audio, diagnostic ? null : prompt.text);
+            try {
+              await api(
+                `${path}/${created.id}/playback`,
+                "POST",
+                { state: "playing" },
+                job.abort.signal,
+              );
+            } catch (error) {
+              job.audio.pause();
+              reject(error);
+            }
+          })
+          .catch(reject);
       });
       if (!valid()) return;
       await api(
@@ -174,6 +197,7 @@ export function createSpeechPlayer(options: {
         const completed = job.finished;
         active = null;
         job.audio.pause();
+        options.playback?.(null, null);
         job.audio.removeAttribute("src");
         job.audio.load();
         if (job.url) URL.revokeObjectURL(job.url);

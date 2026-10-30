@@ -1,0 +1,31 @@
+{
+  "at": "2026-10-30T18:18:11.810Z",
+  "scope": "Local virtual camera through real WebRTC; not remote Teams",
+  "settings": {
+    "aspectRatio": 1.7777777777777777,
+    "frameRate": 30,
+    "height": 1080,
+    "resizeMode": "none",
+    "width": 1920
+  },
+  "seconds": 10.00559999999404,
+  "presentedFrames": 291,
+  "uniqueFrames": 290,
+  "uniqueFPS": 28.98376908932725,
+  "decodedFPS": 30.083153434094836,
+  "width": 1920,
+  "height": 1080,
+  "dropped": 0,
+  "renderer": {
+    "fps": 23,
+    "cpuSubmissionMs": 0.16666666666666666,
+    "drawCalls": 2,
+    "triangles": 12800,
+    "motes": 160,
+    "pixelRatio": 1,
+    "quality": "economy",
+    "width": 1920,
+    "height": 842
+  },
+  "passed": true
+}

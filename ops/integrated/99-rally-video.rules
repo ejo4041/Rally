@@ -1,0 +1,1 @@
+SUBSYSTEM=="video4linux", KERNEL=="video42", ATTR{name}=="Rally_Presence", OWNER="hack", GROUP="video", MODE="0660"

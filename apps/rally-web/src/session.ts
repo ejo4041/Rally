@@ -29,7 +29,7 @@ export class MeetingSession {
   replace(meeting: RecordView) {
     if (meeting.id !== this.meeting.id)
       throw new Error("Wrong meeting snapshot");
-    if (meeting.epoch < this.meeting.epoch) return;
+    if (meeting.epoch < this.meeting.epoch || (meeting.sceneRevision ?? 0) < (this.meeting.sceneRevision ?? 0)) return;
     // A snapshot requested before a final event may arrive after it. Keep newer
     // revisions until the next authoritative read includes them.
     const turns = new Map(meeting.turns.map((turn) => [turn.id, turn]));
@@ -107,6 +107,9 @@ export class MeetingSession {
           m.epoch = Math.max(m.epoch, data.epoch);
         if (data?.type === "pause") m.paused = true;
         if (data?.type === "resume") m.paused = false;
+        return true;
+      case "speech.playback":
+        if (data.epoch === m.epoch) m.playback = data;
         return true;
       case "assessment":
         return true; // The embedded recommendation is not an approved intervention.

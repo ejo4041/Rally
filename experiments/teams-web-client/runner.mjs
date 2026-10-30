@@ -1,3 +1,4 @@
+import {acquireTeamsLock} from '../teams-common/lock.mjs';
 import {chromium} from '../teams-audio/node_modules/playwright/index.mjs';
 import {readFile,writeFile} from 'node:fs/promises';
 import {spawn,execFileSync} from 'node:child_process';
@@ -90,8 +91,9 @@ async function tick(){
  if(current){if(!result.job||result.job.id!==current.id||result.job.leaveRequested||!['joining','lobby','connected'].includes(result.job.state))return finish('left',result.job?.leaveRequested?'host_leave':'job_no_longer_active');if(current.preparing)return api('update',{id:current.id,state:'joining'});return inspect();}
  if(result.job?.claimed){const job=result.job;void launch(job).catch(()=>{if(current?.id===job.id)void finish('failed','browser_start_failed');});}
 }
-process.on('SIGTERM',()=>{quitting=true;void finish().finally(()=>process.exit());});
-process.on('SIGINT',()=>{quitting=true;void finish().finally(()=>process.exit());});
+process.on('SIGTERM',()=>{quitting=true;void finish().finally(()=>{releaseTeamsLock();process.exit();});});
+process.on('SIGINT',()=>{quitting=true;void finish().finally(()=>{releaseTeamsLock();process.exit();});});
+const releaseTeamsLock=await acquireTeamsLock();
 // A crash/restart never resumes or rejoins a prior meeting.
 try{unit('stop');}catch{}
 console.log('Normal Teams queue runner ready; transcription requires host opt-in.');

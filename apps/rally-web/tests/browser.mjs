@@ -330,6 +330,9 @@ try {
   );
   await page.locator("#audio-mode").selectOption("microphone");
   await page.evaluate(() => (fixtureAudio.streams = []));
+  const firstHeartbeat = page.waitForResponse((response) =>
+    response.url().endsWith("/heartbeat") && response.status() === 200,
+  );
   await page.locator("#consent").check();
   await page.locator("#start").click();
   await page.waitForFunction(() =>
@@ -337,6 +340,12 @@ try {
   );
   await page.waitForFunction(
     () => document.querySelectorAll(".turn").length === 1,
+  );
+  await firstHeartbeat;
+  // Observe the actual periodic renewal, beyond the immediate publication call.
+  await page.waitForResponse((response) =>
+    response.url().endsWith("/heartbeat") && response.status() === 200,
+    { timeout: 25000 },
   );
   const transport = await (
     await page.request.get(base + "/api/test/state")
@@ -917,6 +926,29 @@ try {
   await page.waitForFunction(
     () => document.querySelector("#report-status").textContent === "Ready",
   );
+  // A renewal refusal must stop the actual published track, not reconnect or
+  // request a report automatically. Server expiry is independently clock-tested.
+  const leaseMeeting = await (await page.request.post(base + "/api/meetings", {
+    data: { title: "Capture renewal check", agenda: "Check local capture cleanup", durationMinutes: 3 },
+  })).json();
+  await page.route(`**/api/meetings/${leaseMeeting.id}/heartbeat`, (route) =>
+    route.fulfill({ status: 409, contentType: "application/json", body: JSON.stringify({ error: "Audio is off; reconnect explicitly." }) }),
+  );
+  await page.evaluate((meetingId) => { location.hash = `meeting/${meetingId}`; }, leaseMeeting.id);
+  await page.waitForFunction(() => document.querySelector("#meeting-title").textContent === "Capture renewal check");
+  await page.locator("#audio-mode").selectOption("microphone");
+  await page.locator("#consent").check();
+  const sessionsBeforeLease = (await (await page.request.get(base + "/api/test/state")).json()).speechSessions;
+  await page.locator("#start").click();
+  await page.waitForFunction(() => document.querySelector("#connection-status").textContent.includes("Audio disconnected"));
+  assert.equal(await page.evaluate(() => fixtureAudio.streams.every((stream) => stream.getTracks().every((track) => track.readyState === "ended"))), true);
+  const refusedLease = await (await page.request.get(base + `/api/meetings/${leaseMeeting.id}`)).json();
+  assert.equal(refusedLease.reportStatus, "none");
+  assert.equal((await (await page.request.get(base + "/api/test/state")).json()).speechSessions, sessionsBeforeLease + 1);
+  await page.unroute(`**/api/meetings/${leaseMeeting.id}/heartbeat`);
+  await page.locator("#end").click();
+  await page.waitForFunction(() => document.querySelector("#phase").textContent === "Ended");
+  await page.waitForFunction(() => document.querySelector("#report-status").textContent === "Ready");
   await context.clearCookies();
   await page.evaluate(() => document.querySelector("#usage-button").click());
   await page.locator("#auth-screen").waitFor({ state: "visible" });
@@ -955,6 +987,7 @@ try {
       "agenda edit and failed preparation retry",
       "actual browser audio reaches backend",
       "reload reconnects without duplicating ASR sessions",
+      "publication renews the capture lease periodically; renewal refusal stops real tracks without automatic restart or analysis",
       "canonical final revisions, reversible session-scoped names, stale-report disclosure and explicit reanalysis",
       "approved intervention only, pause/dismiss and mute",
       "end stops tracks and drains final turn into complete report",

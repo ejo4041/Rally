@@ -20,8 +20,9 @@ Use `credentials: 'include'` for fetch. Use the same hostname for frontend and A
 | `GET /meetings/:id` | Authoritative meeting snapshot including all finalized `turns`. |
 | `POST /meetings/:id/prepare` | Retry agenda generation for draft/ready meeting. |
 | `PATCH /meetings/:id/plan` | Complete `Plan`: objective, topics with stable ID/title/outcome/minutes/status, durationMinutes, wrapMinutes. Non-parked topic budgets plus wrap-up must equal duration. |
-| `POST /meetings/:id/start` | `{consented:true}` → `{meeting,connection:{url,token,room}}`. Call only after plan review and consent. |
-| `POST /meetings/:id/connection` | Fresh room credentials for an active meeting. |
+| `POST /meetings/:id/start` | `{consented:true}` → `{meeting,connection:{url,token,room,captureToken}}`. Call only after plan review and consent. |
+| `POST /meetings/:id/connection` | Fresh room credentials and current capture token; does not renew an active meeting. |
+| `POST /meetings/:id/heartbeat` | `{captureToken}` → `{expiresAt}`; owner-only renewal after publication and every 20 seconds. Expired/stale tokens return 409. [Lease policy](capture-lease.md). |
 | `POST /meetings/:id/reconnect` | `{consented:true}` → explicitly replace failed capture/ASR with a new session; labels restart and transcript remains saved. |
 | `POST /meetings/:id/commands` | `{type:'pause'|'resume'|'dismiss'|'request_guidance'}` → meeting. Pause affects moderation, not capture. |
 | `PATCH /meetings/:id/speakers` | `{speakerId,name}` → corrected label mapping; `name` is trimmed 1–100 characters or `null` to clear. Changes during report processing return 409. |

@@ -51,3 +51,7 @@ These distinguish documented capability, access experiments, actual model measur
 - [Remote access](remote-access.md), [repository skills/tooling](aihero-skills.md).
 
 Teams voice preparation: [Meta MMS output and remaining live moderation connection](teams-mms-output.md).
+
+- [Living Silk implementation checkpoint and remaining plan](living-presence-implementation.md)
+
+- [Living presence operations](living-presence-operations.md) — native Teams camera, audio, scoped renderer, build/checks and rollback.

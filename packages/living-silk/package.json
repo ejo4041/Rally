@@ -1,0 +1,1 @@
+{"name":"living-silk","version":"1.0.1-rally","private":true,"type":"module","exports":{".":"./src/index.ts","./controls.css":"./src/controls.css"},"dependencies":{"three":"0.180.0"},"devDependencies":{"@types/three":"^0.180.0"}}

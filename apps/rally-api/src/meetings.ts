@@ -20,6 +20,14 @@ export class Meetings {
     this.providers = providers;
   }
   save(m: Meeting) {
+    const stored = this.store.db
+      .prepare("SELECT body FROM meetings WHERE id=?")
+      .get(m.id) as { body: string } | undefined;
+    m.sceneRevision =
+      Math.max(
+        m.sceneRevision ?? 0,
+        stored ? (JSON.parse(stored.body).sceneRevision ?? 0) : 0,
+      ) + 1;
     this.store.db
       .prepare(
         "INSERT INTO meetings VALUES(?,?,?) ON CONFLICT(id) DO UPDATE SET body=excluded.body",
@@ -33,7 +41,12 @@ export class Meetings {
     const m = this.get(id);
     if (m.startedAt === null) return;
     const exclusions = (m.audioExclusions ??= []);
-    if (exclusions.some((item) => item.id === shield.id)) return;
+    const existing = exclusions.find((item) => item.id === shield.id);
+    if (existing) {
+      existing.maxEndMs = Math.max(existing.maxEndMs, shield.end - m.startedAt);
+      this.save(m);
+      return;
+    }
     exclusions.push({
       id: shield.id,
       startMs: Math.max(0, shield.start - m.startedAt),

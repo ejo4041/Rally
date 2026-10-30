@@ -1,3 +1,11 @@
+import { sceneFor } from "../../../packages/rally-presence/scene.ts";
+import { recentTurns } from "./assessment-context.ts";
+import {
+  actuate,
+  hold,
+  initialPresence,
+  type Axis,
+} from "../../../packages/rally-presence/state.ts";
 import type { SpeechOutput } from "./speech.ts";
 import { retainLegacyNotes } from "./report-notes.ts";
 import { randomUUID } from "node:crypto";
@@ -33,6 +41,11 @@ type Active = {
   lastIntervention: number;
   rotationAt: number;
   offset: number;
+  captureToken: string;
+  leaseUntil: number;
+  lastStart: number;
+  tokens: number;
+  refilledAt: number;
 };
 export class Engine {
   meetings: Meetings;
@@ -62,6 +75,7 @@ export class Engine {
       let changed = false;
       if (m.phase === "live") {
         m.phase = "interrupted";
+        if (m.presence) m.presence = hold(m.presence, Date.now());
         changed = true;
       }
       if (m.reportStatus === "processing") {
@@ -74,6 +88,16 @@ export class Engine {
         meetings.save(m);
       }
     }
+  }
+  private cancelSpeech(m: Meeting) {
+    this.speech?.cancel(m.id);
+    const saved = this.meetings.get(m.id);
+    return {
+      ...m,
+      playback: saved.playback,
+      lastSpokenEnd: this.speech?.lastEnd(m.id) ?? saved.lastSpokenEnd,
+      sceneRevision: saved.sceneRevision,
+    };
   }
   snapshot(id: string): Snapshot {
     const meeting = this.meetings.get(id);
@@ -95,6 +119,18 @@ export class Engine {
       void session
         .send({ version: 1, id: randomUUID(), meetingId: id, type, data })
         .catch(() => {});
+    if (session && type !== "transcript.partial") {
+      const scene = sceneFor(this.meetings.get(id));
+      void session
+        .send({
+          version: 1,
+          id: randomUUID(),
+          meetingId: id,
+          type: "presence.scene",
+          data: scene,
+        })
+        .catch(() => {});
+    }
   }
   gap(id: string, reason: string, mode: "capture" | "continuity" = "capture") {
     this.speech?.cancel(id);
@@ -163,6 +199,10 @@ export class Engine {
     )
       return;
     if (old) {
+      if (m.presence) m.presence = hold(m.presence, Date.now());
+      m.concerns = m.concerns?.filter((c) => !(key in c.revisions));
+      m.assessment = null;
+      this.meetings.save(m);
       this.speech?.cancel(id);
       this.emit(id, "speech.cancel", {
         reason: "Transcript evidence was revised",
@@ -209,7 +249,11 @@ export class Engine {
     return opened;
   }
 
-  async start(m: Meeting, consented: boolean) {
+  async start(
+    m: Meeting,
+    consented: boolean,
+    mode: "browser" | "teams" = "browser",
+  ) {
     if (!consented) throw new HttpError("Recording consent required");
     if (!["ready", "interrupted"].includes(m.phase) || !m.plan)
       throw new HttpError("Prepare and review the meeting plan first", 409);
@@ -237,14 +281,22 @@ export class Engine {
       lastIntervention: 0,
       rotationAt: Date.now() + this.config.asrRotationMs,
       offset: m.startedAt ? Date.now() - m.startedAt : 0,
+      captureToken: randomUUID(),
+      leaseUntil: Date.now() + this.config.captureLeaseMs,
+      lastStart: 0,
+      tokens: 3,
+      refilledAt: Date.now(),
     };
     this.active.set(m.id, state);
     const previous = m.phase;
     const previousStartedAt = m.startedAt;
     m.phase = "live";
+    m.captureMode = mode;
+    m.captureEpoch = m.epoch + 1;
     m.startedAt ??= Date.now();
-    this.speech?.cancel(m.id);
+    m = this.cancelSpeech(m);
     m.epoch++;
+    if (m.presence) m.presence = hold(m.presence, Date.now());
     m.error = null;
     this.meetings.save(m);
     try {
@@ -268,7 +320,10 @@ export class Engine {
         (reason) => this.gap(m.id, reason),
       );
       state.asr = await this.openASR(m, state);
-      const connection = await state.media.connection();
+      const connection = await state.media.connection(
+        mode === "teams" ? "capture" : "host",
+      );
+      state.leaseUntil = Date.now() + this.config.captureLeaseMs;
       const current = this.meetings.get(m.id);
       if (current.report) {
         current.reportStale = true;
@@ -276,12 +331,12 @@ export class Engine {
       }
       state.timer = setInterval(
         () => void this.tick(m.id).catch(() => {}),
-        this.config.assessmentMs,
+        Math.min(500, this.config.assessmentMs),
       );
       state.timer.unref();
       return {
         meeting: this.meetings.get(m.id),
-        connection,
+        connection: { ...connection, captureToken: state.captureToken },
       };
     } catch (error) {
       state.ending = true;
@@ -299,10 +354,43 @@ export class Engine {
       this.starting.delete(m.id);
     }
   }
-  async connection(m: Meeting) {
+  async observerConnection(m: Meeting) {
     const state = this.active.get(m.id);
-    if (!state?.media) throw new HttpError("Start the meeting first", 409);
-    return state.media.connection();
+    if (m.captureMode !== "teams" || !state?.media || state.ending)
+      throw new HttpError("Teams capture is not live", 409);
+    return state.media.connection("host");
+  }
+  async rendererConnection(m: Meeting) {
+    const state = this.active.get(m.id);
+    if (!state?.media || state.ending)
+      throw new HttpError("Meeting is not live", 409);
+    return state.media.connection("renderer");
+  }
+  async connection(m: Meeting) {
+    if (m.captureMode === "teams")
+      throw new HttpError("The Teams runner owns capture", 409);
+    const state = this.active.get(m.id);
+    if (!state?.media || state.ending || Date.now() >= state.leaseUntil)
+      throw new HttpError("Audio is off; reconnect explicitly.", 409);
+    return {
+      ...(await state.media.connection()),
+      captureToken: state.captureToken,
+    };
+  }
+  heartbeat(m: Meeting, captureToken: unknown) {
+    const state = this.active.get(m.id);
+    if (
+      !state ||
+      this.closed ||
+      state.ending ||
+      m.phase !== "live" ||
+      typeof captureToken !== "string" ||
+      captureToken !== state.captureToken ||
+      Date.now() >= state.leaseUntil
+    )
+      throw new HttpError("Audio is off; reconnect explicitly.", 409);
+    state.leaseUntil = Date.now() + this.config.captureLeaseMs;
+    return { expiresAt: state.leaseUntil };
   }
   private async rotateASR(m: Meeting, state: Active) {
     const current = () =>
@@ -351,7 +439,27 @@ export class Engine {
   }
   async tick(id: string, force = false) {
     const state = this.active.get(id);
-    if (this.closed || !state || state.busy || state.ending) return;
+    if (this.closed || !state || state.ending) return;
+    if (Date.now() >= state.leaseUntil) {
+      this.gap(
+        id,
+        "Browser connection expired. Audio is stopping; reconnect explicitly.",
+      );
+      await this.interrupt(this.meetings.get(id));
+      return;
+    }
+    if (state.rotating) return;
+    // Lifecycle work must run even while a model request is in flight.
+    if (Date.now() >= state.rotationAt) {
+      const handoff = this.rotateASR(this.meetings.get(id), state);
+      this.handoffs.add(handoff);
+      try {
+        if (!(await handoff)) return;
+      } finally {
+        this.handoffs.delete(handoff);
+      }
+    }
+    if (state.busy) return;
     let snapshot = this.snapshot(id),
       m = snapshot.meeting;
     if (m.phase !== "live") return;
@@ -360,6 +468,19 @@ export class Engine {
     // Milestone changes permit reassessment without calling on every silent tick.
     const signature = `${m.epoch}:${snapshot.turns.map((t) => `${t.id}@${t.revision}`).join(",")}:${Math.floor(snapshot.elapsedSeconds / 60)}`;
     if (!force && !shouldRotate && signature === state.signature) return;
+    const now = Date.now();
+    state.tokens = Math.min(3, state.tokens + (now - state.refilledAt) / 5000);
+    state.refilledAt = now;
+    const cadence =
+      (m.assessment?.urgency ?? 0) >= 0.6 ? 2000 : this.config.assessmentMs;
+    if (
+      !force &&
+      (now - state.lastStart < Math.max(2000, cadence) || state.tokens < 1)
+    )
+      return;
+    if (!force && state.tokens < 1) return;
+    if (!force) state.tokens--;
+    state.lastStart = now;
     state.busy = true;
     state.signature = signature;
     try {
@@ -376,26 +497,90 @@ export class Engine {
       }
       if (m.paused || m.phase !== "live" || !snapshot.turns.length) return;
       const epoch = m.epoch;
+      const supplied = recentTurns(snapshot.turns);
+      if (!supplied.length)
+        throw new HttpError(
+          "Latest transcript segment exceeds assessment context capacity; no model call was made.",
+        );
       const result = assessmentSchema.parse(
         await this.meetings.providers.assess({
           ...snapshot,
-          turns: snapshot.turns.slice(-40),
+          turns: supplied,
         }),
       );
-      validateEvidence(result, snapshot.turns.slice(-40));
+      validateEvidence(result, supplied);
       const currentTurns = new Map(
         this.meetings.turns(id).map((t) => [t.id, t.revision]),
       );
-      if (snapshot.turns.some((t) => currentTurns.get(t.id) !== t.revision))
+      if (
+        supplied.some((t) => currentTurns.get(t.id) !== t.revision) ||
+        (m.concerns ?? []).some((c) =>
+          Object.entries(c.revisions).some(
+            ([id, revision]) => currentTurns.get(id) !== revision,
+          ),
+        )
+      )
         return;
       const current = this.meetings.get(id);
       if (
         current.epoch !== epoch ||
         current.paused ||
         current.phase !== "live" ||
-        state.ending
+        state.ending || state.rotating
       )
         return;
+      if (result.plan) {
+        validatePlan(result.plan);
+        if (!result.planReason.trim())
+          throw new HttpError("Plan revision needs a reason");
+      }
+      if (
+        result.focus &&
+        !(result.plan ?? current.plan)?.topics.some(
+          (t) => t.id === result.focus!.intendedTopicId,
+        )
+      )
+        throw new HttpError("Focus must reference an existing topic");
+      if (result.focus?.detour && !result.focus.evidence.length)
+        throw new HttpError("Detours require evidence");
+      const urgent =
+        (result.urgency ?? 0) >= 0.8 && !!result.intervention?.evidence.length;
+      if (
+        result.intervention &&
+        result.intervention.text.trim().split(/\s+/u).length >
+          (urgent ? 20 : 40)
+      )
+        throw new HttpError("Intervention exceeds spoken word limit");
+      if (result.concerns) {
+        const memory = new Map((current.concerns ?? []).map((c) => [c.id, c]));
+        for (const c of result.concerns)
+          memory.set(c.id, {
+            ...c,
+            updatedAt: Date.now(),
+            revisions: Object.fromEntries(
+              c.evidence.map((id) => [id, currentTurns.get(id)!]),
+            ),
+          });
+        const newest = [...memory.values()].sort(
+          (a, b) => b.updatedAt - a.updatedAt,
+        );
+        current.concerns = [
+          ...newest.filter((c) => !c.resolved).slice(0, 8),
+          ...newest.filter((c) => c.resolved).slice(0, 8),
+        ];
+      }
+      if (result.affect && result.affect.evidence.length) {
+        const key = result.affect.evidence
+          .map((id) => `${id}@${currentTurns.get(id)}`)
+          .sort()
+          .join("|");
+        current.presence = actuate(
+          current.presence ?? initialPresence(Date.now()),
+          result.affect.forces as Record<Axis, number | null>,
+          key,
+          Date.now(),
+        );
+      }
       current.assessment = result;
       current.progress = result.progress;
       current.error = null;
@@ -409,16 +594,25 @@ export class Engine {
           reason: result.planReason,
           plan: result.plan,
         });
-        this.emit(id, "plan.updated", {
-          plan: result.plan,
-          reason: result.planReason,
-        });
       }
+      let approved:
+        | { id: string; at: number; text: string; kind: string; epoch: number }
+        | undefined;
+      const playback = this.speech?.activity(id);
+      const playbackBusy =
+        playback &&
+        ["armed", "playing"].includes(playback.state) &&
+        playback.until > Date.now();
+      const lastEnd = Math.max(
+        current.lastSpokenEnd ?? 0,
+        this.speech?.lastEnd(id) ?? 0,
+        state.lastIntervention,
+      );
       if (
         result.intervention &&
+        !playbackBusy &&
         (force ||
-          result.intervention.kind === "wrapup" ||
-          Date.now() - state.lastIntervention >= this.config.cooldownMs)
+          Date.now() - lastEnd >= (urgent ? 15000 : this.config.cooldownMs))
       ) {
         const item = {
           id: randomUUID(),
@@ -428,10 +622,20 @@ export class Engine {
         };
         current.interventions.push(item);
         state.lastIntervention = item.at;
-        this.speech?.offer(id, { ...item, epoch: current.epoch });
-        this.emit(id, "intervention", { ...item, epoch: current.epoch });
+        approved = { ...item, epoch: current.epoch };
       }
+      current.sceneRevision = (current.sceneRevision ?? 0) + 1;
       this.meetings.save(current);
+      // Publish only after the entire validated result has committed.
+      if (result.plan)
+        this.emit(id, "plan.updated", {
+          plan: result.plan,
+          reason: result.planReason,
+        });
+      if (approved) {
+        this.speech?.offer(id, approved);
+        this.emit(id, "intervention", approved);
+      }
       this.emit(id, "assessment", result);
     } catch (error) {
       let current: Meeting;
@@ -462,8 +666,9 @@ export class Engine {
       await this.tick(m.id, true);
       return this.meetings.get(m.id);
     }
-    this.speech?.cancel(m.id);
+    m = this.cancelSpeech(m);
     m.epoch++;
+    if (m.presence) m.presence = hold(m.presence, Date.now());
     if (command.type === "pause") m.paused = true;
     if (command.type === "resume") m.paused = false;
     this.meetings.save(m);
@@ -477,8 +682,9 @@ export class Engine {
     if (m.phase === "ended") throw new HttpError("Meeting has ended", 409);
     const plan = planSchema.parse(input);
     validatePlan(plan);
-    this.speech?.cancel(m.id);
+    m = this.cancelSpeech(m);
     m.epoch++;
+    if (m.presence) m.presence = hold(m.presence, Date.now());
     m.plan = plan;
     m.originalPlan ??= structuredClone(plan);
     if (m.phase === "draft") m.phase = "ready";
@@ -505,8 +711,9 @@ export class Engine {
     if (name === null) delete m.speakerNames[speakerId];
     else m.speakerNames[speakerId] = name;
     if (m.report) m.reportStale = true;
-    this.speech?.cancel(m.id);
+    m = this.cancelSpeech(m);
     m.epoch++;
+    if (m.presence) m.presence = hold(m.presence, Date.now());
     this.meetings.save(m);
     this.emit(m.id, "speaker.updated", { speakerId, name });
     return m;
@@ -517,8 +724,9 @@ export class Engine {
     if (m.phase === "ended") return m;
     const state = this.active.get(m.id);
     if (state?.ending) throw new HttpError("Meeting is ending", 409);
-    this.speech?.cancel(m.id);
+    m = this.cancelSpeech(m);
     m.epoch++;
+    if (m.presence) m.presence = hold(m.presence, Date.now());
     this.meetings.save(m);
     if (state) {
       state.ending = true;
@@ -635,16 +843,24 @@ export class Engine {
     if (!state || state.ending) return;
     state.ending = true;
     clearInterval(state.timer);
-    this.speech?.cancel(m.id);
+    m = this.cancelSpeech(m);
     m.epoch++;
+    if (m.presence) m.presence = hold(m.presence, Date.now());
     this.meetings.save(m);
-    await state.asr?.end();
-    await state.media?.close();
-    this.active.delete(m.id);
-    m = this.meetings.get(m.id);
-    m.phase = "interrupted";
-    m.error = "Capture stopped; reconnect explicitly.";
-    this.meetings.save(m);
+    try {
+      await state.asr?.end();
+    } finally {
+      state.asr?.close();
+      try {
+        await state.media?.close();
+      } finally {
+        this.active.delete(m.id);
+        m = this.meetings.get(m.id);
+        m.phase = "interrupted";
+        m.error = "Capture stopped; reconnect explicitly.";
+        this.meetings.save(m);
+      }
+    }
   }
   async disconnectUser(userId: string) {
     for (const id of this.active.keys()) {
@@ -685,6 +901,7 @@ export class Engine {
           m.phase = "interrupted";
           this.speech?.cancel(m.id);
           m.epoch++;
+          if (m.presence) m.presence = hold(m.presence, Date.now());
           this.meetings.save(m);
         }
       } catch {}

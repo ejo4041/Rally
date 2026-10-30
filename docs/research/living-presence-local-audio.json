@@ -1,0 +1,12 @@
+{
+  "at": "2026-10-30T18:17:41.319Z",
+  "model": "facebook/mms-tts-eng",
+  "revision": "c71de0fe7204c83f1c10820a7d696d0b450048ba",
+  "seconds": 4.064,
+  "maxOutgoingLevel": 1,
+  "maxIncomingLevel": 0,
+  "levelAfterStop": 0,
+  "featureFrames": 154,
+  "paidCalls": 0,
+  "passed": true
+}

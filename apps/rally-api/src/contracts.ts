@@ -1,3 +1,4 @@
+import type { Presence } from "../../../packages/rally-presence/state.ts";
 import { z } from "zod";
 
 const text = z.string().min(1).max(2000);
@@ -28,7 +29,48 @@ export const issues = [
   "unclear_outcome",
   "missing_action_details",
 ] as const;
+export const concernSchema = z.object({
+  id: z.string().min(1).max(80),
+  description: z.string().min(1).max(300),
+  resolved: z.boolean(),
+  evidence: evidence.min(1),
+});
+export type Concern = z.infer<typeof concernSchema> & {
+  updatedAt: number;
+  revisions: Record<string, number>;
+};
 export const assessmentSchema = z.object({
+  concerns: z.array(concernSchema).max(8).nullable().optional(),
+  focus: z
+    .object({
+      intendedTopicId: z.string().max(80),
+      detour: z.string().max(140).nullable(),
+      evidence,
+    })
+    .nullable()
+    .optional(),
+  urgency: z.number().min(0).max(1).optional(),
+  affect: z
+    .object({
+      forces: z.object(
+        Object.fromEntries(
+          [
+            "joy",
+            "curiosity",
+            "worry",
+            "irritation",
+            "sadness",
+            "confidence",
+            "energy",
+            "sass",
+          ].map((a) => [a, z.number().min(-1).max(1).nullable()]),
+        ),
+      ),
+      evidence,
+      rationale: z.string().max(500),
+    })
+    .nullable()
+    .optional(),
   health: z.number().int().min(0).max(5).nullable(),
   reason: text,
   issues: z.array(z.enum(issues)),
@@ -128,6 +170,20 @@ export type Meeting = {
   progress: string;
   speakerNames: Record<string, string>;
   assessment: Assessment | null;
+  presence?: Presence;
+  captureMode?: "browser" | "teams";
+  captureEpoch?: number;
+  concerns?: Concern[];
+  sceneRevision?: number;
+  playback?: {
+    id: string;
+    interventionId: string;
+    text: string;
+    state: string;
+    at: number;
+    until: number;
+  };
+  lastSpokenEnd?: number;
   interventions: { id: string; at: number; text: string; kind: string }[];
   reportStatus: "none" | "processing" | "ready" | "failed";
   reportStale?: boolean;
@@ -189,7 +245,9 @@ export type LiveEvent = {
   data: unknown;
 };
 export interface MediaSession {
-  connection(): Promise<{ url: string; token: string; room: string }>;
+  connection(
+    role?: "host" | "capture" | "renderer",
+  ): Promise<{ url: string; token: string; room: string }>;
   send(event: LiveEvent): Promise<void>;
   close(): Promise<void>;
 }

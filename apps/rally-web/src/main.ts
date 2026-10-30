@@ -1,3 +1,5 @@
+import {setupTeamsPresence} from "./teams-presence.ts";
+import { updatePresence, disposePresence, presenceSpeech, unlockPresenceAudio } from "./presence.ts";
 import {
   api,
   APIError,
@@ -47,6 +49,7 @@ const state = {
   ending: false,
 };
 const speech = createSpeechPlayer({
+  playback: presenceSpeech,
   current: (prompt) => {
     const s = state.session;
     return (
@@ -67,6 +70,7 @@ const speech = createSpeechPlayer({
       $("capture-label").textContent = "Audio shielded while Rally speaks";
   },
 });
+const teamsPresence = setupTeamsPresence(() => state.session?.meeting, () => scheduleRefresh(), fail);
 const audioCheck = setupAudioCheck();
 const followUp = setupFollowUp(() => state.session?.meeting);
 const teams = setupTeams((id) => {
@@ -104,6 +108,7 @@ function showAuth() {
   $("workspace").hidden = true;
 }
 async function signOutLocal() {
+  disposePresence();
   speech.cancel();
   followUp.clear();
   input("spoken-prompts").checked = false;
@@ -186,6 +191,7 @@ async function loadHistory() {
     .join("");
 }
 function home() {
+  disposePresence();
   speech.cancel();
   audioCheck.stop();
   const media = state.media;
@@ -327,11 +333,12 @@ function render() {
   ])
     button(id).disabled = state.busy;
   if (!session) return;
+  teamsPresence.update();
   const m = session.meeting,
     live = m.phase === "live",
     pre =
       ["draft", "ready", "interrupted"].includes(m.phase) ||
-      (live && !state.capture);
+      (live && !state.capture && m.captureMode !== "teams");
   $("meeting-title").textContent = m.title;
   $("meeting-meta").textContent =
     `${m.durationMinutes} minutes planned · ${m.participants.length} roster names${m.paused ? " · Moderator paused" : ""}`;
@@ -341,7 +348,7 @@ function render() {
   $("record-error").textContent = error || "";
   $("connection-status").hidden = !state.status;
   $("connection-status").textContent = state.status;
-  $("restart-session-label").hidden = !(live && !state.capture);
+  $("restart-session-label").hidden = !(live && !state.capture && m.captureMode !== "teams");
   $("start-panel").hidden = !pre;
   button("test-voice").disabled =
     state.busy || !!state.capture || m.phase === "live";
@@ -381,6 +388,7 @@ function render() {
   $("assessment-note").textContent = m.assessment
     ? `${m.assessment.reason}${m.assessment.issues.length ? " · " + m.assessment.issues.map(label).join(", ") : ""}`
     : "";
+  updatePresence(m);
   renderTranscript();
   $("partial").textContent = session.partial;
   const speakerIds = [
@@ -395,13 +403,17 @@ function render() {
         .join("")
     : '<p class="small muted">No attributable voices yet.</p>';
   $("controls").hidden = !(live || state.capture);
+  const nativeSpeaking = live && m.captureMode === "teams" && !!m.playback && ["armed", "playing"].includes(m.playback.state);
+  button("stop-speaking").hidden = !(speech.isActive() || nativeSpeaking);
+  input("spoken-prompts").closest("label")!.hidden = m.captureMode === "teams";
+  if (m.captureMode === "teams") $("speech-status").textContent = nativeSpeaking ? "Rally is speaking into Teams" : "Voice is delivered by Rally in Teams";
   $("capture-label").textContent = state.capture
     ? speech.isPlaying()
       ? "Audio shielded while Rally speaks"
       : state.muted
         ? "Audio muted"
         : "Listening · Muse transcription"
-    : "Audio off here";
+    : live && m.captureMode === "teams" ? "Listening in Teams · Muse transcription" : "Audio off here";
   button("mute").disabled = !state.capture || state.busy;
   button("mute").textContent = state.muted ? "Unmute audio" : "Mute audio";
   button("pause").textContent = m.paused ? "Resume Rally" : "Pause Rally";
@@ -1018,6 +1030,7 @@ button("check-audio").onclick = () => {
 };
 
 input("spoken-prompts").onchange = () => {
+  if (input("spoken-prompts").checked) unlockPresenceAudio();
   if (!input("spoken-prompts").checked) speech.cancel();
   else
     void api<{ enabled: boolean; ready: boolean }>("/speech/status")
@@ -1036,4 +1049,4 @@ button("stop-speaking").onclick = () => {
   if (state.session?.meeting.phase === "live") void command("dismiss");
 };
 
-button("test-voice").onclick = () => void speech.test();
+button("test-voice").onclick = () => { unlockPresenceAudio(); void speech.test(); };

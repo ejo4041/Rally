@@ -208,6 +208,16 @@
             </div>
             <p id="record-error" class="banner error" role="alert" hidden></p>
             <p id="connection-status" class="banner" role="status" hidden></p>
+            <section class="card" id="teams-presence-panel">
+              <details><summary>Have Rally join this Teams meeting</summary>
+                <p>Rally joins as a meeting guide with its own animated camera and voice. Review the agenda first.</p>
+                <label>Teams invitation<input id="teams-presence-url" type="url" placeholder="https://teams.microsoft.com/meet/…"></label>
+                <label class="check"><input id="teams-presence-consent" type="checkbox">Everyone is aware and consents to Rally joining, sending audio to Meta, saving the transcript, and speaking into the call.</label>
+                <p id="teams-presence-status" role="status">Checking Teams presence…</p>
+                <button id="teams-presence-join" class="primary" disabled>Join with voice and video</button>
+                <button id="teams-presence-leave" class="danger" hidden>Leave and end meeting</button>
+              </details>
+            </section>
             <section class="card setup" id="start-panel">
               <h2 id="start-title">Review the plan. Then bring everyone in.</h2>
               <p class="small muted">

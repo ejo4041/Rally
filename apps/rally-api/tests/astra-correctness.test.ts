@@ -260,6 +260,7 @@ test("every meeting mutation and retrieval rejects another owner", async (t) => 
     ["/start", "POST", { consented: true }],
     ["/reconnect", "POST", { consented: true }],
     ["/connection", "POST"],
+    ["/heartbeat", "POST", { captureToken: "other-host" }],
     ["/commands", "POST", { type: "pause" }],
     ["/end", "POST"],
     ["/report", "GET"],

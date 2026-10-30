@@ -1,0 +1,135 @@
+{
+  "completed": 6,
+  "failure": null,
+  "knownUSD": 0.055675999999999996,
+  "unknown": 0,
+  "results": [
+    {
+      "scenario": 4,
+      "input": "Alex: Agreed, login only this release. Pat owns export next week. Sam: Confirmed. We are back on the agenda.",
+      "latencyMs": 5462,
+      "result": {
+        "concerns": [],
+        "focus": {
+          "intendedTopicId": "owners",
+          "detour": null,
+          "evidence": [
+            "scenario:4"
+          ]
+        },
+        "urgency": 0.15,
+        "affect": {
+          "forces": {
+            "joy": null,
+            "curiosity": null,
+            "worry": -0.2,
+            "irritation": -0.2,
+            "sadness": null,
+            "confidence": null,
+            "energy": null,
+            "sass": null
+          },
+          "evidence": [
+            "scenario:3",
+            "scenario:4"
+          ],
+          "rationale": "Recovery and agreement in turn 4 supports clearing residual worry/irritation."
+        },
+        "health": 5,
+        "reason": "Tangent repaired and scope agreement voiced; remaining work is confirming owners within time.",
+        "issues": [],
+        "evidence": [
+          "scenario:3",
+          "scenario:4"
+        ],
+        "progress": "Scope converged to login-only this release with export next week; owners discussion named Pat for export but needs confirmation.",
+        "intervention": null,
+        "plan": {
+          "objective": "Decide launch scope and owners",
+          "topics": [
+            {
+              "id": "scope",
+              "title": "Launch scope",
+              "outcome": "Decide included work",
+              "minutes": 10,
+              "status": "done"
+            },
+            {
+              "id": "owners",
+              "title": "Owners",
+              "outcome": "Confirm responsibility",
+              "minutes": 3,
+              "status": "active"
+            }
+          ],
+          "durationMinutes": 15,
+          "wrapMinutes": 2
+        },
+        "planReason": "Scope agreement stated in turn 4; moving to owners to confirm responsibility within remaining time."
+      },
+      "rejected": []
+    },
+    {
+      "scenario": 5,
+      "input": "Sam: Actually stop, forget launch scope. I am going to spend the rest of this meeting on phone deals. Alex: We just agreed to return to scope, and we have two minutes to confirm owners. Sam: No, phone deals first.",
+      "latencyMs": 4741,
+      "result": {
+        "concerns": [
+          {
+            "id": "drift-1",
+            "description": "Repeated phone-deals derailment blocking owners confirmation",
+            "resolved": false,
+            "evidence": [
+              "scenario:5"
+            ]
+          }
+        ],
+        "focus": {
+          "intendedTopicId": "owners",
+          "detour": "phone deals",
+          "evidence": [
+            "scenario:5"
+          ]
+        },
+        "urgency": 0.82,
+        "affect": {
+          "forces": {
+            "joy": null,
+            "curiosity": null,
+            "worry": 0.5,
+            "irritation": 0.5,
+            "sadness": null,
+            "confidence": null,
+            "energy": 0.3,
+            "sass": null
+          },
+          "evidence": [
+            "scenario:5"
+          ],
+          "rationale": "Deliberate repeat derailment after repair threatens owners confirmation."
+        },
+        "health": 2,
+        "reason": "Explicit refusal to stay on scope after prior repair, with 2 minutes left for owners decision.",
+        "issues": [
+          "drift"
+        ],
+        "evidence": [
+          "scenario:3",
+          "scenario:4",
+          "scenario:5"
+        ],
+        "progress": "Scope converged to login-only, export next week; owners confirmation interrupted by renewed phone-deals push.",
+        "intervention": {
+          "text": "Park phones and confirm owners now: Pat for export? 2 minutes left to lock launch scope.",
+          "kind": "redirect",
+          "evidence": [
+            "scenario:5"
+          ]
+        },
+        "plan": null,
+        "planReason": ""
+      },
+      "rejected": []
+    }
+  ]
+}

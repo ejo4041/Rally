@@ -6,7 +6,7 @@ The $150 remainder below assumes the full grant is applied and no other usage ex
 
 [Official pricing](https://dev.meta.ai/docs/pricing-rate-limits): Spark input $1.25/M, cached input $0.15/M, output $4.25/M; Voice Transcribe $0.18/hour.
 
-Known estimated spend: **$0.47338150**. Conditional $150 remainder: **$149.52661850**.
+Known tracked estimated spend after runtime reconciliation: **$1.38818810**. Conditional $150 remainder: **$148.61181190**.
 Calls/sessions with unknown cost: **0**. These are excluded from the known total; it is not a complete total if nonzero.
 
 | Time UTC | Test | Model | Seconds | Status | Estimated USD |
@@ -94,3 +94,15 @@ Original 60.336-second synthetic single-voice meeting generated offline with Met
 ## Explicit realistic-report retry
 
 One report-only retry with maximum effort and 32,768 completion-token allowance completed, passed application evidence validation and the case-specific checks. No successful preparation/assessment was repeated. Cost **$0.08957025**, unknown **0**. Cumulative **$0.47338150**, conditional remainder **$149.52661850**. Run `report-retry-1793281702834`. The whole Astra follow-up spent **$0.28876035** across agenda examples, initial failed report, full audio test, and explicit successful retry.
+
+## Living presence schema calibration — October 30
+
+Stage 1: one synthetic on-topic assessment through the production Muse adapter and strict presence schema. Passed in 2.282 seconds; no intervention and no forced affect change. Batch **$0.00407575**, unknown **0**. Central tracked cumulative **$0.47745725**; conditional $150 remainder **$149.52254275**. Billing/grant unverified; deployed user-session usage is recorded separately in its runtime database. The authorized presence experiment ceiling is $3, not a spending target.
+
+Stage 2: five sequential synthetic tangent/repair/relapse assessments. Batch **$0.03679250**, unknown **0**. Presence experiment cumulative **$0.04086825**; central tracked cumulative **$0.51424975**, conditional $150 remainder **$149.48575025**. All strict schemas parsed; one contradictory recovery force was rejected by the controller. Latencies ranged 5.658–8.185 seconds; no model migration or automatic retry.
+
+Stage 3: two targeted repair/relapse retests after supplying precomputed valid-force bounds. Batch **$0.01480775**, unknown **0**. Presence experiment cumulative **$0.05567600**; central tracked cumulative **$0.52905750**, conditional remainder **$149.47094250**. Both commands accepted without contradictory-direction rejection; see [results](living-presence-muse-repair.json).
+
+## Runtime usage reconciliation — October 30
+
+Read-only audit of the integrated runtime ledger imported 105 distinct usage rows, with no duplicated usage IDs against the central log: **$0.85913060**, unknown **0**. These are previously incurred deployment/user-session costs, not a new experiment batch. Combined tracked estimate **$1.38818810**, conditional remainder **$148.61181190**. [Sanitized audit](runtime-usage-reconciliation-2026-10-30.json). Billing/grant still unverified.

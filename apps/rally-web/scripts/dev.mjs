@@ -6,9 +6,9 @@ import { build } from "esbuild";
 const target = new URL(process.env.RALLY_API_URL || "http://127.0.0.1:3001");
 if (target.protocol !== "http:")
   throw new Error("Development API proxy expects a local HTTP server");
-const bundle = () =>
+const bundle = (renderer = false) =>
   build({
-    entryPoints: [fileURLToPath(new URL("../src/main.ts", import.meta.url))],
+    entryPoints: [fileURLToPath(new URL(renderer ? "../src/renderer.ts" : "../src/main.ts", import.meta.url))],
     bundle: true,
     format: "esm",
     target: "es2022",
@@ -43,6 +43,8 @@ const server = createServer(async (req, res) => {
       "/": "text/html; charset=utf-8",
       "/index.html": "text/html; charset=utf-8",
       "/style.css": "text/css; charset=utf-8",
+      "/renderer.html": "text/html; charset=utf-8",
+      "/renderer.js": "text/javascript; charset=utf-8",
       "/app.js": "text/javascript; charset=utf-8",
     };
     if (!Object.hasOwn(types, path)) {
@@ -51,8 +53,8 @@ const server = createServer(async (req, res) => {
       return;
     }
     const body =
-      path === "/app.js"
-        ? (await bundle()).outputFiles[0].contents
+      (path === "/app.js" || path === "/renderer.js")
+        ? (await bundle(path === "/renderer.js")).outputFiles[0].contents
         : await readFile(
             new URL(
               "../src/" + (path === "/" ? "index.html" : path.slice(1)),
