@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
-"""Export source, excluding credentials, runtime data, nested Git and dependencies."""
+"""Export tracked source, excluding credentials, runtime data and dependencies."""
 import argparse
 import json
+import subprocess
 from pathlib import Path
 import zipfile
 
@@ -11,13 +12,18 @@ EXCLUDED={'.git','node_modules','__pycache__','.data','.venv','dist','test-resul
 def export(out):
     out=out.resolve()
     if out.is_relative_to(ROOT):raise ValueError('Write the archive outside the source tree.')
+    try:
+        listed=subprocess.run(['git','-C',str(ROOT),'ls-files','-z'],check=True,capture_output=True).stdout
+    except (OSError,subprocess.CalledProcessError) as error:
+        raise ValueError('Export requires a Git checkout so untracked private files stay excluded.') from error
+    sources=[Path(name) for name in listed.decode('utf-8').split('\0') if name]
     count=0
     with zipfile.ZipFile(out,'w',compression=zipfile.ZIP_DEFLATED) as archive:
-        for path in sorted(ROOT.rglob('*')):
-            relative=path.relative_to(ROOT)
+        for relative in sorted(sources):
+            path=ROOT/relative
             if any(part in EXCLUDED for part in relative.parts) or path.is_symlink() or not path.is_file():continue
             if any(part.startswith('.env') and part!='.env.example' for part in relative.parts):continue
-            if path.name=='.dev.vars' or path.suffix in {'.pyc','.sqlite','.sqlite3','.db','.safetensors','.pt','.pth','.onnx'}:continue
+            if path.name=='.dev.vars' or path.name.endswith(('.sqlite-wal','.sqlite-shm','.sqlite3-wal','.sqlite3-shm','.db-wal','.db-shm')) or path.suffix in {'.pyc','.sqlite','.sqlite3','.db','.safetensors','.pt','.pth','.onnx'}:continue
             if '.openai' in relative.parts and path.name!='hosting.json':continue
             if '.openai' in relative.parts and path.name=='hosting.json':
                 data=json.loads(path.read_text());data.pop('project_id',None);archive.writestr(str(relative),json.dumps(data,indent=2)+'\n')

@@ -1,6 +1,7 @@
 """Offline regression checks for source archive privacy and completeness."""
 import importlib.util
 import json
+import subprocess
 from pathlib import Path
 import tempfile
 import unittest
@@ -28,6 +29,8 @@ class SourceExportTest(unittest.TestCase):
                 'apps/rally/.wrangler/local-store': 'DO_NOT_EXPORT_RUNTIME',
                 'apps/rally/node_modules/provider/index.js': 'DO_NOT_EXPORT_DEPS',
                 'apps/rally/.data/store.sqlite': 'DO_NOT_EXPORT_DB',
+                'loose.sqlite-wal': 'DO_NOT_EXPORT_DB_WAL',
+                'loose.sqlite-shm': 'DO_NOT_EXPORT_DB_SHM',
                 'apps/rally/.openai/hosting.json': json.dumps({'project_id':'private-project','d1':'DB'}),
             }
             for name, content in files.items():
@@ -35,6 +38,9 @@ class SourceExportTest(unittest.TestCase):
                 file.parent.mkdir(parents=True, exist_ok=True)
                 file.write_text(content)
             (root / 'linked-secret').symlink_to(root / '.env.local')
+            subprocess.run(['git','-C',str(root),'init','-q'],check=True,capture_output=True)
+            subprocess.run(['git','-C',str(root),'add','--all'],check=True,capture_output=True)
+            (root / 'scratch-transcript.txt').write_text('DO_NOT_EXPORT_UNTRACKED_TRANSCRIPT')
             original = exporter.ROOT
             try:
                 exporter.ROOT = root
@@ -47,6 +53,22 @@ class SourceExportTest(unittest.TestCase):
                     self.assertEqual(json.loads(archive.read('apps/rally/.openai/hosting.json')), {'d1':'DB'})
                 with self.assertRaises(ValueError):
                     exporter.export(root / 'recursive.zip')
+            finally:
+                exporter.ROOT = original
+
+    def test_export_requires_git_instead_of_sweeping_untracked_files(self):
+        with tempfile.TemporaryDirectory() as directory:
+            base = Path(directory)
+            root = base / 'not-a-checkout'
+            root.mkdir()
+            (root / 'private-notes.txt').write_text('DO_NOT_EXPORT')
+            original = exporter.ROOT
+            try:
+                exporter.ROOT = root
+                out = base / 'source.zip'
+                with self.assertRaisesRegex(ValueError, 'Git checkout'):
+                    exporter.export(out)
+                self.assertFalse(out.exists())
             finally:
                 exporter.ROOT = original
 
