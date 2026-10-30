@@ -13,8 +13,9 @@ test('rejects a truncated sample after partial delivery',async()=>{
  await assert.rejects(async()=>{for await(const b of service([[1,2],[3]]).stream({input:'Hello.'},signal())){}},/Incomplete/);
 });
 test('enforces exact opening once without rewriting generic synthesis',()=>{
- assert.equal(interventionSpeech('Let’s get back on track. Choose an owner.'),'Let’s get back on track. Choose an owner.');
- assert.equal(interventionSpeech('Choose an owner.'),'Let’s get back on track. Choose an owner.');
+ assert.equal(interventionSpeech('Let’s get back on track. Choose an owner.'),"Let's get back on track. Choose an owner.");
+ assert.equal(interventionSpeech("Let's get back on track. Choose an owner."),"Let's get back on track. Choose an owner.");
+ assert.equal(interventionSpeech('Choose an owner.'),"Let's get back on track. Choose an owner.");
 });
 test('passes request contract and surfaces throttling without retry',async()=>{
  let calls=0;

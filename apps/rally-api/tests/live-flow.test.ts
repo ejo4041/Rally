@@ -30,7 +30,7 @@ for(const capture of ['browser','teams'] as const) test(`HTTP ${capture} meeting
  } else assert.equal((await req(`/meetings/${meeting.id}/start`,{consented:true})).status,200);
  emit({type:'final',sessionId:'s',turnId:1,text:'Who will own it?',speaker:'A'});
  for(let n=0;n<100&&!played;n++)await new Promise(r=>setTimeout(r,10));
- assert.equal(played,640);assert.equal(browserPlayed,capture==='teams'?0:640);assert.equal(spoken,'Let’s get back on track. Who owns the next step?');
+ assert.equal(played,640);assert.equal(browserPlayed,capture==='teams'?0:640);assert.equal(spoken,'Let\'s get back on track. Who owns the next step?');
  const snap=await (await req(`/meetings/${meeting.id}`)).json();assert.equal(snap.speechStatus.state,'completed');assert.equal(snap.audioExclusions.length,1);
  await req(`/meetings/${meeting.id}/commands`,{type:'pause'});const before=events.length;
  await new Promise(r=>setTimeout(r,70));

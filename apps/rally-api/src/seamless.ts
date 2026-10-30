@@ -1,6 +1,6 @@
 import { HttpError } from './auth.ts';
 
-export const opening = 'Let’s get back on track.';
+export const opening = 'Let\'s get back on track.';
 export function interventionSpeech(body: string) {
   return opening + ' ' + body.replace(/^(?:Let[’']?s get back on track\.\s*)+/i, '').trim();
 }

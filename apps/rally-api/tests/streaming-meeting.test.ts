@@ -15,7 +15,7 @@ test('approved speech streams with the cached opening and cancellation aborts th
  });
  output.offer('m',{...meeting.interventions[0],epoch:1});
  await new Promise(r=>setImmediate(r));
- assert.equal(input,'Let’s get back on track. Choose an owner.');
+ assert.equal(input,'Let\'s get back on track. Choose an owner.');
  assert.equal(output.shielded('m'),true);
  output.cancel('m');
  await new Promise(r=>setImmediate(r));
