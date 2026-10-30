@@ -9,9 +9,9 @@ import {
 } from "../../../packages/rally-presence/scene.ts";
 
 /** A renderer owns its canvas only; it never owns the audio source or meeting. */
-export function mountPresence(parent: HTMLElement, camera = false) {
+export function mountPresence(parent: HTMLElement, camera = false, options:{mascot?:boolean}={}) {
   const host = document.createElement("section");
-  host.className = `rally-presence${camera ? " camera-presence" : ""}`;
+  host.className = `rally-presence${camera ? " camera-presence" : ""}${options.mascot?" mascot-presence":""}`;
   host.innerHTML =
     '<div class="rally-silk"></div><div class="presence-copy"><p class="presence-tag"></p><p class="presence-words" aria-live="polite"></p><p class="presence-next"></p><div class="presence-timeline"><progress max="1" value="0"></progress><div class="presence-markers"></div></div><small class="presence-time"></small></div>';
   parent.prepend(host);
@@ -40,9 +40,10 @@ export function mountPresence(parent: HTMLElement, camera = false) {
         expressiveness: 1,
       },
       quality: "auto",
-      initialQuality: camera ? "economy" : undefined,
+      background:options.mascot?"transparent":undefined,
+      initialQuality: camera||options.mascot ? "economy" : undefined,
       antialias: camera ? false : undefined,
-      pixelRatioCap: camera ? 2 / 3 : undefined,
+      pixelRatioCap: camera ? 2 / 3 : options.mascot?1:undefined,
       visibility: camera ? "always" : undefined,
       onError: fallback,
     });
@@ -106,7 +107,7 @@ export function mountPresence(parent: HTMLElement, camera = false) {
         ? `${Math.floor((elapsed - total) / 60)}m ${Math.floor((elapsed - total) % 60)}s overtime`
         : `${Math.floor(elapsed / 60)} / ${scene.durationMinutes} min`;
   }
-  const timer = setInterval(drawText, 250);
+  const timer = options.mascot?undefined:setInterval(drawText, 250);
   return {
     host,
     get silk() {

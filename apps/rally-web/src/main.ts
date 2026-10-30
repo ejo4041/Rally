@@ -1,3 +1,4 @@
+import {setupMascot} from "./mascot.ts";
 import {setupTheme} from "./theme.ts";
 import {rallyRepliesHTML} from "./rally-replies.ts";
 import {setupActionFeedback} from "./action-feedback.ts";
@@ -82,6 +83,7 @@ const speech = createSpeechPlayer({
       $("capture-label").textContent = "Audio shielded while Rally speaks";
   },
 });
+const mascot=setupMascot();
 const meetingLayout=setupMeetingLayout();
 const reportSharing=setupReportSharing(()=>state.session?.meeting,fail);
 const security = setupSecurity(signedIn, canNavigate);
@@ -119,6 +121,7 @@ function canNavigate() {
   return true;
 }
 function showAuth() {
+  mascot.hide();
   $("auth-screen").hidden = false;
   $("workspace").hidden = true;
 }
@@ -226,6 +229,7 @@ function home() {
   $("home").hidden = false;
   $("meeting").hidden = true;
   $("breadcrumb").textContent = "Workspace / Meetings";
+  mascot.show();
 }
 async function route() {
   if (!state.user) return;
@@ -278,6 +282,7 @@ async function route() {
       : "";
   state.muted = false;
   input("consent").checked = false;
+  mascot.hide();
   $("home").hidden = true;
   $("meeting").hidden = false;
   $("breadcrumb").textContent = "Workspace / Meeting";

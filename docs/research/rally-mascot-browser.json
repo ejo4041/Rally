@@ -1,0 +1,13 @@
+{
+  "passed": true,
+  "renderer": "Same mountPresence/createLivingSilk as actual meeting, idle baseline",
+  "realWebGL": true,
+  "motionVerified": true,
+  "reducedMotionStillVerified": true,
+  "resumeVerified": true,
+  "mobileNoOverflow": true,
+  "disposeOnMeetingAndLogout": true,
+  "oneCanvasOnReturn": true,
+  "audioRequests": 0,
+  "modelCalls": 0
+}

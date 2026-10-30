@@ -1,3 +1,5 @@
+**Rally mascot follow-up:** [Same meeting visualization in the home hero](rally-mascot.md), real GPU/reduced-motion/lifecycle checks pass. Worktree unchanged, branch polish/rally-mascot-20261030.
+
 **Current UI: Light/Dark/System + Meta showcase, merged and deployed.** [Scope and verification](appearance-and-meta-showcase.md), [public evidence](research/appearance-deployed.json). Main includes all prior feedback through2c8c0f5 and UI37d5740. Static assets37d5740; API8054fb5 unchanged/no restart. Droplet workspace `/srv/hackathon/rally-feedback`, branch `polish/meta-showcase-20261030`. Appearance selector is top-right; browser choice persists.
 
 **Appearance/UI follow-up:** [Light/Dark/System and richer Meta showcase](appearance-and-meta-showcase.md). Prior feedback branch merged to main2c8c0f5; visual work isolated on polish/meta-showcase-20261030 in the same droplet workspace.
