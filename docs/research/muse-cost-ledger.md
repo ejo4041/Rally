@@ -132,3 +132,13 @@ Three valid-schema calls with ten-second simulated state advancement cost **$0.0
 ### Attained-concern recovery endpoint check
 
 One targeted real check after clarifying that zero holds (does not reduce) attained emotion. [Result](living-presence-live-repair.json). Valid in3.920s; batch **$0.00659400**, unknown0. Combined tracked total **$1.45503685**, conditional unverified-$150 remainder **$148.54496315**. Presence calibration cumulative **$0.09881775**. No audio or platform join.
+
+## First merged Teams presence rehearsal
+
+Consented4m56s live call:32 Muse usage records (preparation, transcription,29live checks and final report), known **$0.33466395**, unknown0. Combined tracked **$1.78970080**, conditional unverified-$150 remainder **$148.21029920**. User reported the experience worked well but camera included the browser shell. Repeated late-call checks exhausted1024 outputtokens; all such responses were rejected, not acted on. Calls ended and report completed. Existing hosted streaming-speech costs remain separately recorded and unpriced by the app; this figure is Muse-only. No meeting link or transcript is saved in this engineering record.
+
+## Presence cache measurement — October 30
+
+Three synthetic bounded-transcript calls using production schema and cache-friendly layout: **$0.01526095**, unknown0. Latencies1.928/1.708/2.559seconds; all valid and within8seconds. Cached inputs0/3898,0/3950,3313/4002 (82.78% on third request). No real participant content, speech or meeting join. This is a small cache measurement, not a guaranteed production hit rate. [Usage/results](living-presence-cache-benchmark.json).
+
+Combined tracked Muse spend **$1.80496175**; conditional unverified-$150 remainder **$148.19503825**. Actual grant/Billing remains unverified; other ongoing deployment activity is not inferred from this experiment.

@@ -62,7 +62,9 @@ export async function createCamera({
   onFailure = () => {},
   signal,
 }) {
-  const screen = await display(1920, 1080, signal);
+  // Pinned Chromium on bare Xvfb leaves one pixel outside its fullscreen window.
+  // Oversize the display by one; verify exact content geometry before capture.
+  const screen = await display(1921, 1081, signal);
   let browser,
     producer,
     closed = false;
@@ -93,8 +95,9 @@ export async function createCamera({
         "--ignore-gpu-blocklist",
         "--disable-gpu-sandbox",
         "--autoplay-policy=no-user-gesture-required",
-        "--start-fullscreen",
-        "--window-size=1920,1080",
+        "--kiosk",
+        "--force-device-scale-factor=1",
+        "--window-size=1921,1081",
         "--window-position=0,0",
       ],
     });
@@ -106,13 +109,31 @@ export async function createCamera({
       if (!closed) onFailure("Renderer exited");
     });
     const page = await browser.newPage({
-      viewport: { width: 1920, height: 1080 },
-      deviceScaleFactor: 1,
+      viewport: null,
     });
     await page.goto(new URL("/renderer.html", origin).href, {
       waitUntil: "networkidle",
     });
     await page.waitForFunction(() => !!window.rallyRenderer);
+    const session = await page.context().newCDPSession(page);
+    const { windowId } = await session.send("Browser.getWindowForTarget");
+    await session.send("Browser.setWindowBounds", {
+      windowId,
+      bounds: { windowState: "fullscreen" },
+    });
+    await page.evaluate(() => document.documentElement.requestFullscreen());
+    await session.detach();
+    await page.waitForFunction(
+      () =>
+        innerWidth === 1920 &&
+        innerHeight === 1080 &&
+        outerWidth === innerWidth &&
+        outerHeight === innerHeight &&
+        screenX === 0 &&
+        screenY === 0,
+      undefined,
+      { timeout: 5000 },
+    );
     await page.evaluate((scene) => window.rallyRenderer.preview(scene), scene);
     if (
       !(await page.evaluate(
@@ -130,6 +151,8 @@ export async function createCamera({
         "error",
         "-f",
         "x11grab",
+        "-draw_mouse",
+        "0",
         "-framerate",
         "30",
         "-video_size",

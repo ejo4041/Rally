@@ -426,3 +426,16 @@ test("live context retains complete bounded finalized turns and invalidates nest
   assert.equal(monitor.context(snapshot).previous, null);
   store.close();
 });
+
+test('large cumulative partials preserve append-only evidence and final promotion across 8000 characters',async()=>{
+ for(const size of [3999,4000,7990,7999,8000,8001,12000]){
+  for(const finalize of [false,true]){
+   const {store,meeting,monitor,snapshot}=setup();const text='x'.repeat(size);
+   monitor.ingest('m','s',1,text);let release!:(v:LiveDecision)=>void,accepted=false;
+   const checking=monitor.check(snapshot,()=>new Promise(r=>release=r),()=>meeting,()=>{},()=>{accepted=true;});
+   if(finalize){snapshot.turns=[{id:'s:1',text,revision:1}] as any;monitor.finalReader=()=>snapshot.turns;monitor.ingest('m','s',1,text,true);}
+   else monitor.ingest('m','s',1,text+' append');
+   release(decision);await checking;assert.equal(accepted,true,`${size} ${finalize?'final':'append'}`);store.close();
+  }
+ }
+});

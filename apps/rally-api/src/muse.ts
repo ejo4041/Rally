@@ -1,5 +1,6 @@
-import { liveDecisionSchema } from "./realtime.ts";
+import { liveDecisionSchema, type LiveContext } from "./realtime.ts";
 import { prompts } from "./prompts.ts";
+import { reportContext } from "./report-context.ts";
 import { speechSettingsSchema } from "./speech-config.ts";
 import { randomUUID } from "node:crypto";
 import { z } from "zod";
@@ -11,6 +12,7 @@ import type {
   Meeting,
   TranscriptEvent,
   ASRSession,
+  Turn,
 } from "./contracts.ts";
 import type { Store } from "./store.ts";
 import type { Configuration } from "./config.ts";
@@ -173,14 +175,16 @@ export function createMuse(
       );
   };
   let activeReasoning = 0;
-  async function json<T>(
-    m: Meeting,
+  const liveSchema = liveDecisionSchema.required({
+    affect: true,
+    focus: true,
+    concerns: true,
+  });
+  function request<T>(
     kind: keyof typeof prompts,
     input: unknown,
     schema: z.ZodType<T>,
-    signal?: AbortSignal,
-  ): Promise<T> {
-    enabled();
+  ) {
     const r = settings.reasoning;
     const max =
       kind === "report"
@@ -188,10 +192,42 @@ export function createMuse(
         : kind === "prepare"
           ? 4096
           : kind === "live"
-            ? 1024
+            ? 2048
             : r.maxOutputTokens;
+    // Reference material precedes the complete current snapshot. Keep volatile
+    // state after transcript text so unchanged evidence can share a prefix.
+    const live = kind === "live" ? (input as LiveContext) : null;
+    const messages = [{ role: "system", content: prompts[kind] }];
+    if (live)
+      messages.push({
+        role: "user",
+        content: JSON.stringify({
+          reference:
+            "Meeting reference; the following snapshot is authoritative",
+          objective: live.meeting.objective,
+          originalGoals: live.meeting.originalGoals.map(
+            ({ currentStatus, ...goal }) => goal,
+          ),
+          plan: live.meeting.plan,
+          originalDeadline: live.originalDeadline,
+        }),
+      });
+    const { finals, partials, ...state } = live ?? ({} as Partial<LiveContext>);
+    messages.push({
+      role: "user",
+      content: JSON.stringify(
+        live
+          ? {
+              finals,
+              partials,
+              ...state,
+            }
+          : input,
+      ),
+    });
     const body = {
       model: r.model,
+      prompt_cache_key: `rally-${kind}-v2`,
       reasoning_effort:
         kind === "report"
           ? settings.report.reasoningEffort
@@ -199,10 +235,7 @@ export function createMuse(
             ? "low"
             : r.reasoningEffort,
       max_tokens: max,
-      messages: [
-        { role: "system", content: prompts[kind] },
-        { role: "user", content: JSON.stringify(input) },
-      ],
+      messages,
       response_format: {
         type: "json_schema",
         json_schema: {
@@ -213,16 +246,57 @@ export function createMuse(
       },
     };
     const encoded = JSON.stringify(body);
+    // Reserve at uncached input prices even when a provider may reuse a prefix.
+    const projected =
+      (Buffer.byteLength(encoded) * r.rates.input + max * r.rates.output) / 1e6;
+    return { body, encoded, projected };
+  }
+  function reportReserve(meeting: Meeting) {
+    const row = store.db
+      .prepare("SELECT body FROM meetings WHERE id=?")
+      .get(meeting.id) as { body: string } | undefined;
+    const current: Meeting = row ? JSON.parse(row.body) : meeting;
+    const turns = (
+      store.db
+        .prepare("SELECT body FROM turns WHERE meeting_id=? ORDER BY rowid")
+        .all(meeting.id) as { body: string }[]
+    ).map((row) => JSON.parse(row.body) as Turn);
+    // Ordering does not change serialized byte size. Include every canonical
+    // turn and the report allowlist, never the live monitor's bounded window.
+    const input = reportContext({
+      meeting: current,
+      turns,
+      elapsedSeconds:
+        current.startedAt == null
+          ? 0
+          : Math.max(
+              0,
+              ((current.endedAt ?? Date.now()) - current.startedAt) / 1000,
+            ),
+    });
+    return Math.max(
+      config.reportReserve,
+      request("report", input, reportSchema).projected,
+    );
+  }
+  async function json<T>(
+    m: Meeting,
+    kind: keyof typeof prompts,
+    input: unknown,
+    schema: z.ZodType<T>,
+    signal?: AbortSignal,
+  ): Promise<T> {
+    enabled();
+    const r = settings.reasoning;
+    const { body, encoded, projected } = request(kind, input, schema);
     if (Buffer.byteLength(encoded) > 2000000)
       throw new HttpError(
         "Transcript exceeds the supported report size; no content was silently truncated",
         413,
       );
-    const projected =
-      (Buffer.byteLength(encoded) * r.rates.input + max * r.rates.output) / 1e6;
     if (activeReasoning >= config.capacity * 2 + (kind === "live" ? 0 : 2))
       throw new HttpError("Reasoning capacity reached; check skipped", 429);
-    if (kind === "live") ledger.check(m.id, projected + config.reportReserve);
+    if (kind === "live") ledger.check(m.id, projected + reportReserve(m));
     const id = ledger.reserve(m, projected, {
       kind,
       reasoningEffort: body.reasoning_effort,
@@ -315,22 +389,13 @@ export function createMuse(
         planSchema,
       ),
     forecastLive: (context, meeting) => {
-      const inputBytes =
-        Buffer.byteLength(JSON.stringify(context)) +
-        Buffer.byteLength(prompts.live) +
-        Buffer.byteLength(
-          JSON.stringify(
-            z.toJSONSchema(liveDecisionSchema, { target: "draft-7" }),
-          ),
-        ) +
-        1024;
-      const estimatedCheckCost =
-        (inputBytes * settings.reasoning.rates.input +
-          1024 * settings.reasoning.rates.output) /
-        1e6;
+      const estimatedCheckCost = request("live", context, liveSchema).projected;
+      const reserve = reportReserve(meeting);
       const checksRemaining = Math.max(
         0,
-        Math.ceil(context.meeting.remainingSeconds / 10),
+        Math.ceil(
+          (context.meeting.remainingSeconds * 1000) / config.assessmentMs,
+        ),
       );
       const remainingWorkSeconds =
         (meeting.plan?.topics
@@ -353,24 +418,14 @@ export function createMuse(
           (Math.max(0, context.meeting.remainingSeconds) *
             settings.transcription.usdPerAudioHour) /
             3600 +
-          config.reportReserve,
-        reportReserve: config.reportReserve,
+          reserve,
+        reportReserve: reserve,
         remainingWorkSeconds,
         slackSeconds: context.meeting.remainingSeconds - remainingWorkSeconds,
       };
     },
     checkLive: (context, meeting, signal) =>
-      json(
-        meeting,
-        "live",
-        context,
-        liveDecisionSchema.required({
-          affect: true,
-          focus: true,
-          concerns: true,
-        }),
-        signal,
-      ),
+      json(meeting, "live", context, liveSchema, signal),
     assess: (s) => json(s.meeting, "assess", s, assessmentSchema),
     report: (s) => json(s.meeting, "report", s, reportSchema),
     async openASR(m, callbacks) {

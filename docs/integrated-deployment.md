@@ -1,3 +1,5 @@
+**Living presence update:** `a686843` merges the silk with deployed MFA, streaming speech and continuous monitoring. Idle check/SQLite backup preceded activation; deployed closed signup and actual MFA enrollment pass.118 backend/14 frontend tests, both typechecks, full browser workflow, display/read-along and actual streamed playback/Stop checks pass. Consented remote Teams rehearsal is in progress; outbound negotiation measured1280×720 at30fps, not remote1080p. [Implementation](living-presence-implementation.md), [operations](living-presence-operations.md).
+
 # Integrated Rally deployment
 
 **Current integrated release:** `c20261d` is publicly hosted with backend login. See [streaming speech deployment and validation](streaming-speech-validation.md) and [current handoff](handoff.md). The checkpoints below are historical; their access policies and active-release labels are superseded for the integrated Node app. The separate Sites app stays private.

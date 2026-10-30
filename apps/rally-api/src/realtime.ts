@@ -140,6 +140,7 @@ export class LiveMonitor {
     final = false,
   ) {
     if (session === undefined || turn === undefined) return;
+    if(text.length>1_000_000) throw new Error("Provisional speech exceeds the bounded transport size");
     const key = session + ":" + turn;
     if (!final && this.finalReader?.(id).some((t) => t.id === key)) return;
     this.inputAt.set(id, Date.now());
@@ -156,7 +157,8 @@ export class LiveMonitor {
     const old = entries.get(key);
     entries.set(key, {
       id: key,
-      text: text.slice(-8000),
+      // Retain the cumulative source coordinate system; only the model projection is windowed.
+      text,
       version: (old?.version ?? 0) + 1,
       at: Date.now(),
     });

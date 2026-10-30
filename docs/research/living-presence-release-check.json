@@ -1,0 +1,34 @@
+{
+  "release": "a686843",
+  "backendTests": 118,
+  "frontendTests": 14,
+  "typechecks": "pass",
+  "frontendBuild": "pass",
+  "browserWorkflow": "pass",
+  "realtimeDisplayBrowser": "pass",
+  "actualStreamingPlaybackStop": "pass",
+  "providersForBrowserChecks": "synthetic",
+  "deployedClosedSignup": "pass",
+  "deployedMFAEnrollment": "pass",
+  "localVideo": {
+    "output": [
+      1920,
+      1080
+    ],
+    "silkFramebuffer": [
+      1280,
+      561
+    ],
+    "distinctFPS": 29.2944,
+    "decodedFPS": 29.8943
+  },
+  "teamsRehearsal": "completed",
+  "teamsOutbound": {
+    "width": 1280,
+    "height": 720,
+    "fps": 30,
+    "qualityLimitationReason": "none"
+  },
+  "remoteRecipientFeedback": "User reported it worked really well; browser shell visible. Follow-up correction validated separately.",
+  "meetingLinkStored": false
+}

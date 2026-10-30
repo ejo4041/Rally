@@ -28,12 +28,15 @@ test("the Muse adapter normalizes speaker spans, timing, partials and out-of-ord
     audioProcessedMs: 500,
   });
   const finals = events.filter((e) => e.type === "final");
-  assert.deepEqual(events.find((e) => e.type === "partial"), {
-    type: "partial",
-    text: "hello",
-    sessionId: "s",
-    turnId: 1,
-  });
+  assert.deepEqual(
+    events.find((e) => e.type === "partial"),
+    {
+      type: "partial",
+      text: "hello",
+      sessionId: "s",
+      turnId: 1,
+    },
+  );
   assert.equal(finals.length, 2);
   assert.deepEqual(finals[1], {
     type: "final",
@@ -337,4 +340,155 @@ test("completion processing position never fills a missing speech-end boundary",
   assert.equal(finals[0].endMs, null);
   assert.equal(finals[1].speaker, "B");
   assert.equal(finals[1].sourceOrder, 1);
+});
+
+test("live assessments preserve stable reference and complete changing state in cache-friendly requests", async (t) => {
+  const { LiveMonitor } = await import("../src/realtime.ts");
+  const store = new Store(":memory:");
+  t.after(() => store.close());
+  const requests: any[] = [];
+  const muse = createMuse(
+    store,
+    { ...defaults, paidEnabled: true },
+    {
+      key: "fixture",
+      fetch: async (_url, init) => {
+        requests.push(JSON.parse(String(init?.body)));
+        return new Response(
+          JSON.stringify({
+            usage: {
+              prompt_tokens: 2000,
+              completion_tokens: 100,
+              prompt_tokens_details: { cached_tokens: 1500 },
+            },
+            choices: [
+              {
+                finish_reason: "stop",
+                message: {
+                  content: JSON.stringify({
+                    health: 4,
+                    feeling: "curious",
+                    observation: "Listening",
+                    progress: "",
+                    concern: "",
+                    evidence: [],
+                    intervention: null,
+                    agendaChange: null,
+                    extension: null,
+                    extensionConsent: null,
+                    affect: null,
+                    focus: null,
+                    concerns: null,
+                  }),
+                },
+              },
+            ],
+          }),
+        );
+      },
+    },
+  );
+  const meeting = {
+    id: "cache",
+    userId: "host",
+    startedAt: 0,
+    durationMinutes: 60,
+    interventions: [],
+    plan: {
+      objective: "Choose the launch date",
+      durationMinutes: 60,
+      wrapMinutes: 5,
+      topics: [
+        {
+          id: "date",
+          title: "Launch",
+          outcome: "Choose date",
+          minutes: 55,
+          status: "active",
+        },
+      ],
+    },
+  } as unknown as Meeting;
+  meeting.originalPlan = structuredClone(meeting.plan);
+  const turn = {
+    id: "s:1",
+    sessionId: "s",
+    turnId: 1,
+    revision: 1,
+    text: "Friday is a proposal, not yet agreed.",
+    speaker: null,
+    startMs: 0,
+    endMs: 1000,
+  };
+  const context = new LiveMonitor(store).context({
+    meeting,
+    turns: [turn],
+    elapsedSeconds: 10,
+  });
+  await muse.checkLive!(context, meeting, new AbortController().signal);
+  await muse.checkLive!(
+    {
+      ...context,
+      progress: "Now deciding",
+      meeting: {
+        ...context.meeting,
+        elapsedSeconds: 20,
+        remainingSeconds: 3580,
+      },
+      emotions: undefined,
+    },
+    meeting,
+    new AbortController().signal,
+  );
+  assert.equal(requests[0].prompt_cache_key, requests[1].prompt_cache_key);
+  assert.ok(requests[0].prompt_cache_key);
+  assert.deepEqual(
+    requests[0].messages.slice(0, 2),
+    requests[1].messages.slice(0, 2),
+  );
+  const payload = JSON.parse(requests[1].messages[2].content);
+  assert.deepEqual(
+    payload,
+    JSON.parse(
+      JSON.stringify({
+        ...context,
+        progress: "Now deciding",
+        meeting: {
+          ...context.meeting,
+          elapsedSeconds: 20,
+          remainingSeconds: 3580,
+        },
+        emotions: undefined,
+      }),
+    ),
+  );
+  assert.equal(Object.keys(payload)[0], "finals");
+  const appended = {
+    ...context,
+    finals: [
+      turn,
+      { ...turn, id: "s:2", turnId: 2, text: "We still need validation." },
+    ],
+  };
+  await muse.checkLive!(appended, meeting, new AbortController().signal);
+  assert.deepEqual(
+    requests[2].messages.slice(0, 2),
+    requests[0].messages.slice(0, 2),
+  );
+  const firstEvidence =
+    requests[0].messages[2].content.split('],"partials"')[0];
+  assert.ok(requests[2].messages[2].content.startsWith(firstEvidence));
+  const corrected = {
+    ...appended,
+    finals: [
+      { ...turn, revision: 2, text: "Friday is rejected." },
+      appended.finals[1],
+    ],
+  };
+  await muse.checkLive!(corrected, meeting, new AbortController().signal);
+  assert.deepEqual(
+    JSON.parse(requests[3].messages[2].content).finals,
+    corrected.finals,
+  );
+  assert.ok(!requests[3].messages[2].content.startsWith(firstEvidence));
 });

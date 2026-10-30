@@ -49,10 +49,10 @@ try {
   });
   const page = await context.newPage();
   await page.goto(origin);
-  const result = await page.evaluate(async () => {
+  const result = await page.evaluate(async (cameraLabel) => {
     const devices = await navigator.mediaDevices.enumerateDevices();
     const device = devices.find(
-      (d) => d.kind === "videoinput" && d.label.includes("Rally"),
+      (d) => d.kind === "videoinput" && d.label.includes(cameraLabel),
     );
     if (!device) throw Error("Rally virtual camera not found");
     const stream = await navigator.mediaDevices.getUserMedia({
@@ -135,23 +135,53 @@ try {
       height: after.frameHeight,
       dropped: after.framesDropped - before.framesDropped,
     };
+    const actual = document.createElement("canvas");
+    actual.width = video.videoWidth;
+    actual.height = video.videoHeight;
+    actual.getContext("2d").drawImage(video, 0, 0);
+    window.rallyCapturedFrame = actual.toDataURL("image/png");
     stream.getTracks().forEach((t) => t.stop());
     send.close();
     receive.close();
     return result;
-  });
+  }, process.env.RALLY_TEST_CAMERA_LABEL || "Rally_Presence");
   const metrics = await camera.page.evaluate(() =>
     window.rallyRenderer.metrics(),
   );
   await mkdir("test-results", { recursive: true });
-  await camera.page.screenshot({ path: "test-results/presence-camera.png" });
+  const frame = await page.evaluate(() => window.rallyCapturedFrame);
+  await writeFile(
+    "test-results/presence-camera.png",
+    Buffer.from(frame.split(",")[1], "base64"),
+  );
+  const bounds = await camera.page.evaluate(() => ({
+    width: innerWidth,
+    height: innerHeight,
+    outerWidth,
+    outerHeight,
+    x: screenX,
+    y: screenY,
+  }));
+  const contentOnly =
+    bounds.width === 1920 &&
+    bounds.height === 1080 &&
+    bounds.outerWidth === bounds.width &&
+    bounds.outerHeight === bounds.height &&
+    bounds.x === 0 &&
+    bounds.y === 0;
   const report = {
     at: new Date().toISOString(),
     scope: "Local virtual camera through real WebRTC; not remote Teams",
     ...result,
     renderer: metrics,
+    contentBounds: bounds,
+    contentOnly,
+    screenshotSource: "Actual decoded virtual-camera frame",
     passed:
-      result.width === 1920 && result.height === 1080 && result.uniqueFPS >= 27,
+      contentOnly &&
+      result.width === 1920 &&
+      result.height === 1080 &&
+      result.uniqueFPS >= 27,
   };
   await writeFile(
     "test-results/presence-video.json",

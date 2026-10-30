@@ -1,6 +1,6 @@
 # Rally living presence
 
-Current integration combines the supplied silk with the deployed MFA, streaming speech and [continuous-monitoring specification](realtime-monitoring-plan.md). Source worktree: `rally-whatsapp-guest`. Remote acceptance is pending; the active deployment remains the prior reviewed release until this integration is verified.
+Current integration combines the supplied silk with the deployed MFA, streaming speech and [continuous-monitoring specification](realtime-monitoring-plan.md). Source worktree: `rally-whatsapp-guest`. Merged release `a686843` is active; the user reported the first remote test worked well, with a browser-shell framing defect. The follow-up fix remains pending release. Deployed MFA/closed signup checks passed before joining.
 
 ## Continuous emotions and AI
 
@@ -30,7 +30,7 @@ The connector holds a shared host lock, including across service-private `/tmp` 
 
 ## Evidence and remaining acceptance
 
-The merged suite passed 115 backend tests and fourteen frontend tests, both typechecks and the full HTTP/SQLite/LiveKit browser workflow at the first combined checkpoint. Additional review regressions cover corrected provisional affect/focus, deleted-job cleanup and sink-underrun progress; final counts are recorded in the handoff. Synthetic providers establish lifecycle behavior, not model or remote audio accuracy.
+The merged suite passed 118 backend tests and fourteen frontend tests, both typechecks and the full HTTP/SQLite/LiveKit browser workflow at the first combined checkpoint. Additional review regressions cover corrected provisional affect/focus, deleted-job cleanup and sink-underrun progress; final counts are recorded in the handoff. Synthetic providers establish lifecycle behavior, not model or remote audio accuracy.
 
 Three initial merged-schema judgments tested tangent → recovery → relapse; all valid in2.503–4.901s. A cadence follow-up exposed one10.690s response (production discards it) and clarified the distinction between holding versus reducing attained concern. The final targeted recovery check cleared worry/irritation with valid negative forces in3.920s. [Results](research/living-presence-live-benchmark.json), [cost ledger](research/muse-cost-ledger.md). Earlier foundation calibration is historical evidence, not a substitute for this production-path check.
 
@@ -41,3 +41,19 @@ Local virtual-camera/WebRTC and actual pinned-MMS measurements are [video](resea
 Fresh Astra spec/systems reviews found and prompted fixes for persistent concern provenance, full-turn evidence, accepted focus retention, nested evidence invalidation, agenda spending, voice sampling, captions, logout during joining, transport failure, lock cancellation, terminal-job cleanup and underrun progress. Review is not a substitute for final regression and remote acceptance.
 
 An attempted activation of the older foundation exposed a deployment ancestry mismatch with newer MFA/streaming/monitoring work. It was rolled back to `40c5739` before any preparation or Teams join. The merged implementation preserves those newer contracts; the old foundation must not be deployed independently. No new provider charge occurred during that reverted activation. See [operations](living-presence-operations.md).
+
+## Follow-up camera acceptance
+
+The prior screenshot inspected page content and did not establish that X11 capture excluded browser chrome. The user identified the address bar in the real Teams call. Camera startup now requests browser and DOM fullscreen, uses native viewport dimensions, verifies exactly 1920×1080 content at display origin, and suppresses cursor capture. Pinned Chromium on bare Xvfb needs a 1921×1081 display to yield the exact content rectangle. A failed geometry check prevents camera startup.
+
+The updated probe inspects an actual decoded virtual-camera frame through real local WebRTC. It shows only silk, topic/next-topic and progress; no browser chrome or pointer. Measured 29.10 distinct frames/s, 30 decoded frames/s at 1920×1080, zero dropped frames. [Machine-readable evidence](research/living-presence-content-video.json). This is local verification, not a second remote Teams acceptance.
+
+Caching and approved budget changes are tracked in [the caching record](research/living-presence-caching.md).
+
+## Long-meeting follow-up
+
+The normal workload is30–60minutes of continuous conversation. Cumulative ASR partials retain their original coordinates internally (bounded at1million characters per partial); model projection remains the latest4,000characters with original prefix length. Boundary tests cover4,000/8,000-character crossings and promotion to canonical final evidence. Full finalized transcripts remain stored and supplied to the report.
+
+The live output allowance increases from1,024to2,048tokens after observed truncation in the real rehearsal. Eight-second decision eligibility is unchanged. This gives more completion headroom, not a guarantee that every model response finishes on time. A latest individual finalized turn exceeding8,000characters still produces an explicit skipped check until newer usable speech arrives; it is never silently truncated into misleading full-turn evidence. Long continuous multi-turn meetings are covered by accelerated30/60minute tests, not an elapsed-hour media soak.
+
+Shared request serialization keeps forecasts consistent with actual wire requests, including cache reference material. Final-report reserve uses all currently stored canonical turns and the report allowlist at uncached rates, with the configured minimum. Future unseen speech is not pre-reserved. User-approved application caps are$6/meeting and$20total; activation is recorded in handoff after safe release restart.

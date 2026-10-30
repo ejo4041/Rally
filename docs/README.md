@@ -64,3 +64,7 @@ Teams voice preparation: [Meta MMS output and remaining live moderation connecti
 [Integrated Teams startup configuration incident](teams-startup-incident.md): missing Chromium library path, production-sandbox reproduction and correction.
 
 [Successful live Teams trial: saved guidance and pause-to-intervention timing](teams-live-rehearsal-2026-10-30.md).
+
+- [Live presence prompt caching: measured baseline, implementation and pending verification](research/living-presence-caching.md)
+
+- [Living presence follow-up review and acceptance limits](research/living-presence-followup-review.md)
