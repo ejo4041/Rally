@@ -65,6 +65,12 @@ export class MeetingSession {
         turns.set(turn.id, turn);
     }
     meeting = { ...meeting, turns: [...turns.values()] };
+    // Approved responses are persisted independently of participant turns. An
+    // older HTTP snapshot must not erase an already-observed response event.
+    const replies=new Map((meeting.interventions??[]).map(item=>[item.id,item]));
+    for(const item of this.meeting.interventions??[])if(!replies.has(item.id))replies.set(item.id,item);
+    meeting={...meeting,interventions:[...replies.values()].sort((a,b)=>a.at-b.at)};
+
     if (
       meeting.epoch !== this.meeting.epoch ||
       meeting.paused ||
@@ -133,8 +139,13 @@ export class MeetingSession {
         return true; // Fetch the authoritative ordering too.
       }
       case "intervention":
-        if (!m.paused && m.phase === "live" && typeof data?.text === "string")
+        if (!m.paused && m.phase === "live" && typeof data?.text === "string") {
           this.intervention = data;
+          if(typeof data.id==='string'&&Number.isFinite(data.at)&&typeof data.kind==='string') {
+            const items=m.interventions??=[];
+            if(!items.some(item=>item.id===data.id))items.push({id:data.id,at:data.at,text:data.text,kind:data.kind});
+          }
+        }
         return false;
       case "moderator.control":
         this.intervention = null;

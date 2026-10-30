@@ -1,3 +1,5 @@
+import {rallyRepliesHTML} from "./rally-replies.ts";
+import {setupActionFeedback} from "./action-feedback.ts";
 import {formatMoney as formatCost} from "./format.ts";
 import {setupMeetingLayout} from "./meeting-layout.ts";
 import {setupReportSharing} from "./report-sharing.ts";
@@ -121,6 +123,7 @@ function showAuth() {
 }
 async function signOutLocal() {
   meetingLayout.clear();reportSharing.clear();
+  $("rally-replies").replaceChildren();delete $("rally-replies").dataset.replyKey;
   disposePresence();
   rallyDisplay.clear();
   speech.cancel();
@@ -427,6 +430,9 @@ function render() {
     : "";
   updatePresence(m);
   rallyDisplay.render(m);
+  const replyBox=$("rally-replies"),replyKey=JSON.stringify([m.interventions,m.speechStatus]);
+  if(replyBox.dataset.replyKey!==replyKey){const atBottom=replyBox.scrollHeight-replyBox.scrollTop-replyBox.clientHeight<80;replyBox.innerHTML=rallyRepliesHTML(m);replyBox.dataset.replyKey=replyKey;if(atBottom)replyBox.scrollTop=replyBox.scrollHeight;}
+  $("rally-replies-section").hidden=!(m.interventions?.length);
   renderTranscript();
   $("partial").textContent = session.partial;
   const speakerIds = [
@@ -456,6 +462,9 @@ function render() {
     button(name).disabled = state.busy;
   button("request-guidance").disabled = state.busy || m.paused;
   renderReport();
+  $("report-status").classList.toggle("is-loading",m.reportStatus==="processing");
+  $("report-panel").setAttribute("aria-busy",String(m.reportStatus==="processing"));
+  $("speech-status").classList.toggle("is-loading",m.speechStatus?.state==="preparing");
 }
 let transcriptKey = "";
 function renderTranscript() {
@@ -894,12 +903,12 @@ $("create-form").onsubmit = async (event) => {
 };
 button("mobile-logout").onclick = () => button("logout").click();
 button("logout").onclick = () =>
-  void perform(async () => {
+  perform(async () => {
     await api("/auth/logout", "POST", {});
     await signOutLocal();
     location.hash = "";
   });
-button("start").onclick = () => void start();
+button("start").onclick = () => start();
 button("cancel-start").onclick = () => state.selecting?.abort();
 input("consent").onchange = render;
 input("audio-mode").onchange = () => {
@@ -909,7 +918,7 @@ input("audio-mode").onchange = () => {
   $("tab-help").hidden = !tab;
 };
 button("prepare").onclick = () =>
-  void perform(async () => {
+  perform(async () => {
     mergeMeeting(
       await api<Meeting>(
         `/meetings/${state.session!.meeting.id}/prepare`,
@@ -925,11 +934,11 @@ button("mute").onclick = () => {
 };
 button("pause").onclick = () =>
   void command(state.session?.meeting.paused ? "resume" : "pause");
-button("request-guidance").onclick = () => void command("request_guidance");
-button("dismiss").onclick = () => void command("dismiss");
-button("end").onclick = () => void end();
+button("request-guidance").onclick = () => command("request_guidance");
+button("dismiss").onclick = () => command("dismiss");
+button("end").onclick = () => end();
 button("retry-report").onclick = () =>
-  void perform(async () => {
+  perform(async () => {
     await api(
       `/meetings/${state.session!.meeting.id}/report/retry`,
       "POST",
@@ -939,7 +948,7 @@ button("retry-report").onclick = () =>
   });
 $("correction-form").onsubmit = (event) => {
   event.preventDefault();
-  void perform(async () => {
+  return perform(async () => {
     await api(`/meetings/${state.session!.meeting.id}/report`, "PATCH", {
       note: input("correction-note").value,
     });
@@ -949,7 +958,7 @@ $("correction-form").onsubmit = (event) => {
 };
 button("delete").onclick = () => dialog("delete-dialog").showModal();
 button("confirm-delete").onclick = () =>
-  void perform(async () => {
+  perform(async () => {
     await api(`/meetings/${state.session!.meeting.id}`, "DELETE");
     dialog("delete-dialog").close();
     state.busy = false;
@@ -962,7 +971,7 @@ button("export").onclick = () => {
     location.href = `/api/meetings/${state.session.meeting.id}/export`;
 };
 button("usage-button").onclick = () =>
-  void (async () => {
+  (async () => {
     try {
       const rows = await api<
         {
@@ -1072,7 +1081,7 @@ button("check-audio").onclick = () => {
     return;
   }
   if (!state.busy && !state.capture)
-    void audioCheck.start(
+    return audioCheck.start(
       input("audio-mode").value,
       input("include-mic").checked,
     );
@@ -1108,7 +1117,7 @@ button("stop-speaking").onclick = () => {
 
 button("test-voice").onclick = () => {
   unlockPresenceAudio();
-  void speech.test();
+  return speech.test();
 };
 
 input("share-feedback").onchange = () => {
@@ -1133,3 +1142,5 @@ input("share-feedback").onchange = () => {
 };
 
 input('moderation-mode').onchange=()=>{const m=state.session?.meeting;if(!m)return;void api<Meeting>(`/meetings/${m.id}/moderation`,'PATCH',{mode:input('moderation-mode').value}).then(updated=>{mergeMeeting(updated);render();toast('Rally’s approach updated.');}).catch(fail);};
+
+setupActionFeedback();

@@ -1,3 +1,5 @@
+**Latest UI follow-up:** [Loading indicators, Meta model attribution and Rally response history](loading-and-rally-responses.md). Same droplet worktree/branch; no new paid calls. See deployment evidence for current asset release.
+
 **Phone continuation:** Open the droplet host in Omnigent and select **Rally feedback · ready for review** (session `ece55172f6a44ce385a6ee3b35d8759b`). History-only handoff, no duplicate runner; workspace `/srv/hackathon/rally-feedback`. The older “in progress” checkpoint remains historical. Final source/operator/docs branch checkpoint `03d2de7` (subsequent commit adds this pointer only); runtime application `d5d2399`.
 
 **Current feedback release: `d5d2399` deployed from `feedback/demo-polish-20261030`; main remains `28df66f`.** [Deployed MFA/PDF/sharing/favicon checks pass](research/feedback-deployed-smoke.json), synthetic records removed. [Scope, model costs, tests and remaining manual checks](feedback-2026-10-30.md). Three-minute draft stays at `/srv/hackathon/rally-feedback/artifacts/feedback/rally-three-minute-narrated-draft.mp4`; no upload/submission. Server workspace `/srv/hackathon/rally-feedback`.

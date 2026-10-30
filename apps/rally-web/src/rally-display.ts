@@ -21,7 +21,7 @@ export class RallyDisplay {
  private reduced=matchMedia('(prefers-reduced-motion: reduce)');
  constructor(private refresh:()=>Promise<void>,private fail:(error:unknown)=>void) {
   el<HTMLDetailsElement>('rally-history').addEventListener('toggle',()=>{if(el<HTMLDetailsElement>('rally-history').open)void this.loadHistory();});
-  el('rally-history-more').onclick=()=>void this.loadHistory(true);
+  el('rally-history-more').onclick=()=>this.loadHistory(true);
   document.addEventListener('visibilitychange',()=>this.acknowledgeVisible());
   setInterval(()=>{if(this.meeting){this.freshness();this.words();}},250);
  }

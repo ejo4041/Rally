@@ -10,17 +10,17 @@ export function setupReportSharing(current:()=>Meeting|undefined,fail:(e:unknown
   if(epoch!==generation||ownerId!==id)return;
   $('report-recipient-list').innerHTML=rows.map(r=>`<div class="history-row"><strong>${esc(r.username)}</strong><button class="secondary" data-revoke-report="${esc(r.id)}">Revoke access</button></div>`).join('')||'<p>No recipients yet.</p>';
  }
- $('share-report').onclick=()=>{const m=current();if(!m)return;ownerId=m.id;$('report-share-status').textContent='';$<HTMLDialogElement>('report-sharing-dialog').showModal();void recipients().catch(fail);};
+ $('share-report').onclick=()=>{const m=current();if(!m)return;ownerId=m.id;$('report-share-status').textContent='';$<HTMLDialogElement>('report-sharing-dialog').showModal();return recipients().catch(fail);};
  $('report-share-form').onsubmit=async e=>{
   e.preventDefault();const id=ownerId,username=$<HTMLInputElement>('report-recipient').value;
   try{await api(`/meetings/${id}/report-shares`,'POST',{username});$<HTMLFormElement>('report-share-form').reset();$('report-share-status').textContent='Access granted. The recipient can find it under Shared with you.';await recipients();}catch(e){$('report-share-status').textContent=e instanceof Error?e.message:'Sharing failed';}
  };
- $('report-recipient-list').onclick=e=>{const b=(e.target as HTMLElement).closest<HTMLButtonElement>('[data-revoke-report]');if(!b)return;void api(`/meetings/${ownerId}/report-shares/${b.dataset.revokeReport}`,'DELETE').then(recipients).catch(fail);};
+ $('report-recipient-list').onclick=e=>{const b=(e.target as HTMLElement).closest<HTMLButtonElement>('[data-revoke-report]');if(!b)return;return api(`/meetings/${ownerId}/report-shares/${b.dataset.revokeReport}`,'DELETE').then(recipients).catch(fail);};
  $('export-pdf').onclick=()=>{
-  const m=current();if(!m)return;const b=$<HTMLButtonElement>('export-pdf');b.disabled=true;b.textContent='Preparing PDF…';
-  void (async()=>{const r=await fetch(`/api/meetings/${m.id}/report.pdf`,{credentials:'include'});if(!r.ok){const body=await r.json();throw new APIError(body.error??'PDF export failed',r.status);}const url=URL.createObjectURL(await r.blob()),a=document.createElement('a');a.href=url;a.download=`rally-report-${m.id}.pdf`;a.click();setTimeout(()=>URL.revokeObjectURL(url),30000);})().catch(fail).finally(()=>{b.disabled=false;b.textContent='Export PDF';});
+  const m=current();if(!m)return;const b=$<HTMLButtonElement>('export-pdf');b.disabled=true;
+  return (async()=>{const r=await fetch(`/api/meetings/${m.id}/report.pdf`,{credentials:'include'});if(!r.ok){const body=await r.json();throw new APIError(body.error??'PDF export failed',r.status);}const url=URL.createObjectURL(await r.blob()),a=document.createElement('a');a.href=url;a.download=`rally-report-${m.id}.pdf`;a.click();setTimeout(()=>URL.revokeObjectURL(url),30000);})().catch(fail).finally(()=>{b.disabled=false;b.textContent='Export PDF';});
  };
- $('shared-reports').onclick=e=>{const b=(e.target as HTMLElement).closest<HTMLButtonElement>('[data-shared-report]');if(!b)return;const epoch=generation;void api<SharedReport>(`/shared-reports/${b.dataset.sharedReport}`).then(view=>{
+ $('shared-reports').onclick=e=>{const b=(e.target as HTMLElement).closest<HTMLButtonElement>('[data-shared-report]');if(!b)return;const epoch=generation;return api<SharedReport>(`/shared-reports/${b.dataset.sharedReport}`).then(view=>{
   if(epoch!==generation)return;
   $('shared-report-title').textContent=view.title;$<HTMLAnchorElement>('shared-report-pdf').href=`/api/shared-reports/${view.id}/pdf`;
   const r=view.report;

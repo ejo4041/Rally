@@ -1,3 +1,5 @@
+**Latest UI follow-up:** [Loading indicators, Meta model attribution and Rally response history](loading-and-rally-responses.md). Same droplet worktree/branch; no new paid calls. See deployment evidence for current asset release.
+
 **Current feedback release: `d5d2399` deployed from `feedback/demo-polish-20261030`; main remains `28df66f`.** [Deployed MFA/PDF/sharing/favicon checks pass](research/feedback-deployed-smoke.json), synthetic records removed. [Scope, model costs, tests and remaining manual checks](feedback-2026-10-30.md). Three-minute draft stays at `/srv/hackathon/rally-feedback/artifacts/feedback/rally-three-minute-narrated-draft.mp4`; no upload/submission. Server workspace `/srv/hackathon/rally-feedback`.
 
 **Feedback polish branch:** `feedback/demo-polish-20261030`, server worktree `/srv/hackathon/rally-feedback`. [Completed scope, checks, costs and remaining acceptance](feedback-2026-10-30.md); [three-minute review draft](demo-feedback-draft.md). Runtime deployment status follows in the final checkpoint.

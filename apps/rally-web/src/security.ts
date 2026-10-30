@@ -124,13 +124,13 @@ export function setupSecurity(
     const user = pendingUser;
     pendingUser = null;
     $("recovery-codes").textContent = "";
-    void advance("login")
+    return advance("login")
       .then(() => user && signedIn(user))
       .catch(error);
   };
   // Admin views never reuse the owner meeting view or its write actions.
   const run = (fn: () => Promise<void>) =>
-    void fn().catch((e) => {
+    fn().catch((e) => {
       $("admin-status").textContent =
         e instanceof Error ? e.message : "Request failed";
     });
@@ -174,7 +174,7 @@ export function setupSecurity(
   };
   $("admin-reauth").onsubmit = (e) => {
     e.preventDefault();
-    run(async () => {
+    return run(async () => {
       await adminApi("/admin/reauth", "POST", {
         password: val("admin-password"),
         code: val("admin-code"),
@@ -186,7 +186,7 @@ export function setupSecurity(
   };
   $("admin-create").onsubmit = (e) => {
     e.preventDefault();
-    run(async () => {
+    return run(async () => {
       const data = await adminApi<any>("/admin/users", "POST", {
         username: val("admin-new-username"),
         role: val("admin-new-role"),
@@ -201,7 +201,7 @@ export function setupSecurity(
     const b = (e.target as HTMLElement).closest<HTMLButtonElement>("button");
     if (!b) return;
     if (b.dataset.reset)
-      run(async () => {
+      return run(async () => {
         const reason = prompt(
           "Verify the user’s identity first. Enter a reason for this MFA reset:",
         );
@@ -216,7 +216,7 @@ export function setupSecurity(
         await refreshAdmin();
       });
     if (b.dataset.disable)
-      run(async () => {
+      return run(async () => {
         if (!confirm("Change this account’s access and revoke its sessions?"))
           return;
         await adminApi(`/admin/users/${b.dataset.disable}`, "PATCH", {
@@ -225,7 +225,7 @@ export function setupSecurity(
         await refreshAdmin();
       });
     if (b.dataset.role)
-      run(async () => {
+      return run(async () => {
         if (
           !confirm(
             "Change this account’s administrator role and revoke its sessions?",
@@ -238,7 +238,7 @@ export function setupSecurity(
         await refreshAdmin();
       });
     if (b.dataset.transcript)
-      run(async () => {
+      return run(async () => {
         const data = await adminApi<any>(
           `/admin/meetings/${b.dataset.transcript}/transcript`,
         );

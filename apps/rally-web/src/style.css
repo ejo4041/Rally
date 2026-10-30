@@ -1055,3 +1055,22 @@ dialog::backdrop {
 .table-scroll { overflow-x:auto; }
 .table-scroll table { border-collapse:collapse; width:100%; font-size:.85rem; }
 .table-scroll td,.table-scroll th { text-align:left; padding:9px; border-bottom:1px solid #ddd; white-space:nowrap; }
+
+/* Waiting states remain visible without implying a model operation completed. */
+.is-loading::before { content:"";display:inline-block;width:.85em;height:.85em;margin-right:.55em;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;vertical-align:-.08em;animation:rally-spin .8s linear infinite; }
+button.is-loading { cursor:progress; }
+@keyframes rally-spin { to { transform:rotate(360deg); } }
+@media(prefers-reduced-motion:reduce) { .is-loading::before { animation:none;border-style:dotted; } }
+.meta-badge { display:inline-flex;align-items:center;gap:.35em;padding:.25rem .55rem;border:1px solid #b6c8e3;border-radius:999px;background:#edf4ff;color:#254e84;font-size:.7rem;font-weight:700;letter-spacing:.015em;line-height:1.4;white-space:normal; }
+.meta-products { margin:1rem 0 1.5rem;padding:1rem 1.2rem;border:1px solid #c7d5e8;border-radius:14px;background:linear-gradient(120deg,#edf4ff,#f4f0ff); }
+.meta-products h2 {font-size:1rem;margin:0 0 .7rem;}
+.meta-product-grid {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem;}
+.meta-product-grid p {font-size:.82rem;margin:.4rem 0 0;line-height:1.5;}
+.model-attribution {margin:.5rem 0 .8rem;font-size:.78rem;color:#52647e;line-height:1.5;}
+@media(max-width:680px) {.meta-product-grid{grid-template-columns:1fr;gap:.7rem}.meta-products{padding:1rem}}
+
+.rally-replies {max-height:18rem;overflow-y:auto;overscroll-behavior:contain;margin-bottom:1rem;}
+.rally-reply {padding:.85rem;margin:.5rem 0;background:#eef3ff;border:1px solid #bdcce8;border-left:4px solid #557bb4;border-radius:10px;}
+.rally-reply p {white-space:pre-wrap;overflow-wrap:anywhere;margin:.5rem 0 0;}
+.rally-reply-status {font-size:.72rem;color:#34537c;}
+.rally-reply .turn-meta {flex-wrap:wrap;}

@@ -109,7 +109,7 @@ export function setupTeams(
   }
   el("teams-join-form").onsubmit = (event) => {
     event.preventDefault();
-    void action(async () => {
+    return action(async () => {
       const transcribe = (el("teams-transcribe") as HTMLInputElement).checked;
       await api("/teams/join", "POST", {
         meetingUrl: (el("teams-url") as HTMLInputElement).value,
@@ -121,11 +121,11 @@ export function setupTeams(
     });
   };
   button("teams-leave").onclick = () =>
-    void action(async () => {
+    action(async () => {
       if (status?.job) await api("/teams/leave", "POST", { id: status.job.id });
     });
   button("teams-save").onclick = () =>
-    void action(async () => {
+    action(async () => {
       if (status?.job) {
         const current = generation;
         const saved = await api<{ meetingId: string }>("/teams/save", "POST", {
@@ -134,7 +134,7 @@ export function setupTeams(
         if (current === generation) onSaved(saved.meetingId);
       }
     });
-  button("teams-refresh").onclick = () => void refresh();
+  button("teams-refresh").onclick = () => refresh();
   return {
     refresh,
     reset() {

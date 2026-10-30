@@ -250,3 +250,13 @@ test('old extension snapshots cannot hide a dispute or reopen a confirmed propos
  session.replace({...fixture(),extension:{...proposal,state:'confirmed',confirmation:{method:'host',at:300}}});
  assert.equal(session.meeting.extension?.state,'confirmed');
 });
+
+test("approved Rally responses survive refresh and are never participant transcript evidence",()=>{
+ const session=new MeetingSession(fixture());
+ const reply={id:'rally-1',at:1000,text:'We decided to ship Monday.',kind:'clarify',epoch:1};
+ session.apply(event('intervention',reply));session.apply(event('intervention',reply));
+ assert.equal(session.meeting.interventions.length,1);assert.equal(session.meeting.turns.length,0);
+ session.replace({...fixture(),interventions:[]});assert.equal(session.meeting.interventions[0].text,reply.text);
+ session.apply(event('moderator.control',{type:'pause',epoch:2}));session.apply(event('intervention',{...reply,id:'stale',epoch:1}));
+ assert.equal(session.meeting.interventions.length,1);assert.equal(session.intervention,null);
+});

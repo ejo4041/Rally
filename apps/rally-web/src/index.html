@@ -112,6 +112,13 @@
                 ><span class="float two">✓ Next step owned</span>
               </div>
             </div>
+            <section class="meta-products" aria-label="Meta AI in Rally">
+              <h2>Built with Meta AI</h2><div class="meta-product-grid">
+                <div><span class="meta-badge">Meta · Muse Spark 1.3</span><p>Turns your agenda into a plan, guides the conversation and builds the final report.</p></div>
+                <div><span class="meta-badge">Meta · Muse Voice Transcribe</span><p>Transcribes the conversation, with anonymous speaker labels you can identify.</p></div>
+                <div><span class="meta-badge">Meta · SeamlessM4T + MMS</span><p>SeamlessM4T streams Rally’s voice; MMS provides the local browser voice option.</p></div>
+              </div>
+            </section>
             <div class="benefits">
               <div>
                 <b>01</b><strong>Start with intention</strong>
@@ -288,6 +295,7 @@
                   <div class="eyebrow">
                     ▥ RALLY <span id="rally-feeling" class="rally-feeling">Listening</span> <span id="health" class="pill"></span>
                   </div>
+                  <p class="model-attribution">Live guidance by <strong>Meta Muse Spark 1.3</strong></p>
                   <p id="rally-freshness" class="small muted" role="status"></p>
                   <p id="guidance" aria-live="off">
                     You lead the meeting. Rally helps it move forward.
@@ -304,6 +312,7 @@
                       Stop speaking
                     </button>
                   </div>
+                  <p class="model-attribution">Streaming voice: Meta SeamlessM4T · Local voice option: Meta MMS</p>
                   <p id="speech-status" class="small muted" role="status"></p>
                   <p id="readalong-note" class="small muted" hidden>Approximate read-along</p>
                   <div class="rally-observation"><span class="eyebrow">Current observation</span><p id="assessment-note" class="small" aria-live="polite"></p></div>
@@ -315,9 +324,14 @@
                   <div class="card-heading">
                     <h2>Conversation</h2>
                     <span class="small muted" id="transcript-label"
-                      >Finalized speech</span
+                      >Meta · Muse Voice Transcribe</span
                     >
                   </div>
+                  <section id="rally-replies-section" hidden aria-label="Rally responses">
+                    <h3>Rally’s responses</h3>
+                    <p class="small muted">Generated response text, separate from participant speech. Playback status reflects Rally’s audio output; it does not confirm everyone heard it.</p>
+                    <div id="rally-replies" class="rally-replies" role="log" aria-live="polite" aria-relevant="additions text" aria-label="Rally response history"></div>
+                  </section>
                   <div id="transcript" class="transcript"></div>
                   <p id="partial" class="partial"></p>
                 </section>
@@ -326,6 +340,7 @@
                     <h2>Meeting report</h2>
                     <span id="report-status" class="pill"></span>
                   </div>
+                  <p class="model-attribution">Meeting analysis by <strong>Meta Muse Spark 1.3</strong></p>
                   <div id="report-body"></div>
                   <div class="report-actions"><button id="export-pdf" class="secondary" disabled>Export PDF</button><button id="share-report" class="secondary" disabled>Share report</button>
                     <button id="draft-follow-up" class="secondary" hidden>
@@ -352,7 +367,7 @@
               <aside class="meeting-aside">
                 <section class="card" id="agenda-panel">
                   <div class="card-heading">
-                    <h2>The plan</h2>
+                    <h2>The plan</h2><span class="meta-badge">Meta · Muse Spark</span>
                     <button id="edit-plan" class="text">Edit</button>
                   </div>
                   <details id="entered-agenda" open><summary>Your entered agenda</summary><p id="source-agenda" class="source-agenda"></p></details>
@@ -386,7 +401,7 @@
             </section>
           </section>
         </main>
-        <footer>Thoughtful meetings, powered by Meta Muse.</footer>
+        <footer>Powered by Meta AI · Muse Spark · Muse Voice Transcribe · SeamlessM4T · MMS</footer>
       </div>
     </div>
     <dialog id="plan-sheet" class="bottom-sheet"><div class="section-title"><h2>Meeting plan</h2><button data-close="plan-sheet" aria-label="Close plan">Close</button></div><div id="plan-sheet-content"></div></dialog>
@@ -517,7 +532,8 @@
           /></label>
         </div>
         <p class="small muted">
-          Muse prepares an editable plan. This is a paid model action; audio
+          <span class="meta-badge">Meta · Muse Spark 1.3</span><br />
+          Prepares an editable plan from your agenda. This is a paid model action; audio
           starts separately after consent.
         </p>
         <label>Rally’s approach<select name="moderationMode" id="create-moderation-mode"><option value="passive">Passive · respond when asked</option><option value="balanced" selected>Balanced</option><option value="proactive">Proactive</option></select></label>
