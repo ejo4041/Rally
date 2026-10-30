@@ -1,3 +1,4 @@
+import { liveDecisionSchema } from "./realtime.ts";
 import { prompts } from "./prompts.ts";
 import { speechSettingsSchema } from "./speech-config.ts";
 import { randomUUID } from "node:crypto";
@@ -171,11 +172,13 @@ export function createMuse(
         503,
       );
   };
+  let activeReasoning = 0;
   async function json<T>(
     m: Meeting,
     kind: keyof typeof prompts,
     input: unknown,
     schema: z.ZodType<T>,
+    signal?: AbortSignal,
   ): Promise<T> {
     enabled();
     const r = settings.reasoning;
@@ -184,7 +187,9 @@ export function createMuse(
         ? settings.report.maxOutputTokens
         : kind === "prepare"
           ? 4096
-          : r.maxOutputTokens;
+          : kind === "live"
+            ? 1024
+            : r.maxOutputTokens;
     const body = {
       model: r.model,
       reasoning_effort:
@@ -215,6 +220,9 @@ export function createMuse(
       );
     const projected =
       (Buffer.byteLength(encoded) * r.rates.input + max * r.rates.output) / 1e6;
+    if (activeReasoning >= config.capacity * 2 + (kind === "live" ? 0 : 2))
+      throw new HttpError("Reasoning capacity reached; check skipped", 429);
+    if (kind === "live") ledger.check(m.id, projected + config.reportReserve);
     const id = ledger.reserve(m, projected, {
       kind,
       reasoningEffort: body.reasoning_effort,
@@ -223,6 +231,7 @@ export function createMuse(
       adapter: r.adapter,
       pricing: r.rates,
     });
+    activeReasoning++;
     let cost: number | null = null;
     let details: Record<string, unknown> = {};
     try {
@@ -233,9 +242,18 @@ export function createMuse(
           authorization: `Bearer ${key}`,
         },
         body: encoded,
-        signal: AbortSignal.timeout(
-          kind === "report" ? 180000 : kind === "prepare" ? 60000 : 15000,
-        ),
+        signal: AbortSignal.any([
+          ...(signal ? [signal] : []),
+          AbortSignal.timeout(
+            kind === "report"
+              ? 180000
+              : kind === "prepare"
+                ? 60000
+                : kind === "live"
+                  ? 18000
+                  : 15000,
+          ),
+        ]),
       });
       details = {
         requestId: response.headers.get("x-request-id"),
@@ -280,6 +298,7 @@ export function createMuse(
         );
       return schema.parse(JSON.parse(data.choices[0].message.content));
     } finally {
+      activeReasoning--;
       ledger.finish(id, cost, details);
     }
   }
@@ -295,6 +314,53 @@ export function createMuse(
         },
         planSchema,
       ),
+    forecastLive: (context, meeting) => {
+      const inputBytes =
+        Buffer.byteLength(JSON.stringify(context)) +
+        Buffer.byteLength(prompts.live) +
+        Buffer.byteLength(
+          JSON.stringify(
+            z.toJSONSchema(liveDecisionSchema, { target: "draft-7" }),
+          ),
+        ) +
+        1024;
+      const estimatedCheckCost =
+        (inputBytes * settings.reasoning.rates.input +
+          1024 * settings.reasoning.rates.output) /
+        1e6;
+      const checksRemaining = Math.max(
+        0,
+        Math.ceil(context.meeting.remainingSeconds / 10),
+      );
+      const remainingWorkSeconds =
+        (meeting.plan?.topics
+          .filter((t) => t.status === "active" || t.status === "pending")
+          .reduce(
+            (sum, t) =>
+              sum +
+              Math.max(
+                0,
+                t.minutes * 60 - (meeting.topicSpentSeconds?.[t.id] ?? 0),
+              ),
+            0,
+          ) ?? 0) +
+        (meeting.plan?.wrapMinutes ?? 0) * 60;
+      return {
+        checksRemaining,
+        estimatedCheckCost,
+        estimatedRemainingCost:
+          checksRemaining * estimatedCheckCost +
+          (Math.max(0, context.meeting.remainingSeconds) *
+            settings.transcription.usdPerAudioHour) /
+            3600 +
+          config.reportReserve,
+        reportReserve: config.reportReserve,
+        remainingWorkSeconds,
+        slackSeconds: context.meeting.remainingSeconds - remainingWorkSeconds,
+      };
+    },
+    checkLive: (context, meeting, signal) =>
+      json(meeting, "live", context, liveDecisionSchema, signal),
     assess: (s) => json(s.meeting, "assess", s, assessmentSchema),
     report: (s) => json(s.meeting, "report", s, reportSchema),
     async openASR(m, callbacks) {

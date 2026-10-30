@@ -1,3 +1,11 @@
+import { listSpeechDeliveries } from "./speech-delivery.ts";
+import { reportContext } from "./report-context.ts";
+import {
+  applyAgenda,
+  proposeExtension,
+  confirmExtension,
+} from "./live-agenda.ts";
+import { LiveMonitor } from "./realtime.ts";
 import { interventionSpeech } from "./seamless.ts";
 import type { SpeechOutput } from "./speech.ts";
 import { retainLegacyNotes } from "./report-notes.ts";
@@ -24,8 +32,9 @@ import type {
 import type { Configuration } from "./config.ts";
 
 type Active = {
-  captureToken:string;
-  leaseUntil:number;
+  captureToken: string;
+  leaseUntil: number;
+  budgetAt?: number;
   asr?: ASRSession;
   media?: MediaSession;
   timer?: NodeJS.Timeout;
@@ -38,6 +47,7 @@ type Active = {
   offset: number;
 };
 export class Engine {
+  monitor: LiveMonitor;
   meetings: Meetings;
   media: Media;
   config: Configuration;
@@ -46,7 +56,7 @@ export class Engine {
   starting = new Set<string>();
   closed = false;
   private handoffs = new Set<Promise<boolean>>();
-  onCaptureStop?: (id:string)=>Promise<void>;
+  onCaptureStop?: (id: string) => Promise<void>;
   speech?: SpeechOutput;
   constructor(
     meetings: Meetings,
@@ -54,6 +64,9 @@ export class Engine {
     config: Configuration,
     speech?: SpeechOutput,
   ) {
+    this.monitor = new LiveMonitor(meetings.store);
+    this.monitor.finalReader = (id) => meetings.turns(id);
+    this.monitor.forecast = meetings.providers.forecastLive;
     this.speech = speech;
     this.meetings = meetings;
     this.media = media;
@@ -64,10 +77,24 @@ export class Engine {
       .all() as { body: string }[]) {
       const m: Meeting = JSON.parse(row.body);
       let changed = false;
-      if(m.speechStatus && ['preparing','playing'].includes(m.speechStatus.state)){
-        m.speechStatus={...m.speechStatus,state:'canceled',at:Date.now()};changed=true;
+      if (
+        m.speechStatus &&
+        ["preparing", "playing"].includes(m.speechStatus.state)
+      ) {
+        m.speechStatus = {
+          ...m.speechStatus,
+          state: "canceled",
+          at: Date.now(),
+        };
+        changed = true;
       }
-      if(m.callState && ['joining','lobby','connected'].includes(m.callState)){m.callState='failed';changed=true;}
+      if (
+        m.callState &&
+        ["joining", "lobby", "connected"].includes(m.callState)
+      ) {
+        m.callState = "failed";
+        changed = true;
+      }
 
       if (m.phase === "live") {
         m.phase = "interrupted";
@@ -105,9 +132,9 @@ export class Engine {
         .send({ version: 1, id: randomUUID(), meetingId: id, type, data })
         .catch(() => {});
   }
-  private cancelSpeech(m:Meeting) {
+  private cancelSpeech(m: Meeting) {
     this.speech?.cancel(m.id);
-    m.speechStatus=this.meetings.get(m.id).speechStatus;
+    m.speechStatus = this.meetings.get(m.id).speechStatus;
   }
   gap(id: string, reason: string, mode: "capture" | "continuity" = "capture") {
     this.speech?.cancel(id);
@@ -137,7 +164,18 @@ export class Engine {
   ingest(id: string, e: TranscriptEvent) {
     const state = this.active.get(id);
     if (!state) return;
+    if (
+      this.config.realtimeEnabled &&
+      "sessionId" in e &&
+      e.sessionId &&
+      state.asr &&
+      e.sessionId !== state.asr.sessionId
+    )
+      return;
+    if (e.type === "progress")
+      this.monitor.progress(id, state.offset + e.processedMs);
     if (e.type === "partial") {
+      this.monitor.ingest(id, e.sessionId, e.turnId, e.text);
       this.emit(id, "transcript.partial", {
         text: e.text,
         sessionId: e.sessionId,
@@ -146,6 +184,7 @@ export class Engine {
       return;
     }
     if (e.type !== "final") return;
+    this.monitor.ingest(id, e.sessionId, e.turnId, e.text, true);
     const m = this.meetings.get(id);
     if (m.phase !== "live") return;
     const key = `${e.sessionId}:${e.turnId}`;
@@ -175,11 +214,21 @@ export class Engine {
       old.endMs === turn.endMs
     )
       return;
+    if (
+      old &&
+      m.extension?.confirmation?.evidence?.id === key &&
+      m.extension.confirmation.evidence.revision !== turn.revision
+    ) {
+      m.extension.state = "disputed";
+      this.meetings.save(m);
+    }
     if (old) {
-      this.speech?.cancel(id);
-      this.emit(id, "speech.cancel", {
-        reason: "Transcript evidence was revised",
-      });
+      if (this.speech?.live) this.speech.live.invalidateEvidence(id);
+      else this.speech?.cancel(id);
+      if (!this.speech?.live?.isActive(id))
+        this.emit(id, "speech.cancel", {
+          reason: "Transcript evidence was revised",
+        });
     }
     this.meetings.store.db
       .prepare(
@@ -242,8 +291,11 @@ export class Engine {
       if (this.meetings.get(id).userId === m.userId)
         throw new HttpError("This host already has an active meeting", 409);
     this.starting.add(m.id);
+    this.monitor.clear(m.id);
     const state: Active = {
-      captureToken:randomUUID(),leaseUntil:Date.now()+this.config.captureLeaseMs,
+      captureToken: randomUUID(),
+      budgetAt: Date.now(),
+      leaseUntil: Date.now() + this.config.captureLeaseMs,
       busy: false,
       ending: false,
       rotating: false,
@@ -256,8 +308,9 @@ export class Engine {
     const previous = m.phase;
     const previousStartedAt = m.startedAt;
     m.phase = "live";
-    m.speechTransport=this.speech?.live?"livekit":"wav";
+    m.speechTransport = this.speech?.live ? "livekit" : "wav";
     m.startedAt ??= Date.now();
+    this.monitor.cancel(m.id);
     this.cancelSpeech(m);
     m.epoch++;
     m.error = null;
@@ -269,7 +322,11 @@ export class Engine {
           try {
             if (!state.ending && !state.rotating)
               state.asr?.send(
-                this.speech?.shielded(m.id)
+                this.speech?.shielded(m.id) &&
+                  !(
+                    m.captureSource === "teams" &&
+                    this.config.teamsDuplexEnabled
+                  )
                   ? new Uint8Array(bytes.byteLength)
                   : bytes,
               );
@@ -282,9 +339,11 @@ export class Engine {
         },
         (reason) => this.gap(m.id, reason),
       );
-      if(state.ending || this.active.get(m.id)!==state) throw new HttpError("Session revoked during startup",401);
+      if (state.ending || this.active.get(m.id) !== state)
+        throw new HttpError("Session revoked during startup", 401);
       state.asr = await this.openASR(m, state);
-      if(state.ending || this.active.get(m.id)!==state) throw new HttpError("Session revoked during startup",401);
+      if (state.ending || this.active.get(m.id) !== state)
+        throw new HttpError("Session revoked during startup", 401);
       const connection = await state.media.connection();
       const current = this.meetings.get(m.id);
       if (current.report) {
@@ -298,7 +357,11 @@ export class Engine {
       state.timer.unref();
       return {
         meeting: this.meetings.get(m.id),
-        connection:{...connection,captureToken:m.captureSource==='teams'?undefined:state.captureToken},
+        connection: {
+          ...connection,
+          captureToken:
+            m.captureSource === "teams" ? undefined : state.captureToken,
+        },
       };
     } catch (error) {
       state.ending = true;
@@ -316,17 +379,38 @@ export class Engine {
       this.starting.delete(m.id);
     }
   }
-  heartbeat(m:Meeting, token:unknown) {
-    const state=this.active.get(m.id);
-    if(m.captureSource==='teams'||!state||state.ending||typeof token!=='string'||token!==state.captureToken||Date.now()>=state.leaseUntil)throw new HttpError('Capture lease expired or invalid',409);
-    state.leaseUntil=Date.now()+this.config.captureLeaseMs;return {expiresAt:state.leaseUntil};
+  heartbeat(m: Meeting, token: unknown) {
+    const state = this.active.get(m.id);
+    if (
+      m.captureSource === "teams" ||
+      !state ||
+      state.ending ||
+      typeof token !== "string" ||
+      token !== state.captureToken ||
+      Date.now() >= state.leaseUntil
+    )
+      throw new HttpError("Capture lease expired or invalid", 409);
+    state.leaseUntil = Date.now() + this.config.captureLeaseMs;
+    return { expiresAt: state.leaseUntil };
   }
-  renewCall(id:string) {const state=this.active.get(id);if(state && !state.ending && this.meetings.get(id).captureSource==='teams')state.leaseUntil=Date.now()+this.config.captureLeaseMs;}
+  renewCall(id: string) {
+    const state = this.active.get(id);
+    if (
+      state &&
+      !state.ending &&
+      this.meetings.get(id).captureSource === "teams"
+    )
+      state.leaseUntil = Date.now() + this.config.captureLeaseMs;
+  }
   async connection(m: Meeting) {
     const state = this.active.get(m.id);
     if (!state?.media) throw new HttpError("Start the meeting first", 409);
-    const connection=await state.media.connection();
-    return {...connection,captureToken:m.captureSource==='teams'?undefined:state.captureToken};
+    const connection = await state.media.connection();
+    return {
+      ...connection,
+      captureToken:
+        m.captureSource === "teams" ? undefined : state.captureToken,
+    };
   }
   private async rotateASR(m: Meeting, state: Active) {
     const current = () =>
@@ -335,11 +419,13 @@ export class Engine {
       !state.ending &&
       this.meetings.get(m.id).phase === "live";
     state.rotating = true;
+    this.monitor.cancel(m.id);
     this.cancelSpeech(m);
     this.emit(m.id, "speech.cancel", { reason: "Transcription handoff" });
     try {
       await state.asr?.end();
       if (!current()) return false;
+      this.monitor.clear(m.id);
       state.offset = Date.now() - (m.startedAt ?? Date.now());
       const next = await this.openASR(this.meetings.get(m.id), state);
       if (!current()) {
@@ -376,19 +462,201 @@ export class Engine {
   async tick(id: string, force = false) {
     const state = this.active.get(id);
     if (this.closed || !state || state.ending) return;
-    if(Date.now()>=state.leaseUntil){await this.interrupt(this.meetings.get(id));return;}
-    const statusMeeting=this.meetings.get(id);
-    statusMeeting.liveStatus={at:Date.now(),assessmentState:statusMeeting.paused?'paused':state.busy?'assessing':'listening',destination:statusMeeting.captureSource==='teams'?'teams':'browser',callState:statusMeeting.callState??'idle'};
+    if (Date.now() >= state.leaseUntil) {
+      await this.interrupt(this.meetings.get(id));
+      return;
+    }
+    const statusMeeting = this.meetings.get(id);
+    if (this.config.realtimeEnabled) {
+      const now = Date.now(),
+        topic = statusMeeting.plan?.topics.find((t) => t.status === "active");
+      if (topic && state.budgetAt) {
+        statusMeeting.topicSpentSeconds ??= {};
+        statusMeeting.topicSpentSeconds[topic.id] =
+          (statusMeeting.topicSpentSeconds[topic.id] ?? 0) +
+          (now - state.budgetAt) / 1000;
+      }
+      state.budgetAt = now;
+    }
+    statusMeeting.liveStatus = {
+      at: Date.now(),
+      assessmentState: statusMeeting.paused
+        ? "paused"
+        : state.busy
+          ? "assessing"
+          : "listening",
+      destination:
+        statusMeeting.captureSource === "teams" ? "teams" : "browser",
+      callState: statusMeeting.callState ?? "idle",
+    };
     this.meetings.save(statusMeeting);
-    this.emit(id,"meeting.status",{
-      at:Date.now(), epoch:statusMeeting.epoch, phase:statusMeeting.phase, paused:statusMeeting.paused,
-      health:statusMeeting.assessment?.health??null, reason:statusMeeting.assessment?.reason??null,
-      issues:statusMeeting.assessment?.issues??[], progress:statusMeeting.progress,
-      assessmentAt:statusMeeting.assessmentAt??null, assessmentState:statusMeeting.paused?'paused':state.busy?'assessing':'listening',
-      speech:statusMeeting.speechStatus??null, destination:statusMeeting.captureSource==='teams'?'teams':'browser',callState:statusMeeting.callState??'idle',
-      currentTopic:statusMeeting.plan?.topics.find(t=>t.status==='active')??null,
+    this.emit(id, "meeting.status", {
+      at: Date.now(),
+      epoch: statusMeeting.epoch,
+      phase: statusMeeting.phase,
+      paused: statusMeeting.paused,
+      health: statusMeeting.assessment?.health ?? null,
+      reason: statusMeeting.assessment?.reason ?? null,
+      issues: statusMeeting.assessment?.issues ?? [],
+      progress: statusMeeting.progress,
+      assessmentAt: statusMeeting.assessmentAt ?? null,
+      assessmentState: statusMeeting.paused
+        ? "paused"
+        : state.busy
+          ? "assessing"
+          : "listening",
+      speech: statusMeeting.speechStatus ?? null,
+      destination:
+        statusMeeting.captureSource === "teams" ? "teams" : "browser",
+      callState: statusMeeting.callState ?? "idle",
+      currentTopic:
+        statusMeeting.plan?.topics.find((t) => t.status === "active") ?? null,
     });
-    if(state.busy)return;
+    if (this.config.realtimeEnabled) {
+      if (Date.now() >= state.rotationAt && !state.rotating) {
+        const handoff = this.rotateASR(statusMeeting, state);
+        this.handoffs.add(handoff);
+        try {
+          if (!(await handoff)) return;
+        } finally {
+          this.handoffs.delete(handoff);
+        }
+      }
+      if (state.rotating || state.ending) return;
+      const provider = this.meetings.providers.checkLive;
+      if (!provider) return;
+      await this.monitor.check(
+        this.snapshot(id),
+        (context, signal) => provider(context, this.meetings.get(id), signal),
+        () => this.meetings.get(id),
+        (check) => {
+          const current = this.meetings.get(id);
+          if ((current.monitor?.sequence ?? 0) > check.sequence) return;
+          current.monitor = check;
+          this.meetings.save(current);
+          this.emit(id, "meeting.check", check);
+        },
+        (decision, check) => {
+          const current = this.meetings.get(id);
+          if (decision.agendaChange)
+            applyAgenda(
+              current,
+              decision.agendaChange,
+              this.meetings.turns(id),
+            );
+          const previousProposal = current.extension?.id;
+          if (decision.extension)
+            proposeExtension(
+              current,
+              decision.extension.minutes,
+              decision.extension.reason,
+            );
+          const newProposal =
+            current.extension?.state === "pending" &&
+            current.extension.id !== previousProposal;
+          if (decision.extensionConsent) {
+            const turns = this.meetings.turns(id),
+              t = turns.find(
+                (t) => t.id === decision.extensionConsent!.evidence,
+              ),
+              p = current.extension;
+            if (t && p) {
+              const deliveries = listSpeechDeliveries(this.meetings.store, id);
+              const delivered = deliveries.find(
+                (d) =>
+                  p.utteranceId !== undefined &&
+                  d.interventionId === p.utteranceId &&
+                  d.state === "completed",
+              );
+              if (p.presentedAt === undefined && delivered?.completedAt)
+                p.presentedAt = delivered.completedAt;
+              const after = p.presentedAt ?? Infinity,
+                start = current.startedAt ?? 0;
+              const conflict = turns.some(
+                (v) =>
+                  v.startMs !== null &&
+                  start + v.startMs > after &&
+                  /\b(no|cannot|can't|not available|have to leave)\b/i.test(
+                    v.text,
+                  ),
+              );
+              const overlap = deliveries.some(
+                (d) =>
+                  d.startedAt != null &&
+                  t.startMs != null &&
+                  start + t.startMs < (d.completedAt ?? Infinity) &&
+                  (t.endMs == null || start + t.endMs > d.startedAt),
+              );
+              if (conflict || overlap)
+                throw new HttpError(
+                  "Conflicting or overlapping extension response",
+                );
+              confirmExtension(
+                current,
+                decision.extensionConsent.proposalId,
+                true,
+                t,
+              );
+            }
+          }
+          if (check.sequence >= (current.monitor?.sequence ?? 0))
+            current.monitor = { ...check, decision };
+          this.meetings.save(current);
+          if (
+            decision.agendaChange ||
+            decision.extension ||
+            decision.extensionConsent
+          )
+            this.emit(id, "plan.updated", {
+              plan: current.plan,
+              extension: current.extension,
+              reason: decision.agendaChange?.reason ?? "Extension updated",
+            });
+          const acceptedRevision = current.revisions.length;
+          if (
+            decision.intervention &&
+            !["preparing", "playing"].includes(
+              current.speechStatus?.state ?? "",
+            )
+          ) {
+            const item = {
+              id: randomUUID(),
+              at: Date.now(),
+              text: interventionSpeech(
+                newProposal
+                  ? `Can everyone stay for another ${current.extension!.minutes} minutes?`
+                  : decision.intervention.text,
+              ),
+              kind: decision.intervention.kind,
+            };
+            if (newProposal) {
+              current.extension!.checkId = check.id;
+              current.extension!.utteranceId = item.id;
+            }
+            current.interventions.push(item);
+            this.meetings.save(current);
+            if (current.speechEnabled !== false)
+              this.speech?.offer(id, {
+                ...item,
+                epoch: current.epoch,
+                checkId: check.id,
+                snapshotAt: check.capturedAt,
+                speakBy: check.capturedAt + 10000,
+                evidenceValid: () =>
+                  this.meetings.get(id).revisions.length === acceptedRevision &&
+                  this.monitor.validEvidence(id, check.id),
+              });
+            this.emit(id, "intervention", {
+              ...item,
+              epoch: current.epoch,
+              streaming: true,
+            });
+          }
+        },
+      );
+      return;
+    }
+    if (state.busy) return;
     let snapshot = this.snapshot(id),
       m = snapshot.meeting;
     if (m.phase !== "live") return;
@@ -462,14 +730,21 @@ export class Engine {
         const item = {
           id: randomUUID(),
           at: Date.now(),
-          text: this.speech?.live ? interventionSpeech(result.intervention.text) : result.intervention.text,
+          text: this.speech?.live
+            ? interventionSpeech(result.intervention.text)
+            : result.intervention.text,
           kind: result.intervention.kind,
         };
         current.interventions.push(item);
         state.lastIntervention = item.at;
         this.meetings.save(current);
-        if(current.speechEnabled!==false)this.speech?.offer(id, { ...item, epoch: current.epoch });
-        this.emit(id, "intervention", { ...item, epoch: current.epoch, streaming: !!this.speech?.live });
+        if (current.speechEnabled !== false)
+          this.speech?.offer(id, { ...item, epoch: current.epoch });
+        this.emit(id, "intervention", {
+          ...item,
+          epoch: current.epoch,
+          streaming: !!this.speech?.live,
+        });
       }
       this.emit(id, "assessment", result);
     } catch (error) {
@@ -492,7 +767,14 @@ export class Engine {
   async command(m: Meeting, input: unknown) {
     const command = z
       .object({
-        type: z.enum(["pause", "resume", "dismiss", "request_guidance", "voice_on", "voice_off"]),
+        type: z.enum([
+          "pause",
+          "resume",
+          "dismiss",
+          "request_guidance",
+          "voice_on",
+          "voice_off",
+        ]),
         id: z.string().optional(),
       })
       .parse(input);
@@ -501,12 +783,13 @@ export class Engine {
       await this.tick(m.id, true);
       return this.meetings.get(m.id);
     }
+    this.monitor.cancel(m.id);
     this.cancelSpeech(m);
     m.epoch++;
     if (command.type === "pause") m.paused = true;
     if (command.type === "resume") m.paused = false;
-    if(command.type==='voice_on')m.speechEnabled=true;
-    if(command.type==='voice_off')m.speechEnabled=false;
+    if (command.type === "voice_on") m.speechEnabled = true;
+    if (command.type === "voice_off") m.speechEnabled = false;
     this.meetings.save(m);
     this.emit(m.id, "moderator.control", {
       type: command.type,
@@ -516,8 +799,24 @@ export class Engine {
   }
   editPlan(m: Meeting, input: unknown) {
     if (m.phase === "ended") throw new HttpError("Meeting has ended", 409);
-    const plan = planSchema.parse(input);
+    const plan: import("./contracts.ts").Plan = planSchema.parse(input);
+    if (
+      m.startedAt !== null &&
+      m.plan &&
+      plan.durationMinutes >
+        m.plan.durationMinutes -
+          (m.extension?.state === "disputed" ? m.extension.minutes : 0)
+    )
+      throw new HttpError(
+        "Confirm a specific extension before increasing the deadline",
+        409,
+      );
+    if (m.extension?.state === "pending") m.extension.state = "superseded";
+    plan.retiredMinutes = plan.topics
+      .filter((t) => t.status === "parked")
+      .reduce((sum, t) => sum + (m.topicSpentSeconds?.[t.id] ?? 0) / 60, 0);
     validatePlan(plan);
+    this.monitor.cancel(m.id);
     this.cancelSpeech(m);
     m.epoch++;
     m.plan = plan;
@@ -546,6 +845,7 @@ export class Engine {
     if (name === null) delete m.speakerNames[speakerId];
     else m.speakerNames[speakerId] = name;
     if (m.report) m.reportStale = true;
+    this.monitor.cancel(m.id);
     this.cancelSpeech(m);
     m.epoch++;
     this.meetings.save(m);
@@ -553,13 +853,15 @@ export class Engine {
     return m;
   }
   async end(m: Meeting) {
+    this.monitor.cancel(m.id);
     await this.onCaptureStop?.(m.id);
-    m=this.meetings.get(m.id);
+    m = this.meetings.get(m.id);
     if (this.starting.has(m.id))
       throw new HttpError("Audio is starting; retry in a moment", 409);
     if (m.phase === "ended") return m;
     const state = this.active.get(m.id);
     if (state?.ending) throw new HttpError("Meeting is ending", 409);
+    this.monitor.cancel(m.id);
     this.cancelSpeech(m);
     m.epoch++;
     this.meetings.save(m);
@@ -592,12 +894,7 @@ export class Engine {
         if (!snapshot.turns.length)
           throw new HttpError("No finalized speech to review");
         const raw = reportSchema.parse(
-          await this.meetings.providers.report({
-            ...snapshot,
-            // Reanalyze source evidence, not the previous model's conclusions.
-            // Host annotations are preserved separately after generation.
-            meeting: { ...snapshot.meeting, report: null, reportNotes: [] },
-          }),
+          await this.meetings.providers.report(reportContext(snapshot)),
         );
         validateEvidence(raw, snapshot.turns);
         if (
@@ -672,14 +969,16 @@ export class Engine {
     this.reports.set(m.id, task);
   }
   async interrupt(m: Meeting) {
+    this.monitor.cancel(m.id);
     await this.onCaptureStop?.(m.id);
-    m=this.meetings.get(m.id);
+    m = this.meetings.get(m.id);
     if (this.starting.has(m.id))
       throw new HttpError("Audio is starting; retry in a moment", 409);
     const state = this.active.get(m.id);
     if (!state || state.ending) return;
     state.ending = true;
     clearInterval(state.timer);
+    this.monitor.cancel(m.id);
     this.cancelSpeech(m);
     m.epoch++;
     this.meetings.save(m);
@@ -693,24 +992,35 @@ export class Engine {
   }
   // Security revocation also covers Teams and pending startup. Ordinary logout
   // retains its existing behavior for independently hosted Teams meetings.
-  async revokeUser(userId:string) {
-    for(const [id,state] of this.active) {
-      const m=this.meetings.get(id);if(m.userId!==userId)continue;
-      const wasEnding=state.ending;state.ending=true;clearInterval(state.timer);
-      this.cancelSpeech(m);state.asr?.close();
+  async revokeUser(userId: string) {
+    for (const [id, state] of this.active) {
+      const m = this.meetings.get(id);
+      if (m.userId !== userId) continue;
+      this.monitor.cancel(id);
+      const wasEnding = state.ending;
+      state.ending = true;
+      clearInterval(state.timer);
+      this.cancelSpeech(m);
+      state.asr?.close();
       await state.media?.close();
-      if(!wasEnding) {
-        this.active.delete(id);m.epoch++;m.phase='interrupted';m.error='Account access changed. Sign in again before reconnecting.';this.meetings.save(m);
+      if (!wasEnding) {
+        this.active.delete(id);
+        m.epoch++;
+        m.phase = "interrupted";
+        m.error = "Account access changed. Sign in again before reconnecting.";
+        this.meetings.save(m);
       }
     }
   }
   async disconnectUser(userId: string) {
     for (const id of this.active.keys()) {
       const m = this.meetings.get(id);
-      if (m.userId === userId && m.captureSource!=="teams") await this.interrupt(m);
+      if (m.userId === userId && m.captureSource !== "teams")
+        await this.interrupt(m);
     }
   }
   async remove(m: Meeting) {
+    this.monitor.cancel(m.id);
     await this.onCaptureStop?.(m.id);
     if (
       this.starting.has(m.id) ||
@@ -732,6 +1042,7 @@ export class Engine {
   }
   async close() {
     this.closed = true;
+    await this.monitor.close();
     for (const [id, s] of this.active) {
       this.speech?.forget(id);
       s.ending = true;

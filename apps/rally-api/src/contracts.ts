@@ -18,7 +18,7 @@ export const planSchema = z.object({
   durationMinutes: z.number().positive().max(480),
   wrapMinutes: z.number().nonnegative().max(30),
 });
-export type Plan = z.infer<typeof planSchema>;
+export type Plan = z.infer<typeof planSchema> & { retiredMinutes?: number };
 const evidence = z.array(z.string()).max(200);
 export const issues = [
   "drift",
@@ -110,6 +110,9 @@ export type Turn = {
   endMs: number | null;
 };
 export type Meeting = {
+  topicSpentSeconds?: Record<string, number>;
+  extension?: import("./live-agenda.ts").ExtensionProposal;
+  monitor?: import("./realtime.ts").LiveCheck;
   id: string;
   userId: string;
   title: string;
@@ -131,9 +134,14 @@ export type Meeting = {
   assessmentAt?: number;
   captureSource?: "browser" | "teams";
   callState?: string;
-  speechEnabled?:boolean;
-  speechTransport?:"livekit"|"wav";
-  liveStatus?: {at:number;assessmentState:string;destination:string;callState:string};
+  speechEnabled?: boolean;
+  speechTransport?: "livekit" | "wav";
+  liveStatus?: {
+    at: number;
+    assessmentState: string;
+    destination: string;
+    callState: string;
+  };
   speechStatus?: import("./live-speech.ts").SpeechState | null;
   interventions: { id: string; at: number; text: string; kind: string }[];
   reportStatus: "none" | "processing" | "ready" | "failed";
@@ -178,6 +186,15 @@ export interface ASRSession {
 export interface Providers {
   prepare(meeting: Meeting): Promise<Plan>;
   assess(snapshot: Snapshot): Promise<Assessment>;
+  forecastLive?(
+    context: import("./realtime.ts").LiveContext,
+    meeting: Meeting,
+  ): import("./realtime.ts").LiveForecast;
+  checkLive?(
+    context: import("./realtime.ts").LiveContext,
+    meeting: Meeting,
+    signal: AbortSignal,
+  ): Promise<import("./realtime.ts").LiveDecision>;
   report(snapshot: Snapshot): Promise<z.infer<typeof reportSchema>>;
   openASR(
     meeting: Meeting,
@@ -196,7 +213,13 @@ export type LiveEvent = {
   data: unknown;
 };
 export interface MediaSession {
-  play?(job: import("./live-speech.ts").SpeechState, chunks: AsyncIterable<Buffer>, signal: AbortSignal, beforeAudio: () => void): Promise<void>;
+  play?(
+    job: import("./live-speech.ts").SpeechState,
+    chunks: AsyncIterable<Buffer>,
+    signal: AbortSignal,
+    beforeAudio: () => void,
+    onProgress?: (playedMs: number) => void,
+  ): Promise<void>;
   connection(): Promise<{ url: string; token: string; room: string }>;
   send(event: LiveEvent): Promise<void>;
   close(): Promise<void>;
