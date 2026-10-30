@@ -37,7 +37,7 @@ The eight-hour local reliability check runs `node experiments/meta-mms/overnight
 
 ## Deployed checkpoint
 
-Release `ebf308d` is live at the [private integrated app](https://rally.tail703f9e.ts.net:8445). A temporary account and synthetic ready meeting verified authenticated model readiness, real browser WAV playback, Stop and unchanged empty paid usage through the deployed HTTPS endpoint. Test records were removed. [Measurement](research/integrated-speech-deployed.json). The eight-hour soak is still running as of this deployment checkpoint.
+The initial speech deployment used release `ebf308d` at the [private integrated app](https://rally.tail703f9e.ts.net:8445); see the [current handoff](handoff.md) for the active release. A temporary account and synthetic ready meeting verified authenticated model readiness, real browser WAV playback, Stop and unchanged empty paid usage through the deployed HTTPS endpoint. Test records were removed. [Measurement](research/integrated-speech-deployed.json). The eight-hour soak is still running as of this deployment checkpoint.
 
 ## Local worker reload check
 
