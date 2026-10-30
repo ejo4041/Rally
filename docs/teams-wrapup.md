@@ -1,3 +1,5 @@
+**Phone continuation:** Omnigent droplet session **Rally · Teams wrap-up handoff** (`bc8e5295591d4b4ba6e18164f8c7fd49`), workspace `/srv/hackathon/rally-feedback`. History-only checkpoint; no second runner. Current application8054fb5.
+
 # Graceful Teams wrap-up
 
 User request: End should visibly process notes instead of freezing, post a summary link in the meeting chat, then leave. Implemented on droplet branch feedback/demo-polish-20261030.
@@ -33,3 +35,9 @@ All later connection/readiness/formatting checks are transport-only, with no ASR
 The anonymous Teams client exposes a minimal chat editor: Ctrl+K and the desktop Insert link dialog were not available, even with formatting expanded. Do not rely on the preceding native-dialog implementation. Normal formatted paste through the bot’s own isolated browser clipboard successfully created a real composer anchor and a posted chat anchor, verified in the live Teams page. The adapter now uses that supported paste path; it never injects message DOM or calls undocumented Teams endpoints. Clipboard permissions are scoped to the bot browser’s current Teams origin and preserve its camera/microphone grants. The clipboard is cleared after verifying the pasted anchor. No laptop clipboard or laptop services are touched. If Teams strips the hyperlink, the adapter does not send a plain-text substitute.
 
 Actual live message/anchor and subsequent normal Leave are recorded in [clickable-summary evidence](research/teams-clickable-summary-check.json). This isolated formatting check did not run models or retime an Engine End; prior13.885second hold remains separate evidence. Real-Chromium localhost tests now use the actual Clipboard API and paste events, with delayed chat controls, new-message confirmation, uncertainty/no retries and disabled-chat paths. Three summary/leave tests and five Teams lifecycle tests pass after this fix; the previous full suite139 and frontend17/feedback browser checks remain recorded above.
+
+## Current deployment —8054fb5
+
+Final adapter is active. Idle capture/report/usage and free shared camera lock checked; SQLite backed up, API restarted, media service preserved.13second minimum wrap-up,25second bound, actual normal Teams leave acknowledgement, and explicit rich-text clipboard hyperlink. Live posted anchor verified and normal leave confirmed; no additional model calls in transport checks. The supplied meeting invite remains only in ignored mode0600 artifacts. Native dialog implementation08af62e was superseded after it proved unavailable in the anonymous client.
+
+Rehearsal owner accounts (two wrapup_* users) remain to preserve auditable model usage and the two reports, with their sessions revoked. Both report grants to rally_admin remain active; disabling these owner accounts also disables recipient report access by design. These are private test reports, not broadly shared production meetings.

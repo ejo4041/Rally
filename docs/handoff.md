@@ -1,3 +1,7 @@
+**Phone continuation:** Omnigent droplet session **Rally · Teams wrap-up handoff** (`bc8e5295591d4b4ba6e18164f8c7fd49`), workspace `/srv/hackathon/rally-feedback`. History-only checkpoint; no second runner. Current application8054fb5.
+
+**Current application release8054fb5:** Graceful Teams wrap-up with13second minimum, verified rich summary hyperlink and confirmed Leave before camera teardown. [Implementation, live evidence, model costs and remaining user access confirmation](teams-wrapup.md). Branch `feedback/demo-polish-20261030`; no main merge.
+
 **Latest Teams follow-up:** [Graceful wrap-up, chat link,13-second hold and validation limits](teams-wrapup.md). Native Insert link path passes local browser tests; final remote admission/check pending. Earlier local-close-only success was rejected by the user and corrected with Teams leave acknowledgement.
 
 **Teams wrap-up follow-up:** [Animation, authenticated chat summary link and graceful leave](teams-wrapup.md). Branch/worktree unchanged; read this before further call lifecycle changes.
