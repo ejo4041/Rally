@@ -4,7 +4,7 @@ import type { LiveCheck } from '../../rally-api/src/realtime.ts';
 import { ReadAlong } from './readalong.ts';
 const escape=(value:unknown)=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]!));
 const el=<T extends HTMLElement=HTMLElement>(id:string)=>document.getElementById(id) as T;
-type Extension={id:string;minutes:number;state:string;reason?:string;deadline:number};
+type Extension={id:string;minutes:number;state:string;reason?:string;deadline:number;presentedAt?:number};
 export class RallyDisplay {
  private meeting:RecordView|null=null;
  private reading=new ReadAlong();
@@ -15,13 +15,17 @@ export class RallyDisplay {
  private generation=0;
  private historyKey='';
  private extensionKey='';
+ private presentationObserver:IntersectionObserver|null=null;
+ private presentationAttempts=new Set<string>();
+ private acknowledgeVisible:()=>void=()=>{};
  private reduced=matchMedia('(prefers-reduced-motion: reduce)');
  constructor(private refresh:()=>Promise<void>,private fail:(error:unknown)=>void) {
   el<HTMLDetailsElement>('rally-history').addEventListener('toggle',()=>{if(el<HTMLDetailsElement>('rally-history').open)void this.loadHistory();});
   el('rally-history-more').onclick=()=>void this.loadHistory(true);
+  document.addEventListener('visibilitychange',()=>this.acknowledgeVisible());
   setInterval(()=>{if(this.meeting){this.freshness();this.words();}},250);
  }
- clear(){this.meeting=null;this.reading.clear();this.history=[];this.lastAccepted=null;this.cursor=null;this.generation++;this.loading=false;this.historyKey='';this.extensionKey='';el('rally-history-items').replaceChildren();el('rally-history-status').textContent='';el<HTMLDetailsElement>('rally-history').open=false;}
+ clear(){this.presentationObserver?.disconnect();this.presentationObserver=null;this.acknowledgeVisible=()=>{};this.meeting=null;this.reading.clear();this.history=[];this.lastAccepted=null;this.cursor=null;this.generation++;this.loading=false;this.historyKey='';this.extensionKey='';el('rally-history-items').replaceChildren();el('rally-history-status').textContent='';el<HTMLDetailsElement>('rally-history').open=false;}
  render(meeting:RecordView) {
   if(this.meeting?.id!==meeting.id)this.clear();
   this.meeting=meeting;
@@ -50,13 +54,18 @@ export class RallyDisplay {
   const m=this.meeting;if(!m)return;
   const c=m.monitor,age=c?Math.max(0,Date.now()-c.capturedAt):Infinity;
   const fresh=c?.status==='accepted'&&age<=20000&&m.phase==='live'&&!m.paused;
+  const forecast=c?.forecast;
+  el('rally-timing').hidden=!forecast||forecast.slackSeconds>=0;
+  el('rally-timing').textContent=forecast&&forecast.slackSeconds<0?`Plan pressure: about ${Math.ceil(-forecast.slackSeconds/60)} min more planned work than remaining time.`:'';
+  el('rally-budget-forecast').hidden=!forecast;
+  el('rally-budget-forecast').textContent=forecast?`6 checks/min · ${forecast.checksRemaining} scheduled checks remaining · conservative remaining estimate $${forecast.estimatedRemainingCost.toFixed(2)}, including transcription and $${forecast.reportReserve.toFixed(2)} report reserve. AWS speech cost is unknown and excluded; actual charges may differ.`:'';
   const feeling=fresh?c.decision?.feeling??'neutral':'neutral';
   el('rally-display').dataset.feeling=feeling;
   el('rally-feeling').textContent=m.phase==='ended'?'Finished':m.paused?'Paused':fresh?feeling:c?.status==='checking'?'Checking':c?.status==='waiting'?'Listening':c?'Awaiting fresh check':'Listening';
   if(c){
    const decision=c.decision??this.lastAccepted?.decision;
    el('health').textContent=decision?.health==null?'Unscored':`Health ${decision.health}/5${fresh?'':' · previous'}`;
-   el('rally-freshness').textContent=`Check ${c.sequence} · ${c.status} · snapshot ${Math.floor(age/1000)}s ago${c.latencyMs!=null?` · ${(c.latencyMs/1000).toFixed(1)}s assessment`:''}`;
+   el('rally-freshness').textContent=`Check ${c.sequence} · ${c.status} · snapshot ${Math.floor(age/1000)}s ago${c.latencyMs!=null?` · ${(c.latencyMs/1000).toFixed(1)}s assessment`:''}${c.transcriptAt!=null?` · last transcript update ${Math.max(0,Math.floor((Date.now()-c.transcriptAt)/1000))}s ago`:' · no transcript update recorded'}`;
    el('assessment-note').textContent=c.decision?.observation||c.reason||(c.status==='checking'&&decision?.observation?`Previous observation: ${decision.observation}`:'')||(c.status==='checking'?'Reading the latest conversation.':c.status==='waiting'?'Waiting for conversation.':'No new assessment to show.');
   }else{
    el('rally-freshness').textContent=m.assessmentAt?`Last assessment ${Math.max(0,Math.floor((Date.now()-m.assessmentAt)/1000))}s ago`:'Waiting for the first assessment';
@@ -78,13 +87,29 @@ export class RallyDisplay {
  }
  private extension() {
   const proposal=(this.meeting as RecordView & {extension?:Extension})?.extension;
-  const key=proposal?`${proposal.id}:${proposal.state}`:'';if(key===this.extensionKey)return;this.extensionKey=key;
-  const box=el('rally-extension');box.hidden=proposal?.state!=='pending';if(!proposal||proposal.state!=='pending'){box.replaceChildren();return;}
-  box.innerHTML=`<p><strong>Extend by ${escape(proposal.minutes)} minutes?</strong><br>${escape(proposal.reason)}</p><div class="actions"><button type="button" data-confirm="true" class="secondary">Confirm extra time</button><button type="button" data-confirm="false" class="text">Keep current end time</button></div>`;
+  const key=proposal?`${proposal.id}:${proposal.state}:${this.meeting?.phase}`:'';if(key===this.extensionKey)return;this.extensionKey=key;
+  this.presentationObserver?.disconnect();this.presentationObserver=null;this.acknowledgeVisible=()=>{};
+  const box=el('rally-extension');box.hidden=!proposal;if(!proposal){box.replaceChildren();return;}
+  const pending=proposal.state==='pending',disputed=proposal.state==='disputed',live=this.meeting?.phase==='live';
+  const title=pending?`Extend by ${proposal.minutes} minutes?`:disputed?'Extension needs your confirmation':proposal.state==='confirmed'?`${proposal.minutes}-minute extension confirmed`:proposal.state==='rejected'?'Extension declined':'Extension proposal replaced';
+  const explanation=disputed?'The transcript supporting the earlier agreement changed. The scheduled extension needs explicit host reconfirmation.':proposal.reason;
+  box.innerHTML=`<p><strong>${escape(title)}</strong><br>${escape(explanation)}</p>${live&&(pending||disputed)?`<div class="actions"><button type="button" data-confirm="true" class="secondary">${disputed?'Reconfirm extension':'Confirm extra time'}</button>${pending?'<button type="button" data-confirm="false" class="text">Keep current end time</button>':''}</div>`:''}`;
   for(const button of box.querySelectorAll<HTMLButtonElement>('button'))button.onclick=()=>{
    const id=this.meeting!.id,generation=this.generation;for(const b of box.querySelectorAll<HTMLButtonElement>('button'))b.disabled=true;
    void api(`/meetings/${id}/extension`,'POST',{proposalId:proposal.id,accept:button.dataset.confirm==='true'}).then(()=>generation===this.generation?this.refresh():undefined).catch(this.fail).finally(()=>{if(generation===this.generation)for(const b of box.querySelectorAll<HTMLButtonElement>('button'))b.disabled=false;});
   };
+  if(pending&&live&&!proposal.presentedAt){
+   const meetingId=this.meeting!.id,attempt=`${meetingId}:${proposal.id}`,generation=this.generation;
+   this.acknowledgeVisible=()=>{
+    if(document.visibilityState!=='visible'||generation!==this.generation||this.extensionKey!==key||this.presentationAttempts.has(attempt))return;
+    const rect=box.getBoundingClientRect();
+    if(box.hidden||!rect.width||!rect.height||rect.top>=innerHeight||rect.bottom<=0||rect.left>=innerWidth||rect.right<=0)return;
+    this.presentationAttempts.add(attempt);
+    void api(`/meetings/${meetingId}/extension/presented`,'POST',{proposalId:proposal.id}).catch(()=>{});
+   };
+   this.presentationObserver=new IntersectionObserver(()=>this.acknowledgeVisible());this.presentationObserver.observe(box);
+   requestAnimationFrame(()=>this.acknowledgeVisible());
+  }
  }
  private async loadHistory(append=false) {
   if(!this.meeting||this.loading||(append&&this.cursor===null))return;

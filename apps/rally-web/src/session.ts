@@ -1,5 +1,15 @@
 import type { LiveEvent } from "../../rally-api/src/contracts.ts";
 import type { RecordView, Turn } from "./api.ts";
+function newerExtension(incoming: RecordView['extension'], current: RecordView['extension']) {
+  if(!current)return true;
+  if(!incoming)return false;
+  if(incoming.id!==current.id)return incoming.at>=current.at;
+  const oldAt=current.confirmation?.at??current.at,newAt=incoming.confirmation?.at??incoming.at;
+  if(newAt!==oldAt)return newAt>oldAt;
+  if(current.state==='disputed'&&incoming.state==='confirmed')return false;
+  if(current.state!=='pending'&&incoming.state==='pending')return false;
+  return true;
+}
 function newerSpeech(incoming: RecordView['speechStatus'], current: RecordView['speechStatus']) {
   if(!incoming)return false;
   if(!current)return true;
@@ -67,6 +77,7 @@ export class MeetingSession {
     if((meeting.revisions?.length??0)<(this.meeting.revisions?.length??0)) {
       meeting={...meeting,plan:this.meeting.plan,revisions:this.meeting.revisions};
     }
+    if(!newerExtension(meeting.extension,this.meeting.extension))meeting={...meeting,extension:this.meeting.extension};
     const oldSpeech=this.meeting.speechStatus,incomingSpeech=meeting.speechStatus;
     if(oldSpeech && !newerSpeech(incomingSpeech,oldSpeech))meeting={...meeting,speechStatus:oldSpeech};
     this.meeting = meeting;

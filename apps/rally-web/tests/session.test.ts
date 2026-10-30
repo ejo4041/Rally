@@ -239,3 +239,14 @@ test('late playback events and snapshots never resurrect completed speech',()=>{
  session.replace({...fixture(),speechStatus:{...completed,state:'playing'}} as RecordView);
  assert.equal(session.meeting.speechStatus?.state,'completed');
 });
+
+test('old extension snapshots cannot hide a dispute or reopen a confirmed proposal',()=>{
+ const proposal={id:'extra',minutes:5,deadline:10000,baseRevision:0,at:100,state:'disputed' as const,reason:'Finish decision',confirmation:{method:'spoken' as const,at:200,evidence:{id:'t',revision:1}}};
+ const session=new MeetingSession({...fixture(),extension:proposal});
+ session.replace({...fixture(),extension:{...proposal,state:'confirmed'}});
+ assert.equal(session.meeting.extension?.state,'disputed');
+ session.replace({...fixture(),extension:{...proposal,state:'pending',confirmation:undefined}});
+ assert.equal(session.meeting.extension?.state,'disputed');
+ session.replace({...fixture(),extension:{...proposal,state:'confirmed',confirmation:{method:'host',at:300}}});
+ assert.equal(session.meeting.extension?.state,'confirmed');
+});
