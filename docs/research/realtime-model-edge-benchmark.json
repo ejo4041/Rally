@@ -1,0 +1,136 @@
+{
+  "at": "2026-10-30T16:52:45.730Z",
+  "scope": "Synthetic text, production live schema; no ASR, TTS or meeting join",
+  "budget": 0.15,
+  "results": [
+    {
+      "name": "agenda-reorder",
+      "latencyMs": 6256.918527,
+      "valid": true,
+      "withinDeadline": true,
+      "decision": {
+        "agendaChange": {
+          "reason": "Discussion moved to validation ownership while scope remains undecided",
+          "order": [
+            "owner",
+            "scope"
+          ],
+          "additions": [],
+          "updates": [
+            {
+              "id": "owner",
+              "minutes": 3,
+              "status": "active"
+            },
+            {
+              "id": "scope",
+              "minutes": 26,
+              "status": "pending"
+            }
+          ],
+          "evidence": [
+            "final:0"
+          ]
+        },
+        "extension": null,
+        "extensionConsent": null,
+        "health": 4,
+        "feeling": "neutral",
+        "observation": "Turn indicates focus shifted to validation ownership with scope undecided",
+        "progress": "Reordering to put validation owner first while keeping scope pending",
+        "concern": "",
+        "evidence": [
+          "final:0"
+        ],
+        "intervention": null
+      }
+    },
+    {
+      "name": "bounded-context",
+      "latencyMs": 1791.467012,
+      "valid": true,
+      "withinDeadline": true,
+      "decision": {
+        "agendaChange": null,
+        "extension": null,
+        "extensionConsent": null,
+        "health": 4,
+        "feeling": "focused",
+        "observation": "Discussion remains on release dependencies and need for explicit owner.",
+        "progress": "Evaluating release dependencies; validation owner still to be agreed.",
+        "concern": "",
+        "evidence": [
+          "final:16",
+          "final:17",
+          "final:18",
+          "final:19"
+        ],
+        "intervention": null
+      }
+    }
+  ],
+  "usage": [
+    {
+      "id": "d1e1a104-97f5-49f6-b959-f734b7a8eaa0",
+      "at": 1793379157684,
+      "kind": "live",
+      "reasoningEffort": "minimal",
+      "maxOutputTokens": 1024,
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "requestId": "1161a384-adb9-41fc-9d32-63370e896108",
+      "httpStatus": 200,
+      "finishReason": "stop",
+      "usage": {
+        "completion_tokens": 841,
+        "prompt_tokens": 1206,
+        "total_tokens": 2047,
+        "completion_tokens_details": {
+          "reasoning_tokens": 712
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "cost": 0.00508175,
+      "status": "known"
+    },
+    {
+      "id": "78ac6d30-94ff-4ab5-8a22-f9efdc7f3443",
+      "at": 1793379163939,
+      "kind": "live",
+      "reasoningEffort": "minimal",
+      "maxOutputTokens": 1024,
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "requestId": "3d538d84-8c7b-4d45-bf15-a16cb89d0881",
+      "httpStatus": 200,
+      "finishReason": "stop",
+      "usage": {
+        "completion_tokens": 266,
+        "prompt_tokens": 4585,
+        "total_tokens": 4851,
+        "completion_tokens_details": {
+          "reasoning_tokens": 162
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "cost": 0.00686175,
+      "status": "known"
+    }
+  ],
+  "knownCost": 0.0119435,
+  "unknown": 0
+}

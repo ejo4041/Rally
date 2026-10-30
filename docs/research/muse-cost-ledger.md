@@ -100,3 +100,9 @@ One report-only retry with maximum effort and 32,768 completion-token allowance 
 Four purpose-written text fixtures through the real `checkLive` adapter, Spark 1.3 minimal, 1,024 output tokens. [Results and per-call usage](realtime-model-benchmark.json). All four valid and below eight seconds (2.131–4.243 seconds). Identical exploratory input remained silent with twenty minutes available and prompted a redirect with three minutes available; on-topic input stayed silent and irrelevant drift prompted redirect. No retries, ASR, TTS or platform join. This small short-context batch is not a production p95 guarantee or near-limit context evaluation.
 
 Batch **$0.01176350**, unknown **0**. Development-ledger cumulative **$0.48514500**, conditional remainder **$149.51485500** against the unverified $150 grant. Separately recorded user-operated live meeting charges are not reconciled into this development ledger; this is not an actual Billing balance. Runtime accounting remains authoritative for those requests. Experiment maximum was $0.15, not an allowance consumed in full.
+
+### Continuous monitoring agenda and bounded-context follow-up
+
+Two additional production-schema text checks exercised an actual agenda reorder and a bounded 20-topic/recent-transcript context. [Per-call results](realtime-model-edge-benchmark.json). Both valid within eight seconds: reorder 6.257 s (841 output tokens including 712 reasoning), bounded context 1.791 s (4,585 prompt tokens). No retries or audio/platform calls; no latency guarantee inferred.
+
+Batch **$0.01194350**, unknown **0**. Development-ledger cumulative **$0.49708850**; conditional unverified-grant remainder **$149.50291150**. All six realtime experiment calls together cost **$0.02370700**. User-operated live meeting charges remain separately recorded, not reconciled into this development estimate.

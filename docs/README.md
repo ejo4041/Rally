@@ -1,3 +1,5 @@
+**Continuous monitoring:** [Accepted design](realtime-monitoring-plan.md), [backend/API behavior](realtime-backend-notes.md), [review and validation](realtime-monitoring-validation.md), [Rally display](realtime-ui-notes.md).
+
 **MFA and judge access:** [Closed registration, enrollment, admin controls and opt-in transcript review](mfa-admin-judge-audit.md).
 
 # Rally documentation
