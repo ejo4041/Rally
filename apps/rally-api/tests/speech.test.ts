@@ -173,6 +173,47 @@ test("one synthesis at a time, provenance validation and shield deadlines remain
   assert.throws(() => output.audio("b", b.id), /no longer/);
   output.close();
 });
+
+test("canceled jobs expire and an older expiry cannot revoke a replacement job", async (t) => {
+  t.mock.timers.enable({ apis: ["setTimeout", "Date"], now: 100000 });
+  const m = meeting("m");
+  const output = new SpeechOutput(
+    {
+      async start() {},
+      async synthesize() {
+        return audio();
+      },
+      close() {},
+    },
+    () => m,
+  );
+  await settle();
+  function offer() {
+    const item = {
+      id: randomUUID(),
+      at: Date.now(),
+      text: "Current prompt",
+      kind: "clarify",
+      epoch: 1,
+    };
+    m.interventions.push(item);
+    output.offer(m.id, item);
+    return output.create(m.id, item.id, 1);
+  }
+  const old = offer();
+  await settle();
+  output.cancel(m.id);
+  t.mock.timers.tick(20000);
+  const replacement = offer();
+  await settle();
+  t.mock.timers.tick(55001);
+  assert.equal(output.get(m.id, replacement.id).state, "ready");
+  output.cancel(m.id);
+  t.mock.timers.tick(20000);
+  assert.throws(() => output.get(m.id, replacement.id), /not found/);
+  assert.throws(() => output.get(m.id, old.id), /not found/);
+  output.close();
+});
 test("HTTP speech is owner isolated, generated only from approved text, shields audio and stops on host pause/end", async (t) => {
   let onAudio: (bytes: Uint8Array) => void = () => {},
     final: (e: TranscriptEvent) => void = () => {},

@@ -31,7 +31,7 @@ Diagnostic jobs use the same status/audio/playback suffixes under `/api/speech/t
 
 ## Validation
 
-Backend tests cover approved text, duplicate requests, cancellation before a late result, epoch changes, global synthesis contention, provenance validation, bounded shields, account isolation, fixed diagnostics, rate limits and pause/end behavior. Browser tests use real Express/SQLite/LiveKit with injected reasoning/ASR; speech can use either synthetic WAV or the actual pinned local MMS process. They exercise actual browser playback, Stop, pause, completion, autoplay rejection and restored capture. These tests do not establish remote participant audibility or human speaker accuracy.
+Backend tests cover approved text, duplicate requests, cancellation before a late result, epoch changes, canceled-job expiration/replacement timer isolation, global synthesis contention, provenance validation, bounded shields, account isolation, fixed diagnostics, rate limits and pause/end behavior. Browser tests use real Express/SQLite/LiveKit with injected reasoning/ASR; speech can use either synthetic WAV or the actual pinned local MMS process. They exercise actual browser playback, Stop, pause, completion, autoplay rejection and restored capture. These tests do not establish remote participant audibility or human speaker accuracy.
 
 The eight-hour local reliability check runs `node experiments/meta-mms/overnight-check.mjs`, synthesizes a fixed synthetic phrase every 30 minutes and periodically restarts the worker. Its ignored local report is `experiments/meta-mms/test-results/overnight-check.json`. A running report is not an eight-hour pass. No platform meeting, saved waveform or paid model request is used.
 
