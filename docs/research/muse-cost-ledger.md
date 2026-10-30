@@ -150,3 +150,7 @@ Two synthetic-discussion real Spark1.3 calls, maximum authorized working ceiling
 ### Uncached speech validation (separate AWS infrastructure accounting)
 
 One synthetic, non-retrying SeamlessM4T-v2-large utterance without the old prefix completed. First PCM1.643s, total2.234s, output5.94seconds, cache miss. No playback or meeting join during the check. AWS infrastructure cost is **unknown**, not charged to the Muse grant in this ledger. The recorded output is used as an explicitly synthetic production-voice sample in the local demo draft. [Evidence](feedback-tts-check.json). No additional Muse call.
+
+## Teams wrap-up rehearsal — October30
+
+One authorized live join,25seconds captured by Muse Voice Transcribe and one Muse Spark report. Estimated ASR $0.00125000 + recorded report $0.01683700 = **$0.01808700**, unknown rows0, TTS disabled. Tracked cumulative **$1.83393450**; conditional unverified-$150 remainder **$148.16606550**, excludes unrelated runtime usage and AWS speech infrastructure. Report ready/private, explicit grant to rally_admin. Local stop returned3.5s and camera animation appeared, but user observed a frozen lingering participant; real departure acceptance failed. Chat click attempted, delivery unconfirmed; no automatic retry. Fix actual leave acknowledgement before further rehearsal.

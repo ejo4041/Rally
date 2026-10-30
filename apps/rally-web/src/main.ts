@@ -386,6 +386,7 @@ function render() {
   $("connection-status").textContent = state.status;
   const wrap=m.wrapUp;$('wrap-up-status').hidden=!wrap;
   $('wrap-up-message').textContent=!wrap?'':wrap.state==='processing'?'Preparing notes and sharing the summary link before Rally leaves Teams…':wrap.chat==='sent'?'Summary link posted to Teams. Report access remains private.':wrap.chat==='unknown'?'Rally left Teams. Chat delivery could not be confirmed; check the meeting chat before sharing again.':'Rally left Teams. The summary link could not be posted to chat; you can copy it below.';
+  if(wrap?.state==='left'&&wrap.leaveConfirmed===false)$('wrap-up-message').textContent='Server client closed, but Teams departure could not be confirmed. '+(wrap.chat==='sent'?'The summary link was posted.':wrap.chat==='unknown'?'Chat delivery is also unconfirmed; check before sharing again.':'The summary link is available below.');
   $('wrap-up-message').classList.toggle('is-loading',wrap?.state==='processing');
   const summary=$<HTMLAnchorElement>('wrap-up-link');summary.hidden=!wrap?.summaryUrl;if(wrap?.summaryUrl)summary.href=wrap.summaryUrl;
 

@@ -5,17 +5,38 @@ export function summaryURL(origin:string,id:string){const url=new URL(origin);if
 export async function postTeamsSummary(page:Page,url:string):Promise<ChatResult>{
  let attempted=false;
  try{
-  const chat=page.locator('[data-tid="meeting-chat-button"],[data-tid="chat-button"]').or(page.getByRole('button',{name:/^(Chat|Show (meeting )?(chat|conversation)|Open (meeting )?chat)(\b|$)/i})).first();
-  if(!await chat.isVisible().catch(()=>false))return 'unavailable';
-  await chat.click({timeout:1500});
   const composer=page.locator('[contenteditable="true"][role="textbox"],textarea[placeholder*="message" i],[contenteditable="true"][data-placeholder*="message" i]').filter({visible:true}).first();
+  const chat=page.locator('[data-tid="meeting-chat-button"],[data-tid="chat-button"]').or(page.getByRole('button',{name:/^(Chat|Show (meeting )?(chat|conversation)|Open (meeting )?chat)(\b|$)/i})).first();
+  if(!await composer.isVisible().catch(()=>false)){
+    if(!await chat.isVisible().catch(()=>false))return 'unavailable';
+    await chat.click({timeout:1500});
+  }
   await composer.waitFor({state:'visible',timeout:2500});
   const message='Rally is preparing the meeting notes. Summary: '+url+'\nSign in to Rally. The host can grant report access to your Rally account; the link does not make the report public.';
   await composer.fill(message,{timeout:1500});
   const send=page.getByRole('button',{name:/^Send( message)?( \(.*\))?$/i}).filter({visible:true}).first();
   if(!await send.isEnabled({timeout:1000}).catch(()=>false))return 'unavailable';
   attempted=true;await send.click({timeout:1500});
-  await page.waitForFunction(url=>Array.from(document.querySelectorAll<HTMLAnchorElement>('a[href]')).some(a=>a.href===url&&!a.closest('[contenteditable="true"]')) ,url,{timeout:2500});
+  await page.waitForFunction(url=>Array.from(document.querySelectorAll<HTMLAnchorElement>('a[href]')).some(a=>!a.closest('[contenteditable="true"]')&&(a.href===url||a.textContent?.trim()===url||(()=>{try{const safe=new URL(a.href);return safe.hostname.endsWith('.safelinks.protection.outlook.com')&&safe.searchParams.get('url')===url;}catch{return false;}})())) ,url,{timeout:2500});
   return 'sent';
  }catch{return attempted?'unknown':'unavailable';}
+}
+
+// Let Teams send its leave signaling before any browser/camera teardown.
+export async function leaveTeamsMeeting(page:Page):Promise<boolean>{
+ try{
+  await page.getByRole('button',{name:/^(Leave|Hang up)(\b|$)/i}).filter({visible:true}).first().click({timeout:2000});
+  const confirm=page.getByRole('dialog').getByRole('button',{name:/^(Leave|Leave meeting)$/i}).first();
+  if(await confirm.isVisible().catch(()=>false))await confirm.click({timeout:1500});
+  await page.waitForFunction(()=>{
+    const buttons=Array.from(document.querySelectorAll<HTMLButtonElement>('button'));
+    const visibleLeave=buttons.some(b=>b.getClientRects().length&&/^(Leave|Hang up)(\b|$)/i.test(b.getAttribute('aria-label')||b.textContent||''));
+    const peers=(window as any).__rallyPeers??[];
+    const disconnected=peers.length>0&&peers.every((p:any)=>!['connected','connecting'].includes(p.connectionState));
+    const afterCall=/you(?: have|'ve)? left the meeting|rejoin|how was your call quality/i.test(document.body.innerText);
+    return !visibleLeave&&(disconnected||afterCall);
+  },undefined,{timeout:8000});
+  // Allow the normal client to finish outbound signaling and UI cleanup.
+  await page.waitForTimeout(750);return true;
+ }catch{return false;}
 }

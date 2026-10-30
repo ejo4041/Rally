@@ -12,7 +12,7 @@ export interface CallAudio {
     beforeAudio: () => void,
     onProgress?: (playedMs: number) => void,
   ): Promise<void>;
-  finish?(summaryUrl:string):Promise<import("./teams-summary.ts").ChatResult>;
+  finish?(summaryUrl:string):Promise<import("./teams-summary.ts").ChatResult|{chat:import("./teams-summary.ts").ChatResult;left:boolean}>;
   close(): Promise<void>;
 }
 export type TeamsConnector = (
@@ -173,15 +173,16 @@ export class TeamsLive {
     j.finishTask=(async()=>{
       clearInterval(j.watch);this.update(j,'finishing');
       const m=this.hooks.current(id);m.wrapUp={state:'processing',chat:'pending',summaryUrl:url};this.hooks.save(m);
-      let chat:import('./teams-summary.ts').ChatResult='unavailable';
+      let chat:import('./teams-summary.ts').ChatResult='unavailable',leaveConfirmed=false;
       try{
         if(j.call?.alive()&&!j.abort.signal.aborted&&j.call.finish){
           let timer:ReturnType<typeof setTimeout>;
-          chat=await Promise.race([j.call.finish(url),new Promise<import('./teams-summary.ts').ChatResult>(resolve=>{timer=setTimeout(()=>resolve('unknown'),12000);})]).finally(()=>clearTimeout(timer!));
+          const result=await Promise.race([j.call.finish(url),new Promise<import('./teams-summary.ts').ChatResult>(resolve=>{timer=setTimeout(()=>resolve('unknown'),18000);})]).finally(()=>clearTimeout(timer!));
+          chat=typeof result==='string'?result:result.chat;leaveConfirmed=typeof result==='object'&&result.left;
         }
       }catch{chat='failed';}
       finally{
-        try{await this.stop(id);}finally{const current=this.hooks.current(id);current.wrapUp={state:'left',chat,summaryUrl:url};this.hooks.save(current);}
+        try{await this.stop(id);}finally{const current=this.hooks.current(id);current.wrapUp={state:'left',chat,summaryUrl:url,leaveConfirmed};this.hooks.save(current);}
       }
     })();return j.finishTask;
   }

@@ -160,7 +160,7 @@ export type Turn = {
   endMs: number | null;
 };
 export type Meeting = {
-  wrapUp?: {state:"processing"|"left";chat:"pending"|import("./teams-summary.ts").ChatResult;summaryUrl?:string};
+  wrapUp?: {state:"processing"|"left";chat:"pending"|import("./teams-summary.ts").ChatResult;summaryUrl?:string;leaveConfirmed?:boolean};
   moderationMode?: import("./moderation-policy.ts").ModerationMode;
   addressedRequestsHandled?: string[];
   topicSpentSeconds?: Record<string, number>;

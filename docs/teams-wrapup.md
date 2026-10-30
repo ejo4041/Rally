@@ -9,3 +9,7 @@ The link `/#report/<meeting-id>` opens the owner view or the named recipient’s
 Microsoft meeting policy can deny anonymous chat: https://support.microsoft.com/en-us/teams/meetings/access-meeting-chat-in-microsoft-teams . Browser adapter selectors require remote acceptance; local tests cover actual Playwright compose/send/confirmation and blocked/ambiguous paths.
 
 Validation:138backend/17frontend tests, both typechecks/build. Focused real HTTP Teams test verifies ASR drain before finish, approved summary URL, one finish invocation, call close and repeat-End idempotence. Renderer check on an isolated port shows healthy silk and finishing spinner. Full browser feedback test passes deep-link recipient access and denied access after revocation, plus previous loading/MFA/PDF workflows. No paid calls in these fixture checks. Remote rehearsal is pending using the invite stored only in ignored artifacts.
+
+## First remote rehearsal: failed acceptance
+
+Spinner was visible; report completed and was shared with rally_admin. End returned3.5seconds and local resources closed, but user observed a frozen lingering Rally participant. Chat delivery was unconfirmed. Local close is not proof of remote departure. Follow-up waits for Teams post-call UI or disconnected peers after the actual Leave button before browser/camera teardown; displays unconfirmed departure explicitly on failure. Chat confirmation also tolerates Microsoft Safe Links and already-open chat. A renewed remote rehearsal remains required.
