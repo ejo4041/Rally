@@ -15,3 +15,9 @@ Backend validation covers clear/no-op behavior, ownership, unknown labels, proce
 ## Correction notes and reanalysis
 
 Host correction notes are stored separately as `reportNotes` and retained when a model report is regenerated. They remain visibly labeled host annotations in the summary and export; they do not rewrite transcript evidence or automatically revise an action row. Reanalysis excludes the previous generated report and annotations from model input, then restores the notes after the new result. New notes include their saved timestamp, are trimmed and capped at 4,000 characters each and 50 notes per meeting. Older appended correction segments are retained as legacy text with unknown timestamps and a legacy marker; their old format did not independently preserve authorship metadata. Tests cover note ownership, whitespace rejection, one-time legacy migration and preservation across label changes/regeneration.
+
+## Late provider metadata
+
+The Muse decoder now republishes a completed turn when later speaker/timing metadata changes its normalized meaning. It keeps the same session/turn ID; canonical storage advances the revision rather than adding another transcript row. Repeated identical labels produce no extra final. A later second voice label within that turn changes attribution back to unknown. Revised evidence cancels pending speech and cannot approve an assessment based on the superseded revision. Empty new final text and malformed/nonfinite timing do not become usable speech evidence. Labels that cannot be uniquely associated with a known timed turn remain unknown.
+
+This fixed an offline fixture where late labels were accumulated internally but never reached canonical final storage. Decoder tests, a local WebSocket final-drain test and HTTP speech cancellation checks pass. This is a parser/lifecycle correction, not a newly measured increase in real-meeting diarization accuracy.

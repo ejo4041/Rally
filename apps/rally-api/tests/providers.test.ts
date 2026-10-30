@@ -100,6 +100,7 @@ test("the streaming adapter drains final speech and records known audio usage th
             transcript: "Finished.",
             audioProcessedMs: 100,
           },
+          { type: "speaker", label: "B", audioProcessedMs: 75 },
         ])
           socket.send(JSON.stringify(event));
         socket.close(1000);
@@ -128,8 +129,76 @@ test("the streaming adapter drains final speech and records known audio usage th
   session.send(new Uint8Array(3200));
   await session.end();
   assert.ok(frames >= 5);
-  assert.equal(events.filter((e) => e.type === "final").length, 1);
+  const finals = events.filter((e) => e.type === "final");
+  assert.equal(finals.length, 2);
+  assert.equal(finals[0].speaker, "A");
+  assert.equal(finals[1].speaker, null);
+  assert.equal(finals[1].turnId, finals[0].turnId);
   // The external accounting contract is checked through the ledger's next-call gate.
   const { UsageLedger } = await import("../src/muse.ts");
   new UsageLedger(store, defaults).check("meeting", 0.01);
+});
+
+test("late speaker and timing metadata revise the same finalized turn, preserving ambiguity without duplicates", () => {
+  const events: TranscriptEvent[] = [];
+  const decoder = new TranscriptDecoder("session-late", (event) =>
+    events.push(event),
+  );
+  decoder.accept({ type: "speechStart", turnId: 4, audioProcessedMs: 0 });
+  decoder.accept({ type: "speechEnd", turnId: 4, audioProcessedMs: 1000 });
+  decoder.accept({
+    type: "speechComplete",
+    turnId: 4,
+    audioProcessedMs: 1000,
+    transcript: "I can check rollback.",
+  });
+  decoder.accept({ type: "speaker", label: "A", audioProcessedMs: 300 });
+  decoder.accept({ type: "speaker", label: "A", audioProcessedMs: 300 });
+  decoder.accept({ type: "speaker", label: "B", audioProcessedMs: 600 });
+  decoder.accept({ type: "speechEnd", turnId: 4, audioProcessedMs: 900 });
+  const finals = events.filter((e) => e.type === "final");
+  assert.deepEqual(
+    finals.map((e) => e.speaker),
+    [null, "A", null, null],
+  );
+  assert.ok(
+    finals.every(
+      (e) =>
+        e.turnId === 4 &&
+        e.text === "I can check rollback." &&
+        e.sessionId === "session-late",
+    ),
+  );
+  assert.equal(finals.at(-1)!.endMs, 900);
+});
+
+test("blank finals and malformed metadata cannot become speech evidence or erase valid timestamps", () => {
+  const events: TranscriptEvent[] = [];
+  const decoder = new TranscriptDecoder("safe", (event) => events.push(event));
+  decoder.accept({
+    type: "speechComplete",
+    turnId: -1,
+    transcript: "Invalid turn",
+  });
+  decoder.accept({ type: "speechComplete", turnId: 1, transcript: "  " });
+  decoder.accept({ type: "speechStart", turnId: 2, audioProcessedMs: 0 });
+  decoder.accept({ type: "speaker", label: "  ", audioProcessedMs: 10 });
+  decoder.accept({
+    type: "speechComplete",
+    turnId: 2,
+    transcript: "Actual speech",
+    audioProcessedMs: Infinity,
+  });
+  decoder.accept({ type: "speechStart", turnId: 2, audioProcessedMs: NaN });
+  decoder.accept({ type: "speechEnd", turnId: 2, audioProcessedMs: -10 });
+  const finals = events.filter((e) => e.type === "final");
+  assert.equal(finals.length, 1);
+  assert.equal(finals[0].speaker, null);
+  assert.equal(finals[0].startMs, 0);
+  assert.equal(finals[0].endMs, null);
+  assert.ok(
+    events
+      .filter((e) => e.type === "progress")
+      .every((e) => Number.isFinite(e.processedMs) && e.processedMs >= 0),
+  );
 });

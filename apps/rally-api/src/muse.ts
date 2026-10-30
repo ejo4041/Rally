@@ -312,59 +312,81 @@ export function createMuse(
 }
 
 // Provider-only event parsing stays here, not in browser or meeting policy code.
+type DecodedTurn = {
+  start: number | null;
+  end: number | null;
+  labels: Set<string>;
+  text?: string;
+  emitted?: string;
+};
 export class TranscriptDecoder {
   sessionId: string;
   emit: (event: TranscriptEvent) => void;
-  turns = new Map<
-    number,
-    {
-      start: number | null;
-      end: number | null;
-      labels: Set<string>;
-      text?: string;
-    }
-  >();
+  turns = new Map<number, DecodedTurn>();
   constructor(sessionId: string, emit: (event: TranscriptEvent) => void) {
     this.sessionId = sessionId;
     this.emit = emit;
   }
+  private publish(turnId: number, turn: DecodedTurn) {
+    if (typeof turn.text !== "string" || !turn.text.trim()) return;
+    const event: Extract<TranscriptEvent, { type: "final" }> = {
+      type: "final",
+      sessionId: this.sessionId,
+      turnId,
+      text: turn.text,
+      speaker: turn.labels.size === 1 ? [...turn.labels][0] : null,
+      startMs: turn.start,
+      endMs: turn.end,
+    };
+    const signature = JSON.stringify(event);
+    if (turn.emitted === signature) return;
+    turn.emitted = signature;
+    this.emit(event);
+  }
   accept(v: Record<string, unknown>) {
     const time =
-      typeof v.audioProcessedMs === "number" ? v.audioProcessedMs : null;
+      typeof v.audioProcessedMs === "number" &&
+      Number.isFinite(v.audioProcessedMs) &&
+      v.audioProcessedMs >= 0
+        ? v.audioProcessedMs
+        : null;
     if (v.type === "transcript" && typeof v.transcript === "string")
       this.emit({ type: "partial", text: v.transcript });
-    if (v.type === "speaker" && typeof v.label === "string" && time !== null) {
-      const candidates = [...this.turns.values()].filter(
-        (t) =>
+    if (
+      v.type === "speaker" &&
+      typeof v.label === "string" &&
+      v.label.trim() &&
+      time !== null
+    ) {
+      const candidates = [...this.turns.entries()].filter(
+        ([, t]) =>
           t.start !== null &&
           t.start <= time &&
           (t.end === null || t.end >= time),
       );
       if (candidates.length === 1) {
-        candidates[0].labels.add(v.label);
+        const [turnId, turn] = candidates[0];
+        turn.labels.add(v.label);
+        this.publish(turnId, turn);
       }
     }
-    if (typeof v.turnId === "number" && Number.isSafeInteger(v.turnId)) {
+    if (
+      typeof v.turnId === "number" &&
+      Number.isSafeInteger(v.turnId) &&
+      v.turnId >= 0
+    ) {
       let turn = this.turns.get(v.turnId);
       if (!turn) {
         turn = { start: null, end: null, labels: new Set() };
         this.turns.set(v.turnId, turn);
       }
-      if (v.type === "speechStart") turn.start = time;
-      if (v.type === "speechEnd") turn.end = time;
+      if (v.type === "speechStart" && time !== null) turn.start = time;
+      if (v.type === "speechEnd" && time !== null) turn.end = time;
       if (v.type === "speechComplete" && typeof v.transcript === "string") {
         turn.text = v.transcript;
         turn.end ??= time;
-        this.emit({
-          type: "final",
-          sessionId: this.sessionId,
-          turnId: v.turnId,
-          text: turn.text,
-          speaker: turn.labels.size === 1 ? [...turn.labels][0] : null,
-          startMs: turn.start,
-          endMs: turn.end,
-        });
       }
+      this.publish(v.turnId, turn);
     }
     if (time !== null) this.emit({ type: "progress", processedMs: time });
   }

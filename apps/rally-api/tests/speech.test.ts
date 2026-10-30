@@ -396,7 +396,7 @@ test("HTTP speech is owner isolated, generated only from approved text, shields 
       epoch: assessed.epoch,
       text: "Injected text must not be spoken",
     };
-  const job = await (
+  let job = await (
     await req(`/meetings/${m.id}/speech`, "POST", input, alice)
   ).json();
   await settle();
@@ -414,6 +414,52 @@ test("HTTP speech is owner isolated, generated only from approved text, shields 
   );
   assert.equal(wav.headers.get("content-type"), "audio/wav");
   assert.ok(wav.headers.get("cache-control")?.includes("no-store"));
+  final({
+    type: "final",
+    sessionId: "s",
+    turnId: 0,
+    text: "We need an owner",
+    speaker: null,
+  });
+  assert.equal(
+    (
+      await (
+        await req(`/meetings/${m.id}/speech/${job.id}`, "GET", undefined, alice)
+      ).json()
+    ).state,
+    "canceled",
+  );
+  assert.equal(
+    (
+      await req(
+        `/meetings/${m.id}/speech/${job.id}/audio`,
+        "GET",
+        undefined,
+        alice,
+      )
+    ).status,
+    409,
+  );
+  const refreshed = await (
+    await req(
+      `/meetings/${m.id}/commands`,
+      "POST",
+      { type: "request_guidance" },
+      alice,
+    )
+  ).json();
+  job = await (
+    await req(
+      `/meetings/${m.id}/speech`,
+      "POST",
+      {
+        interventionId: refreshed.interventions.at(-1).id,
+        epoch: refreshed.epoch,
+      },
+      alice,
+    )
+  ).json();
+  await settle();
   await req(
     `/meetings/${m.id}/speech/${job.id}/playback`,
     "POST",
