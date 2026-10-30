@@ -1,6 +1,6 @@
 # Muse realtime speaker metadata contract
 
-Research date: October 30, 2026. Scope: read-only inspection of public primary documentation, official example source, the current `TranscriptDecoder`, and existing sanitized evidence. No inference requests, credentials, audio access, service changes, or code edits. 
+Research date: October 30, 2026. Scope: read-only inspection of public primary documentation, official example source, the current `TranscriptDecoder`, and existing sanitized evidence. No inference requests, credentials, audio access, service changes, or code edits.
 
 ## Source access and authority
 
