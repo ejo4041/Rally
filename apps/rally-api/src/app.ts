@@ -1,4 +1,5 @@
 import express from "express";
+import { SpeechOutput, configuredSpeech, type SpeechEngine } from "./speech.ts";
 import {
   TeamsBridge,
   configuredTeamsRequest,
@@ -27,6 +28,7 @@ export function createApplication(
     providers?: Partial<Providers>;
     media?: Media;
     teamsRequest?: TeamsRequest;
+    speechEngine?: SpeechEngine;
   } = {},
 ) {
   const config = { ...defaults, ...options };
@@ -37,7 +39,11 @@ export function createApplication(
   };
   const meetings = new Meetings(store, providers);
   const media: Media = options.media || new LiveKitMedia(config);
-  const engine = new Engine(meetings, media, config);
+  const speech = new SpeechOutput(
+    options.speechEngine || configuredSpeech(),
+    (id) => meetings.get(id),
+  );
+  const engine = new Engine(meetings, media, config, speech);
   const teams = new TeamsBridge(
     store,
     meetings,
@@ -165,6 +171,62 @@ export function createApplication(
   });
   const owned = (req: express.Request) =>
     meetings.get(String(req.params.id), userForRequest(store, req).id);
+  app.get("/api/speech/status", (req, res) => {
+    userForRequest(store, req);
+    res.json(speech.status());
+  });
+  const diagnosticOwner = (req: express.Request) =>
+    "diagnostic:" + userForRequest(store, req).id;
+  app.post("/api/speech/test", (req, res) => {
+    const user = userForRequest(store, req);
+    if (meetings.list(user.id).some((m) => m.phase === "live"))
+      throw new HttpError(
+        "End your live meeting before testing the voice.",
+        409,
+      );
+    res.status(202).json(speech.test(user.id));
+  });
+  app.get("/api/speech/test/:job", (req, res) =>
+    res.json(speech.get(diagnosticOwner(req), String(req.params.job))),
+  );
+  app.get("/api/speech/test/:job/audio", (req, res) =>
+    res
+      .type("audio/wav")
+      .send(speech.audio(diagnosticOwner(req), String(req.params.job))),
+  );
+  app.post("/api/speech/test/:job/playback", (req, res) => {
+    const data = z
+      .object({ state: z.enum(["playing", "completed", "canceled"]) })
+      .parse(req.body);
+    res.json(
+      speech.playback(diagnosticOwner(req), String(req.params.job), data.state),
+    );
+  });
+  app.post("/api/meetings/:id/speech", (req, res) => {
+    const m = owned(req);
+    const data = z
+      .object({
+        interventionId: z.string().uuid(),
+        epoch: z.number().int().nonnegative(),
+      })
+      .parse(req.body);
+    res.status(202).json(speech.create(m.id, data.interventionId, data.epoch));
+  });
+  app.get("/api/meetings/:id/speech/:job", (req, res) =>
+    res.json(speech.get(owned(req).id, String(req.params.job))),
+  );
+  app.get("/api/meetings/:id/speech/:job/audio", (req, res) => {
+    const audio = speech.audio(owned(req).id, String(req.params.job));
+    res.type("audio/wav").send(audio);
+  });
+  app.post("/api/meetings/:id/speech/:job/playback", (req, res) => {
+    const data = z
+      .object({ state: z.enum(["playing", "completed", "canceled"]) })
+      .parse(req.body);
+    res.json(
+      speech.playback(owned(req).id, String(req.params.job), data.state),
+    );
+  });
   app.post("/api/meetings/:id/prepare", async (req, res) => {
     const m = owned(req);
     await meetings.prepare(m);
@@ -251,6 +313,7 @@ export function createApplication(
     app,
     async close() {
       await engine.close();
+      speech.close();
       store.close();
     },
   };

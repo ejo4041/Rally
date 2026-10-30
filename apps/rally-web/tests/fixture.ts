@@ -1,4 +1,8 @@
 // Local integration fixture only. Providers are injected; no model API is used.
+import {
+  configuredSpeech,
+  type SpeechEngine,
+} from "../../rally-api/src/speech.ts";
 import { createApplication } from "../../rally-api/src/app.ts";
 import { LiveKitMedia } from "../../rally-api/src/media.ts";
 import { defaults } from "../../rally-api/src/config.ts";
@@ -161,8 +165,59 @@ function report(s: Snapshot) {
     },
   };
 }
+let speechGenerations = 0;
 let teamsJob: any = null;
+const syntheticSpeech: SpeechEngine = {
+  async start() {},
+  async synthesize() {
+    speechGenerations++;
+    const pcm = Buffer.alloc(32000 * 3);
+    for (let i = 0; i < pcm.length / 2; i++)
+      pcm.writeInt16LE(
+        Math.round(3000 * Math.sin((2 * Math.PI * 440 * i) / 16000)),
+        i * 2,
+      );
+    const wav = Buffer.alloc(44 + pcm.length);
+    wav.write("RIFF");
+    wav.writeUInt32LE(wav.length - 8, 4);
+    wav.write("WAVEfmt ", 8);
+    wav.writeUInt32LE(16, 16);
+    wav.writeUInt16LE(1, 20);
+    wav.writeUInt16LE(1, 22);
+    wav.writeUInt32LE(16000, 24);
+    wav.writeUInt32LE(32000, 28);
+    wav.writeUInt16LE(2, 32);
+    wav.writeUInt16LE(16, 34);
+    wav.write("data", 36);
+    wav.writeUInt32LE(pcm.length, 40);
+    pcm.copy(wav, 44);
+    return {
+      pcm,
+      wav,
+      sampleRate: 16000,
+      seconds: 3,
+      model: "facebook/mms-tts-eng",
+      revision: "c71de0fe7204c83f1c10820a7d696d0b450048ba",
+    };
+  },
+  close() {},
+};
+const localSpeech =
+  process.env.RALLY_TEST_REAL_MMS === "1" ? configuredSpeech() : undefined;
+if (process.env.RALLY_TEST_REAL_MMS === "1" && !localSpeech)
+  throw Error("Enable the pinned local MMS engine for the real speech test.");
 const api = createApplication({
+  speechEngine: localSpeech
+    ? {
+        start: () => localSpeech.start(),
+        async synthesize(text, options) {
+          speechGenerations++;
+          return localSpeech.synthesize(text, options);
+        },
+        close: () => localSpeech.close(),
+      }
+    : syntheticSpeech,
+
   teamsRequest: async (action, data: any) => {
     if (action === "status")
       return {
@@ -218,6 +273,7 @@ api.app.get("/api/test/state", (_req, res) =>
   res.json({
     totalBytes,
     energy,
+    speechGenerations,
     reportAttempts,
     reportedTurns,
     speechSessions,

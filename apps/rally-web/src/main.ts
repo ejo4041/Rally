@@ -8,6 +8,7 @@ import {
   type Plan,
   type Connection,
 } from "./api.ts";
+import { createSpeechPlayer } from "./speech.ts";
 import { setupAudioCheck } from "./audio-check.ts";
 import { setupTeams } from "./teams.ts";
 import { MeetingSession } from "./session.ts";
@@ -44,6 +45,27 @@ const state = {
   pollBusy: false,
   ending: false,
 };
+const speech = createSpeechPlayer({
+  current: (prompt) => {
+    const s = state.session;
+    return (
+      !!s &&
+      input("spoken-prompts").checked &&
+      !!state.capture &&
+      !s.meeting.paused &&
+      s.meeting.phase === "live" &&
+      s.meeting.epoch === prompt.epoch &&
+      s.intervention?.id === prompt.id
+    );
+  },
+  status: (message, shielded) => {
+    state.media?.setShielded(shielded);
+    $("speech-status").textContent = message;
+    button("stop-speaking").hidden = !speech.isActive();
+    if (shielded)
+      $("capture-label").textContent = "Audio shielded while Rally speaks";
+  },
+});
 const audioCheck = setupAudioCheck();
 const teams = setupTeams((id) => {
   void loadHistory().catch(fail);
@@ -80,6 +102,8 @@ function showAuth() {
   $("workspace").hidden = true;
 }
 async function signOutLocal() {
+  speech.cancel();
+  input("spoken-prompts").checked = false;
   audioCheck.stop();
   teams.reset();
   showAuth();
@@ -159,6 +183,7 @@ async function loadHistory() {
     .join("");
 }
 function home() {
+  speech.cancel();
   audioCheck.stop();
   const media = state.media;
   state.media = null;
@@ -186,6 +211,8 @@ async function route() {
     if (state.session) location.hash = `meeting/${state.session.meeting.id}`;
     return;
   }
+  speech.cancel();
+  input("spoken-prompts").checked = false;
   audioCheck.stop();
   const generation = ++state.generation;
   const media = state.media;
@@ -279,6 +306,7 @@ function evidence(ids: string[]) {
   return `<div class="evidence">${ids.map((id, i) => `<button data-evidence="${escape(id)}">Source ${i + 1} ↗</button>`).join("")}</div>`;
 }
 function render() {
+  speech.validate();
   const session = state.session;
   for (const id of [
     "back",
@@ -306,6 +334,8 @@ function render() {
   $("connection-status").textContent = state.status;
   $("restart-session-label").hidden = !(live && !state.capture);
   $("start-panel").hidden = !pre;
+  button("test-voice").disabled =
+    state.busy || !!state.capture || m.phase === "live";
   button("check-audio").disabled = state.busy || !!state.capture;
   button("start").disabled = state.busy || !m.plan || !input("consent").checked;
   button("start").textContent = state.selecting
@@ -357,9 +387,11 @@ function render() {
     : '<p class="small muted">No attributable voices yet.</p>';
   $("controls").hidden = !(live || state.capture);
   $("capture-label").textContent = state.capture
-    ? state.muted
-      ? "Audio muted"
-      : "Listening · Muse transcription"
+    ? speech.isPlaying()
+      ? "Audio shielded while Rally speaks"
+      : state.muted
+        ? "Audio muted"
+        : "Listening · Muse transcription"
     : "Audio off here";
   button("mute").disabled = !state.capture || state.busy;
   button("mute").textContent = state.muted ? "Unmute audio" : "Mute audio";
@@ -426,6 +458,7 @@ async function perform(task: () => Promise<void>) {
   }
 }
 function stopCapture() {
+  speech.cancel();
   if (state.session) state.session.partial = "";
   state.selecting?.abort();
   state.selecting = null;
@@ -507,7 +540,26 @@ async function start() {
                     "Review the revised plan.",
                 ),
             );
+          if (
+            event.type === "speech.cancel" ||
+            event.type === "moderator.control" ||
+            event.type === "plan.updated" ||
+            event.type === "meeting.ended" ||
+            event.type === "capture.gap"
+          )
+            speech.cancel();
           if (session.apply(event)) scheduleRefresh();
+          if (
+            event.type === "intervention" &&
+            input("spoken-prompts").checked
+          ) {
+            const prompt = event.data as {
+              id: string;
+              text: string;
+              epoch: number;
+            };
+            if (typeof prompt.epoch === "number") void speech.speak(id, prompt);
+          }
           render();
         },
         (status) => {
@@ -557,6 +609,7 @@ async function end() {
   });
 }
 async function command(type: string) {
+  speech.cancel();
   if (!state.session) return;
   state.session.intervention = null;
   await perform(async () => {
@@ -926,3 +979,24 @@ button("check-audio").onclick = () => {
       input("include-mic").checked,
     );
 };
+
+input("spoken-prompts").onchange = () => {
+  if (!input("spoken-prompts").checked) speech.cancel();
+  else
+    void api<{ enabled: boolean; ready: boolean }>("/speech/status")
+      .then((status) => {
+        if (!status.enabled || !status.ready) {
+          input("spoken-prompts").checked = false;
+          toast(
+            "Meta MMS voice is unavailable or warming. Prompts stay visible.",
+          );
+        }
+      })
+      .catch(fail);
+};
+button("stop-speaking").onclick = () => {
+  speech.cancel();
+  if (state.session?.meeting.phase === "live") void command("dismiss");
+};
+
+button("test-voice").onclick = () => void speech.test();

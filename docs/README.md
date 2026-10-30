@@ -1,5 +1,7 @@
 # Rally documentation
 
+**Integrated spoken guidance:** [Meta MMS lifecycle, free voice check and validation](integrated-speech.md). Real local MMS browser playback passes; remote call audibility still needs rehearsal.
+
 **Free audio preflight:** [Integrated local tab/microphone check and validation](audio-preflight.md). Verify separate input signals before opening paid transcription.
 
 **WhatsApp guest prototype:** [Preparation and local audio evidence](whatsapp-guest-prototype.md). Isolated audio routing passes; a fresh call link and host admission are needed for actual guest joining. No enabled WhatsApp invite UI is deployed.

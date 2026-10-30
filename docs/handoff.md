@@ -1,12 +1,14 @@
 # Rally handoff — current checkpoint
 
+**Integrated spoken guidance:** [Meta MMS lifecycle, free voice check and validation](integrated-speech.md). Real local MMS browser playback passes; remote call audibility still needs rehearsal.
+
 **Free audio preflight:** [Integrated local tab/microphone check and validation](audio-preflight.md). Verify separate input signals before opening paid transcription.
 
 **WhatsApp guest prototype:** [Preparation and local audio evidence](whatsapp-guest-prototype.md). Isolated audio routing passes; a fresh call link and host admission are needed for actual guest joining. No enabled WhatsApp invite UI is deployed.
 
 **Teams invite UI:** [Meeting links, ownership, transcription-test limits and validation](teams-integrated-ui.md). The Meetings page now has a Teams link field plus a distinct browser-tab setup path for other calls.
 
-**Integrated app deployed:** [Private HTTPS URL, test steps and service operations](integrated-deployment.md). Frontend/API/LiveKit run on the existing host. Sign in or create an app account with Tailscale connected. Muse is enabled with existing budget gates; generated speech is still pending.
+**Integrated app deployed:** [Private HTTPS URL, test steps and service operations](integrated-deployment.md). Frontend/API/LiveKit run on the existing host. Sign in or create an app account with Tailscale connected. Muse is enabled with existing budget gates. See the speech checkpoint above for the new host-browser voice implementation.
 
 **Frontend integration:** [Node API frontend, validation and current limits](frontend-integration.md). Local workflow is implemented in `apps/rally-web`; use `node scripts/dev-rally.mjs` after setup. Remote deployment and human rehearsal remain pending; the restricted Site is unchanged.
 

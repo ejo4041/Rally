@@ -120,6 +120,8 @@ export class MeetingMedia {
   room: Room | null = null;
   private track: LocalAudioTrack | null = null;
   private audio: AudioInput | null = null;
+  private muted = false;
+  private shielded = false;
   private elements = new Set<HTMLMediaElement>();
   constructor(
     private meetingId: string,
@@ -204,8 +206,16 @@ export class MeetingMedia {
     }
   }
   setMuted(muted: boolean) {
+    this.muted = muted;
+    this.updateGate();
+  }
+  setShielded(value: boolean) {
+    this.shielded = value;
+    this.updateGate();
+  }
+  private updateGate() {
     if (this.track?.mediaStreamTrack)
-      this.track.mediaStreamTrack.enabled = !muted;
+      this.track.mediaStreamTrack.enabled = !(this.muted || this.shielded);
   }
   stopCapture() {
     this.audio?.close();

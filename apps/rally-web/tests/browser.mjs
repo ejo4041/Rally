@@ -79,6 +79,16 @@ try {
   page.setDefaultTimeout(15000);
   page.on("pageerror", (e) => errors.push(e.message));
   await page.addInitScript(() => {
+    window.fixturePlayback = [];
+    const nativePlay = HTMLMediaElement.prototype.play;
+    HTMLMediaElement.prototype.play = function () {
+      if (window.fixtureBlockPlayback)
+        return Promise.reject(
+          new DOMException("Fixture blocked playback", "NotAllowedError"),
+        );
+      fixturePlayback.push(this);
+      return nativePlay.call(this);
+    };
     window.fixtureAudio = {
       streams: [],
       contexts: [],
@@ -216,6 +226,29 @@ try {
   assert.match(
     await page.locator("#plan").textContent(),
     /Choose release scope/,
+  );
+  for (let i = 0; i < 100; i++) {
+    if (
+      (await (await page.request.get(base + "/api/speech/status")).json()).ready
+    )
+      break;
+    await page.waitForTimeout(250);
+  }
+  await page.locator("#test-voice").click();
+  await page.waitForFunction(() =>
+    fixturePlayback.some((audio) => !audio.paused),
+  );
+  await page.locator("#stop-speaking").click();
+  await page.waitForFunction(() =>
+    fixturePlayback.every((audio) => audio.paused),
+  );
+  const diagnosticGenerations = (
+    await (await page.request.get(base + "/api/test/state")).json()
+  ).speechGenerations;
+  assert.equal(
+    diagnosticGenerations,
+    1,
+    "free test voice synthesizes exactly once",
   );
   // Local preflight must leave meeting lifecycle and ASR untouched.
   await page.locator("#check-audio").click();
@@ -377,6 +410,88 @@ try {
     ),
     true,
   );
+  assert.equal(
+    (await (await page.request.get(base + "/api/test/state")).json())
+      .speechGenerations,
+    diagnosticGenerations,
+    "meeting voice must be opt-in",
+  );
+  await page.locator("#spoken-prompts").check();
+  await page.waitForTimeout(100);
+  await page.locator("#request-guidance").click();
+  await page.waitForFunction(() =>
+    document
+      .querySelector("#speech-status")
+      .textContent.includes("Rally is speaking"),
+  );
+  assert.equal(
+    await page.evaluate(
+      () => fixtureAudio.streams[0].getAudioTracks()[0].enabled,
+    ),
+    false,
+    "input shield applies before actual playback",
+  );
+  await page.waitForFunction(() =>
+    fixturePlayback.some((audio) => !audio.paused),
+  );
+  await page.locator("#stop-speaking").click();
+  await page.waitForFunction(() =>
+    fixturePlayback.every((audio) => audio.paused),
+  );
+  assert.equal(
+    await page.evaluate(
+      () => fixtureAudio.streams[0].getAudioTracks()[0].enabled,
+    ),
+    true,
+    "cancel restores unmuted input",
+  );
+  await page.locator("#request-guidance").click();
+  await page.waitForFunction(() =>
+    document
+      .querySelector("#speech-status")
+      .textContent.includes("Rally is speaking"),
+  );
+  await page.locator("#pause").click();
+  await page.waitForFunction(() =>
+    fixturePlayback.every((audio) => audio.paused),
+  );
+  await page.waitForFunction(
+    () => document.querySelector("#pause").textContent === "Resume Rally",
+  );
+  await page.locator("#pause").click();
+  await page.locator("#request-guidance").click();
+  await page.waitForFunction(() =>
+    document
+      .querySelector("#speech-status")
+      .textContent.includes("Rally is speaking"),
+  );
+  await page.waitForFunction(
+    () => document.querySelector("#stop-speaking").hidden,
+    undefined,
+    { timeout: 8000 },
+  );
+  assert.equal(
+    await page.evaluate(
+      () => fixtureAudio.streams[0].getAudioTracks()[0].enabled,
+    ),
+    true,
+  );
+  await page.evaluate(() => (window.fixtureBlockPlayback = true));
+  await page.locator("#request-guidance").click();
+  await page.waitForFunction(() =>
+    document
+      .querySelector("#speech-status")
+      .textContent.includes("Fixture blocked playback"),
+  );
+  assert.equal(
+    await page.evaluate(
+      () => fixtureAudio.streams[0].getAudioTracks()[0].enabled,
+    ),
+    true,
+  );
+  assert.equal(await page.locator("#stop-speaking").isVisible(), false);
+  await page.evaluate(() => (window.fixtureBlockPlayback = false));
+  await page.locator("#spoken-prompts").uncheck();
   await mkdir(resolve(root, "test-results"), { recursive: true });
   await page.screenshot({
     path: resolve(root, "test-results/live-desktop.png"),
@@ -683,7 +798,11 @@ try {
     testedAt: new Date().toISOString(),
     passed: true,
     backend: "real Express/cookie auth/SQLite and LiveKit",
-    modelProviders: "injected deterministic fixtures",
+    modelProviders: "injected deterministic fixtures for reasoning and ASR",
+    speechEngine:
+      process.env.RALLY_TEST_REAL_MMS === "1"
+        ? "real pinned local Meta MMS"
+        : "synthetic tone fixture",
     syntheticAudio: true,
     paidModelCalls: 0,
     checks: [
@@ -700,6 +819,7 @@ try {
       "evidence links, host correction, reload and export",
       "cross-owner denial and deletion",
       "mobile layout",
+      "opt-in browser WAV playback, Stop speaking, Pause and completion restore shielded input",
       "free preflight detects separate sources, rejects missing consent, stops manually/after 15s and closes late grants without ASR",
       "Teams invite validation, lobby, leave and finalized transcript import via injected bridge",
       "tab rejection/cancellation stops tracks before ASR",
@@ -708,7 +828,12 @@ try {
     ],
   };
   await writeFile(
-    resolve(root, "test-results/browser-check.json"),
+    resolve(
+      root,
+      process.env.RALLY_TEST_REAL_MMS === "1"
+        ? "test-results/real-mms-browser-check.json"
+        : "test-results/browser-check.json",
+    ),
     JSON.stringify(report, null, 2) + "\n",
   );
   console.log(JSON.stringify(report, null, 2));
@@ -720,6 +845,7 @@ try {
         status: document.querySelector("#connection-status")?.textContent,
         toast: document.querySelector("#toast")?.textContent,
         phase: document.querySelector("#phase")?.textContent,
+        speech: document.querySelector("#speech-status")?.textContent,
       })),
       null,
       2,

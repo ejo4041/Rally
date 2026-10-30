@@ -8,7 +8,7 @@ This uses the same source acquisition as the integrated live workflow. Backend/p
 
 Validation: frontend typecheck/build and four state tests pass. The full browser test uses real local HTTP/SQLite/LiveKit with injected model providers and synthetic audio. Both meters detect signals; manual and automatic stops close all tracks; missing consent opens no check; canceled picker grants close; the ASR session count stays unchanged during preflight. The subsequent complete meeting/report workflow also passes. No real model call was made. [Browser result](research/frontend-browser-check.json).
 
-Next overnight priorities: connect approved Meta MMS speech to the Node backend with pause/dismiss/end cancellation and echo handling; verify shared-room attribution without equating voice labels with people; complete the WhatsApp guest admission/audio trial when a host supplies a fresh link; rehearse the three-person decision loop before recording. Actual human/device/platform validation remains necessary.
+Next overnight priorities: rehearse [integrated Meta MMS speech](integrated-speech.md), including host playback and input shielding; verify shared-room attribution without equating voice labels with people; complete the WhatsApp guest admission/audio trial when a host supplies a fresh link; rehearse the three-person decision loop before recording. Actual human/device/platform validation remains necessary.
 
 ## Deployment
 

@@ -1,3 +1,4 @@
+import type { SpeechOutput } from "./speech.ts";
 import { randomUUID } from "node:crypto";
 import { z } from "zod";
 import { HttpError } from "./auth.ts";
@@ -39,7 +40,14 @@ export class Engine {
   reports = new Map<string, Promise<void>>();
   starting = new Set<string>();
   closed = false;
-  constructor(meetings: Meetings, media: Media, config: Configuration) {
+  speech?: SpeechOutput;
+  constructor(
+    meetings: Meetings,
+    media: Media,
+    config: Configuration,
+    speech?: SpeechOutput,
+  ) {
+    this.speech = speech;
     this.meetings = meetings;
     this.media = media;
     this.config = config;
@@ -86,6 +94,7 @@ export class Engine {
         .catch(() => {});
   }
   gap(id: string, reason: string) {
+    this.speech?.cancel(id);
     try {
       const m = this.meetings.get(id);
       if (m.gaps.at(-1)?.reason !== reason) {
@@ -129,6 +138,12 @@ export class Engine {
       old.endMs === turn.endMs
     )
       return;
+    if (old) {
+      this.speech?.cancel(id);
+      this.emit(id, "speech.cancel", {
+        reason: "Transcript evidence was revised",
+      });
+    }
     this.meetings.store.db
       .prepare(
         "INSERT INTO turns VALUES(?,?,?) ON CONFLICT(meeting_id,id) DO UPDATE SET body=excluded.body",
@@ -182,6 +197,7 @@ export class Engine {
     const previousStartedAt = m.startedAt;
     m.phase = "live";
     m.startedAt ??= Date.now();
+    this.speech?.cancel(m.id);
     m.epoch++;
     m.error = null;
     this.meetings.save(m);
@@ -190,7 +206,12 @@ export class Engine {
         m,
         (bytes) => {
           try {
-            if (!state.ending) state.asr?.send(bytes);
+            if (!state.ending)
+              state.asr?.send(
+                this.speech?.shielded(m.id)
+                  ? new Uint8Array(bytes.byteLength)
+                  : bytes,
+              );
           } catch (e) {
             this.gap(
               m.id,
@@ -307,7 +328,8 @@ export class Engine {
         };
         current.interventions.push(item);
         state.lastIntervention = item.at;
-        this.emit(id, "intervention", item);
+        this.speech?.offer(id, { ...item, epoch: current.epoch });
+        this.emit(id, "intervention", { ...item, epoch: current.epoch });
       }
       this.meetings.save(current);
       this.emit(id, "assessment", result);
@@ -340,6 +362,7 @@ export class Engine {
       await this.tick(m.id, true);
       return this.meetings.get(m.id);
     }
+    this.speech?.cancel(m.id);
     m.epoch++;
     if (command.type === "pause") m.paused = true;
     if (command.type === "resume") m.paused = false;
@@ -354,6 +377,7 @@ export class Engine {
     if (m.phase === "ended") throw new HttpError("Meeting has ended", 409);
     const plan = planSchema.parse(input);
     validatePlan(plan);
+    this.speech?.cancel(m.id);
     m.epoch++;
     m.plan = plan;
     m.originalPlan ??= structuredClone(plan);
@@ -373,6 +397,7 @@ export class Engine {
     if (!this.meetings.turns(m.id).some((t) => t.speaker === speakerId))
       throw new HttpError("Unknown speaker label");
     m.speakerNames[speakerId] = name;
+    this.speech?.cancel(m.id);
     m.epoch++;
     this.meetings.save(m);
     this.emit(m.id, "speaker.updated", { speakerId, name });
@@ -384,6 +409,7 @@ export class Engine {
     if (m.phase === "ended") return m;
     const state = this.active.get(m.id);
     if (state?.ending) throw new HttpError("Meeting is ending", 409);
+    this.speech?.cancel(m.id);
     m.epoch++;
     this.meetings.save(m);
     if (state) {
@@ -478,6 +504,7 @@ export class Engine {
       } finally {
         const state = this.active.get(m.id);
         await state?.media?.close();
+        this.speech?.forget(m.id);
         this.active.delete(m.id);
         this.reports.delete(m.id);
       }
@@ -491,6 +518,7 @@ export class Engine {
     if (!state || state.ending) return;
     state.ending = true;
     clearInterval(state.timer);
+    this.speech?.cancel(m.id);
     m.epoch++;
     this.meetings.save(m);
     await state.asr?.end();
@@ -516,6 +544,7 @@ export class Engine {
     )
       throw new HttpError("Wait for processing to finish before deleting", 409);
     const state = this.active.get(m.id);
+    this.speech?.forget(m.id);
     if (state) {
       state.ending = true;
       clearInterval(state.timer);
@@ -528,6 +557,7 @@ export class Engine {
   async close() {
     this.closed = true;
     for (const [id, s] of this.active) {
+      this.speech?.forget(id);
       s.ending = true;
       clearInterval(s.timer);
       await s.asr?.end();
@@ -536,6 +566,7 @@ export class Engine {
         const m = this.meetings.get(id);
         if (m.phase === "live") {
           m.phase = "interrupted";
+          this.speech?.cancel(m.id);
           m.epoch++;
           this.meetings.save(m);
         }
