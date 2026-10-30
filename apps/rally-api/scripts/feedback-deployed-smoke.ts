@@ -12,7 +12,7 @@ import {categories,type Meeting,type Report,type Turn} from '../src/contracts.ts
 if(process.env.RALLY_FEEDBACK_DEPLOYED_SMOKE!=='1')throw Error('Operator gate required on deployment host');
 const base='https://rally.tail703f9e.ts.net',db=new DatabaseSync('/srv/hackathon/rally-deployed/state/rally.sqlite'),store={db} as Store,users:{id:string;username:string;password:string}[]=[],meetingId=randomUUID();
 db.exec('PRAGMA foreign_keys=ON');
-let browser:Awaited<ReturnType<typeof chromium.launch>>|undefined;
+let browser:Awaited<ReturnType<typeof chromium.launch>>|undefined,screen:{name:string;close:()=>Promise<void>|void}|undefined;
 const evidence:Record<string,unknown>={at:new Date().toISOString(),passed:false,scope:'Public HTTPS and deployed API/PDF sandbox with disposable synthetic accounts/report',modelCalls:0,platformJoins:0};
 async function login(page:Page,username:string,password:string){await page.goto(base);await page.locator('#username').fill(username);await page.locator('#password').fill(password);await page.locator('#auth-submit').click();await page.locator('#enrollment-secret').waitFor({state:'visible'});await page.waitForFunction(()=>document.querySelector('#enrollment-secret')!.textContent!.length>0);assert.equal(await page.locator('#mfa-code').getAttribute('name'),'totp');const secret=await page.locator('#enrollment-secret').textContent();await page.locator('#mfa-code').fill(new TOTP({secret:Secret.fromBase32(secret!),digits:6,period:30,algorithm:'SHA1'}).generate());await page.locator('#mfa-submit').click();await page.locator('#recovery-continue').waitFor({state:'visible'});await page.locator('#recovery-continue').click();await page.locator('#workspace').waitFor({state:'visible'});}
 try{
@@ -22,8 +22,10 @@ try{
  m.interventions=[{id:'synthetic-rally-response',at:Date.now(),text:'Synthetic Rally response: owner is still unassigned.',kind:'clarify'}];
  m.speechStatus={id:'synthetic-voice',interventionId:'synthetic-rally-response',epoch:1,at:Date.now(),state:'canceled',destination:'teams'};
  db.prepare('INSERT INTO meetings VALUES(?,?,?)').run(m.id,m.userId,JSON.stringify(m));const turn:Turn={id:'probe:0',sessionId:'probe',turnId:0,revision:1,text:'We propose checking this synthetic release. Owner is not assigned.',speaker:null,startMs:0,endMs:2000};db.prepare('INSERT INTO turns VALUES(?,?,?)').run(m.id,turn.id,JSON.stringify(turn));
- browser=await chromium.launch({headless:true,args:['--no-sandbox','--host-resolver-rules=MAP rally.tail703f9e.ts.net '+(process.env.RALLY_PUBLIC_RELAY_IP||'209.177.145.192')]});
+ let executablePath:string|undefined;if(process.env.RALLY_MASCOT_GPU_CHECK==='1'){const camera=await import(new URL('../../../experiments/teams-presence/camera.mjs',import.meta.url).href);screen=await camera.display(1601,1101);executablePath=camera.chrome;}
+ browser=await chromium.launch({headless:!screen,executablePath,env:screen?{...process.env,DISPLAY:screen.name}:undefined,args:['--no-sandbox','--host-resolver-rules=MAP rally.tail703f9e.ts.net '+(process.env.RALLY_PUBLIC_RELAY_IP||'209.177.145.192'),...(screen?['--use-gl=angle','--use-angle=gl','--ignore-gpu-blocklist','--disable-gpu-sandbox']:[])]});
  const owner=await browser.newContext(),page=await owner.newPage();await login(page,users[0].username,users[0].password);evidence.mfaLogin=true;evidence.semanticOTP=true;
+ if(screen){await page.locator('#rally-mascot canvas').waitFor({state:'visible'});await page.waitForTimeout(300);assert.equal(await page.locator('#rally-mascot [data-graphics=unavailable]').count(),0);evidence.publicMascotWebGL=true;}
  const cookies=await owner.cookies();assert.ok(cookies.some(c=>c.name==='rally_session'&&c.secure&&c.httpOnly));evidence.secureCookie=true;
  assert.equal(await page.evaluate(async password=>(await fetch('/api/auth/signup',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:'disabled_signup_probe',password})})).status,users[0].password),403);evidence.closedRegistration=true;
  const picker=page.locator('#workspace [data-theme-selector]');await picker.selectOption('dark');await page.waitForFunction(()=>document.documentElement.dataset.theme==='dark');await page.reload();await page.locator('#workspace').waitFor({state:'visible'});assert.equal(await picker.inputValue(),'dark');await picker.selectOption('light');await page.waitForFunction(()=>document.documentElement.dataset.theme==='light');evidence.appearanceSelector=true;evidence.appearancePersists=true;
@@ -44,7 +46,7 @@ try{
  await page.locator('[data-revoke-report]').click();await page.waitForFunction(()=>document.querySelector('#report-recipient-list')!.textContent!.includes('No recipients'));
  assert.equal(await other.evaluate(async id=>(await fetch('/api/shared-reports/'+id)).status,m.id),404);evidence.revocation=true;evidence.passed=true;
 }finally{
- await browser?.close();db.prepare('DELETE FROM meetings WHERE id=?').run(meetingId);
+ await browser?.close();await screen?.close();db.prepare('DELETE FROM meetings WHERE id=?').run(meetingId);
  for(const user of users){for(const table of ['sessions','auth_challenges','recovery_codes','account_tokens','user_security'])db.prepare(`DELETE FROM ${table} WHERE user_id=?`).run(user.id);db.prepare('DELETE FROM audit WHERE actor=? OR target=?').run(user.id,user.id);db.prepare('DELETE FROM users WHERE id=?').run(user.id);}
  db.prepare('DELETE FROM audit WHERE target=?').run(meetingId);evidence.temporaryRecordsRemoved=true;audit(store,null,'operator.feedback_validation',null,{passed:evidence.passed,modelCalls:0});db.close();
  writeFileSync(new URL(process.env.RALLY_FEEDBACK_SMOKE_OUTPUT??'../../../docs/research/loading-replies-deployed.json',import.meta.url),JSON.stringify(evidence,null,2)+'\n');console.log(JSON.stringify(evidence));

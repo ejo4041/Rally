@@ -1,3 +1,5 @@
+**Current home mascot: same Living Silk as meetings, deployed/merged9c57bfe.** [Implementation and checks](rally-mascot.md), [public actual-WebGL evidence](research/rally-mascot-deployed.json). Main includes all previous work. Static assets9c57bfe; running API8054fb5 unchanged. Workspace `/srv/hackathon/rally-feedback`, branch polish/rally-mascot-20261030; resume phone session here and read these notes.
+
 **Rally mascot follow-up:** [Same meeting visualization in the home hero](rally-mascot.md), real GPU/reduced-motion/lifecycle checks pass. Worktree unchanged, branch polish/rally-mascot-20261030.
 
 **Current UI: Light/Dark/System + Meta showcase, merged and deployed.** [Scope and verification](appearance-and-meta-showcase.md), [public evidence](research/appearance-deployed.json). Main includes all prior feedback through2c8c0f5 and UI37d5740. Static assets37d5740; API8054fb5 unchanged/no restart. Droplet workspace `/srv/hackathon/rally-feedback`, branch `polish/meta-showcase-20261030`. Appearance selector is top-right; browser choice persists.
