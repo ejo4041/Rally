@@ -50,6 +50,7 @@ export function createSpeechPlayer(options: {
   }
   async function speak(meetingId: string, prompt: Prompt, diagnostic = false) {
     const path = diagnostic ? "/speech/test" : `/meetings/${meetingId}/speech`;
+    if (!diagnostic && !options.current(prompt)) return;
     if (seen.has(prompt.id)) return;
     seen.add(prompt.id);
     if (seen.size > 1000) seen.delete(seen.values().next().value!);

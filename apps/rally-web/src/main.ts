@@ -532,6 +532,7 @@ async function start() {
         id,
         (event) => {
           if (state.session !== session) return;
+          if (session.isStaleControl(event)) return;
           if (
             event.type === "capture.gap" &&
             !state.ending &&
@@ -572,7 +573,11 @@ async function start() {
               text: string;
               epoch: number;
             };
-            if (typeof prompt.epoch === "number") void speech.speak(id, prompt);
+            if (
+              typeof prompt.epoch === "number" &&
+              session.intervention?.id === prompt.id
+            )
+              void speech.speak(id, prompt);
           }
           render();
         },

@@ -85,6 +85,39 @@ test("speaker mappings remain session scoped across authoritative refreshes", ()
   assert.equal(session.meeting.speakerNames["session-2:A"], "Alex");
 });
 
+test("late prompts and controls from an older epoch cannot undo resume or dismiss the current prompt", () => {
+  const session = new MeetingSession(fixture());
+  session.apply(event("moderator.control", { type: "pause", epoch: 2 }));
+  session.apply(event("moderator.control", { type: "resume", epoch: 3 }));
+  session.apply(
+    event("intervention", {
+      id: "current",
+      text: "Current approved prompt",
+      kind: "clarify",
+      epoch: 3,
+    }),
+  );
+  for (const data of [
+    { type: "pause", epoch: 2 },
+    { type: "dismiss", epoch: 1 },
+  ]) {
+    const late = event("moderator.control", data);
+    assert.equal(session.isStaleControl(late), true);
+    session.apply(late);
+  }
+  session.apply(
+    event("intervention", {
+      id: "old",
+      text: "Old prompt",
+      kind: "clarify",
+      epoch: 1,
+    }),
+  );
+  assert.equal(session.meeting.paused, false);
+  assert.equal(session.meeting.epoch, 3);
+  assert.equal(session.intervention?.id, "current");
+});
+
 test("a late HTTP snapshot cannot regress a finalized revision or a host control", () => {
   const session = new MeetingSession(fixture());
   const turn = {

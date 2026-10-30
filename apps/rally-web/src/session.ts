@@ -11,6 +11,16 @@ export class MeetingSession {
   constructor(meeting: RecordView) {
     this.meeting = meeting;
   }
+  isStaleControl(event: LiveEvent) {
+    if (!["intervention", "moderator.control"].includes(event.type))
+      return false;
+    const epoch = (event.data as { epoch?: unknown } | null)?.epoch;
+    return (
+      typeof epoch === "number" &&
+      Number.isInteger(epoch) &&
+      epoch < this.meeting.epoch
+    );
+  }
   replace(meeting: RecordView) {
     if (meeting.id !== this.meeting.id)
       throw new Error("Wrong meeting snapshot");
@@ -38,7 +48,8 @@ export class MeetingSession {
       event.version !== 1 ||
       event.meetingId !== this.meeting.id ||
       typeof event.id !== "string" ||
-      this.seen.has(event.id)
+      this.seen.has(event.id) ||
+      this.isStaleControl(event)
     )
       return false;
     this.seen.add(event.id);
