@@ -1,6 +1,6 @@
 # Rally current handoff — October 31, 2026
 
-The public app is https://rally.tail703f9e.ts.net/ . Access requires an invited account and MFA. At this check, remote main was `a2278e0`, static release `a9f0004`, and API application source `8054fb5`. All tracked API/frontend source matched main; later static updates did not restart the API. [Fresh live UI readiness check](readiness-2026-10-31.md).
+The public app is https://rally.tail703f9e.ts.net/ . Access requires an invited account and MFA. The long-turn backend correction is deployed as `51677f7`; it preserves the static frontend from `a9f0004`. Source is pushed to main. The prior October31 readiness snapshot matched main `a2278e0`. [Fresh live UI readiness check](readiness-2026-10-31.md).
 
 ## Implemented
 
@@ -13,7 +13,7 @@ The public app is https://rally.tail703f9e.ts.net/ . Access requires an invited 
 
 ## Evidence
 
-Latest broad recorded regression: 139 backend tests and 17 frontend tests, both type checks/build and browser workflows. The October 31 [deployed UI measurement](research/current-ui-audit-2026-10-31.json) freshly passed MFA, closed signup, theme persistence, loading recovery, PDF, named sharing/denial/revocation with disposable synthetic records and zero model calls. Actual Teams rehearsal, chat hyperlink and normal Leave evidence are in [wrap-up](teams-wrapup.md). Local camera measurements are distinct from remote recipient acceptance.
+Latest broad recorded regression: 144 backend tests and 17 frontend tests, both type checks/build and browser workflows. The October 31 [deployed UI measurement](research/current-ui-audit-2026-10-31.json) freshly passed MFA, closed signup, theme persistence, loading recovery, PDF, named sharing/denial/revocation with disposable synthetic records and zero model calls. Actual Teams rehearsal, chat hyperlink and normal Leave evidence are in [wrap-up](teams-wrapup.md). Local camera measurements are distinct from remote recipient acceptance.
 
 ## Demo and source preparation
 
@@ -21,10 +21,16 @@ Latest broad recorded regression: 139 backend tests and 17 frontend tests, both 
 
 ## Remaining acceptance
 
-Use the ordered [readiness list](readiness-2026-10-31.md): a 30–60-minute current-code real call and settled usage; remote camera/captions/duplex/echo; normal host-to-recipient End/report access; real mobile/background/network/MFA behavior; handling individual finalized turns above 8,000 characters; final video, source licensing/access and judge account rehearsal. WhatsApp guest joining remains experimental.
+Use the ordered [readiness list](readiness-2026-10-31.md): a 30–60-minute current-code real call and settled usage; remote camera/captions/duplex/echo; normal host-to-recipient End/report access; real mobile/background/network/MFA behavior; final video, source licensing/access and judge account rehearsal. WhatsApp guest joining remains experimental.
 
 ## Operations
 
 Workspace `/srv/hackathon/rally-feedback`. API/web/media system services are `rally-integrated-api`, `rally-integrated-web`, `rally-integrated-media`; immutable releases and persistent state/configuration are under `/srv/hackathon/rally-deployed`. Before deployment, check active capture/report/usage, compare release ancestry, build fully and back up SQLite. Preserve MFA secrets, the shared Teams camera lock and runtime data. Shared-host browser checks must use the bounded systemd settings in AGENTS.md.
 
 [API](backend-api.md) · [Model interfaces](model-interfaces.md) · [Presence operations](living-presence-operations.md) · [MFA/admin](mfa-admin-judge-audit.md) · [Deployment](integrated-deployment.md) · [Dated prior handoffs](handoff-history-through-2026-10-31.md).
+
+## Long-turn correction and running endurance
+
+[Long finalized turns](long-turn-handling.md) now supply labeled source-coordinate windows to live reasoning without modifying canonical/report text. Two real synthetic-text checks passed in3.312/2.999seconds; deterministic coverage includes revisions, bounded proofs, direct-question identity and Unicode. [Deployment check](research/long-turn-deployed-2026-10-31.json) passes source matching, health and anonymous-access denial. The first backup attempt lacked permissions; the prior release remained active and was briefly restarted, then privileged backup and the final switch succeeded. No live production capture was interrupted.
+
+The [65-minute real-provider experiment](provider-endurance.md) started at21:09UTC and is running against source51677f7. It uses authored synthetic speech, actual Muse/Seamless and isolated LiveKit; it does not join Teams. A fresh consented Teams invite/admission remains required for the actual platform endurance trial. Do not label a running report as passed.

@@ -16,3 +16,5 @@ Start with the [current handoff](handoff.md) and [readiness check](readiness-202
 | Historical implementation | [Prior handoffs](handoff-history-through-2026-10-31.md), [prior index](index-history-through-2026-10-31.md), [original roadmap](rally-roadmap.md) |
 
 Research files preserve source attribution and distinguish documented capability, local synthetic experiments, real model calls and actual meeting evidence. The earlier Sites app is a separate iteration; use the integrated Node references above for current behavior.
+
+[Long-turn source windows](long-turn-handling.md) · [Bounded real-provider endurance](provider-endurance.md).

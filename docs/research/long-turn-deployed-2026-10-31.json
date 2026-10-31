@@ -1,0 +1,15 @@
+{
+  "at": "2026-10-31T21:11:57.155795+00:00",
+  "release": "51677f7",
+  "passed": true,
+  "deployedLongTurnSourceMatches": true,
+  "healthHTTP": 200,
+  "anonymousAppAccessHTTP": 401,
+  "servicesActive": true,
+  "backendTestsPassed": 144,
+  "frontendTestsPassed": 17,
+  "bothTypechecksPassed": true,
+  "realLongTurnChecksPassed": 2,
+  "enduranceState": "running",
+  "productionCaptureDuringRestart": false
+}
