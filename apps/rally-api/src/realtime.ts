@@ -69,6 +69,10 @@ export type LiveCheck = {
   evidenceHashes?: Record<string, string>;
   evidenceProofs?: Record<string, import("./contracts.ts").EvidenceProof>;
 };
+export type LiveFinal = Turn & {
+  prefixLength?: number;
+  textWindow?: { start: number; end: number; totalCharacters: number };
+};
 export type LiveContext = {
   moderationMode?: import("./moderation-policy.ts").ModerationMode;
   addressedRequest?: import("./moderation-policy.ts").AddressedRequest | null;
@@ -94,7 +98,7 @@ export type LiveContext = {
     remainingSeconds: number;
     topicSpentSeconds: Record<string, number>;
   };
-  finals: Turn[];
+  finals: LiveFinal[];
   partials: {
     id: string;
     text: string;
@@ -286,7 +290,7 @@ export class LiveMonitor {
             60 -
           s.elapsedSeconds,
       },
-      finals: this.boundedFinals(s.turns),
+      finals,
       partials: [...(this.partials.get(s.meeting.id)?.values() ?? [])]
         .slice(-2)
         .map((p) => ({
@@ -303,9 +307,23 @@ export class LiveMonitor {
   }
   private boundedFinals(turns: Turn[]) {
     let remaining = 8000;
-    const selected: Turn[] = [];
+    const selected: LiveFinal[] = [];
     for (const t of turns.slice(-20).reverse()) {
-      if (t.text.length > remaining) break;
+      if (t.text.length > remaining) {
+        // Ordinary turns remain whole. An oversized source gets a labeled recent
+        // window rather than starving every later live check until new speech.
+        if (t.text.length > 8000 && remaining >= 1000) {
+          let start = t.text.length - remaining;
+          // Offsets use JavaScript UTF-16 coordinates. Never split a surrogate pair.
+          const first = t.text.charCodeAt(start);
+          if (first >= 0xdc00 && first <= 0xdfff) start++;
+          selected.unshift({ ...t, text: t.text.slice(start),
+            prefixLength: t.text.length,
+            textWindow: { start, end: t.text.length, totalCharacters: t.text.length },
+          });
+        }
+        break;
+      }
       selected.unshift(t);
       remaining -= t.text.length;
     }
@@ -362,17 +380,6 @@ export class LiveMonitor {
       jobs.size >= 2 ||
       [...this.tasks.values()].reduce((n, j) => n + j.size, 0) >= 10
     ) {
-      if (
-        s.turns.at(-1)?.text.length! > 8000 &&
-        !context.finals.length &&
-        !context.partials.length
-      ) {
-        check.status = "skipped";
-        check.reason =
-          "Latest finalized turn exceeds the 8000-character complete-evidence budget";
-        publish();
-        return;
-      }
       check.status = s.meeting.paused
         ? "paused"
         : context.finals.length || context.partials.length
@@ -448,7 +455,7 @@ export class LiveMonitor {
               key,
               {
                 hash: createHash("sha256").update(supplied.text).digest("hex"),
-                length: partial?.prefixLength ?? supplied.text.length,
+                length: final?.textWindow?.end ?? partial?.prefixLength ?? supplied.text.length,
                 tailLength: supplied.text.length,
                 ...(final ? { revision: final.revision } : {}),
               },

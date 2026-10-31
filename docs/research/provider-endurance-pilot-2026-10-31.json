@@ -1,0 +1,44 @@
+{
+  "at": "2026-10-31T21:07:18.447Z",
+  "passed": true,
+  "minutes": 2,
+  "rotationMs": 60000,
+  "realMuse": true,
+  "realSeamless": true,
+  "realLocalLiveKit": true,
+  "syntheticInput": true,
+  "teamsJoined": false,
+  "final": {
+    "turns": 8,
+    "asrSessions": 2,
+    "reportStatus": "ready",
+    "reportEvidenceIds": [
+      "voyager/duplex/04306208D20A46F399B9CD0D269048B4:0",
+      "voyager/duplex/04306208D20A46F399B9CD0D269048B4:1",
+      "voyager/duplex/04306208D20A46F399B9CD0D269048B4:3",
+      "voyager/duplex/B19715D7FA644F03992C22D9815B576C:1",
+      "voyager/duplex/B19715D7FA644F03992C22D9815B576C:2",
+      "voyager/duplex/B19715D7FA644F03992C22D9815B576C:0",
+      "voyager/duplex/B19715D7FA644F03992C22D9815B576C:1",
+      "voyager/duplex/04306208D20A46F399B9CD0D269048B4:1",
+      "voyager/duplex/04306208D20A46F399B9CD0D269048B4:4",
+      "voyager/duplex/B19715D7FA644F03992C22D9815B576C:1",
+      "voyager/duplex/B19715D7FA644F03992C22D9815B576C:2",
+      "voyager/duplex/B19715D7FA644F03992C22D9815B576C:0",
+      "voyager/duplex/B19715D7FA644F03992C22D9815B576C:2"
+    ],
+    "canonicalCharacters": 1550,
+    "acceptedChecks": 11,
+    "checkStates": {
+      "accepted": 11,
+      "rejected": 1
+    },
+    "outputBytes": 476160,
+    "outputEnergy": 2773222831911,
+    "gaps": 1
+  },
+  "museKnownCost": 0.17267054999999998,
+  "unknownMuseCosts": 0,
+  "speechRequests": 2,
+  "speechInfrastructureCost": null
+}

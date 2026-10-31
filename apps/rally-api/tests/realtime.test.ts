@@ -439,3 +439,80 @@ test('large cumulative partials preserve append-only evidence and final promotio
   }
  }
 });
+
+test('an oversized finalized speaking turn remains assessable with explicit bounded evidence',async()=>{
+ const {store,meeting,monitor,snapshot}=setup();
+ const text='Release remains conditional on rollback verification. '+ 'We are reviewing the release checklist. '.repeat(300)+' Rally, who still needs to own accessibility?';
+ snapshot.turns=[{id:'s:1',sessionId:'s',turnId:1,revision:1,text,speaker:null,startMs:0,endMs:95000}];
+ monitor.finalReader=()=>snapshot.turns;
+ let calls=0,applied=false;
+ await monitor.check(snapshot,async context=>{calls++;assert.ok(context.finals.length>0);assert.ok(context.finals[0].text.includes('accessibility'));return decision;},()=>meeting,()=>{},()=>{applied=true;});
+ assert.equal(calls,1,'a long finalized turn must not starve live reasoning');
+ assert.equal(applied,true);
+ assert.equal(snapshot.turns[0].text,text,'canonical source must remain complete');
+ store.close();
+});
+
+test('long finalized windows stay bounded, retain source coordinates and validate against complete canonical evidence',async()=>{
+ for(const size of [8000,8001,16000,100000]){
+  const {store,meeting,monitor,snapshot}=setup();
+  const text='Earlier condition must remain in the report. '+ 'x'.repeat(size)+'. Rally, who owns the rollback check?';
+  snapshot.turns=[{id:'s:1',sessionId:'s',turnId:1,revision:1,text,speaker:null,startMs:0,endMs:100000}];
+  monitor.finalReader=()=>snapshot.turns;
+  let captured:import('../src/realtime.ts').LiveCheck|undefined;
+  await monitor.check(snapshot,async context=>{
+   const supplied=context.finals[0];
+   assert.ok(supplied.text.length<=8000);
+   assert.deepEqual(supplied.textWindow,{start:text.length-8000,end:text.length,totalCharacters:text.length});
+   assert.equal(supplied.text,text.slice(supplied.textWindow!.start));
+   assert.equal(context.addressedRequest?.id,'s:1');
+   return {...decision,focus:{intendedTopicId:'a',detour:null,evidence:['s:1']}};
+  },()=>meeting,()=>{},(_result,check)=>{captured=check;});
+  assert.ok(captured);
+  assert.equal(monitor.presenceProofValid('m',captured.evidenceProofs,snapshot.turns),true);
+  assert.equal(monitor.validEvidence('m',captured.id),true);
+  assert.equal(captured.evidenceProofs?.['s:1'].length,text.length);
+  snapshot.turns[0]={...snapshot.turns[0],text:'Revised condition. '+text,revision:2};
+  assert.equal(monitor.validEvidence('m',captured.id),false);
+  assert.equal(monitor.presenceProofValid('m',captured.evidenceProofs,snapshot.turns),false);
+  assert.equal(monitor.context(snapshot).previous,null);
+  store.close();
+ }
+});
+
+test('recent long-turn evidence does not displace newer complete turns or mutate the source',()=>{
+ const {store,monitor,snapshot}=setup();
+ const long={id:'s:1',sessionId:'s',turnId:1,revision:1,text:'a'.repeat(12000),speaker:null,startMs:0,endMs:100000};
+ const newer={...long,id:'s:2',turnId:2,text:'The remaining required check still has no owner.'};
+ snapshot.turns=[long,newer];
+ const context=monitor.context(snapshot);
+ assert.deepEqual(context.finals.map(turn=>turn.id),['s:1','s:2']);
+ assert.equal(context.finals.reduce((n,turn)=>n+turn.text.length,0),8000);
+ assert.equal(context.finals[1],newer);
+ assert.equal(long.text.length,12000);
+ store.close();
+});
+
+test('addressed request identity survives the window change from long partial to finalized evidence',()=>{
+ const {store,monitor,snapshot}=setup();
+ const text='Context. '.repeat(1200)+'Rally, what should happen next?';
+ monitor.ingest('m','s',1,text);
+ const before=monitor.context(snapshot).addressedRequest;
+ snapshot.turns=[{id:'s:1',sessionId:'s',turnId:1,revision:1,text,speaker:null,startMs:0,endMs:100000}];
+ monitor.ingest('m','s',1,text,true);
+ const after=monitor.context(snapshot).addressedRequest;
+ assert.ok(before);assert.ok(after);assert.equal(before.key,after.key);
+ snapshot.meeting.addressedRequestsHandled=[before.key];
+ assert.equal(monitor.context(snapshot).addressedRequest,null);
+ store.close();
+});
+
+test('a bounded final excerpt never starts halfway through a Unicode character',()=>{
+ const {store,monitor,snapshot}=setup();
+ const text='A'.repeat(9000)+'😀'+'Z'.repeat(7999);
+ snapshot.turns=[{id:'s:1',sessionId:'s',turnId:1,revision:1,text,speaker:null,startMs:0,endMs:100000}];
+ const final=monitor.context(snapshot).finals[0];
+ assert.equal(final.text,'Z'.repeat(7999));
+ assert.deepEqual(final.textWindow,{start:9002,end:text.length,totalCharacters:text.length});
+ store.close();
+});

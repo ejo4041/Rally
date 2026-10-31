@@ -1,0 +1,229 @@
+{
+  "at": "2026-10-31T21:07:49.852Z",
+  "passed": true,
+  "syntheticInput": true,
+  "realMuse": true,
+  "meetingJoined": false,
+  "museKnownCost": 0.016997699999999998,
+  "unknownCosts": 0,
+  "checks": [
+    {
+      "corrected": false,
+      "id": "4a2608f4-bdcd-4468-a562-dfec83c9cd5d",
+      "sequence": 1,
+      "capturedAt": 1793480863531,
+      "transcriptAt": null,
+      "processedMs": null,
+      "status": "accepted",
+      "epoch": 0,
+      "planRevision": 0,
+      "completedAt": 1793480866843,
+      "latencyMs": 3312,
+      "evidenceProofs": {
+        "long:1": {
+          "hash": "3ff462d4fe299b86dbe204100d2f02b56c8e65591073ba92095cf43eaf0a7bfe",
+          "length": 12053,
+          "tailLength": 8000,
+          "revision": 1
+        }
+      },
+      "evidenceHashes": {
+        "long:1": "3ff462d4fe299b86dbe204100d2f02b56c8e65591073ba92095cf43eaf0a7bfe"
+      },
+      "decision": {
+        "affect": null,
+        "concerns": [
+          {
+            "id": "rollback-acceptance",
+            "description": "No explicit acceptance of Thursday 3pm rollback check; verification still conditions release",
+            "resolved": false,
+            "evidence": [
+              "long:1"
+            ]
+          }
+        ],
+        "focus": {
+          "intendedTopicId": "release-condition",
+          "detour": null,
+          "evidence": [
+            "long:1"
+          ]
+        },
+        "agendaChange": {
+          "reason": "Start on release condition while rollback acceptance is pending",
+          "order": [
+            "release-condition",
+            "rollback-plan"
+          ],
+          "additions": [],
+          "updates": [
+            {
+              "id": "release-condition",
+              "minutes": 4,
+              "status": "active"
+            }
+          ],
+          "evidence": [
+            "long:1"
+          ]
+        },
+        "extension": null,
+        "extensionConsent": null,
+        "health": 4,
+        "feeling": "neutral",
+        "observation": "Release conditional on rollback verification; Thursday 3pm proposal lacks acceptance",
+        "progress": "Release condition noted as conditional on verification; rollback owner/deadline still open pending acceptance",
+        "concern": "Rollback verification acceptance and owner/deadline remain undecided",
+        "evidence": [
+          "long:1"
+        ],
+        "intervention": {
+          "text": "What remains: release is conditional on actual rollback verification, and Priya's Thursday 3pm proposal has no explicit acceptance yet, so owner/deadline are undecided.",
+          "kind": "clarify"
+        }
+      }
+    },
+    {
+      "corrected": true,
+      "id": "02d50ea5-f9e5-42b8-89d1-8d630691e400",
+      "sequence": 2,
+      "capturedAt": 1793480866848,
+      "transcriptAt": null,
+      "processedMs": null,
+      "status": "accepted",
+      "epoch": 0,
+      "planRevision": 0,
+      "completedAt": 1793480869847,
+      "latencyMs": 2999,
+      "evidenceProofs": {
+        "long:1": {
+          "hash": "34a2f05f0c7cc5cb501b1e0498c33addf7a90d3c8fed0b79577b9b78e9aefda4",
+          "length": 12072,
+          "tailLength": 8000,
+          "revision": 2
+        }
+      },
+      "evidenceHashes": {
+        "long:1": "34a2f05f0c7cc5cb501b1e0498c33addf7a90d3c8fed0b79577b9b78e9aefda4"
+      },
+      "decision": {
+        "affect": null,
+        "concerns": null,
+        "focus": {
+          "intendedTopicId": "release-condition",
+          "detour": null,
+          "evidence": [
+            "long:1"
+          ]
+        },
+        "agendaChange": null,
+        "extension": null,
+        "extensionConsent": null,
+        "health": null,
+        "feeling": "curious",
+        "observation": "Question asks what remains unresolved on release and rollback.",
+        "progress": "Release conditional noted; rollback owner/time noted with result pending.",
+        "concern": "Release conditional; rollback verification pending.",
+        "evidence": [
+          "long:1"
+        ],
+        "intervention": {
+          "text": "Release remains conditional on actual rollback verification; Sam accepted check Thursday at 3, result still pending.",
+          "kind": "clarify"
+        }
+      }
+    }
+  ],
+  "usage": [
+    {
+      "id": "81e53c16-4c13-4ee7-a39f-615ef01047e8",
+      "at": 1793480860395,
+      "kind": "prepare",
+      "reasoningEffort": "low",
+      "maxOutputTokens": 4096,
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "requestId": "4fbd81d9-123a-4e83-b63d-f016da06d78d",
+      "httpStatus": 200,
+      "finishReason": "stop",
+      "usage": {
+        "completion_tokens": 629,
+        "prompt_tokens": 535,
+        "total_tokens": 1164,
+        "completion_tokens_details": {
+          "reasoning_tokens": 500
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 497
+        }
+      },
+      "cost": 0.0027953,
+      "status": "known"
+    },
+    {
+      "id": "fe26b4a2-a361-4796-bbed-d132be77a791",
+      "at": 1793480863549,
+      "kind": "live",
+      "reasoningEffort": "minimal",
+      "maxOutputTokens": 2048,
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "requestId": "c0d87381-22bc-49a3-b4c1-1b30e49f6fd2",
+      "httpStatus": 200,
+      "finishReason": "stop",
+      "usage": {
+        "completion_tokens": 731,
+        "prompt_tokens": 4469,
+        "total_tokens": 5200,
+        "completion_tokens_details": {
+          "reasoning_tokens": 439
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "cost": 0.008693,
+      "status": "known"
+    },
+    {
+      "id": "a531ef32-181c-4baa-82ed-bb56193d91a3",
+      "at": 1793480866854,
+      "kind": "live",
+      "reasoningEffort": "minimal",
+      "maxOutputTokens": 2048,
+      "model": "muse-spark-1.3",
+      "adapter": "meta-chat-json",
+      "pricing": {
+        "input": 1.25,
+        "cachedInput": 0.15,
+        "output": 4.25
+      },
+      "requestId": "fb20ee47-ea8f-4bd3-ae02-ae8650318097",
+      "httpStatus": 200,
+      "finishReason": "stop",
+      "usage": {
+        "completion_tokens": 543,
+        "prompt_tokens": 4463,
+        "total_tokens": 5006,
+        "completion_tokens_details": {
+          "reasoning_tokens": 379
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 2161
+        }
+      },
+      "cost": 0.005509399999999999,
+      "status": "known"
+    }
+  ]
+}
