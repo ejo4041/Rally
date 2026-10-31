@@ -1,0 +1,57 @@
+{
+  "at": "2026-10-31T00:12:07.281653+00:00",
+  "assetRelease": "c42429d",
+  "runningAPIRelease": "8054fb5",
+  "backendSourceUnchanged": true,
+  "restarts": 0,
+  "backup": "/srv/hackathon/rally-deployed/backups/first-screen-20261031T001207Z.sqlite",
+  "mainMerged": true,
+  "modelCalls": 0,
+  "publicSmoke": {
+    "at": "2026-10-31T00:12:07.998Z",
+    "passed": true,
+    "scope": "Public HTTPS and deployed API/PDF sandbox with disposable synthetic accounts/report",
+    "modelCalls": 0,
+    "platformJoins": 0,
+    "mfaLogin": true,
+    "semanticOTP": true,
+    "publicMascotWebGL": true,
+    "secureCookie": true,
+    "closedRegistration": true,
+    "appearanceSelector": true,
+    "appearancePersists": true,
+    "firstScreenFit": [
+      {
+        "width": 1366,
+        "height": 650,
+        "bottom": 550.015625,
+        "scroll": 0,
+        "font": 13
+      },
+      {
+        "width": 1280,
+        "height": 600,
+        "bottom": 550.015625,
+        "scroll": 0,
+        "font": 13
+      },
+      {
+        "width": 1024,
+        "height": 550,
+        "bottom": 539.796875,
+        "scroll": 0,
+        "font": 13
+      }
+    ],
+    "favicon": true,
+    "metaAttribution": true,
+    "loadingFailureRecovery": true,
+    "duplicateSubmitBlocked": true,
+    "rallyResponseLog": true,
+    "deployedPDF": true,
+    "accountSharing": true,
+    "fullMeetingDenied": true,
+    "revocation": true,
+    "temporaryRecordsRemoved": true
+  }
+}

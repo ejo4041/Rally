@@ -1,3 +1,5 @@
+**Current layoutc42429d: complete hero + Meta section above the desktop fold at100% zoom.** [Scope/viewports](first-screen-fit.md), [public verification](research/first-screen-deployed.json). Both themes,13px Meta descriptions, home-scroll reset and real mascot verified. Main merged. Static assetsc42429d; API8054fb5 unchanged. Workspace `/srv/hackathon/rally-feedback`, branch polish/first-screen-fit-20261030.
+
 **First-screen fit:** [Hero and full Meta section at100% zoom](first-screen-fit.md), both themes checked through1024×550 viewport. Home returns to top after sign-in;13px Meta copy preserved.
 
 **Current UI69720b3: illustrated Meta cards + larger type, merged/deployed.** [Scope and checks](meta-capability-cards.md), [public evidence](research/meta-cards-deployed.json). Actual Living Silk mascot retained; both themes/mobile/reduced motion verified. Static update only; API8054fb5 unchanged. Workspace `/srv/hackathon/rally-feedback`, branch polish/meta-cards-20261030.

@@ -29,6 +29,15 @@ try{
  const cookies=await owner.cookies();assert.ok(cookies.some(c=>c.name==='rally_session'&&c.secure&&c.httpOnly));evidence.secureCookie=true;
  assert.equal(await page.evaluate(async password=>(await fetch('/api/auth/signup',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:'disabled_signup_probe',password})})).status,users[0].password),403);evidence.closedRegistration=true;
  const picker=page.locator('#workspace [data-theme-selector]');await picker.selectOption('dark');await page.waitForFunction(()=>document.documentElement.dataset.theme==='dark');await page.reload();await page.locator('#workspace').waitFor({state:'visible'});assert.equal(await picker.inputValue(),'dark');await picker.selectOption('light');await page.waitForFunction(()=>document.documentElement.dataset.theme==='light');evidence.appearanceSelector=true;evidence.appearancePersists=true;
+ if(process.env.RALLY_FIRST_SCREEN_FIT==='1'){
+  const originalViewport=page.viewportSize(),checks=[];
+  for(const size of [{width:1366,height:650},{width:1280,height:600},{width:1024,height:550}]){
+   await page.setViewportSize(size);await page.evaluate(()=>new Promise<void>(resolve=>requestAnimationFrame(()=>requestAnimationFrame(()=>resolve()))));
+   const fit=await page.evaluate(()=>({bottom:document.querySelector('.meta-products')!.getBoundingClientRect().bottom,height:innerHeight,scroll:scrollY,font:parseFloat(getComputedStyle(document.querySelector('.meta-model-card p')!).fontSize)}));
+   assert.ok(fit.bottom<=fit.height-8);assert.equal(fit.scroll,0);assert.ok(fit.font>=13);checks.push({...size,...fit});
+  }
+  if(originalViewport)await page.setViewportSize(originalViewport);evidence.firstScreenFit=checks;
+ }
  const icon=await page.evaluate(async()=>{const r=await fetch('/favicon.svg');return {status:r.status,type:r.headers.get('content-type')};});assert.equal(icon.status,200);assert.match(icon.type??'',/image\/svg\+xml/);evidence.favicon=true;
  let releasePrepare;const gate=new Promise<void>(resolve=>releasePrepare=resolve);let prepareCalls=0;
  await page.route('**/api/meetings',async route=>{if(route.request().method()!=='POST')return route.continue();prepareCalls++;await gate;await route.fulfill({status:503,contentType:'application/json',body:JSON.stringify({error:'Synthetic loading-state validation only'})});});

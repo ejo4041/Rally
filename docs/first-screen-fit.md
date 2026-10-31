@@ -7,3 +7,7 @@ Home-only desktop media queries reduce header/outer spacing, hero padding/headli
 Headed Chromium actual-WebGL checks at100% zoom verify complete Meta panel bottom at least8px above the viewport edge, no horizontal overflow and13px descriptions in both themes at:1920×900,1536×864,1440×800,1366×768,1366×650,1280×600,1024×600,1366×550,1024×550. Smallest case ends at539.80px in550px height. These are CSS browser viewport sizes, accounting for toolbar/display-scaling differences rather than physical monitor size. [Evidence](research/first-screen-fit.json).
 
 Actual mascot motion, reduced-motion still/resume, mobile layout, cleanup and zero audio requests still pass. Full synthetic feedback workflow and typecheck/build pass after compaction. No model calls or platform joins. Current source branch polish/first-screen-fit-20261030 in /srv/hackathon/rally-feedback, from main8205ab4. Merge/deployment results follow in handoff.
+
+## Deployed and merged
+
+Static releasec42429d active and merged into main. Source API byte-identical to previous release8054fb5; static publication did not restart API or media. SQLite backup recorded in [deployed evidence](research/first-screen-deployed.json). Public actual-WebGL/MFA browser check confirms both sections fit at1366×650,1280×600,1024×550, starting at scroll0 with13px copy; PDF/sharing/MFA/theme checks also pass. Temporary records removed, model calls0. Final operator/documentation checkpoint merged afterward.
