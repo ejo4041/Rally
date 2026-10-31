@@ -11,3 +11,7 @@ An isolated root browser-test session exhausted host memory during an experiment
 The experimental automatic sizing was replaced with explicit artwork dimensions. Replacement browser tests passed under a systemd transient unit capped at 1600MiB RAM, zero swap, 150% CPU and 120 seconds, with control-group cleanup. Screenshots now capture the bounded viewport. Future shared-droplet browser checks must use these limits; do not run unbounded GPU checks.
 
 No paid model requests were made. Deployment and public verification are recorded in the current handoff.
+
+## Deployment
+
+Application commit `49fa5e3` is merged into main and active at `https://rally.tail703f9e.ts.net/`. Static-only release; API PID unchanged, backend source identical to previous release and SQLite backed up before atomic symlink switch. Public HTTPS validation passed real MFA, closed registration, appearance persistence, WebGL mascot, three laptop viewport fit checks, loading recovery, PDF, account sharing and revocation. Disposable synthetic records were removed. [Evidence](research/hero-balance-deployed.json).
