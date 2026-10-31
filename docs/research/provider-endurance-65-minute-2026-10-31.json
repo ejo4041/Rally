@@ -1,0 +1,129 @@
+{
+  "state": "passed",
+  "startedAt": "2026-10-31T21:09:08.521Z",
+  "captureStartedAt": "2026-10-31T21:09:13.680Z",
+  "endedAt": "2026-10-31T22:16:23.431Z",
+  "minutes": 65,
+  "rotationMs": 3300000,
+  "sourceRevision": "51677f740f81bf7c1913e1cab878fc44e2d23121",
+  "sourceDirty": false,
+  "inputManifestSha256": "7abf8a75d8739c4b00d341c931303a107219b1bcb8c68787c911f58c6f5434de",
+  "realMuse": true,
+  "realSeamless": true,
+  "realLocalLiveKit": true,
+  "syntheticInput": true,
+  "teamsJoined": false,
+  "humanMeeting": false,
+  "rawMeetingAudioSaved": false,
+  "scope": "Normal-cadence authored synthetic single-voice speech through real production-class adapters and isolated loopback LiveKit; no Teams call or human meeting.",
+  "final": {
+    "reportInputTurns": 19,
+    "reportInputCharacters": 56044,
+    "turns": 19,
+    "asrSessions": 2,
+    "reportStatus": "ready",
+    "reportEvidenceIds": [
+      "voyager/duplex/57CB51B0DE6344E6ADD54EF6D1B49AF8:0",
+      "voyager/duplex/57CB51B0DE6344E6ADD54EF6D1B49AF8:9",
+      "voyager/duplex/042E6FB4EF2D4B648C5F8F22746A970A:0",
+      "voyager/duplex/57CB51B0DE6344E6ADD54EF6D1B49AF8:9",
+      "voyager/duplex/57CB51B0DE6344E6ADD54EF6D1B49AF8:12",
+      "voyager/duplex/57CB51B0DE6344E6ADD54EF6D1B49AF8:1",
+      "voyager/duplex/57CB51B0DE6344E6ADD54EF6D1B49AF8:9",
+      "voyager/duplex/57CB51B0DE6344E6ADD54EF6D1B49AF8:12",
+      "voyager/duplex/57CB51B0DE6344E6ADD54EF6D1B49AF8:6",
+      "voyager/duplex/57CB51B0DE6344E6ADD54EF6D1B49AF8:7",
+      "voyager/duplex/57CB51B0DE6344E6ADD54EF6D1B49AF8:9"
+    ],
+    "canonicalCharacters": 56044,
+    "acceptedChecks": 389,
+    "checkStates": {
+      "accepted": 389,
+      "rejected": 1
+    },
+    "outputBytes": 2689920,
+    "outputEnergy": 17902606378090,
+    "gaps": 1
+  },
+  "largestFinalTurnCharacters": 25169,
+  "acceptedChecksUsingLongWindows": 319,
+  "acceptedCheckLatencyMs": {
+    "median": 2447,
+    "p95NearestRank": 3817,
+    "max": 4638,
+    "scope": "Model-check latency, not end-to-end audible latency"
+  },
+  "captureSamples": {
+    "count": 390,
+    "rssMBMin": 231,
+    "rssMBMax": 247,
+    "inputBytesPerSecondMin": 31996,
+    "inputBytesPerSecondMax": 32640,
+    "last": {
+      "at": "2026-10-31T22:14:13.687Z",
+      "elapsedMinutes": 65,
+      "inputBytes": 124806400,
+      "receivedInputBytes": 124797440,
+      "inputBytesPerSecond": 32003,
+      "outputBytes": 2689920,
+      "outputEnergy": 17902606378090,
+      "asrSessions": 2,
+      "turns": 18,
+      "maxFinalCharacters": 25169,
+      "monitorStatus": "checking",
+      "monitorSequence": 390,
+      "museCommittedOrReserved": 3.219763449999999,
+      "unknownCosts": 0,
+      "speechRequests": 8,
+      "rssMB": 247,
+      "phase": "live"
+    }
+  },
+  "gaps": [
+    {
+      "at": 1793484254365,
+      "reason": "Muse transcription restarted. Audio capture continues; speaker labels restart. Check the transcript around this handoff."
+    }
+  ],
+  "reportEvidenceIdsResolveToCanonicalTurns": true,
+  "usage": {
+    "calls": 394,
+    "knownMuseUSD": "3.28526990",
+    "unknown": 0,
+    "running": 0,
+    "currentTaskBatchKnownMuseUSD": "3.47760170",
+    "trackedCumulativeMuseUSD": "5.33846965",
+    "conditionalUnverified150DollarGrantRemainderUSD": "144.66153035",
+    "billingGrantAndUnrelatedUsageVerified": false
+  },
+  "speech": {
+    "requests": 8,
+    "states": [
+      "completed",
+      "completed",
+      "completed",
+      "completed",
+      "completed",
+      "completed",
+      "completed",
+      "completed"
+    ],
+    "generatedSeconds": 70.7,
+    "receivedPCMBytes": 2689920,
+    "receivedEnergy": 17902606378090,
+    "awsInfrastructureCost": "unknown; separate from Muse accounting"
+  },
+  "reportReview": {
+    "releaseConditionRetained": true,
+    "correctedRollbackDeadlineRetained": "Thursday at three, not Friday at noon",
+    "thirdPersonOwnershipRemainsProposal": true,
+    "participationScoreWithheldForInsufficientIdentityEvidence": true
+  },
+  "limitations": [
+    "One authored synthetic voice; no human diarization or roster-name accuracy measurement.",
+    "No Teams admission, camera, remote human audibility, duplex echo, browser/mobile or network-interruption acceptance.",
+    "One planned ASR restart records a continuity warning and resets session speaker labels.",
+    "One final check was rejected near meeting shutdown; no rejected result was accepted.",
+    "Final report consumed all canonical text; this does not establish perfect semantic accuracy."
+  ]
+}

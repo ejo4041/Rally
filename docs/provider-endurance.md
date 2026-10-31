@@ -15,3 +15,13 @@ The two-minute pilot uses a one-minute handoff, a $0.75 Muse ceiling and two spe
 A running long-test report is not a pass. Inspect terminal state, elapsed wall time, source revision, actual session handoff, complete report input, output delivery, resource samples and settled usage before documenting completion. Operator-requested shutdown is recorded as stopped. The source/test state is isolated from the public app.
 
 The [long-turn correction](long-turn-handling.md) has independent real-model checks over synthetic long text; real ASR may choose shorter segments during endurance. Do not claim the run exercised a long finalized window unless its measurements show one.
+
+## October 31 completed run
+
+The 65-minute run passed on application source `51677f7`; its complete wall runtime was about 67 minutes including preparation and the final report. [Terminal measurements](research/provider-endurance-65-minute-2026-10-31.json). Actual Muse ASR crossed the normal 55-minute restart: two sessions, one expected continuity warning, nineteen finalized turns. The largest turn was 25,169 characters; 319 accepted checks used labeled long-turn windows. Of 390 checks, 389 were accepted and one was rejected near shutdown.
+
+The report received all 19 canonical turns and all 56,044 characters; decision/action evidence IDs resolve to stored turns. Review confirmed that conditional release stayed conditional, the corrected Thursday-at-three deadline survived, and third-person ownership remained a proposal. This is a scenario observation, not a general accuracy guarantee.
+
+Normal-cadence input stayed approximately 32,000 bytes/second. Sampled process RSS ranged 231–247 MB. Eight actual Seamless requests completed and the independent LiveKit receiver measured 2,689,920 PCM bytes with nonzero energy. Muse usage settled across 394 rows at **$3.28526990**, unknown0/running0; AWS infrastructure cost remains unknown. The owned transient service exited successfully and production services remain active on the long-turn release.
+
+This is current-code real-provider endurance with synthetic speech. It does not close the real Teams/human meeting acceptance item: admission, remote camera/audio, overlap/echo, roster identity, network interruption and host/recipient report access still need a fresh consented call.

@@ -10,9 +10,11 @@ The first operator run stopped at a local PDF output permission error. A tempora
 
 ## Implementation and documentation still useful
 
-- Handle individual finalized turns longer than 8,000 characters in live reasoning without falsely presenting truncated evidence as a full turn. Current implementation explicitly skips that live check; the complete text remains available for final analysis. Long-turn response behavior needs its own acceptance case.
-- Refresh the submission draft and demonstration script to reflect continuous monitoring, integrated Teams voice/video, Seamless speech, closed accounts, sharing/PDF and graceful wrap-up. The older submission package still describes Teams as a transcription-only experiment. The current 180-second narrated draft is explicitly synthetic and still mentions advance participants removed from setup.
-- Consolidate the append-only handoff into one current status plus dated history. Historical release, access and pending-test statements now conflict with completed work.
+Subsequent work: the long-turn correction is deployed as `51677f7`, with 144 backend and 17 frontend tests passing and both type checks. The current demo script, exact three-minute synthetic narrated draft, submission draft and consolidated handoff have been refreshed. The opening release identifiers and UI measurements above describe the earlier audit, not the current deployment. See [current handoff](handoff.md).
+
+- Completed: [long finalized turns](long-turn-handling.md) now use explicitly labeled source-coordinate windows for live reasoning while retaining complete canonical/report text. Deterministic and actual-model checks cover evidence validity and revisions.
+- Completed: the [demo script](demo-script.md) and [submission draft](submission-package.md) reflect current functionality and distinguish synthetic walkthrough footage from actual platform evidence. The 180-second narrated video remains a local draft pending review.
+- Completed: [current handoff](handoff.md) is separate from the retained dated history.
 - Finish source licensing/access decisions, named judge account/access instructions, contributor verification and an accurate final video. Final submission remains on hold. No root LICENSE was found locally; anonymous GitHub access and authenticated portal requirements were not rechecked in this audit.
 - WhatsApp guest joining and other native platform connectors remain separate unfinished integrations. Host-side microphone/tab capture is implemented; expanding connectors is optional to completing the Teams demonstration.
 
@@ -29,3 +31,7 @@ Recorded latest broad suite: 139 backend and 17 frontend tests, type checks/buil
 ## Existing reliability evidence
 
 The prior 65-minute synthetic browser/LiveKit capture experiment passed, crossing a 55-minute handoff. Its source predates later realtime/presence work. The earlier local eight-hour MMS attempt records stopped after about 4.5 hours, so it must not be described as a completed eight-hour pass. Production speech now uses Seamless through the configured endpoint; local MMS tests are separate evidence.
+
+## Current-code provider endurance follow-up
+
+The [65-minute real-provider run](provider-endurance.md) passed on deployed `51677f7`: actual Muse/Seamless and isolated LiveKit, normal ASR handoff, long finalized turns, complete report input and settled Muse accounting. Authored synthetic speech was used. This provides current-code backend/provider endurance evidence; it does not close the real Teams, human overlap/echo, remote camera/audio, identity or network tests listed above.
