@@ -1,37 +1,57 @@
-# Rally demonstration script — draft
+# Rally three-minute demonstration script
 
-Updated October 30 for the [integrated Node app](integrated-deployment.md), including [Meta MMS speech](integrated-speech.md) and [speaker correction](speaker-attribution.md). No recording or final submission has been made. The earlier Sites preview is a separate release with different confirmation, presenter and sharing controls; this script describes the integrated app.
+Current integrated application, October 31, 2026. The produced video uses the actual application UI with synthetic meeting/provider fixtures, clearly labeled throughout. It is a prepared walkthrough, not a recording of new live inference or a new Teams call. No recording credential, real participant transcript or private invite is shown. Final submission remains on hold.
 
-Start with the concrete meeting problem, demonstrate the working loop, then spend the closing 30 seconds on the future meeting-platform vision. A useful prototype makes that vision credible. Describe future capabilities as future work, and let the observed interaction carry the demonstration.
+Lead with Meta's complementary capabilities and demonstrate one useful loop: plan, listen, guide, review. End with the future meeting-workspace direction as a proposal. The hosted app currently uses invitation-only MFA access; the demonstration enters after authentication so no setup secrets appear.
 
-## Three-minute rehearsal script
+## 0:00–0:24
 
-| Time | Presenter and participants | Product behavior to capture |
-| --- | --- | --- |
-| 0:00–0:15 | Presenter: “A transcript tells us what was said. A team still needs to decide what happens next. Rally helps a host keep a decision meeting moving, then keeps the source for its conclusions.” | Prepared agenda: decide whether Friday's release can proceed and who owns the rollback check. Identify the demonstrated release. |
-| 0:15–0:30 | Presenter: “This is a rehearsed discussion with consenting participants. Muse transcribes our audio; it does not use the meeting platform's transcript.” Participants confirm consent. | Show the real capture state and finalized transcript. Complete the free audio/voice checks before the timed take. |
-| 0:30–1:05 | Alex: “Can we ship Friday?” Sam: “Before that, I spent all weekend comparing mountain bikes.” Priya: “We could compare bike frames and holiday routes.” Pause for the actual response. | Actual agenda-related guidance and opt-in local Meta MMS playback at normal speed. If using Ask Rally, show the click and describe it as a host request. Never substitute a prepared model response. |
-| 1:05–1:35 | Alex: “Release only after rollback is verified.” Priya: “I'll run the rollback check.” If asked for a deadline, Priya: “Thursday at three.” | Actual clarification, if produced; current plan/progress and evidence-bearing finalized speech. If the model does not ask, the host can ask directly and the record should reflect that. |
-| 1:35–1:50 | Presenter: “The host keeps the floor.” Use Stop speaking during an actual prompt, or pause Rally and then resume. | Immediate local playback stop and restored listening. Explain that speech input is shielded while Rally speaks. Remote call participants hearing the prompt requires a separately verified output route. |
-| 1:50–2:30 | Presenter: “After we end, Rally reviews the complete transcript. These are its interpretations: reported agreement, proposal or unresolved. Here is the source. I can correct a name or add a correction note.” | End meeting and show the actual asynchronous report when ready; follow a source link, inspect a due-out and an unknown owner/date if present, then export/reopen history. If useful, show a [reviewed WhatsApp draft](integrated-whatsapp-follow-up.md) without sending. Identify Muse reasoning and self-hosted Meta MMS voice. |
-| 2:30–3:00 | Presenter: “This is the starting point. I want to build a meeting space around the work itself: arrive with an agenda, get help when a decision stalls, and leave with clear next steps. Meta models could connect preparation, conversation and follow-through. We're starting with one promise: make it clear what was decided, who owns it, and why.” | Clearly labeled **Future direction**, then return to the actual product and project links. |
+**Narration:** Meet Rally, a meeting guide built around Meta AI. A transcript tells you what was said. Rally helps a team decide what happens next, while keeping the evidence. This walkthrough uses the current app with a labeled synthetic meeting replay. The production stack combines Meta transcription, reasoning, and speech.
 
-The table is a rehearsal target, not a promise about response latency. If the complete report does not fit the take, record the actual wait or use a clearly identified later capture from the same meeting. Preserve ordinary speed during the key live model interaction. A transition must make elapsed time clear. Do not claim a real three-minute end-to-end turnaround unless measured.
+**Screen:** Opening card: Meta AI, meeting problem, current app; visible synthetic replay badge.
 
-## Participant notes
+## 0:24–0:50
 
-Use three people, ideally on the intended recording devices. Prepare the scenario and words; model output remains what actually happens. Leave a short pause between speakers, avoid talking over the moderator, and use Stop speaking to interrupt it. Have each speaker introduce themselves, then assign a host label only if recognizable. A shared room name does not identify the individuals in it. Keep mistakes visible enough to explain the correction path.
+**Narration:** Start with the decision you need, your agenda, and the time available. Muse Spark one point three turns that brief into a structured plan. Choose passive observation, balanced guidance, or a more proactive approach. Rally can join Teams with voice and video, or listen through a microphone or selected call tab.
 
-For a browser call, the host selects the call tab with Share tab audio and can include their microphone. WhatsApp Web is a possible Meta-owned call surface only if its call works on the actual browser/device; the selection preset alone proves nothing about platform support. Zoom Web, Meet or Jitsi use the same capture boundary. Rally is not automatically a participant in these calls. Do not promise remote audibility of its host-browser voice. Use a room microphone for the main take if that is the surface the team has actually rehearsed successfully.
+**Screen:** Create a decision meeting with agenda/time and moderation approach. Show the preserved original agenda. Advance participant names are not requested.
 
-The Teams invitation remains a bounded transcription test. The WhatsApp guest prototype still needs a fresh link and admission/audio validation. Neither should become the main demonstration until its full intended path has been observed.
+## 0:50–1:19
 
-## Longer show-and-tell
+**Narration:** Muse Voice Transcribe supplies streaming speech and anonymous speaker labels. Muse Spark considers the conversation, agenda, remaining time, and unresolved concerns. It can respond before a long speaking turn finishes. The living visual presence expresses Rally's assessment. Its colors describe the guide, not the emotions of people in the meeting.
 
-Use the [longer presenter script](show-and-tell-script.md) for a separate six-to-eight-minute talk. Spend one minute on the team problem, three on the prototype, one on architecture and observed limits, then one to two on the future platform. Expand the source/correction example and invite feedback about real meeting habits. Keep this talk distinct from the required three-minute submission video. No adoption, revenue, accuracy or time-savings claim has been established by the current tests.
+**Screen:** Start consented synthetic microphone input; show the transcript, current observation, visual presence and response history. Explain the real model roles while the fixture replay is visible.
 
-The implemented Meta responsibilities are complementary: Muse Voice Transcribe supplies speech evidence, Muse Spark reasons about agenda/progress/outcomes, and the local MMS adapter makes approved prompts audible. Future services should solve a clear user need and retain replaceable capability boundaries. The pitch does not require claiming every Meta service is integrated.
+## 1:28–1:50
 
-## Before recording
+**Narration:** Ask Rally a direct question, such as what still needs an owner. Approved replies use Meta Seamless M four T for streamed speech. The host can pause or stop Rally. On a phone, the meeting stays central, with the plan and conversation available when you need them.
 
-Use the [integrated rehearsal packet](integrated-rehearsal.md). Verify physical sound, microphone/remote input, cancellation and the complete report on the chosen devices. Keep real consent, errors, pauses and model timing accurate. The eight-hour synthetic speech check is reliability evidence, not a participant meeting or a demo recording. Submission remains on hold.
+**Screen:** Demonstrate direct-question response, passive setting, mobile plan/conversation sheets and speaker naming. Reuse the existing attributed production Seamless sample at 79.5 seconds, before this narration begins.
+
+## 1:50–2:20
+
+**Narration:** End with a reviewable record. Muse Spark analyzes the complete final transcript, preserving conditions, unresolved details, and source references. Identify a speaker only when you recognize the voice. Share a read only report with a named Rally account, revoke access later, or download a PDF. Unknown owners and dates stay unknown.
+
+**Screen:** End the replay, review complete report and source references, show named-account report sharing and actual PDF download. No external message is sent.
+
+## 2:20–2:45
+
+**Narration:** Three Meta capabilities create one useful loop. Muse Voice Transcribe provides speech evidence. Muse Spark prepares, follows, and reviews the meeting. Seamless M four T voices approved guidance. Local Meta MMS narrates this video and also provides a configurable local voice option. Rally supplies the controls, permissions, and evidence links around those models.
+
+**Screen:** Model-role card: Muse Voice Transcribe, Muse Spark 1.3, SeamlessM4T; narration attribution to local MMS. Living Silk is the visual presence.
+
+## 2:45–3:00
+
+**Narration:** Today, Rally helps a host move from an agenda to clear next steps. The future direction is a meeting workspace that connects preparation, conversation, and follow through. Start with one promise: make it clear what was decided, who owns it, and why.
+
+**Screen:** Clearly labeled future direction, then close on the current product promise.
+
+## Voice interval, 1:19.5–1:25.44
+
+An existing synthetic-text production Seamless sample plays without narration. It is reused from the documented earlier provider check; this edit initiates no new paid request. The synthetic replay label remains visible. Narration resumes at 1:28.
+
+## Evidence and recording
+
+Use [video provenance and build instructions](demo-feedback-draft.md). Meta model responsibility is distinct from fixture output: the narration explains the implemented production path while the on-screen badge identifies simulated meeting content. The record does not establish real-time model response speed, remote-camera quality or human diarization accuracy. For a live recording use consenting participants and preserve ordinary response timing; identify any report-generation transition.
+
+The longer [show-and-tell](show-and-tell-script.md) is separate from this 180-second artifact. Root source license, final contributor list, judge account access and publication remain review items in the [submission draft](submission-package.md).

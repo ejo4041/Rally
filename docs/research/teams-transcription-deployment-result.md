@@ -1,6 +1,6 @@
 # Teams live-transcription POC — deployed
 
-Completed October 28, 2026 using this session's existing signed-in Sites owner account/workspace. No other agents were spawned. The existing restricted shared audience is preserved exactly. No substitute Site, account credential transfer or owner-private publication was used.
+Completed October 28, 2026 using this session's existing signed-in Sites owner account/workspace. The existing restricted shared audience is preserved exactly. No substitute Site, account credential transfer or owner-private publication was used.
 
 ## Ready-to-use result
 

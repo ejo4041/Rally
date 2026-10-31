@@ -1,0 +1,23 @@
+{
+  "at": "2026-10-31T19:37:57.421Z",
+  "passed": true,
+  "scope": "Public HTTPS and deployed API/PDF sandbox with disposable synthetic accounts/report",
+  "modelCalls": 0,
+  "platformJoins": 0,
+  "mfaLogin": true,
+  "semanticOTP": true,
+  "secureCookie": true,
+  "closedRegistration": true,
+  "appearanceSelector": true,
+  "appearancePersists": true,
+  "favicon": true,
+  "metaAttribution": true,
+  "loadingFailureRecovery": true,
+  "duplicateSubmitBlocked": true,
+  "rallyResponseLog": true,
+  "deployedPDF": true,
+  "accountSharing": true,
+  "fullMeetingDenied": true,
+  "revocation": true,
+  "temporaryRecordsRemoved": true
+}

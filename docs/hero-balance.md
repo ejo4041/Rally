@@ -6,7 +6,7 @@ Validation: frontend typecheck, 17 unit tests, production build, and actual WebG
 
 ## Shared-server incident and recovery
 
-An isolated root browser-test session exhausted host memory during an experimental automatic sizing run. The kernel killed its MainThread process with approximately 4.8GB anonymous RSS at 2026-10-31 01:51:45 UTC; the containing session peaked at 5.2GB. SSH and application access were disrupted. Uptime confirms no reboot. The abandoned test scope session-1363.scope was stopped after recovery; production services and other developers' processes were preserved. The exact cause of test memory growth remains undiagnosed. The experimental layout was never deployed.
+An isolated root browser-test session exhausted host memory during an experimental automatic sizing run. The kernel killed its MainThread process with approximately 4.8GB anonymous RSS at 2026-10-31 01:51:45 UTC; the containing session peaked at 5.2GB. SSH and application access were disrupted. Uptime confirms no reboot. The abandoned test scope session-1363.scope was stopped after recovery; production services and unrelated processes were preserved. The exact cause of test memory growth remains undiagnosed. The experimental layout was never deployed.
 
 The experimental automatic sizing was replaced with explicit artwork dimensions. Replacement browser tests passed under a systemd transient unit capped at 1600MiB RAM, zero swap, 150% CPU and 120 seconds, with control-group cleanup. Screenshots now capture the bounded viewport. Future shared-droplet browser checks must use these limits; do not run unbounded GPU checks.
 

@@ -4,7 +4,7 @@ Read [the participant guide](docs/hackathon-participant-guide.md) before proposi
 
 Before implementing Rally or changing its scope, read [the roadmap](docs/rally-roadmap.md) and [the interview decisions](docs/planning-interview.md). Consult [feasibility research](docs/research/rally-feasibility.md) when selecting model APIs or meeting integrations; distinguish documented capabilities from actual tested access.
 
-The first product is implemented in `apps/rally/` and privately hosted with Sites. Read [the current build report](docs/build-progress.md) and [handoff](docs/handoff.md) before changing it; the original Python architecture proposal is historical, not a second backend to build. Preserve the private access policy and the distinction between the scripted walkthrough and real Muse processing.
+The current application is `apps/rally-api/` plus `apps/rally-web/`, publicly served with invitation-only accounts and MFA. Read [the current handoff](docs/handoff.md) before implementation or deployment. The older `apps/rally/` Sites release is historical. Compare changes with the active release before deploying, preserve account/data isolation, and label synthetic walkthroughs separately from real-model or meeting measurements.
 
 For model selection, adapter, audio-event or pricing changes, read [model interfaces and configuration](docs/model-interfaces.md) and preserve the capability contracts.
 
@@ -19,4 +19,4 @@ Before paid Muse experiments, read [the API budget](docs/api-budget.md). Conserv
 
 ## Shared droplet browser checks
 
-Run browser/GPU integration checks one at a time inside a transient systemd unit with MemoryMax=1600M, MemorySwapMax=0, CPUQuota=150%, RuntimeMaxSec=120 and KillMode=control-group. Use bounded viewport screenshots; avoid full-page GPU captures. Stop only the test unit on failure, preserving production services and other developers' sessions. See [hero balance and test recovery](docs/hero-balance.md).
+Run browser/GPU integration checks one at a time inside a transient systemd unit with MemoryMax=1600M, MemorySwapMax=0, CPUQuota=150%, RuntimeMaxSec=120 and KillMode=control-group. Use bounded viewport screenshots; avoid full-page GPU captures. Stop only the test unit on failure, preserving production services and unrelated sessions. See [hero balance and test recovery](docs/hero-balance.md).

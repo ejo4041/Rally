@@ -1,36 +1,31 @@
-# Three-minute narrated Rally walkthrough — review draft
+# Rally three-minute video — October 31 review artifact
 
-This draft records the actual isolated-branch UI using an explicitly synthetic meeting/provider fixture. It is not evidence of a new live Meta inference or Teams rehearsal. The on-screen replay badge must remain visible. No real meeting transcript, credentials, MFA setup codes or private production history appear in the footage. No upload or final submission is authorized.
+The video records the current Node frontend from a branch based on main `a2278e0`, including simplified agenda setup, moderation settings, transcript/response history, visual presence, mobile sheets, speaker correction, final report, named-account sharing and PDF. All meeting content and ASR/reasoning responses in this walkthrough are synthetic fixtures. A permanent **SYNTHETIC REPLAY | REVIEW DRAFT** badge identifies that scope. It does not demonstrate a fresh Teams join or new live Meta inference.
 
-Runtime product models: Muse Voice Transcribe (ASR), Muse Spark 1.3 (preparation/live guidance/report), SeamlessM4T-v2-large (streaming speech via configured AWS endpoint; checkpoint unknown). The draft narration uses local pinned Meta MMS English, separately attributed as a narration asset, not presented as the active production speech model. Living Silk is supplied visual artwork/runtime, not a Meta vision model. Do not claim use of Wonder/SAM or native Teams per-person feeds.
+## Meta roles and attribution
 
-## 0:00–0:25
+- Muse Voice Transcribe: implemented production audio-to-transcript path; anonymous labels are not verified identities.
+- Muse Spark 1.3: agenda preparation, provisional/finalized live context, structured guidance and full final analysis.
+- SeamlessM4T-v2-large: production streamed voice through the configured AWS endpoint; remote revision unknown. The video reuses one earlier synthetic-text provider sample, with no new call.
+- Meta MMS: all newly generated narration uses locally provisioned `facebook/mms-tts-eng` revision `c71de0fe7204c83f1c10820a7d696d0b450048ba`. Model weights are CC BY-NC 4.0. This narration is separately credited from production Seamless speech.
+- Living Silk: supplied visual artwork/runtime, not Meta vision inference or participant emotion analysis. LiveKit, Chromium, FFmpeg and application dependencies retain their attribution.
 
-Meet Rally. Meetings often end with a transcript, but no clear decision. Rally helps while the conversation is happening. It follows the agenda, notices when the discussion needs attention, and helps people leave with decisions, owners, and next steps. This walkthrough uses a clearly labeled synthetic meeting replay.
+[Word-for-word script and screen plan](demo-script.md). There are no adoption, revenue, accuracy or saved-time claims. Future-platform remarks are labeled as future direction.
 
-## 0:25–0:50
+## Reproduce locally
 
-Start with your agenda, meeting length, and participants. Your original agenda stays visible beside the editable plan. Known users sign in with mandatory multi factor authentication. Choose how Rally should participate: passive observation, balanced nudges, or a more proactive guide. The host stays in control.
+Provision local MMS/Python as in its README, install locked frontend/API/camera dependencies and use Node 24. Generate narration with `node scripts/feedback-demo-narration.mjs`. Record the two bounded browser chapters with `RALLY_DEMO_FROM=0 RALLY_DEMO_UNTIL=94` and `RALLY_DEMO_FROM=94 RALLY_DEMO_UNTIL=180`, using `node scripts/record-feedback-demo.mjs` in separate resource-limited systemd units as required by AGENTS.md. Each chapter reconstructs its own isolated fixture; the final video joins at the mobile transition. Auth enrollment occurs before recording. No production account, invite, transcript or model key is used.
 
-## 0:50–1:20
+Compose with `python3 scripts/render-feedback-demo.py`. Its inputs include the existing attributed synthetic Seamless sample; do not request a replacement silently. The compositor produces 1920×1080 H.264/AAC, exactly 180 seconds, permanent scope label, captions and a narration/model manifest. Narration may be gently fitted to its allotted chapter; this is edited synthetic walkthrough timing, not an inference-latency measurement.
 
-In a live meeting, Meta Muse Voice Transcribe turns streaming audio into the conversation record. Meta Muse Spark assesses the discussion against the goals and remaining time. Rally expresses its assessment through this living visual presence. The colors describe Rally, not the personalities or emotions of the people in the call.
+Video, subtitles, raw footage and voice assets remain under ignored `artifacts/feedback/`. No upload or final submission has been performed. Inspect representative frames, duration, complete decoding and audio levels before sharing.
 
-## 1:28–1:50
+## October 31 artifact
 
-You can address Rally by name and ask for a recap. Responses use the meeting evidence, without adding a canned get back on track message. Change the approach during the meeting, or pause Rally immediately. On a phone, keep the meeting in focus. Slide up the plan, transcript, or settings only when needed.
+- Video: `/srv/hackathon/rally-feedback/artifacts/feedback/rally-three-minute-narrated-draft.mp4`.
+- Subtitles: same directory, `rally-three-minute-narrated-draft.srt`.
+- Local voice generation: seven pinned MMS clips, no speech API call.
+- Recording: two bounded isolated browser chapters, reconstructing synthetic state at the mobile transition. Both completed within 120 seconds with the shared-host memory/CPU limits.
+- Validation: exact 180-second H.264/AAC output, complete decoding, representative frame inspection, and audio-level checks. [Artifact manifest](research/meta-demo-video-2026-10-31.json) pins the final file hash.
 
-## 1:50–2:20
-
-After the meeting, review the report: decisions, due outs, unresolved questions, and evidence linked to the transcript. Identify speakers when you recognize their voices. Unknown owners and dates stay unknown. Share the report with another Rally account, revoke access later, or download a real PDF. The full transcript is not shared automatically.
-
-## 2:20–2:45
-
-Rally combines three Meta services in the product: Muse Voice Transcribe for transcription, Muse Spark one point three for preparation, live guidance, and reports, and Seamless M four T for streamed speech. Teams receives Rally through the same controlled voice and video connection. This replay demonstrates the interface; real call acceptance is tracked separately.
-
-## 2:45–3:00
-
-Rally helps a team turn time together into clear action. A plan before the conversation. Useful guidance during it. And an evidence linked record afterward. This is a review draft, ready for the team to refine.
-
-
-Production Seamless sample plays at1:19.5–1:25.44; narration resumes at1:28. Final MP4180.0s/1920×1080/H264+AAC. Synthetic sample requires no consent to expose a real meeting; no real transcript was used. MMS narration asset license CC-BY-NC-4.0; review draft is not uploaded or licensed for commercial reuse.
+The source/footage scripts and narration text are versioned; large video/audio artifacts remain outside Git. No production service restart, meeting join, video upload or final submission occurred during this work.

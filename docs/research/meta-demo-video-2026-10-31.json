@@ -1,0 +1,42 @@
+{
+  "file": "/srv/hackathon/rally-feedback/artifacts/feedback/rally-three-minute-narrated-draft.mp4",
+  "durationSeconds": 180.0,
+  "width": 1920,
+  "height": 1080,
+  "videoCodec": "h264",
+  "audioCodec": "aac",
+  "sizeBytes": 7060595,
+  "scope": "Actual current UI with labeled synthetic meeting/model replay; two bounded chapters",
+  "narration": "facebook/mms-tts-eng",
+  "narrationLicense": "CC-BY-NC-4.0",
+  "newPaidSpeechSampleCalls": 0,
+  "speechSampleReused": true,
+  "speechSampleOriginalCost": null,
+  "speechSampleFirstByteMs": 1643,
+  "speechSampleCached": false,
+  "uploaded": false,
+  "checkedAt": "2026-10-31T20:00:27.760260+00:00",
+  "sha256": "405e53be66f08245dd259d2cfa7b3d412bc8620509945a5f26c0911447e1e518",
+  "baselineMain": "a2278e0169aa18321e89532b0166716acb5d9530",
+  "completeDecodePassed": true,
+  "representativeFramesReviewed": [
+    5,
+    42,
+    74,
+    99,
+    131,
+    152,
+    174
+  ],
+  "audioMeanDb": -22.3,
+  "audioPeakDb": -4.4,
+  "newPaidModelCalls": 0,
+  "syntheticReplayLabel": true,
+  "subtitles": "rally-three-minute-narrated-draft.srt",
+  "productionApplicationChanged": false,
+  "sourceHashes": {
+    "scripts/record-feedback-demo.mjs": "8ef71f6db3bf94810b0afb128fb98d4aab0d305a65739f93c4d3d4a713c12226",
+    "scripts/render-feedback-demo.py": "0cfddcfcf5a5d09b6bcb6a78c6a3aede8abc086241593988d18d5a6d664362a2",
+    "scripts/fixtures/feedback-demo-narration.json": "885637160f82f049e7aaa16752f66f3ebf16d0ade801c640511556bc1476ad20"
+  }
+}

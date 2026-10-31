@@ -1,6 +1,6 @@
 # Appearance and Meta showcase
 
-All completed feedback/loading/Rally responses/Teams wrap-up work merged and pushed to main at2c8c0f5 by clean fast-forward from28df66f. Merge used dedicated `/srv/hackathon/rally-feedback-merge` worktree, leaving other developers' worktrees intact. The visual pass on `polish/meta-showcase-20261030` in `/srv/hackathon/rally-feedback` was also merged by clean fast-forward to37d5740.
+All completed feedback/loading/Rally responses/Teams wrap-up work merged and pushed to main at2c8c0f5 by clean fast-forward from28df66f. Merge used dedicated `/srv/hackathon/rally-feedback-merge` worktree, leaving existing worktrees intact. The visual pass on `polish/meta-showcase-20261030` in `/srv/hackathon/rally-feedback` was also merged by clean fast-forward to37d5740.
 
 ## Product changes
 

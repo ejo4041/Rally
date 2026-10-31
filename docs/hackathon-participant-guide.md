@@ -16,7 +16,7 @@ Build toward one of these problem statements:
 Join the Hackathon Discord: “Connect Discord – Meta Global AI Developer Hackathon – Cerebral Valley.”
 
 - `#intros`: Introduce yourself, your skills, and the project you want to build.
-- `#team-search`: Find teammates; maximum team size is four.
+- `#team-search`: Participant matching; maximum team size is four.
 - `#general`: Socialize and meet other hackers.
 - `#announcements`: Official CV Team updates and reminders.
 - `#questions`: General questions to @Cerebral Valley; questions not covered by resources can go to the Cerebral Valley team role.
