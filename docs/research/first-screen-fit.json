@@ -1,0 +1,197 @@
+{
+  "passed": true,
+  "initialLoginAtTop": true,
+  "navigationReturnsToTop": true,
+  "foldChecks": [
+    {
+      "width": 1920,
+      "height": 900,
+      "theme": "light",
+      "bottom": 738.390625,
+      "viewport": 900,
+      "overflow": false,
+      "zoom": 1,
+      "bodyFont": 13
+    },
+    {
+      "width": 1920,
+      "height": 900,
+      "theme": "dark",
+      "bottom": 738.390625,
+      "viewport": 900,
+      "overflow": false,
+      "zoom": 1,
+      "bodyFont": 13
+    },
+    {
+      "width": 1536,
+      "height": 864,
+      "theme": "light",
+      "bottom": 738.390625,
+      "viewport": 864,
+      "overflow": false,
+      "zoom": 1,
+      "bodyFont": 13
+    },
+    {
+      "width": 1536,
+      "height": 864,
+      "theme": "dark",
+      "bottom": 738.390625,
+      "viewport": 864,
+      "overflow": false,
+      "zoom": 1,
+      "bodyFont": 13
+    },
+    {
+      "width": 1440,
+      "height": 800,
+      "theme": "light",
+      "bottom": 737.359375,
+      "viewport": 800,
+      "overflow": false,
+      "zoom": 1,
+      "bodyFont": 13
+    },
+    {
+      "width": 1440,
+      "height": 800,
+      "theme": "dark",
+      "bottom": 737.359375,
+      "viewport": 800,
+      "overflow": false,
+      "zoom": 1,
+      "bodyFont": 13
+    },
+    {
+      "width": 1366,
+      "height": 768,
+      "theme": "light",
+      "bottom": 619.546875,
+      "viewport": 768,
+      "overflow": false,
+      "zoom": 1,
+      "bodyFont": 13
+    },
+    {
+      "width": 1366,
+      "height": 768,
+      "theme": "dark",
+      "bottom": 619.546875,
+      "viewport": 768,
+      "overflow": false,
+      "zoom": 1,
+      "bodyFont": 13
+    },
+    {
+      "width": 1366,
+      "height": 650,
+      "theme": "light",
+      "bottom": 550.015625,
+      "viewport": 650,
+      "overflow": false,
+      "zoom": 1,
+      "bodyFont": 13
+    },
+    {
+      "width": 1366,
+      "height": 650,
+      "theme": "dark",
+      "bottom": 550.015625,
+      "viewport": 650,
+      "overflow": false,
+      "zoom": 1,
+      "bodyFont": 13
+    },
+    {
+      "width": 1280,
+      "height": 600,
+      "theme": "light",
+      "bottom": 550.015625,
+      "viewport": 600,
+      "overflow": false,
+      "zoom": 1,
+      "bodyFont": 13
+    },
+    {
+      "width": 1280,
+      "height": 600,
+      "theme": "dark",
+      "bottom": 550.015625,
+      "viewport": 600,
+      "overflow": false,
+      "zoom": 1,
+      "bodyFont": 13
+    },
+    {
+      "width": 1024,
+      "height": 600,
+      "theme": "light",
+      "bottom": 591.734375,
+      "viewport": 600,
+      "overflow": false,
+      "zoom": 1,
+      "bodyFont": 13
+    },
+    {
+      "width": 1024,
+      "height": 600,
+      "theme": "dark",
+      "bottom": 591.734375,
+      "viewport": 600,
+      "overflow": false,
+      "zoom": 1,
+      "bodyFont": 13
+    },
+    {
+      "width": 1366,
+      "height": 550,
+      "theme": "light",
+      "bottom": 498.078125,
+      "viewport": 550,
+      "overflow": false,
+      "zoom": 1,
+      "bodyFont": 13
+    },
+    {
+      "width": 1366,
+      "height": 550,
+      "theme": "dark",
+      "bottom": 498.078125,
+      "viewport": 550,
+      "overflow": false,
+      "zoom": 1,
+      "bodyFont": 13
+    },
+    {
+      "width": 1024,
+      "height": 550,
+      "theme": "light",
+      "bottom": 539.796875,
+      "viewport": 550,
+      "overflow": false,
+      "zoom": 1,
+      "bodyFont": 13
+    },
+    {
+      "width": 1024,
+      "height": 550,
+      "theme": "dark",
+      "bottom": 539.796875,
+      "viewport": 550,
+      "overflow": false,
+      "zoom": 1,
+      "bodyFont": 13
+    }
+  ],
+  "renderer": "Same mountPresence/createLivingSilk as actual meeting, idle baseline",
+  "realWebGL": true,
+  "motionVerified": true,
+  "reducedMotionStillVerified": true,
+  "resumeVerified": true,
+  "mobileNoOverflow": true,
+  "disposeOnMeetingAndLogout": true,
+  "oneCanvasOnReturn": true,
+  "audioRequests": 0,
+  "modelCalls": 0
+}

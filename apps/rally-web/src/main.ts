@@ -230,6 +230,7 @@ function home() {
   $("meeting").hidden = true;
   $("breadcrumb").textContent = "Workspace / Meetings";
   mascot.show();
+  window.scrollTo(0,0);
 }
 async function route() {
   if (!state.user) return;

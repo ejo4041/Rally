@@ -1,3 +1,5 @@
+**First-screen fit:** [Hero and full Meta section at100% zoom](first-screen-fit.md), both themes checked through1024×550 viewport. Home returns to top after sign-in;13px Meta copy preserved.
+
 **Current UI69720b3: illustrated Meta cards + larger type, merged/deployed.** [Scope and checks](meta-capability-cards.md), [public evidence](research/meta-cards-deployed.json). Actual Living Silk mascot retained; both themes/mobile/reduced motion verified. Static update only; API8054fb5 unchanged. Workspace `/srv/hackathon/rally-feedback`, branch polish/meta-cards-20261030.
 
 **Meta card polish:** [Illustrated capability cards and larger type](meta-capability-cards.md), branch polish/meta-cards-20261030 in the existing droplet workspace. Checks pass in both themes/mobile, with mascot unchanged.
