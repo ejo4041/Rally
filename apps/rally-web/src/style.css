@@ -1322,3 +1322,23 @@ html[data-theme="dark"] .model-role{color:var(--model-ink);}
 @media(min-width:1000px) and (max-width:1279px) and (min-height:651px) and (max-height:780px){
  #home .hero>.hero-art{height:160px;}
 }
+
+/* Meeting setup: paired controls and a shared consent column. */
+#meeting .meeting-heading { align-items:flex-start; gap:16px; }
+.meeting-setup-options { display:grid; grid-template-columns:repeat(2,minmax(0,22rem)); gap:24px; margin:20px 0 12px; align-items:start; }
+.meeting-setup-options #moderation-control { margin:0; min-width:0; }
+.meeting-setup-options label { margin:0; }
+.meeting-setup-options .input-options { display:grid; gap:12px; min-width:0; }
+.meeting-setup-options .input-options > label { min-width:0; }
+#moderation-mode, #create-moderation-mode { width:100%; max-width:22rem; }
+#meeting-consents { max-width:88ch; margin:20px 0; }
+#meeting-consents > .check { margin:0 0 12px; }
+#meeting .check input[type="checkbox"] { flex:0 0 auto; }
+#meeting-consents .feedback-card { border:0; padding:0; margin:0; background:transparent; box-shadow:none; }
+#meeting-consents .feedback-card label { margin:0; }
+#meeting-consents .feedback-card p { margin:6px 0 0 22px; }
+@media(max-width:760px) {
+ .meeting-setup-options { grid-template-columns:minmax(0,1fr); gap:16px; }
+ #moderation-mode { max-width:100%; }
+ #meeting .meeting-heading .actions { justify-content:flex-start; }
+}

@@ -399,6 +399,12 @@ function render() {
 
   $("restart-session-label").hidden = !(live && !state.capture);
   $("start-panel").hidden = !pre;
+  // Keep feedback withdrawal available after capture and in saved reports.
+  const feedbackConsent=$("feedback-consent"), feedbackHome=$(pre?"meeting-consents":"meeting");
+  if(feedbackConsent.parentElement!==feedbackHome){
+    if(pre) feedbackHome.append(feedbackConsent);
+    else feedbackHome.insertBefore(feedbackConsent, $("record-error"));
+  }
   button("test-voice").disabled =
     state.busy || !!state.capture || m.phase === "live";
   button("check-audio").disabled = state.busy || !!state.capture;

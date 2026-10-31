@@ -248,7 +248,7 @@
               </div>
             </div>
             <div id="meeting-navigation" class="meeting-navigation" hidden><button id="open-plan" class="secondary">Plan</button><button id="open-conversation" class="secondary">Transcript</button><button id="open-settings" class="secondary">Settings</button></div>
-            <section class="card feedback-card"><label class="check"><input id="share-feedback" type="checkbox" disabled />Share this test’s transcript and report with the developer for feedback</label><p class="small muted">Optional, off by default. Inform participants before sharing. Administrators can read shared text; access is logged. Uncheck to withdraw future access. Basic usage, errors and processing costs are visible to the administrator regardless. No replayable audio is stored by this app.</p></section>
+
             <p id="record-error" class="banner error" role="alert" hidden></p>
             <div id="wrap-up-status" class="notice" hidden role="status"><p id="wrap-up-message"></p><a id="wrap-up-link" hidden>Open meeting summary</a><p class="small muted">Other Rally accounts need an explicit report grant from the host.</p></div>
             <p id="connection-status" class="banner" role="status" hidden></p>
@@ -260,6 +260,7 @@
                 transcripts and reports are saved. Names and speaker labels can
                 need correction.
               </p>
+              <div class="meeting-setup-options">
               <div id="moderation-control"><label>Rally’s approach<select id="moderation-mode"><option value="passive">Passive · observe, respond when asked</option><option value="balanced" selected>Balanced · occasional helpful nudges</option><option value="proactive">Proactive · actively guide the agenda</option></select></label><p class="small muted">Visual feedback stays active. Pause always takes priority; settings never authorize external actions.</p></div>
               <div class="input-options">
                 <label
@@ -273,6 +274,7 @@
                   microphone</label
                 >
               </div>
+              </div>
               <label id="live-teams-link-label" hidden>Teams invitation<input id="live-teams-link" type="url" placeholder="https://teams.microsoft.com/l/meetup-join/…" /></label>
               <p class="small muted">
                 A call tab is host-side capture. Select Rally joins Teams for its animated camera, spoken guidance and agenda display. Rally stays until End, even if this dashboard closes.
@@ -283,11 +285,15 @@
                 tab audio. Use headphones. Rally’s guidance stays in this
                 workspace.
               </p>
+              <div id="meeting-consents">
               <label class="check"
                 ><input id="consent" type="checkbox" />Everyone has been
                 informed and consents to sending audio to Meta and saving the
                 transcript, and to Rally speaking and displaying its camera in a connected Teams call.</label
-              ><label id="restart-session-label" class="check" hidden
+              >
+              <section class="card feedback-card" id="feedback-consent"><label class="check"><input id="share-feedback" type="checkbox" disabled />Share this test’s transcript and report with the developer for feedback</label><p class="small muted">Optional, off by default. Inform participants before sharing. Administrators can read shared text; access is logged. Uncheck to withdraw future access. Basic usage, errors and processing costs are visible to the administrator regardless. No replayable audio is stored by this app.</p></section>
+              </div>
+              <label id="restart-session-label" class="check" hidden
                 ><input id="restart-session" type="checkbox" />Start a new
                 transcription session (speaker labels restart; uses Muse)</label
               >
