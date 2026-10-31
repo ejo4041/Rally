@@ -16,3 +16,7 @@ The user requests all substantive outputs and important context saved as organiz
 
 Before paid Muse experiments, read [the API budget](docs/api-budget.md). Conserve the grant for the full week. Record all calls and usage in the cost ledger and report batch cost, cumulative tracked spend, and remaining credits after every batch. Label the $150 remainder as conditional until the actual grant and Billing balance are verified; preserve unknown costs instead of treating failed calls as free.
 
+
+## Shared droplet browser checks
+
+Run browser/GPU integration checks one at a time inside a transient systemd unit with MemoryMax=1600M, MemorySwapMax=0, CPUQuota=150%, RuntimeMaxSec=120 and KillMode=control-group. Use bounded viewport screenshots; avoid full-page GPU captures. Stop only the test unit on failure, preserving production services and other developers' sessions. See [hero balance and test recovery](docs/hero-balance.md).
