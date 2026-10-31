@@ -408,7 +408,11 @@ function render() {
   button("test-voice").disabled =
     state.busy || !!state.capture || m.phase === "live";
   button("check-audio").disabled = state.busy || !!state.capture;
-  button("start").disabled = state.busy || !m.plan || !input("consent").checked;
+  const needsInvite=needsTeamsInvite(), inviteValid=validTeamsInvite();
+  input("live-teams-link").required=needsInvite;
+  $("teams-invite-help").hidden=!needsInvite;
+  $("teams-invite-help").textContent=inviteValid?"Teams invitation ready. Confirm participant consent to join.":"Paste a work/school Teams meeting link to enable joining.";
+  button("start").disabled = state.busy || !m.plan || !input("consent").checked || (needsInvite && !inviteValid);
   button("start").textContent = state.selecting
     ? "Selecting audio…"
     : live
@@ -584,9 +588,19 @@ function stopCapture() {
   state.media?.stopCapture();
   state.muted = false;
 }
+function needsTeamsInvite() {
+  return input("audio-mode").value === "teams" && state.session?.meeting.phase !== "live";
+}
+function validTeamsInvite() {
+  try {
+    const url=new URL(input("live-teams-link").value.trim());
+    return url.protocol === "https:" && url.hostname === "teams.microsoft.com" && !url.port && !url.username && !url.password && /^\/(l\/meetup-join\/|meet\/)\S+/.test(url.pathname);
+  } catch { return false; }
+}
 async function start() {
-  audioCheck.stop();
   if (!state.session || !input("consent").checked || state.busy) return;
+  if(needsTeamsInvite() && !validTeamsInvite()) { render();input("live-teams-link").focus();return; }
+  audioCheck.stop();
   unlockPresenceAudio();
   const session = state.session,
     id = session.meeting.id;
@@ -619,7 +633,7 @@ async function start() {
       attempted = true;
       if (callMode && session.meeting.phase !== "live") {
         await api(`/meetings/${id}/teams/connect`, "POST", {
-          meetingUrl: input("live-teams-link").value,
+          meetingUrl: input("live-teams-link").value.trim(),
           consented: true,
         });
         while (true) {
@@ -942,7 +956,9 @@ input("audio-mode").onchange = () => {
   $("live-teams-link-label").hidden = input("audio-mode").value !== "teams";
   $("include-mic-label").hidden = !tab;
   $("tab-help").hidden = !tab;
+  render();
 };
+input("live-teams-link").oninput = render;
 button("prepare").onclick = () =>
   perform(async () => {
     mergeMeeting(

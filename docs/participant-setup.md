@@ -15,3 +15,7 @@ Browser validation checks selector alignment/width, checkbox alignment/order, li
 ## Deployment
 
 Merged into main and deployed static release `7af2a98`. The API/media services were not restarted; backend source is unchanged. SQLite backup preceded the atomic release switch. [Public MFA/PDF/access-control smoke checks passed](research/participant-setup-deployed.json), with disposable synthetic records removed and zero paid calls.
+
+## Teams invitation required before joining
+
+Selecting Rally joins Teams disables Join until a valid work/school Teams HTTPS invitation is present and participant consent is checked. The input is required for new joins, with an inline explanation. Validation follows the existing backend host/path rules, including rejecting unrelated hosts, credential-bearing URLs and custom ports. Clearing or changing the link immediately recalculates eligibility; switching to microphone/tab does not require a link. Existing live Teams reconnection does not require a new invitation. The click handler independently guards joining, and the backend continues to validate requests. Browser checks exercise empty/malformed/unrelated links, both supported Teams path formats, consent gating, forced clicks without join requests, and switching back to microphone.
