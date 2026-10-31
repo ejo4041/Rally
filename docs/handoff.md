@@ -1,3 +1,5 @@
+**Current UI69720b3: illustrated Meta cards + larger type, merged/deployed.** [Scope and checks](meta-capability-cards.md), [public evidence](research/meta-cards-deployed.json). Actual Living Silk mascot retained; both themes/mobile/reduced motion verified. Static update only; API8054fb5 unchanged. Workspace `/srv/hackathon/rally-feedback`, branch polish/meta-cards-20261030.
+
 **Meta card polish:** [Illustrated capability cards and larger type](meta-capability-cards.md), branch polish/meta-cards-20261030 in the existing droplet workspace. Checks pass in both themes/mobile, with mascot unchanged.
 
 **Current home mascot: same Living Silk as meetings, deployed/merged9c57bfe.** [Implementation and checks](rally-mascot.md), [public actual-WebGL evidence](research/rally-mascot-deployed.json). Main includes all previous work. Static assets9c57bfe; running API8054fb5 unchanged. Workspace `/srv/hackathon/rally-feedback`, branch polish/rally-mascot-20261030; resume phone session here and read these notes.
