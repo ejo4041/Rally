@@ -104,3 +104,5 @@ Teams voice preparation: [Meta MMS output and remaining live moderation connecti
 - [Deployed living-presence follow-up verification](research/living-presence-followup-deployed.json)
 
 - [Roomier hero, validation and shared-server test recovery](hero-balance.md)
+
+- [Remove advance participant names from setup](participant-setup.md)

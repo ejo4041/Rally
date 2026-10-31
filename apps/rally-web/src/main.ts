@@ -383,7 +383,7 @@ function render() {
       (live && !state.capture && !state.media);
   $("meeting-title").textContent = m.title;
   $("meeting-meta").textContent =
-    `${m.durationMinutes} minutes planned · ${m.participants.length} roster names${m.paused ? " · Moderator paused" : ""}`;
+    `${m.durationMinutes} minutes planned${m.paused ? " · Moderator paused" : ""}`;
   $("phase").textContent = label(m.phase);
   if(m.phase==="ended" && m.reportStatus!=="processing")state.status="";
   const error = m.error || session.notice;
@@ -908,10 +908,6 @@ $("create-form").onsubmit = async (event) => {
       title: data.get("title"),
       agenda: data.get("agenda"),
       durationMinutes: Number(data.get("durationMinutes")),
-      participants: String(data.get("participants") || "")
-        .split(",")
-        .map((v) => v.trim())
-        .filter(Boolean),
     });
     dialog("create-dialog").close();
     state.busy = false;
