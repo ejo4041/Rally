@@ -1,3 +1,5 @@
+**Meta card polish:** [Illustrated capability cards and larger type](meta-capability-cards.md), branch polish/meta-cards-20261030 in the existing droplet workspace. Checks pass in both themes/mobile, with mascot unchanged.
+
 **Current home mascot: same Living Silk as meetings, deployed/merged9c57bfe.** [Implementation and checks](rally-mascot.md), [public actual-WebGL evidence](research/rally-mascot-deployed.json). Main includes all previous work. Static assets9c57bfe; running API8054fb5 unchanged. Workspace `/srv/hackathon/rally-feedback`, branch polish/rally-mascot-20261030; resume phone session here and read these notes.
 
 **Rally mascot follow-up:** [Same meeting visualization in the home hero](rally-mascot.md), real GPU/reduced-motion/lifecycle checks pass. Worktree unchanged, branch polish/rally-mascot-20261030.

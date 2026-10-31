@@ -1176,3 +1176,42 @@ html[data-theme="dark"] .card-heading,html[data-theme="dark"] .turn,html[data-th
 .hero-art .mascot-presence[data-graphics="unavailable"] .rally-silk{height:100%;color:#c8ece0;font-size:20px;}
 .hero-art .hero-float,.hero-art .hero-art-caption{z-index:1;pointer-events:none;}
 @media(max-width:650px){#home .hero-art{height:220px}.hero-art .rally-mascot{inset:0 -8px;}}
+
+/* Illustrated provider cards: show the role, not just a small provider badge. */
+.meta-heading h2{font-size:33px;letter-spacing:-1.1px;}
+.meta-heading>p{font-size:12px;}
+.meta-heading .eyebrow{font-size:9px;}
+.meta-model-card{--model-accent:#9e7ad2;--model-tint:#eee7fa;--model-node:#ffffff;--model-ink:#644588;padding:0;overflow:hidden;border-radius:16px;background:var(--surface);}
+.meta-listen{--model-accent:#50a28d;--model-tint:#e0f3eb;--model-ink:#297966;}
+.meta-speak{--model-accent:#6a95d8;--model-tint:#e5edfc;--model-ink:#416fb2;}
+.meta-model-card:hover{border-color:var(--model-accent);box-shadow:0 12px 30px color-mix(in srgb,var(--model-accent) 18%,transparent);transform:translateY(-4px);}
+.model-art{position:relative;isolation:isolate;width:100%;height:152px;flex:none;overflow:hidden;color:var(--model-accent);background:radial-gradient(ellipse at 45% 100%,var(--model-tint),transparent 80%),var(--surface);border-bottom:1px solid var(--line);}
+.model-art::before{content:"";position:absolute;inset:0 0 auto;height:3px;background:linear-gradient(90deg,transparent,var(--model-accent),transparent);}
+.model-art svg{display:block;width:100%;height:100%;padding:12px 7px 0;}
+.art-label{position:absolute;top:13px;left:18px;font-size:9px;font-weight:750;letter-spacing:1.3px;color:var(--model-ink);}
+.art-node{fill:var(--model-node);stroke:var(--model-accent);stroke-opacity:.38;stroke-width:1;}
+.art-connector{stroke:var(--model-accent);stroke-width:1.5;stroke-opacity:.65;}
+.art-text{fill:var(--model-ink);font-size:10px;font-weight:600;}
+.art-core{fill:var(--model-accent);fill-opacity:.12;stroke:var(--model-accent);stroke-width:1;}
+.art-orbit{stroke:var(--model-accent);stroke-opacity:.35;stroke-dasharray:3 5;}
+.art-spark,.art-dot{fill:var(--model-accent);}
+.art-line{fill:var(--model-accent);fill-opacity:.65;}
+.art-speaker{stroke:var(--model-accent);stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;}
+.art-ripple{stroke:var(--model-accent);stroke-opacity:.28;transform-origin:160px 78px;animation:provider-ripple 5s ease-in-out infinite;}
+.art-wave path{transform-origin:center;animation:provider-wave 3s ease-in-out infinite alternate;}
+.art-wave path:nth-child(3n){animation-delay:-1.2s}.art-wave path:nth-child(3n+1){animation-delay:-.5s}
+@keyframes provider-wave{from{transform:scaleY(.65)}to{transform:scaleY(1)}}
+@keyframes provider-ripple{0%,100%{transform:scale(.93);opacity:.4}50%{transform:scale(1.08);opacity:1}}
+#home[hidden] .model-art *{animation-play-state:paused;}
+.model-card-body{display:flex;flex-direction:column;align-items:flex-start;flex:1;padding:20px;}
+.meta-model-card .meta-badge{font-size:10px;padding:5px 8px;line-height:1.45;}
+.meta-model-card h3{font-size:16px;line-height:1.4;margin:15px 0 8px;letter-spacing:-.25px;}
+.meta-model-card p{font-size:13px;line-height:1.75;margin:0 0 20px;}
+.model-role{font-size:9px;letter-spacing:.8px;color:var(--model-ink);gap:7px;}
+html[data-theme="dark"] .meta-model-card{--model-tint:#302943;--model-node:#202b3d;--model-ink:#d2b8f8;background:#172330;}
+html[data-theme="dark"] .meta-listen{--model-tint:#193c37;--model-node:#1a3435;--model-ink:#a1e3cc;}
+html[data-theme="dark"] .meta-speak{--model-tint:#213555;--model-node:#202e43;--model-ink:#afccfa;}
+html[data-theme="dark"] .model-role{color:var(--model-ink);}
+@media(max-width:1000px) and (min-width:681px){.model-card-body{padding:15px}.meta-model-card h3{font-size:15px}.meta-model-card p{font-size:12px}.meta-model-card .meta-badge{font-size:9px}.model-art{height:128px}}
+@media(max-width:680px){.meta-heading h2{font-size:29px}.meta-model-card{padding:0}.model-art{height:140px}.model-card-body{padding:20px}.meta-model-card h3{font-size:17px}.meta-model-card p{font-size:13px}.meta-model-card .meta-badge{font-size:10px}.model-role{font-size:10px}}
+@media(prefers-reduced-motion:reduce){.model-art *{animation:none!important}.meta-model-card:hover{transform:none}}
