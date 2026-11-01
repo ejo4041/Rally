@@ -1,6 +1,6 @@
 # Rally current handoff — October 31, 2026
 
-The public app is https://rally.tail703f9e.ts.net/ . Access requires an invited account and MFA. The recovery backend correction is deployed as `d0d4615` (including the long-turn fix); it preserves the static frontend from `a9f0004`. Source is pushed to main. The prior October31 readiness snapshot matched main `a2278e0`. [Fresh live UI readiness check](readiness-2026-10-31.md).
+The public app is https://rally.tail703f9e.ts.net/ . Access requires an invited account and MFA. The speech-preparation update is deployed as `080cf83` (including recovery and long-turn fixes); it preserves the static frontend from `a9f0004`. Source is pushed to main. The prior October31 readiness snapshot matched main `a2278e0`. [Fresh live UI readiness check](readiness-2026-10-31.md).
 
 ## Implemented
 
@@ -42,3 +42,7 @@ The [65-minute real-provider experiment](provider-endurance.md) passed on source
 The recovery release is now live as `d0d4615`. [Deployment check](research/recovery-deployed-2026-11-01.json): idle check, private SQLite backup, matching tested engine source, active services, public UI/API200 and anonymous auth401. No live capture/report was interrupted. The focused local real-browser recovery test passed; broader browser chapters retain separate results.
 
 Both bounded browser chapters passed (capture73.103seconds, records97.967seconds), plus the29-second focused recovery browser. The local180-second edit guide is complete with pending real-footage slots; tested source-video/audio replacement uses clearly synthetic fixtures. Private source ZIP inspection passed the recorded filters. No paid provider calls, external invitations, video upload or final entry occurred. [All evidence and remaining owner inputs](recovery-readiness-2026-11-01.md).
+
+## November 1 speech revision
+
+[Pronunciation and sentence-pacing work](speech-naturalness.md) is deployed as `080cf83`. Local MMS now synthesizes sentences with deliberate pauses; both voice adapters share technical-term/operator pronunciation preparation while canonical/display text stays intact. The hosted Seamless service still controls its own acoustic prosody. A fresh local demo candidate under `artifacts/feedback/voice-natural-v1/` is exactly180seconds with no narration speed-up; same-text before/after WAVs are available. Listener acceptance is pending.152backend/17frontend tests,20local speech/presentation tests,3Python prosody tests, both type checks/build and focused real-browser recovery pass. The unrelated clock-sensitive MFA replay test is now pinned to one timestep; production auth is unchanged. One new non-retrying hosted synthetic speech request has unknown AWS cost; zero new Muse calls, no platform join or submission. [Samples, measured timings, cost and public deployment evidence](research/voice-quality-2026-11-01.json).
