@@ -1,0 +1,150 @@
+{
+  "at": "2026-11-01T18:20:22.150898+00:00",
+  "release": "6fa6e2f",
+  "correction": {
+    "word": "agenda",
+    "target": "AH0 JH EH1 N D AH0",
+    "mms": "ajenda",
+    "plural": "ajendas",
+    "hostedSeamless": "ordinary agenda spelling retained"
+  },
+  "samples": {
+    "target": "AH0 JH EH1 N D AH0",
+    "results": [
+      {
+        "name": "before",
+        "text": "Start with an agenda. Muse Spark follows the agenda. We can revise our agenda without changing the deadline.",
+        "seconds": 7.418625,
+        "synthesisMs": 2053,
+        "phrases": [
+          {
+            "text": "Start with an agenda.",
+            "startSeconds": 0,
+            "endSeconds": 1.566,
+            "pauseMs": 300
+          },
+          {
+            "text": "Muse Spark follows the agenda.",
+            "startSeconds": 1.866,
+            "endSeconds": 3.711625,
+            "pauseMs": 300
+          },
+          {
+            "text": "We can revise our agenda without changing the deadline.",
+            "startSeconds": 4.011625,
+            "endSeconds": 7.418625,
+            "pauseMs": 0
+          }
+        ]
+      },
+      {
+        "name": "candidate",
+        "text": "Start with an ajenda. Muse Spark follows the ajenda. We can revise our ajenda without changing the deadline.",
+        "seconds": 8.022125,
+        "synthesisMs": 2244,
+        "phrases": [
+          {
+            "text": "Start with an ajenda.",
+            "startSeconds": 0,
+            "endSeconds": 1.757375,
+            "pauseMs": 300
+          },
+          {
+            "text": "Muse Spark follows the ajenda.",
+            "startSeconds": 2.057375,
+            "endSeconds": 3.8565625,
+            "pauseMs": 300
+          },
+          {
+            "text": "We can revise our ajenda without changing the deadline.",
+            "startSeconds": 4.1565625,
+            "endSeconds": 8.022125,
+            "pauseMs": 0
+          }
+        ]
+      },
+      {
+        "name": "alternative",
+        "text": "Start with an uh jenda. Muse Spark follows the uh jenda. We can revise our uh jenda without changing the deadline.",
+        "seconds": 7.633,
+        "synthesisMs": 1860,
+        "phrases": [
+          {
+            "text": "Start with an uh jenda.",
+            "startSeconds": 0,
+            "endSeconds": 1.51225,
+            "pauseMs": 300
+          },
+          {
+            "text": "Muse Spark follows the uh jenda.",
+            "startSeconds": 1.81225,
+            "endSeconds": 3.818875,
+            "pauseMs": 300
+          },
+          {
+            "text": "We can revise our uh jenda without changing the deadline.",
+            "startSeconds": 4.118875,
+            "endSeconds": 7.633,
+            "pauseMs": 0
+          }
+        ]
+      }
+    ],
+    "apiCalls": 0,
+    "listenerAcceptance": "pending; samples are candidates, not verified acoustic correctness"
+  },
+  "preparationTiming": {
+    "iterations": 3000,
+    "characters": 1200,
+    "medianMs": 0.03387199999997392,
+    "p95Ms": 0.0791499999999985,
+    "maxMs": 5.494504000000006,
+    "providerCalls": 0,
+    "scope": "Local warmed preparation only; excludes model synthesis and playback."
+  },
+  "demo": {
+    "file": "artifacts/feedback/voice-agenda-v3/rally-three-minute-narrated-draft.mp4",
+    "durationSeconds": 180.0,
+    "width": 1920,
+    "height": 1080,
+    "videoCodec": "h264",
+    "audioCodec": "aac",
+    "sizeBytes": 6787501,
+    "scope": "Actual current UI with labeled synthetic meeting/model replay; two bounded chapters",
+    "narration": "facebook/mms-tts-eng",
+    "narrationLicense": "CC-BY-NC-4.0",
+    "newPaidSpeechSampleCalls": 0,
+    "speechSampleReused": true,
+    "speechSampleOriginalCost": null,
+    "speechSampleFirstByteMs": 1643,
+    "speechSampleCached": false,
+    "uploaded": false,
+    "speechTimeStretch": false,
+    "sentenceProsody": true,
+    "sha256": "0c66b8891c3753a093542f1b4bc3720209305953aecdd34e31c310d1872f145c",
+    "fullyDecoded": true
+  },
+  "validation": {
+    "localSpeechAndReferenceTests": 27,
+    "pythonProsodyTests": 3,
+    "targetedAPISpeechTests": 19,
+    "apiTypecheck": true,
+    "canonicalTextPreserved": true,
+    "listenerAcceptance": "pending; generated waveform is not an acoustic correctness verdict"
+  },
+  "deployment": {
+    "idleBeforeSwitch": true,
+    "privateSQLiteBackup": true,
+    "correctionSourceMatches": true,
+    "publicHTTP": {
+      "/": 200,
+      "/api/health": 200,
+      "/api/auth/me": 401
+    },
+    "servicesActive": true
+  },
+  "newMuseCalls": 0,
+  "newHostedSpeechCalls": 0,
+  "platformJoins": 0,
+  "submitted": false
+}

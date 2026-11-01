@@ -1,6 +1,6 @@
 # Rally current handoff — October 31, 2026
 
-The public app is https://rally.tail703f9e.ts.net/ . Access requires an invited account and MFA. The local pronunciation-reference update is deployed as `9bca78a` (including recovery and long-turn fixes); it preserves the static frontend from `a9f0004`. Source is pushed to main. The prior October31 readiness snapshot matched main `a2278e0`. [Fresh live UI readiness check](readiness-2026-10-31.md).
+The public app is https://rally.tail703f9e.ts.net/ . Access requires an invited account and MFA. The agenda pronunciation update is deployed as `6fa6e2f` (including recovery and long-turn fixes); it preserves the static frontend from `a9f0004`. Source is pushed to main. The prior October31 readiness snapshot matched main `a2278e0`. [Fresh live UI readiness check](readiness-2026-10-31.md).
 
 ## Implemented
 
@@ -50,3 +50,7 @@ Both bounded browser chapters passed (capture73.103seconds, records97.967seconds
 ## November 1 local pronunciation reference
 
 [Local pronunciation preparation](pronunciation-reference.md) is deployed as `9bca78a`, including the pinned126,052-entryCMU dictionary/full notice and explicit Meta brand/technical-term references. Both speech adapters compile their preparation once; warmed1,200-character checks measured0.087ms at95th percentile, with145ms one-time cold load. Corrections target Meta/evidence through model-specific spellings; uncertain names/homographs remain original and the current models still lack verified direct phoneme control. The new180-second local demo is under `artifacts/feedback/voice-lexicon-v2/`, with no narration speed-up and original captions. Listening acceptance remains pending.153backend/17frontend tests,25local speech/reference tests,3Python prosody tests, both type checks/build and the focused actual-browser recovery check pass. Public UI/API200 and anonymous auth401 pass after idle check/private backup/restart; no active capture was interrupted. One new hosted sample has unknown AWS cost, zero new Muse calls, no platform join or final submission. [Measurements, sample provenance and deployment](research/pronunciation-reference-2026-11-01.json).
+
+## Agenda pronunciation follow-up
+
+User reported agenda still mispronounced. The shared correction now supplies `ajenda`/`ajendas` to MMS while retaining whole-sentence flow, original captions and canonical records. Hosted Seamless retains normal spelling pending evidence of the same hosted error. Release `6fa6e2f` is deployed and pushed after idle check/private SQLite backup; public UI/API200 and anonymous auth401 pass. New exact180-second draft: `artifacts/feedback/voice-agenda-v3/rally-three-minute-narrated-draft.mp4`, plus before/candidate/alternative sentence WAVs. Listening acceptance remains pending.27local speech/reference tests,3Python tests,19targeted API speech tests and API typecheck pass. Preparation measured0.079ms at95th percentile for1,200characters. [Evidence](research/agenda-pronunciation-2026-11-01.json). No new paid provider requests, meeting joins or final submission.
