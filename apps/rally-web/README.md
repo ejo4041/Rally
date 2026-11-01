@@ -65,3 +65,7 @@ The Meetings page includes the existing three-minute Teams transcription-test fl
 Remote deployment, physical microphone/speaker behavior, real multi-person/room attribution and a complete human rehearsal remain unverified. Generated moderator speech is a subsequent backend integration; subscribing to an audio track does not provide TTS. Existing Sites features such as its free local audio meter, presenter view and WhatsApp sharing remain in that separate app. No final submission has been made.
 
 To exercise actual local MMS in the browser fixture after provisioning, set `RALLY_TEST_REAL_MMS=1 RALLY_MMS_ENABLED=1` when running `npm run test:browser`. Reasoning/ASR remain deterministic injected fixtures; no paid model request is made. The default speech fixture is a synthetic WAV.
+
+## Bounded browser recovery checks
+
+`npm run test:recovery` exercises actual local HTTP/MFA/SQLite/LiveKit reload, lease refusal, explicit restart, End/drain and report retry using synthetic audio/injected providers. The broader browser workflow has `npm run test:browser:capture` and `npm run test:browser:records` chapters so the free-preflight timeout/periodic heartbeat and record/control coverage fit separate shared-host units. Set `RALLY_TEST_LIVEKIT_BINARY` to the provisioned binary and use the Node24/browser-library environment. Follow AGENTS.md limits; run browser units sequentially. These checks make no paid model calls and do not establish physical-device or Teams behavior. [Current evidence](../../docs/recovery-readiness-2026-11-01.md).

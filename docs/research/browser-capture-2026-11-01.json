@@ -1,0 +1,21 @@
+{
+  "at": "2026-11-01T02:25:01.512Z",
+  "passed": true,
+  "chapter": "capture",
+  "paidModelCalls": 0,
+  "scope": "Real local HTTP/MFA/SQLite/LiveKit with synthetic media and injected providers",
+  "checks": [
+    "Teams import fixture and MFA recovery",
+    "free audio preflight consent, signal, manual/timed stop and late grant cleanup",
+    "immediate and periodic publishing heartbeat",
+    "actual browser audio received",
+    "End stops tracks and exposes report failure"
+  ],
+  "resourceLimits": {
+    "memoryMaxMB": 1600,
+    "swapMaxMB": 0,
+    "cpuQuotaPercent": 150,
+    "runtimeMaxSeconds": 120
+  },
+  "transientUnitRuntimeSeconds": 73.103
+}

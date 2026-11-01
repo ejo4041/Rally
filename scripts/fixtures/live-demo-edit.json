@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "durationSeconds": 180,
+  "base": "artifacts/feedback/rally-three-minute-narrated-draft.mp4",
+  "output": "artifacts/feedback/rally-three-minute-live-edit-draft.mp4",
+  "slots": [
+    {"id":"join","start":30,"end":39,"title":"Invite and admit Rally","source":null,"sourceStart":0,"useSourceAudio":false},
+    {"id":"transcript","start":51,"end":63,"title":"Muse transcript and source evidence","source":null,"sourceStart":0,"useSourceAudio":false},
+    {"id":"guidance","start":64,"end":78,"title":"Observed live guidance","source":null,"sourceStart":0,"useSourceAudio":false},
+    {"id":"voice","start":79.5,"end":85.44,"title":"Actual Rally voice and remote presence","source":null,"sourceStart":0,"useSourceAudio":true},
+    {"id":"controls","start":89,"end":98,"title":"Pause and host controls","source":null,"sourceStart":0,"useSourceAudio":false},
+    {"id":"report","start":111,"end":125,"title":"Final report and source reference","source":null,"sourceStart":0,"useSourceAudio":false},
+    {"id":"departure","start":126,"end":135,"title":"Remote departure and report access","source":null,"sourceStart":0,"useSourceAudio":false}
+  ]
+}

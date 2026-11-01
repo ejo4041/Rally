@@ -1,0 +1,22 @@
+{
+  "file": "/srv/hackathon/rally-feedback/artifacts/feedback/rally-three-minute-live-edit-draft.mp4",
+  "durationSeconds": 180.0,
+  "sha256": "7663acd2b6e65961927c0c4d79a53e4bee3e12e887902b89344aecfe3dafad59",
+  "sourceBaseSHA256": "405e53be66f08245dd259d2cfa7b3d412bc8620509945a5f26c0911447e1e518",
+  "replacedSlots": [],
+  "pendingSlots": [
+    "join",
+    "transcript",
+    "guidance",
+    "voice",
+    "controls",
+    "report",
+    "departure"
+  ],
+  "scope": "Edited review draft; each missing live shot remains visibly pending; synthetic base retains its label.",
+  "uploaded": false,
+  "submitted": false,
+  "paidModelCalls": 0,
+  "fullyDecoded": true,
+  "previewFrameInspectedAtSeconds": 52
+}

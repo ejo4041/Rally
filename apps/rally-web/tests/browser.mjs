@@ -14,6 +14,9 @@ const port = Number(process.env.RALLY_WEB_PORT || 5174),
   apiPort = Number(process.env.RALLY_TEST_API_PORT || 3101),
   mediaPort = Number(process.env.RALLY_TEST_MEDIA_PORT || 18890),
   base = `http://127.0.0.1:${port}`;
+const chapter = process.env.RALLY_TEST_BROWSER_CHAPTER || "full";
+if (!["full", "capture", "records"].includes(chapter)) throw Error("Unknown browser chapter");
+const chapterComplete = Symbol("chapter complete");
 const children = [];
 let browser;
 let debugPage;
@@ -96,7 +99,7 @@ try {
     args: ["--no-sandbox", "--autoplay-policy=no-user-gesture-required"],
   });
   const context = await browser.newContext({
-      viewport: { width: 1440, height: 1100 },
+      viewport: { width: 1280, height: 800 },
     }),
     page = await context.newPage();
   debugPage = page;
@@ -178,9 +181,8 @@ try {
   await page.locator("#teams-consent").check();
   await page.locator("#teams-join").click();
   await page.waitForFunction(() =>
-    document
-      .querySelector("#teams-error")
-      .textContent.includes("work/school Teams"),
+    ["teams-error", "toast"].some(id =>
+      document.getElementById(id).textContent.includes("work/school Teams")),
   );
   await page
     .locator("#teams-url")
@@ -194,7 +196,7 @@ try {
   await mkdir(resolve(root, "test-results"), { recursive: true });
   await page.screenshot({
     path: resolve(root, "test-results/teams-invite-desktop.png"),
-    fullPage: true,
+    fullPage: false,
   });
   await page.locator("#teams-leave").click();
   await page.locator("#teams-save").waitFor({ state: "visible" });
@@ -223,13 +225,14 @@ try {
   await page.locator("#delete").click();
   await page.locator("#confirm-delete").click();
   await page.waitForFunction(() => !document.querySelector("#home").hidden);
+  console.log("Browser workflow: create meeting");
   await page.locator("#new-meeting").click();
   await page.locator("[name=title]").fill("Release readiness");
   await page
     .locator("[name=agenda]")
     .fill("Decide release readiness and rollback ownership.");
   await page.locator("[name=durationMinutes]").fill("10");
-  await page.locator("[name=participants]").fill("Priya, Alex");
+  assert.equal(await page.locator("[name=participants]").count(), 0);
   await page.locator("#create-submit").click();
   await page.waitForFunction(
     () =>
@@ -238,6 +241,7 @@ try {
   );
   const id = await page.evaluate(() => location.hash.split("/")[1]);
   assert.equal(await page.locator("#phase").textContent(), "Ready");
+  await page.locator("#audio-mode").selectOption("microphone");
   assert.equal(await page.locator("#start").isDisabled(), true);
   await page.locator("#edit-plan").click();
   await page
@@ -256,6 +260,7 @@ try {
       break;
     await page.waitForTimeout(250);
   }
+  console.log("Browser workflow: voice diagnostic");
   await page.locator("#test-voice").click();
   await page.waitForFunction(() =>
     fixturePlayback.some((audio) => !audio.paused),
@@ -272,6 +277,8 @@ try {
     1,
     "free test voice synthesizes exactly once",
   );
+  if (chapter !== "records") {
+  console.log("Browser workflow: audio preflight");
   // Local preflight must leave meeting lifecycle and ASR untouched.
   await page.locator("#check-audio").click();
   assert.equal(await page.locator("#audio-check-dialog").isVisible(), false);
@@ -345,6 +352,8 @@ try {
       .speechSessions,
     preflightSessions,
   );
+  }
+  console.log("Browser workflow: start capture");
   await page.locator("#audio-mode").selectOption("microphone");
   await page.evaluate(() => (fixtureAudio.streams = []));
   const firstHeartbeat = page.waitForResponse((response) =>
@@ -359,11 +368,26 @@ try {
     () => document.querySelectorAll(".turn").length === 1,
   );
   await firstHeartbeat;
+  if (chapter !== "records") {
   // Observe the actual periodic renewal, beyond the immediate publication call.
   await page.waitForResponse((response) =>
     response.url().endsWith("/heartbeat") && response.status() === 200,
     { timeout: 25000 },
   );
+  }
+  console.log("Browser workflow: capture heartbeat passed");
+  if (chapter === "capture") {
+    const state = await (await page.request.get(base + "/api/test/state")).json();
+    assert.ok(state.totalBytes >= 16000); assert.ok(state.energy > 1000000);
+    await page.locator("#end").click();
+    await page.waitForFunction(() => document.querySelector("#report-status").textContent === "Failed");
+    assert.equal(await page.evaluate(() => fixtureAudio.streams.every(s => s.getTracks().every(t => t.readyState === "ended"))), true);
+    const result = {at:new Date().toISOString(),passed:true,chapter,paidModelCalls:0,scope:"Real local HTTP/MFA/SQLite/LiveKit with synthetic media and injected providers",checks:["Teams import fixture and MFA recovery", "free audio preflight consent, signal, manual/timed stop and late grant cleanup", "immediate and periodic publishing heartbeat", "actual browser audio received", "End stops tracks and exposes report failure"]};
+    await mkdir(resolve(root,"test-results"),{recursive:true});
+    await writeFile(resolve(root,"test-results/browser-capture.json"),JSON.stringify(result,null,2)+"\n");
+    console.log(JSON.stringify(result));
+    throw chapterComplete;
+  }
   const transport = await (
     await page.request.get(base + "/api/test/state")
   ).json();
@@ -376,7 +400,7 @@ try {
   await page.locator("#speaker-form [type=submit]").click();
   await page.locator("#speaker-dialog").waitFor({ state: "hidden" });
   assert.match(
-    await page.locator(".turn-meta strong").first().textContent(),
+    await page.locator("#transcript .turn-meta strong").first().textContent(),
     /Priya/,
   );
   await page.locator("#speakers [data-speaker]").first().click();
@@ -384,7 +408,7 @@ try {
   await page.locator("#speaker-form [type=submit]").click();
   await page.locator("#speaker-dialog").waitFor({ state: "hidden" });
   assert.match(
-    await page.locator(".turn-meta strong").first().textContent(),
+    await page.locator("#transcript .turn-meta strong").first().textContent(),
     /Speaker A · session 1/,
   );
   await page.locator("#speakers [data-speaker]").first().click();
@@ -415,6 +439,7 @@ try {
   assert.ok(
     !(await page.locator("#guidance").textContent()).includes("Unapproved"),
   );
+  console.log("Browser workflow: guidance");
   await page.locator("#request-guidance").click();
   await page.waitForFunction(
     () =>
@@ -459,6 +484,7 @@ try {
     diagnosticGenerations,
     "meeting voice must be opt-in",
   );
+  console.log("Browser workflow: speech controls");
   await page.locator("#spoken-prompts").check();
   await page.waitForTimeout(100);
   await page.locator("#request-guidance").click();
@@ -538,8 +564,9 @@ try {
   await mkdir(resolve(root, "test-results"), { recursive: true });
   await page.screenshot({
     path: resolve(root, "test-results/live-desktop.png"),
-    fullPage: true,
+    fullPage: false,
   });
+  console.log("Browser workflow: reload reconnect");
   // Reload releases local tracks; attaching to the existing room must not start another ASR session.
   const sessionsBeforeReload = (
     await (await page.request.get(base + "/api/test/state")).json()
@@ -559,6 +586,7 @@ try {
       .speechSessions,
     sessionsBeforeReload,
   );
+  console.log("Browser workflow: end report");
   await page.locator("#end").click();
   await page.waitForFunction(
     () => document.querySelector("#report-status").textContent === "Processing",
@@ -627,6 +655,7 @@ try {
   );
   assert.equal(await page.locator(".turn").count(), 2);
   assert.match(await page.locator("#transcript").textContent(), /Priya/);
+  console.log("Browser workflow: mobile report");
   await page.setViewportSize({ width: 390, height: 844 });
   assert.equal(
     await page.evaluate(
@@ -636,12 +665,12 @@ try {
   );
   await page.screenshot({
     path: resolve(root, "test-results/report-mobile.png"),
-    fullPage: true,
+    fullPage: false,
   });
-  await page.setViewportSize({ width: 1440, height: 1100 });
+  await page.setViewportSize({ width: 1280, height: 800 });
   await page.screenshot({
     path: resolve(root, "test-results/report-desktop.png"),
-    fullPage: true,
+    fullPage: false,
   });
   const exported = await (
     await page.request.get(base + `/api/meetings/${id}/export`)
@@ -673,7 +702,7 @@ try {
   await page.locator("#retry-report").waitFor({ state: "visible" });
   assert.match(await page.locator("#retry-report").textContent(), /uses Muse/);
   assert.match(
-    await page.locator(".turn-meta strong").first().textContent(),
+    await page.locator("#transcript .turn-meta strong").first().textContent(),
     /Speaker A · session 1/,
   );
   assert.equal(
@@ -981,6 +1010,7 @@ try {
   const report = {
     testedAt: new Date().toISOString(),
     passed: true,
+    chapter,
     backend: "real Express/cookie auth/SQLite and LiveKit",
     modelProviders: "injected deterministic fixtures for reasoning and ASR",
     speechEngine:
@@ -994,7 +1024,7 @@ try {
       "agenda edit and failed preparation retry",
       "actual browser audio reaches backend",
       "reload reconnects without duplicating ASR sessions",
-      "publication renews the capture lease periodically; renewal refusal stops real tracks without automatic restart or analysis",
+      chapter === "full" ? "publication renews the capture lease periodically; renewal refusal stops real tracks without automatic restart or analysis" : "renewal refusal stops real tracks without automatic restart or analysis",
       "canonical final revisions, reversible session-scoped names, stale-report disclosure and explicit reanalysis",
       "approved intervention only, pause/dismiss and mute",
       "end stops tracks and drains final turn into complete report",
@@ -1006,7 +1036,7 @@ try {
       "mobile layout",
       "host-selected WhatsApp draft, uncertainty preserved, editable encoded text, length guard and private close cleanup without model requests",
       "opt-in browser WAV playback, Stop speaking, Pause and completion restore shielded input",
-      "free preflight detects separate sources, rejects missing consent, stops manually/after 15s and closes late grants without ASR",
+      ...(chapter === "full" ? ["free preflight detects separate sources, rejects missing consent, stops manually/after 15s and closes late grants without ASR"] : []),
       "Teams invite validation, lobby, leave and finalized transcript import via injected bridge",
       "tab rejection/cancellation stops tracks before ASR",
       "capture gap stops audio; explicit restart uses new speaker session",
@@ -1019,12 +1049,13 @@ try {
       root,
       process.env.RALLY_TEST_REAL_MMS === "1"
         ? "test-results/real-mms-browser-check.json"
-        : "test-results/browser-check.json",
+        : chapter === "records" ? "test-results/browser-records.json" : "test-results/browser-check.json",
     ),
     JSON.stringify(report, null, 2) + "\n",
   );
   console.log(JSON.stringify(report, null, 2));
 } catch (error) {
+  if (error !== chapterComplete) {
   console.log(
     JSON.stringify(
       await debugPage?.evaluate(() => ({
@@ -1039,6 +1070,7 @@ try {
     ),
   );
   throw error;
+  }
 } finally {
   await browser?.close();
   for (const child of children.reverse()) {

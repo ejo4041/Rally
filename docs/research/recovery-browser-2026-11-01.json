@@ -1,0 +1,19 @@
+{
+  "at": "2026-11-01T02:19:42.715Z",
+  "passed": true,
+  "scope": "Real local HTTP/MFA/SQLite/LiveKit with synthetic browser microphone and injected providers; no Teams/human or paid provider calls.",
+  "paidModelCalls": 0,
+  "platformJoins": 0,
+  "checks": {
+    "actualAudioReceived": true,
+    "reloadDoesNotDuplicateASR": true,
+    "leaseRefusalStopsTracks": true,
+    "noAutomaticReportOrASRRestart": true,
+    "explicitRestartRecovers": true,
+    "endStopsTracks": true,
+    "finalDrainTurns": 4,
+    "reportFailureVisible": true,
+    "explicitReportRetry": true
+  },
+  "browserErrors": []
+}

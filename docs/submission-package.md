@@ -36,3 +36,7 @@ The app is public HTTPS at https://rally.tail703f9e.ts.net/ with invitation-only
 ## Source package
 
 `python3 scripts/export_submission.py --out /tmp/rally-source-draft.zip` makes a local tracked-source archive with runtime/credential/model filters. Review contents and configured-secret matches before sharing. Old archive manifests refer to their pinned commits, not current code. No source archive, video or final entry has been submitted by this preparation.
+
+## November 1 preparation
+
+[Prepared field text](submission-field-draft.md), [Monday runbook](monday-live-rehearsal.md), [live-footage edit plan](demo-live-edit.md), [judge access rehearsal](judge-access-rehearsal.md) and [source/license readiness](source-release-readiness.md) are ready for review. Current [recovery evidence](recovery-readiness-2026-11-01.md) is separate from the earlier endurance result. The edit draft remains exactly 180 seconds with visible placeholders; no actual Monday footage exists yet. Anonymous GitHub access still returned404; authenticated portal fields, source license, supplied artwork permission and actual contributor confirmation remain pending. No final entry or upload was performed.

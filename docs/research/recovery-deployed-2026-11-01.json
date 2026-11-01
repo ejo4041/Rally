@@ -1,0 +1,22 @@
+{
+  "at": "2026-11-01T02:24:59.634616+00:00",
+  "release": "d0d4615",
+  "passed": true,
+  "deployedEngineMatchesTestedSource": true,
+  "sourcePushedToMain": true,
+  "idleBeforeSwitch": true,
+  "sqliteBackupCompleted": true,
+  "servicesActive": true,
+  "publicFunnelHTTP": {
+    "/": 200,
+    "/api/health": 200,
+    "/api/auth/me": 401
+  },
+  "paidCalls": 0,
+  "platformJoins": 0,
+  "scope": "Public Funnel GET checks from server using external DNS address; no human device or Teams acceptance.",
+  "backendTestsPassed": 151,
+  "frontendTestsPassed": 17,
+  "bothTypechecksPassed": true,
+  "priorRecoveryRelease": "9b38883"
+}

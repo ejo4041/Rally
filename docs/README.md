@@ -4,6 +4,9 @@ Start with the [current handoff](handoff.md) and [readiness check](readiness-202
 
 | Topic | Current reference |
 | --- | --- |
+| Monday rehearsal | [65-minute runbook](monday-live-rehearsal.md), [result template](live-test-result-template.md), [recovery evidence](recovery-readiness-2026-11-01.md) |
+| Live footage | [Shot list and edit workflow](demo-live-edit.md), [judge access rehearsal](judge-access-rehearsal.md) |
+| Source release | [License/access decisions](source-release-readiness.md), [component notices](../THIRD_PARTY_NOTICES.md), [prepared submission text](submission-field-draft.md) |
 | Demonstration | [Three-minute script](demo-script.md), [video/provenance](demo-feedback-draft.md), [longer show-and-tell](show-and-tell-script.md) |
 | Submission preparation | [Working draft](submission-package.md), [supplied participant guide](hackathon-participant-guide.md) |
 | Frontend/backend | [Frontend setup](../apps/rally-web/README.md), [API setup](../apps/rally-api/README.md), [HTTP/streaming contract](backend-api.md) |

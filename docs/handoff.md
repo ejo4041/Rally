@@ -1,6 +1,6 @@
 # Rally current handoff — October 31, 2026
 
-The public app is https://rally.tail703f9e.ts.net/ . Access requires an invited account and MFA. The long-turn backend correction is deployed as `51677f7`; it preserves the static frontend from `a9f0004`. Source is pushed to main. The prior October31 readiness snapshot matched main `a2278e0`. [Fresh live UI readiness check](readiness-2026-10-31.md).
+The public app is https://rally.tail703f9e.ts.net/ . Access requires an invited account and MFA. The recovery backend correction is deployed as `d0d4615` (including the long-turn fix); it preserves the static frontend from `a9f0004`. Source is pushed to main. The prior October31 readiness snapshot matched main `a2278e0`. [Fresh live UI readiness check](readiness-2026-10-31.md).
 
 ## Implemented
 
@@ -34,3 +34,9 @@ Workspace `/srv/hackathon/rally-feedback`. API/web/media system services are `ra
 [Long finalized turns](long-turn-handling.md) now supply labeled source-coordinate windows to live reasoning without modifying canonical/report text. Two real synthetic-text checks passed in3.312/2.999seconds; deterministic coverage includes revisions, bounded proofs, direct-question identity and Unicode. [Deployment check](research/long-turn-deployed-2026-10-31.json) passes source matching, health and anonymous-access denial. The first backup attempt lacked permissions; the prior release remained active and was briefly restarted, then privileged backup and the final switch succeeded. No live production capture was interrupted.
 
 The [65-minute real-provider experiment](provider-endurance.md) passed on source `51677f7`: normal 55-minute ASR handoff, 19 finalized turns, largest turn25,169characters, 389 accepted checks including319using long windows, eight completed speech requests with received output, and a report receiving all56,044canonical characters. One check was rejected near shutdown; one expected ASR continuity warning was recorded. Muse settled at **$3.28526990**, unknown0/running0; AWS speech cost is separate and unknown. It uses authored synthetic speech and isolated LiveKit, not Teams. A fresh consented Teams invite/admission remains required for the actual platform endurance trial.
+
+## November 1 recovery and rehearsal preparation
+
+[Current preparation evidence](recovery-readiness-2026-11-01.md): seven new recovery tests expose/correct stale-room callbacks and cleanup skipped after ASR drain exceptions.151backend/17frontend tests and both type checks/build pass. [Monday runbook](monday-live-rehearsal.md), [shot list and local edit workflow](demo-live-edit.md), [judge access rehearsal](judge-access-rehearsal.md) and [prepared entry text](submission-field-draft.md) are ready for review. The separate180-second edit guide visibly leaves all seven live slots pending. Source-license/contributor/artwork/access decisions remain explicit; no final submission/upload/message was made. Deployment status is recorded in the linked evidence after validation.
+
+The recovery release is now live as `d0d4615`. [Deployment check](research/recovery-deployed-2026-11-01.json): idle check, private SQLite backup, matching tested engine source, active services, public UI/API200 and anonymous auth401. No live capture/report was interrupted. The focused local real-browser recovery test passed; broader browser chapters retain separate results.

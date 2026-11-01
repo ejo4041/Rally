@@ -29,3 +29,7 @@ Video, subtitles, raw footage and voice assets remain under ignored `artifacts/f
 - Validation: exact 180-second H.264/AAC output, complete decoding, representative frame inspection, and audio-level checks. [Artifact manifest](research/meta-demo-video-2026-10-31.json) pins the final file hash.
 
 The source/footage scripts and narration text are versioned; large video/audio artifacts remain outside Git. No production service restart, meeting join, video upload or final submission occurred during this work.
+
+## November 1 live-footage preparation
+
+A second local edit draft preserves the original and adds seven explicit live-footage placeholders. [Shot list, timing and assembly instructions](demo-live-edit.md). The compositor supports normal-speed approved clips and source audio only during the narration-free voice slot. Until those clips are supplied, the output is an edit guide over the synthetic base, not a real meeting recording.
