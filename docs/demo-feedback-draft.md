@@ -33,3 +33,7 @@ The source/footage scripts and narration text are versioned; large video/audio a
 ## November 1 live-footage preparation
 
 A second local edit draft preserves the original and adds seven explicit live-footage placeholders. [Shot list, timing and assembly instructions](demo-live-edit.md). The compositor supports normal-speed approved clips and source audio only during the narration-free voice slot. Until those clips are supplied, the output is an edit guide over the synthetic base, not a real meeting recording.
+
+## November 1 voice revision
+
+A new local candidate under `artifacts/feedback/voice-natural-v1/` uses shorter narration, local MMS sentence synthesis with deliberate pauses, technical-term pronunciation and measured sentence captions. It remains exactly180seconds and uses no narration acceleration. Original draft and real-footage edit guide remain separate artifacts. [Voice changes, samples, limitations and usage](speech-naturalness.md). Listener preference and the actual human meeting test remain pending.

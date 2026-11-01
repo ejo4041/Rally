@@ -1,3 +1,4 @@
+import {spokenText,pronunciationMap} from '../../packages/rally-speech/text.mjs';
 import {spawn} from 'node:child_process';
 import {createInterface} from 'node:readline';
 import {fileURLToPath} from 'node:url';
@@ -13,9 +14,11 @@ export function wav(pcm,rate){
 // One local model process, one bounded request. Cancellation terminates model
 // work, rather than allowing stale speech to finish and play after an override.
 export class MMSSpeech {
- constructor({python,modelDirectory,worker=fileURLToPath(new URL('./worker.py',import.meta.url)),startTimeoutMs=45000,synthesisTimeoutMs=20000,model=MODEL,revision=REVISION,onReady=()=>{}}){
+ constructor({python,modelDirectory,worker=fileURLToPath(new URL('./worker.py',import.meta.url)),startTimeoutMs=45000,synthesisTimeoutMs=20000,model=MODEL,revision=REVISION,onReady=()=>{},pronunciations={},speakingRate=1,sentencePauseMs=300}){
   if(!python||!modelDirectory)throw new Error('Configure the Python environment and pinned model directory.');
-  Object.assign(this,{python,modelDirectory,worker,startTimeoutMs,synthesisTimeoutMs,model,revision,onReady});
+  pronunciationMap(pronunciations);
+  if(!Number.isFinite(speakingRate)||speakingRate<.85||speakingRate>1.15||!Number.isInteger(sentencePauseMs)||sentencePauseMs<120||sentencePauseMs>650)throw Error('Invalid MMS prosody');
+  Object.assign(this,{pronunciations,speakingRate,sentencePauseMs,python,modelDirectory,worker,startTimeoutMs,synthesisTimeoutMs,model,revision,onReady});
  }
  async start(){
   if(this.ready)return this.ready;
@@ -48,6 +51,8 @@ export class MMSSpeech {
  }
  async synthesize(text,{signal}={}){
   if(typeof text!=='string'||!text.trim()||text.trim().length>650||/[\x00-\x08\x0b-\x1f]/.test(text))throw new Error('Use 1–650 characters of moderator text.');
+  const spoken=spokenText(text,{adapter:'mms',pronunciations:this.pronunciations});
+  if(spoken.length>650)throw Error('Pronunciation expansion exceeds MMS input limit.');
   if(this.busy)throw new Error('MMS is already generating speech.');
   if(signal?.aborted)throw new Error('Speech canceled.');
   this.busy=true;
@@ -58,7 +63,7 @@ export class MMSSpeech {
     const timer=setTimeout(()=>{reject(new Error('MMS synthesis timed out.'));this.close();},this.synthesisTimeoutMs);
     const finish=fn=>value=>{clearTimeout(timer);this.pending=null;fn(value);};
     const id=randomUUID();this.pending={id,resolve:finish(resolve),reject:finish(reject)};
-    this.child.stdin.write(JSON.stringify({id,text:text.trim()})+'\n',error=>{if(error)this.pending?.reject(new Error('MMS input failed.'));});
+    this.child.stdin.write(JSON.stringify({id,text:spoken,prosody:{speakingRate:this.speakingRate,sentencePauseMs:this.sentencePauseMs}})+'\n',error=>{if(error)this.pending?.reject(new Error('MMS input failed.'));});
    });
   }finally{signal?.removeEventListener('abort',cancel);this.busy=false;}
  }

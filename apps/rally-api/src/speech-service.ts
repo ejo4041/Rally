@@ -48,5 +48,5 @@ export class SpeechService {
 export function configuredTTS():TextToSpeech {
  const concurrency=Number(process.env.RALLY_TTS_CONCURRENCY||1);
  if(!Number.isInteger(concurrency)||concurrency<1||concurrency>8)throw new Error('Invalid speech concurrency');
- return new SeamlessSpeech(process.env.RALLY_TTS_TOKEN||'',undefined,fetch,concurrency);
+ return new SeamlessSpeech(process.env.RALLY_TTS_TOKEN||'',undefined,fetch,concurrency,JSON.parse(process.env.RALLY_SPEECH_PRONUNCIATIONS || '{}'));
 }

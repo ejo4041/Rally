@@ -2,36 +2,36 @@
   {
     "start": 0,
     "end": 24,
-    "text": "Meet Rally, a meeting guide built around Meta AI. A transcript tells you what was said. Rally helps a team decide what happens next, while keeping the evidence. This walkthrough uses the current app with a labeled synthetic meeting replay. The production stack combines Meta transcription, reasoning, and speech."
+    "text": "Meet Rally, a meeting guide built with Meta AI. It helps a host keep the conversation moving, then saves the evidence behind each decision. This video uses a labeled synthetic replay. The production app combines Meta transcription, reasoning, and speech."
   },
   {
     "start": 24,
     "end": 50,
-    "text": "Start with the decision you need, your agenda, and the time available. Muse Spark one point three turns that brief into a structured plan. Choose passive observation, balanced guidance, or a more proactive approach. Rally can join Teams with voice and video, or listen through a microphone or selected call tab."
+    "text": "Start with a decision, an agenda, and the time available. Muse Spark prepares the plan. Choose quiet observation, balanced guidance, or a more active approach. Rally can join Teams with voice and video. You can also use a microphone or a browser call tab."
   },
   {
     "start": 50,
     "end": 79,
-    "text": "Muse Voice Transcribe supplies streaming speech and anonymous speaker labels. Muse Spark considers the conversation, agenda, remaining time, and unresolved concerns. It can respond before a long speaking turn finishes. The living visual presence expresses Rally's assessment. Its colors describe the guide, not the emotions of people in the meeting."
+    "text": "Muse Voice Transcribe turns speech into a live transcript. Muse Spark follows the agenda, time, and unresolved questions. It can respond before a long turn ends. The animated presence shows Rally's assessment. It does not analyze the emotions of people in the meeting."
   },
   {
     "start": 88,
     "end": 110,
-    "text": "Ask Rally a direct question, such as what still needs an owner. Approved replies use Meta Seamless M four T for streamed speech. The host can pause or stop Rally. On a phone, the meeting stays central, with the plan and conversation available when you need them."
+    "text": "Ask Rally what still needs an owner. Meta SeamlessM4T voices its reply. The host can pause or stop speech. On a phone, the plan and transcript stay close at hand."
   },
   {
     "start": 110,
     "end": 140,
-    "text": "End with a reviewable record. Muse Spark analyzes the complete final transcript, preserving conditions, unresolved details, and source references. Identify a speaker only when you recognize the voice. Share a read only report with a named Rally account, revoke access later, or download a PDF. Unknown owners and dates stay unknown."
+    "text": "When the meeting ends, Muse Spark reviews the complete transcript. Conditions stay attached to decisions. Missing owners and dates stay unresolved. Follow the source links, add a correction, or download a PDF. Share the report with a named Rally account, and revoke access when needed."
   },
   {
     "start": 140,
     "end": 165,
-    "text": "Three Meta capabilities create one useful loop. Muse Voice Transcribe provides speech evidence. Muse Spark prepares, follows, and reviews the meeting. Seamless M four T voices approved guidance. Local Meta MMS narrates this video and also provides a configurable local voice option. Rally supplies the controls, permissions, and evidence links around those models."
+    "text": "Meta models support the whole loop. Muse Voice Transcribe listens. Muse Spark plans, guides, and reviews. SeamlessM4T speaks. Local Meta MMS narrates this video, and provides another voice option. Rally brings these capabilities together with host controls and source evidence."
   },
   {
     "start": 165,
     "end": 180,
-    "text": "Today, Rally helps a host move from an agenda to clear next steps. The future direction is a meeting workspace that connects preparation, conversation, and follow through. Start with one promise: make it clear what was decided, who owns it, and why."
+    "text": "Today, Rally turns discussion into clear next steps. Our next step is one workspace for preparation, conversation, and follow through. The promise stays simple. Know what was decided, who owns it, and why."
   }
 ]

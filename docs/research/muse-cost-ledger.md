@@ -173,3 +173,7 @@ Batch known Muse spend **$0.19233180**; tracked cumulative **$2.05319975**; cond
 [Terminal evidence](provider-endurance-65-minute-2026-10-31.json): 394 Muse usage rows settled at **$3.28526990**, unknown0/running0, including real preparation, two ASR sessions, live reasoning and complete report. No automatic provider retry. Eight completed Seamless requests have **unknown AWS infrastructure cost**, separate from Muse; together with the pilot this task made ten speech requests.
 
 Current long-turn/endurance task batch known Muse **$3.47760170** including the earlier pilot and standalone checks. Tracked cumulative **$5.33846965**; conditional unverified-$150 remainder **$144.66153035**. Actual Billing/grant and unrelated deployment usage remain unverified. The run used authored synthetic speech and did not join Teams.
+
+## Voice naturalness preparation — November 1
+
+Zero new Muse calls. Local pinned MMS generated a same-text before/after pair and seven narration clips with sentence pauses; it made no speech-provider API calls. One separately gated, non-retrying real Seamless request generated7.58seconds, uncached, first PCM1.539seconds. **AWS infrastructure cost remains unknown**, recorded separately from Muse. [Evidence](voice-quality-2026-11-01.json). Tracked Muse remains **$5.33846965**; conditional unverified-$150 remainder **$144.66153035**, excluding unverified unrelated runtime activity. No platform was joined and no final entry/upload was performed.

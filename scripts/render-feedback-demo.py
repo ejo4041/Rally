@@ -1,7 +1,7 @@
 # Compose the recorded branch UI and attributed local narration into an exact 3-minute review draft.
 from pathlib import Path
-import json,subprocess,textwrap
-root=Path(__file__).resolve().parents[1];out=root/'artifacts/feedback'
+import json,subprocess,textwrap,os,re
+root=Path(__file__).resolve().parents[1];out=Path(os.environ.get('RALLY_DEMO_ARTIFACT_DIR',str(root/'artifacts/feedback')))
 first=json.loads((out/'demo-recording-0.json').read_text());second=json.loads((out/'demo-recording-94.json').read_text());evidence=json.loads((out/'demo-narration-evidence.json').read_text())
 segments=evidence['segments'];assert first['durationSeconds']==94 and second['durationSeconds']==86
 command=['ffmpeg','-nostdin','-hide_banner','-loglevel','warning','-y','-i',first['rawVideo'],'-i',second['rawVideo']]
@@ -30,7 +30,9 @@ for index,(start,end,title) in enumerate(chapters):
  filters.append(f"[{previous}]drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf:text='{title}':x=34:y=22:fontsize=30:fontcolor=white:box=1:boxcolor=0x17212be6:boxborderw=12:enable='between(t,{start},{end})'[{label}]")
  previous=label
 for i,segment in enumerate(segments):
- available=segment['end']-segment['start']-.7;speed=max(1,segment['seconds']/available)
+ available=segment['end']-segment['start']-.7
+ if segment['seconds']>available:raise ValueError(f'Chapter {i} is too long; shorten narration instead of accelerating speech')
+ speed=1
  filters.append(f'[{i+2}:a]atempo={speed},volume=.9,adelay={segment["start"]*1000}:all=1[a{i}]')
 filters.append(f'[{len(segments)+2}:a]volume=.95,adelay=79500:all=1[voice]')
 filters.append(''.join(f'[a{i}]' for i in range(len(segments)))+'[voice]'+f'amix=inputs={len(segments)+1}:duration=longest:normalize=0,apad=whole_dur=180,atrim=0:180,afade=t=out:st=179:d=1[a]')
@@ -41,18 +43,21 @@ def timestamp(value):
  ms=round(value*1000);return f'{ms//3600000:02d}:{ms//60000%60:02d}:{ms//1000%60:02d},{ms%1000:03d}'
 blocks=[]
 for segment in segments:
- words=segment['text'].split()
- available=segment['end']-segment['start']-.7
- spoken=min(available,segment['seconds'])
- groups=[words[i:i+8] for i in range(0,len(words),8)]
- consumed=0
- for group in groups:
-  begin=segment['start']+spoken*consumed/len(words)
-  consumed+=len(group)
-  finish=segment['start']+spoken*consumed/len(words)
-  blocks.append(f'{len(blocks)+1}\n{timestamp(begin)} --> {timestamp(finish)}\n'+textwrap.fill(' '.join(group),width=42))
+ phrases=segment.get('phrases') or [{'text':segment['text'],'startSeconds':0,'endSeconds':segment['seconds']}]
+ original_phrases=[part.strip() for part in re.split(r'(?<=[.!?;])\s+|\n+',segment['text']) if part.strip()]
+ for index,phrase in enumerate(phrases):
+  # Captions use measured sentence timings; silence is not spread across words.
+  words=(original_phrases[index] if len(original_phrases)==len(phrases) else segment['text']).split()
+  spoken=phrase['endSeconds']-phrase['startSeconds']
+  groups=[words[i:i+8] for i in range(0,len(words),8)]
+  consumed=0
+  for group in groups:
+   begin=segment['start']+phrase['startSeconds']+spoken*consumed/len(words)
+   consumed+=len(group)
+   finish=segment['start']+phrase['startSeconds']+spoken*consumed/len(words)
+   blocks.append(f'{len(blocks)+1}\n{timestamp(begin)} --> {timestamp(finish)}\n'+textwrap.fill(' '.join(group),width=42))
 (out/'rally-three-minute-narrated-draft.srt').write_text('\n\n'.join(blocks)+'\n')
 probe=json.loads(subprocess.check_output(['ffprobe','-v','error','-show_format','-show_streams','-of','json',str(target)]))
 duration=float(probe['format']['duration']);assert abs(duration-180)<.1
-metadata={'file':str(target),'durationSeconds':duration,'width':1920,'height':1080,'videoCodec':'h264','audioCodec':'aac','sizeBytes':target.stat().st_size,'scope':'Actual current UI with labeled synthetic meeting/model replay; two bounded chapters','narration':evidence['model'],'narrationLicense':evidence['license'],'newPaidSpeechSampleCalls':0,'speechSampleReused':True,'speechSampleOriginalCost':None,'speechSampleFirstByteMs':1643,'speechSampleCached':False,'uploaded':False}
+metadata={'file':str(target),'durationSeconds':duration,'width':1920,'height':1080,'videoCodec':'h264','audioCodec':'aac','sizeBytes':target.stat().st_size,'scope':'Actual current UI with labeled synthetic meeting/model replay; two bounded chapters','narration':evidence['model'],'narrationLicense':evidence['license'],'newPaidSpeechSampleCalls':0,'speechSampleReused':True,'speechSampleOriginalCost':None,'speechSampleFirstByteMs':1643,'speechSampleCached':False,'uploaded':False,'speechTimeStretch':False,'sentenceProsody':True}
 (out/'demo-render-evidence.json').write_text(json.dumps(metadata,indent=2));print(json.dumps(metadata))

@@ -83,3 +83,7 @@ The older `apps/rally/` release has a separate JavaScript adapter registry in [m
 ## Living-presence integration
 
 The production `checkLive` contract adds nullable `affect`, `focus` and bounded `concerns` to the existing judgment, preserving the configured Spark1.3/minimal model, 2,048-token live allowance (raised after observed truncated outputs), deadlines and accounting path. Stable reference material precedes the complete live snapshot for automatic prefix caching; provider-reported cached usage receives the configured discount. Forecasts and admission share exact request sizing, and final-report reserves include the current complete canonical transcript. Affect is signed continuous actuation with exact supplied evidence, never a mapping from feeling enums. Browser/Teams scenes consume accepted state; current streaming speech remains canonical. See [implementation and measured schema checks](living-presence-implementation.md).
+
+## Speech presentation and pacing
+
+Both speech adapters now apply [presentation-only pronunciation preparation](speech-naturalness.md) at synthesis time. Approved/displayed text and canonical evidence remain intact. Operator phonetic overrides use `RALLY_SPEECH_PRONUNCIATIONS`; local MMS also accepts bounded `RALLY_MMS_SPEAKING_RATE` and `RALLY_MMS_SENTENCE_PAUSE_MS`. Local MMS synthesizes sentences separately; hosted Seamless retains its existing one-request streaming contract and provider-controlled prosody. The normalized capability interfaces do not change.

@@ -1,3 +1,4 @@
+import {spokenText, pronunciationMap} from '../../../packages/rally-speech/text.mjs';
 import { HttpError } from './auth.ts';
 
 export const opening = 'Let\'s get back on track.';
@@ -12,11 +13,13 @@ export type SpeechRequest = { input: string; voice?: 'default' };
 export class SeamlessSpeech {
   readonly identity = {adapter:'seamless-aws',model:'facebook/seamless-m4t-v2-large',sampleRate:16000,channels:1,format:'pcm_s16le',revision:null};
   private active = 0;
-  private token: string; private endpoint: string; private request: typeof fetch; private concurrency: number;
-  constructor(token: string, endpoint = 'https://2tluh56msb.execute-api.us-west-2.amazonaws.com/prod/v1/audio/speech', request: typeof fetch = fetch, concurrency = 1) { this.token=token; this.endpoint=endpoint; this.request=request; this.concurrency=concurrency; }
+  private token: string; private endpoint: string; private request: typeof fetch; private concurrency: number; private pronunciations: Record<string,string>;
+  constructor(token: string, endpoint = 'https://2tluh56msb.execute-api.us-west-2.amazonaws.com/prod/v1/audio/speech', request: typeof fetch = fetch, concurrency = 1, pronunciations: Record<string,string> = {}) { this.pronunciations=pronunciationMap(pronunciations); this.token=token; this.endpoint=endpoint; this.request=request; this.concurrency=concurrency; }
   async *stream(input: SpeechRequest, signal: AbortSignal, format: 'pcm' | 'wav' = 'pcm', onCache?: (cached:boolean|null)=>void): AsyncGenerator<Buffer> {
     signal.throwIfAborted();
     if (!input || typeof input.input !== 'string' || !input.input.trim() || [...input.input].length > 1200 || (input.voice !== undefined && input.voice !== 'default')) throw new SpeechError('Invalid speech input', 422);
+    const spoken=spokenText(input.input,{pronunciations:this.pronunciations});
+    if([...spoken].length>1200)throw new SpeechError('Pronunciation expansion exceeds input limit',422);
     if (this.active >= this.concurrency) throw new SpeechError('Speech service busy', 429, '1');
     if (!this.token) throw new SpeechError('Speech service is not configured', 503);
     this.active++;
@@ -26,7 +29,7 @@ export class SeamlessSpeech {
     let idle = setTimeout(() => abort.abort(), 10000);
     let reader: ReadableStreamDefaultReader<Uint8Array> | undefined;
     try {
-      const response = await this.request(this.endpoint, {method:'POST', redirect:'error', signal:combined, headers:{Authorization:`Bearer ${this.token}`, 'Content-Type':'application/json'}, body:JSON.stringify({model:'facebook/seamless-m4t-v2-large', input:input.input, voice:'default', response_format:format, chunking:format === 'pcm' ? 'sentence' : 'none'})});
+      const response = await this.request(this.endpoint, {method:'POST', redirect:'error', signal:combined, headers:{Authorization:`Bearer ${this.token}`, 'Content-Type':'application/json'}, body:JSON.stringify({model:'facebook/seamless-m4t-v2-large', input:spoken, voice:'default', response_format:format, chunking:format === 'pcm' ? 'sentence' : 'none'})});
       if (!response.ok) throw new SpeechError('Speech provider request failed', [400,422,429].includes(response.status) ? response.status : 502, response.headers.get('Retry-After') || undefined);
       const cache=response.headers.get('X-First-Phrase-Cached');
       onCache?.(cache === null ? null : ['true','1','yes'].includes(cache.toLowerCase()));

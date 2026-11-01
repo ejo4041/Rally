@@ -103,6 +103,8 @@ async function fixture(
   return { app, db, admin, user, req, cookie, enroll };
 }
 test("closed signup, mandatory enrollment, encrypted secret, recovery hashes, MFA-only sessions and replay rejection", async (t) => {
+  // Replay assertion must reuse a timestep, even if the wall clock crosses 30s.
+  t.mock.timers.enable({apis:["Date"],now:Math.floor(Date.now()/30000)*30000+15000});
   const f = await fixture(t);
   assert.equal(
     (await f.req("/auth/signup", "POST", { username: "intruder", password }))

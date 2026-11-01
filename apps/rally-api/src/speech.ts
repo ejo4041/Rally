@@ -38,9 +38,15 @@ export function configuredSpeech(): SpeechEngine | undefined {
       modelDirectory: string;
       model: string;
       revision: string;
+      pronunciations?: Record<string,string>;
+      speakingRate?: number;
+      sentencePauseMs?: number;
     }) => SpeechEngine;
   };
   const engine = new MMSSpeech({
+    pronunciations: JSON.parse(process.env.RALLY_SPEECH_PRONUNCIATIONS || "{}"),
+    speakingRate: Number(process.env.RALLY_MMS_SPEAKING_RATE || 1),
+    sentencePauseMs: Number(process.env.RALLY_MMS_SENTENCE_PAUSE_MS || 300),
     model: identity.model,
     revision: identity.revision,
     python:

@@ -33,3 +33,10 @@ test('whole generation rejects a WAV with unsupported audio encoding',async()=>{
  const tts=new SeamlessSpeech('fixture',undefined,async()=>new Response(wav));
  await assert.rejects(tts.synthesize({input:'Hello.'},signal()),/WAV/);
 });
+test('hosted speech expands acronyms at the adapter boundary, preserving displayed wording',async()=>{
+ let sent='';const text='AI uses MMS. Priya owns it at 3:30, not Friday.';
+ const tts=new SeamlessSpeech('fixture',undefined,async(_url,init)=>{sent=JSON.parse(String(init?.body)).input;return new Response(Buffer.alloc(2));},1,{Priya:'Pree yah'});
+ for await(const _part of tts.stream({input:text},signal())){}
+ assert.equal(sent,'A I uses M M S. Pree yah owns it at 3:30, not Friday.');
+ assert.equal(text,'AI uses MMS. Priya owns it at 3:30, not Friday.');
+});

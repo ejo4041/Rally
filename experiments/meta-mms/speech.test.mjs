@@ -46,3 +46,11 @@ test('late output from a canceled worker cannot reject or terminate its replacem
  assert.equal(engine.child,current);
  assert.equal(current.killed,false);
 });
+test('MMS passes speech-only pronunciation and bounded pacing to the worker',async t=>{
+ const engine=await fixture(t);engine.pronunciations={Priya:'Pree yah'};engine.speakingRate=.98;engine.sentencePauseMs=320;
+ await engine.start();let wire='';const original=engine.child.stdin.write.bind(engine.child.stdin);
+ engine.child.stdin.write=(data,...args)=>{wire+=data;return original(data,...args);};
+ await engine.synthesize('Priya uses AI. MMS speaks.');
+ const request=JSON.parse(wire);assert.equal(request.text,'Pree yah uses ay eye. em em ess speaks.');assert.deepEqual(request.prosody,{speakingRate:.98,sentencePauseMs:320});
+ assert.throws(()=>new MMSSpeech({python:'python',modelDirectory:'model',sentencePauseMs:0}),/prosody/);
+});

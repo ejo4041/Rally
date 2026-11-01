@@ -7,6 +7,7 @@ import os
 from pathlib import Path
 import sys
 import time
+from prosody import phrases, trim_edges
 
 MODEL = 'facebook/mms-tts-eng'
 REVISION = 'c71de0fe7204c83f1c10820a7d696d0b450048ba'
@@ -60,19 +61,40 @@ def run(directory,model_id=MODEL,revision=REVISION):
             if any(ord(char)<32 and char not in '\n\t' for char in text):
                 raise ValueError('invalid_request')
             started = time.monotonic()
-            torch.manual_seed(42)
-            inputs = tokenizer(text.strip(),return_tensors='pt')
-            if inputs.input_ids.numel()>1400:
-                raise ValueError('input_limit')
-            with torch.inference_mode():
-                waveform = model(**inputs).waveform[0].float().cpu().numpy()
+            prosody = request.get('prosody', {})
+            speed = prosody.get('speakingRate', 1.0)
+            pause = prosody.get('sentencePauseMs', 300)
+            if isinstance(speed, bool) or not isinstance(speed, (int, float)) or not .85 <= speed <= 1.15:
+                raise ValueError('invalid_request')
             rate = int(model.config.sampling_rate)
+            parts, phrase_timings, cursor = [], [], 0
+            for phrase in phrases(text, pause):
+                torch.manual_seed(42)
+                inputs = tokenizer(phrase['text'],return_tensors='pt')
+                if inputs.input_ids.numel()>1400:
+                    raise ValueError('input_limit')
+                with torch.inference_mode():
+                    audio = model(**inputs, speaking_rate=speed).waveform[0].float().cpu().numpy()
+                if not len(audio) or not np.isfinite(audio).all():
+                    raise ValueError('output_limit')
+                audio = trim_edges(audio, np, rate)
+                # 5ms boundary fades prevent joins clicking, without time-stretching.
+                fade = min(round(rate * .005), len(audio)//2)
+                if fade:
+                    audio[:fade] *= np.linspace(0, 1, fade)
+                    audio[-fade:] *= np.linspace(1, 0, fade)
+                phrase_timings.append({'text':phrase['text'],'startSeconds':cursor/rate,'endSeconds':(cursor+len(audio))/rate,'pauseMs':phrase['pauseMs']})
+                parts.extend([audio, np.zeros(round(rate*phrase['pauseMs']/1000), dtype=np.float32)])
+                cursor += len(audio) + len(parts[-1])
+                if cursor/rate > MAX_SECONDS:
+                    raise ValueError('output_limit')
+            waveform = np.concatenate(parts)
             seconds = len(waveform)/rate
             if seconds>MAX_SECONDS or not len(waveform) or not np.isfinite(waveform).all():
                 raise ValueError('output_limit')
             pcm = (np.clip(waveform,-1,1)*32767).astype('<i2').tobytes()
             emit({'type':'audio','id':request_id,'model':model_id,'revision':revision,
-                  'sampleRate':rate,'seconds':seconds,'synthesisMs':round((time.monotonic()-started)*1000),
+                  'sampleRate':rate,'seconds':seconds,'phrases':phrase_timings,'prosody':{'speakingRate':speed,'sentencePauseMs':pause},'synthesisMs':round((time.monotonic()-started)*1000),
                   'pcmBase64':base64.b64encode(pcm).decode('ascii')})
         except ValueError as error:
             code = str(error) if str(error) in {'invalid_request','input_limit','output_limit','request_too_large'} else 'invalid_request'

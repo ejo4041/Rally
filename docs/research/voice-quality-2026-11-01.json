@@ -1,0 +1,177 @@
+{
+  "at": "2026-11-01T15:37:20.543197+00:00",
+  "tokenizerReproduction": {
+    "punctuatedAndUnpunctuatedTokenIdsIdentical": true,
+    "text": "We can release. Only after verification."
+  },
+  "localComparison": {
+    "text": "Meet Rally, a meeting guide built with Meta AI. Muse Spark follows the agenda. Meta MMS provides a local voice. We can release only after verification. The check has not passed yet.",
+    "results": [
+      {
+        "name": "before",
+        "seconds": 11.936,
+        "synthesisMs": 5020
+      },
+      {
+        "name": "after",
+        "seconds": 13.552375,
+        "synthesisMs": 4067,
+        "phrases": [
+          {
+            "text": "Meet Rally, a meeting guide built with Meta ay eye.",
+            "startSeconds": 0,
+            "endSeconds": 3.2330625,
+            "pauseMs": 300
+          },
+          {
+            "text": "Muse Spark follows the agenda.",
+            "startSeconds": 3.5330625,
+            "endSeconds": 5.3786875,
+            "pauseMs": 300
+          },
+          {
+            "text": "Meta em em ess provides a local voice.",
+            "startSeconds": 5.6786875,
+            "endSeconds": 8.4595625,
+            "pauseMs": 300
+          },
+          {
+            "text": "We can release only after verification.",
+            "startSeconds": 8.7595625,
+            "endSeconds": 11.559875,
+            "pauseMs": 300
+          },
+          {
+            "text": "The check has not passed yet.",
+            "startSeconds": 11.859875,
+            "endSeconds": 13.552375,
+            "pauseMs": 0
+          }
+        ],
+        "prosody": {
+          "speakingRate": 1,
+          "sentencePauseMs": 300
+        }
+      }
+    ],
+    "apiCalls": 0,
+    "scope": "Same authored text, pinned local MMS before/after; naturalness requires listening feedback."
+  },
+  "measuredSentenceSilenceMs": 300,
+  "narrationChapters": [
+    {
+      "start": 0,
+      "end": 24,
+      "audioSeconds": 17.0206875,
+      "sentenceCount": 4
+    },
+    {
+      "start": 24,
+      "end": 50,
+      "audioSeconds": 18.8275,
+      "sentenceCount": 5
+    },
+    {
+      "start": 50,
+      "end": 79,
+      "audioSeconds": 18.4733125,
+      "sentenceCount": 5
+    },
+    {
+      "start": 88,
+      "end": 110,
+      "audioSeconds": 13.2541875,
+      "sentenceCount": 4
+    },
+    {
+      "start": 110,
+      "end": 140,
+      "audioSeconds": 19.09025,
+      "sentenceCount": 5
+    },
+    {
+      "start": 140,
+      "end": 165,
+      "audioSeconds": 23.1809375,
+      "sentenceCount": 6
+    },
+    {
+      "start": 165,
+      "end": 180,
+      "audioSeconds": 14.141,
+      "sentenceCount": 4
+    }
+  ],
+  "render": {
+    "file": "artifacts/feedback/voice-natural-v1/rally-three-minute-narrated-draft.mp4",
+    "durationSeconds": 180.0,
+    "width": 1920,
+    "height": 1080,
+    "videoCodec": "h264",
+    "audioCodec": "aac",
+    "sizeBytes": 6770239,
+    "scope": "Actual current UI with labeled synthetic meeting/model replay; two bounded chapters",
+    "narration": "facebook/mms-tts-eng",
+    "narrationLicense": "CC-BY-NC-4.0",
+    "newPaidSpeechSampleCalls": 0,
+    "speechSampleReused": true,
+    "speechSampleOriginalCost": null,
+    "speechSampleFirstByteMs": 1643,
+    "speechSampleCached": false,
+    "uploaded": false,
+    "speechTimeStretch": false,
+    "sentenceProsody": true
+  },
+  "newMuseCalls": 0,
+  "hostedSample": {
+    "at": "2026-11-01T15:35:47.386Z",
+    "state": "completed",
+    "text": "Meta AI supports the meeting. MMS is another voice option. We can release only after verification. The check has not passed yet.",
+    "model": "facebook/seamless-m4t-v2-large",
+    "adapter": "seamless-aws",
+    "revision": null,
+    "firstByteMs": 1539,
+    "totalMs": 3340,
+    "seconds": 7.58,
+    "cached": false,
+    "cost": null,
+    "billing": "AWS infrastructure unknown",
+    "providerRequests": 1,
+    "apiRetries": 0,
+    "museCalls": 0,
+    "platformJoins": 0,
+    "playback": false,
+    "scope": "Real hosted speech with pronunciation expansion; acoustic naturalness requires listener review; provider controls sentence prosody."
+  },
+  "listenerAcceptance": "pending; timing/transport validation does not prove naturalness",
+  "demoSHA256": "f25aae131634098b82a38f88ab263c9083bce379a45d8038c4050f9ef0084693",
+  "demoFullyDecoded": true,
+  "regression": {
+    "backendTests": 152,
+    "frontendTests": 17,
+    "localMMSAndPresentationTests": 20,
+    "pythonProsodyTests": 3,
+    "bothTypechecksPassed": true,
+    "frontendBuildPassed": true,
+    "targetedSecuritySpeechTests": 25
+  },
+  "browserRecovery": {
+    "at": "2026-11-01T15:39:26.012Z",
+    "passed": true,
+    "scope": "Real local HTTP/MFA/SQLite/LiveKit with synthetic browser microphone and injected providers; no Teams/human or paid provider calls.",
+    "paidModelCalls": 0,
+    "platformJoins": 0,
+    "checks": {
+      "actualAudioReceived": true,
+      "reloadDoesNotDuplicateASR": true,
+      "leaseRefusalStopsTracks": true,
+      "noAutomaticReportOrASRRestart": true,
+      "explicitRestartRecovers": true,
+      "endStopsTracks": true,
+      "finalDrainTurns": 4,
+      "reportFailureVisible": true,
+      "explicitReportRetry": true
+    },
+    "browserErrors": []
+  }
+}
