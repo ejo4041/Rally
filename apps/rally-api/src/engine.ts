@@ -391,6 +391,7 @@ export class Engine {
       state.media = await this.media.open(
         m,
         (bytes) => {
+          if (this.active.get(m.id) !== state || state.ending) return;
           try {
             if (!state.ending && !state.rotating)
               state.asr?.send(
@@ -409,7 +410,10 @@ export class Engine {
             );
           }
         },
-        (reason) => this.gap(m.id, reason),
+        (reason) => {
+          if (this.active.get(m.id) === state && !state.ending)
+            this.gap(m.id, reason);
+        },
       );
       if (state.ending || this.active.get(m.id) !== state)
         throw new HttpError("Session revoked during startup", 401);
@@ -1159,13 +1163,29 @@ export class Engine {
     this.cancelSpeech(m);
     m.epoch++;
     this.meetings.save(m);
-    await state.asr?.end();
-    await state.media?.close();
+    const stopped = await this.releaseCapture(state);
     this.active.delete(m.id);
     m = this.meetings.get(m.id);
     m.phase = "interrupted";
-    m.error = "Capture stopped; reconnect explicitly.";
+    m.error = stopped.drainFailed
+      ? "Final transcription drain failed. Saved text is available; reconnect explicitly after checking usage."
+      : stopped.mediaFailed
+        ? "Media cleanup failed. Capture stopped; check the connection before reconnecting."
+        : "Capture stopped; reconnect explicitly.";
     this.meetings.save(m);
+  }
+  private async releaseCapture(state: Active) {
+    let drainFailed = false, mediaFailed = false;
+    try {
+      await state.asr?.end();
+    } catch {
+      drainFailed = true;
+    } finally {
+      // A failed drain must not retain the provider socket or prevent media cleanup.
+      try { state.asr?.close(); } catch { drainFailed = true; }
+      try { await state.media?.close(); } catch { mediaFailed = true; }
+    }
+    return { drainFailed, mediaFailed };
   }
   // Security revocation also covers Teams and pending startup. Ordinary logout
   // retains its existing behavior for independently hosted Teams meetings.
@@ -1225,14 +1245,17 @@ export class Engine {
       this.speech?.forget(id);
       s.ending = true;
       clearInterval(s.timer);
-      await s.asr?.end();
-      await s.media?.close();
+      const stopped = await this.releaseCapture(s);
       try {
         const m = this.meetings.get(id);
         if (m.phase === "live") {
           m.phase = "interrupted";
           this.cancelSpeech(m);
           m.epoch++;
+          if (stopped.drainFailed)
+            m.error = "Final transcription drain failed during shutdown. Review saved text and usage before reconnecting.";
+          else if (stopped.mediaFailed)
+            m.error = "Media cleanup failed during shutdown. Check the connection before reconnecting.";
           this.meetings.save(m);
         }
       } catch {}
