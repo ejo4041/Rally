@@ -1,7 +1,41 @@
 {
   "version": 1,
   "entries": [
-    {"word":"Meta","match":"brand-case","phones":"M EH1 T AH0","mms":"Metta","seamless":"Metta","status":"candidate-listener-review","reason":"Brand pronounced with short e; CMU generic meta entry has long ee."},
-    {"word":"evidence","match":"case-insensitive","phones":"EH1 V AH0 D AH0 N S","mms":"evidense","seamless":"evidence","status":"candidate-listener-review","reason":"MMS grapheme-only candidate; retain ordinary evidence for hosted speech."}
+    {
+      "word": "Meta",
+      "match": "brand-case",
+      "phones": "M EH1 T AH0",
+      "mms": "Metta",
+      "seamless": "Metta",
+      "status": "candidate-listener-review",
+      "reason": "Brand pronounced with short e; CMU generic meta entry has long ee."
+    },
+    {
+      "word": "evidence",
+      "match": "case-insensitive",
+      "phones": "EH1 V AH0 D AH0 N S",
+      "mms": "evidense",
+      "seamless": "evidence",
+      "status": "candidate-listener-review",
+      "reason": "MMS grapheme-only candidate; retain ordinary evidence for hosted speech."
+    },
+    {
+      "word": "agenda",
+      "match": "case-insensitive",
+      "phones": "AH0 JH EH1 N D AH0",
+      "mms": "ajenda",
+      "seamless": "agenda",
+      "status": "candidate-listener-review",
+      "reason": "User reports incorrect agenda pronunciation in demo; j cue targets uh-JEN-duh while retaining one whole word. Hosted voice retains ordinary spelling until a hosted error is established."
+    },
+    {
+      "word": "agendas",
+      "match": "case-insensitive",
+      "phones": "AH0 JH EH1 N D AH0 Z",
+      "mms": "ajendas",
+      "seamless": "agendas",
+      "status": "candidate-listener-review",
+      "reason": "Plural follows the same local MMS soft-g cue."
+    }
   ]
 }

@@ -61,3 +61,10 @@ test('local meeting speech uses the same reference-aware Meta and evidence corre
  assert.equal(JSON.parse(wire).text,'Metta reviews the evidense. Do not release yet.');
  assert.equal(approved,'Meta reviews the evidence. Do not release yet.');
 });
+
+test('the local voice renders agenda in-context using the same correction as narration',async t=>{
+ const engine=await fixture(t);await engine.start();let wire='';const original=engine.child.stdin.write.bind(engine.child.stdin);
+ engine.child.stdin.write=(data,...args)=>{wire+=data;return original(data,...args);};
+ await engine.synthesize('Follow the agenda. Do not extend the deadline.');
+ assert.equal(JSON.parse(wire).text,'Follow the ajenda. Do not extend the deadline.');
+});

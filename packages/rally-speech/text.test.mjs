@@ -47,3 +47,10 @@ test('startup rejects a modified local pronunciation reference',async t=>{
  const dictionary=join(directory,'vendor/cmudict.dict');await writeFile(dictionary,(await readFile(dictionary,'utf8'))+'\nchanged CH EY1 N JH D\n');
  await assert.rejects(import(pathToFileURL(join(directory,'lexicon.mjs')).href),/checksum mismatch/);
 });
+
+test('agenda uses a soft-g cue for MMS while keeping the whole sentence and canonical text',()=>{
+ const original="Agenda: revise the agenda, not the deadline. Other AGENDAS stay separate. https://example.org/agenda agenda_id";
+ assert.equal(spokenText(original,{adapter:'mms'}),"ajenda: revise the ajenda, not the deadline. Other ajendas stay separate. https://example.org/agenda agenda_id");
+ assert.equal(spokenText(original,{adapter:'seamless'}),"agenda: revise the agenda, not the deadline. Other agendas stay separate. https://example.org/agenda agenda_id");
+ assert.equal(original,"Agenda: revise the agenda, not the deadline. Other AGENDAS stay separate. https://example.org/agenda agenda_id");
+});

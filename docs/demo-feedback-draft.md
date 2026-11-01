@@ -41,3 +41,7 @@ A new local candidate under `artifacts/feedback/voice-natural-v1/` uses shorter 
 ## November 1 pronunciation reference candidate
 
 The latest local candidate is `artifacts/feedback/voice-lexicon-v2/rally-three-minute-narrated-draft.mp4`. It preserves sentence pacing and corrects model-facing Meta/evidence spelling through the shared [local pronunciation reference](pronunciation-reference.md). Canonical captions and the synthetic replay label remain unchanged. All177unique demo word tokens have references; that is coverage, not proof of correct sound. Full listening acceptance is pending.
+
+## Agenda correction candidate
+
+The newest local revision is `artifacts/feedback/voice-agenda-v3/rally-three-minute-narrated-draft.mp4`, with the shared MMS `agenda` → `ajenda` cue. Sentence timing, original captions and the synthetic replay disclosure remain. Full-sentence before/candidate/alternative WAVs accompany it; listener acceptance remains pending. [Pronunciation notes](pronunciation-reference.md).
