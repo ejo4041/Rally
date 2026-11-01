@@ -5,12 +5,12 @@ import {tmpdir} from 'node:os';
 import path from 'node:path';
 import {MMSSpeech,MODEL,REVISION,wav} from './speech.mjs';
 
-async function fixture(t,{startupDelay=0,invalid=false}={}){
+async function fixture(t,{startupDelay=0,invalid=false,...options}={}){
  const dir=await mkdtemp(path.join(tmpdir(),'rally-mms-test-'));t.after(()=>rm(dir,{recursive:true,force:true}));const worker=path.join(dir,'worker.mjs');
  await writeFile(worker,`import {createInterface} from 'node:readline';
  setTimeout(()=>console.log(JSON.stringify({type:'ready',model:${JSON.stringify(MODEL)},revision:${JSON.stringify(REVISION)},loadMs:1})),${startupDelay});
  createInterface({input:process.stdin}).on('line',line=>{const r=JSON.parse(line);setTimeout(()=>console.log(JSON.stringify({type:'audio',id:r.id,model:${JSON.stringify(invalid?'wrong-model':MODEL)},revision:${JSON.stringify(REVISION)},sampleRate:16000,seconds:.01,synthesisMs:1,pcmBase64:Buffer.alloc(320,1).toString('base64')})),r.text==='slow'?120:1);});`);
- const engine=new MMSSpeech({python:process.execPath,worker,modelDirectory:dir,startTimeoutMs:1000,synthesisTimeoutMs:500});t.after(()=>engine.close());return engine;
+ const engine=new MMSSpeech({python:process.execPath,worker,modelDirectory:dir,startTimeoutMs:1000,synthesisTimeoutMs:500,...options});t.after(()=>engine.close());return engine;
 }
 test('MMS adapter validates inputs before starting a process and produces mono 16k WAV',async t=>{
  const engine=await fixture(t);await assert.rejects(engine.synthesize('x'.repeat(651)),/1–650/);await assert.rejects(engine.synthesize('secret\x00'),/1–650/);assert.equal(engine.child,undefined);
@@ -47,10 +47,17 @@ test('late output from a canceled worker cannot reject or terminate its replacem
  assert.equal(current.killed,false);
 });
 test('MMS passes speech-only pronunciation and bounded pacing to the worker',async t=>{
- const engine=await fixture(t);engine.pronunciations={Priya:'Pree yah'};engine.speakingRate=.98;engine.sentencePauseMs=320;
+ const engine=await fixture(t,{pronunciations:{Priya:'Pree yah'},speakingRate:.98,sentencePauseMs:320});
  await engine.start();let wire='';const original=engine.child.stdin.write.bind(engine.child.stdin);
  engine.child.stdin.write=(data,...args)=>{wire+=data;return original(data,...args);};
  await engine.synthesize('Priya uses AI. MMS speaks.');
  const request=JSON.parse(wire);assert.equal(request.text,'Pree yah uses ay eye. em em ess speaks.');assert.deepEqual(request.prosody,{speakingRate:.98,sentencePauseMs:320});
  assert.throws(()=>new MMSSpeech({python:'python',modelDirectory:'model',sentencePauseMs:0}),/prosody/);
+});
+test('local meeting speech uses the same reference-aware Meta and evidence corrections',async t=>{
+ const engine=await fixture(t);await engine.start();let wire='';const original=engine.child.stdin.write.bind(engine.child.stdin);
+ engine.child.stdin.write=(data,...args)=>{wire+=data;return original(data,...args);};
+ const approved='Meta reviews the evidence. Do not release yet.';await engine.synthesize(approved);
+ assert.equal(JSON.parse(wire).text,'Metta reviews the evidense. Do not release yet.');
+ assert.equal(approved,'Meta reviews the evidence. Do not release yet.');
 });

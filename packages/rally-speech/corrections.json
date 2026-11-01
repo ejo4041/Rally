@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "entries": [
+    {"word":"Meta","match":"brand-case","phones":"M EH1 T AH0","mms":"Metta","seamless":"Metta","status":"candidate-listener-review","reason":"Brand pronounced with short e; CMU generic meta entry has long ee."},
+    {"word":"evidence","match":"case-insensitive","phones":"EH1 V AH0 D AH0 N S","mms":"evidense","seamless":"evidence","status":"candidate-listener-review","reason":"MMS grapheme-only candidate; retain ordinary evidence for hosted speech."}
+  ]
+}

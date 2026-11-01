@@ -87,3 +87,5 @@ The production `checkLive` contract adds nullable `affect`, `focus` and bounded 
 ## Speech presentation and pacing
 
 Both speech adapters now apply [presentation-only pronunciation preparation](speech-naturalness.md) at synthesis time. Approved/displayed text and canonical evidence remain intact. Operator phonetic overrides use `RALLY_SPEECH_PRONUNCIATIONS`; local MMS also accepts bounded `RALLY_MMS_SPEAKING_RATE` and `RALLY_MMS_SENTENCE_PAUSE_MS`. Local MMS synthesizes sentences separately; hosted Seamless retains its existing one-request streaming contract and provider-controlled prosody. The normalized capability interfaces do not change.
+
+Both speech adapters now compile [local reference-aware preparation](pronunciation-reference.md) once per configuration. Ordinary-word reference checks add no network/model request; explicit grapheme cues implement corrections where supported. Canonical evidence stays untouched. The bundled dictionary is a licensed reference dataset, and direct model phoneme/SSML control remains unverified in the current adapters.

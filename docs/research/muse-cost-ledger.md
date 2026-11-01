@@ -177,3 +177,7 @@ Current long-turn/endurance task batch known Muse **$3.47760170** including the 
 ## Voice naturalness preparation — November 1
 
 Zero new Muse calls. Local pinned MMS generated a same-text before/after pair and seven narration clips with sentence pauses; it made no speech-provider API calls. One separately gated, non-retrying real Seamless request generated7.58seconds, uncached, first PCM1.539seconds. **AWS infrastructure cost remains unknown**, recorded separately from Muse. [Evidence](voice-quality-2026-11-01.json). Tracked Muse remains **$5.33846965**; conditional unverified-$150 remainder **$144.66153035**, excluding unverified unrelated runtime activity. No platform was joined and no final entry/upload was performed.
+
+## Local pronunciation reference follow-up — November 1
+
+Zero new Muse calls. A pinned local CMU reference and model-specific grapheme corrections prepared the revised MMS narration without speech API charges. One new non-retrying hosted Seamless sample generated8.48seconds, uncached, first PCM1.505seconds. **AWS infrastructure cost remains unknown**, separate from Muse. [Measurements](pronunciation-reference-2026-11-01.json). Tracked Muse remains **$5.33846965**; conditional unverified-$150 remainder **$144.66153035**, excluding unverified unrelated runtime activity. No platform join or final submission.

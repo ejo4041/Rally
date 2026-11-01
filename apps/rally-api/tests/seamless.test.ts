@@ -40,3 +40,10 @@ test('hosted speech expands acronyms at the adapter boundary, preserving display
  assert.equal(sent,'A I uses M M S. Pree yah owns it at 3:30, not Friday.');
  assert.equal(text,'AI uses MMS. Priya owns it at 3:30, not Friday.');
 });
+test('live voice checks the local reference and renders the Meta brand without altering evidence wording',async()=>{
+ let sent='';const approved='Meta reviews the evidence. Do not release yet.';
+ const tts=new SeamlessSpeech('fixture',undefined,async(_url,init)=>{sent=JSON.parse(String(init?.body)).input;return new Response(Buffer.alloc(2));});
+ for await(const _part of tts.stream({input:approved},signal())){}
+ assert.equal(sent,'Metta reviews the evidence. Do not release yet.');
+ assert.equal(approved,'Meta reviews the evidence. Do not release yet.');
+});

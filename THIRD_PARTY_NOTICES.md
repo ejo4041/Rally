@@ -14,3 +14,7 @@ This record identifies components used by Rally; it does not select a license fo
 | Chromium/Playwright, Node, FFmpeg, esbuild, TypeScript and Python packages | Development, runtime, recording and editing tools | Separate upstream licenses apply; these binaries/environments are not included in the tracked-source archive. Retain distribution-specific notices if packaging them later. |
 
 This is a direct-component inventory, not a complete transitive legal audit. Historical source under apps/rally and experiments retains its own dependency records. Application originality is described in [the submission draft](docs/submission-package.md); current model contracts are in [model interfaces](docs/model-interfaces.md). The [owner's remaining license/access decisions](docs/source-release-readiness.md) remain explicit. Final submission is on hold.
+
+## Pronunciation reference
+
+The local English reference includes the CMU Pronouncing Dictionary, copyright Carnegie Mellon University, under its BSD-style two-condition redistribution license. Full notice: [CMUDICT-LICENSE](packages/rally-speech/vendor/CMUDICT-LICENSE). [Pinned source and SHA-256](packages/rally-speech/vendor/cmudict-manifest.json). This is a reference dataset, not a speech-generation model or an external service. Its entries can be ambiguous or incorrect for brands; Rally retains explicit brand corrections and unknown-word handling.

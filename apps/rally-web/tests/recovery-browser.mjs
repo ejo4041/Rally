@@ -58,8 +58,12 @@ try {
  await page.route(`**/api/meetings/${m.id}/heartbeat`,route=>route.fulfill({status:409,contentType:'application/json',body:JSON.stringify({error:'Fixture lease refused; reconnect explicitly.'})}));
  // Exercise the immediate renewal on reattachment instead of waiting for the periodic timer.
  await page.reload();await page.waitForFunction(()=>document.querySelector('#phase').textContent==='Live');
- await page.locator('#audio-mode').selectOption('microphone');await page.locator('#consent').check();await page.locator('#start').click();
- await page.waitForFunction(()=>document.querySelector('#connection-status').textContent.includes('Audio disconnected'));
+ await page.locator('#audio-mode').selectOption('microphone');await page.locator('#consent').check();
+ const refusedHeartbeat=page.waitForResponse(response=>response.url().endsWith('/heartbeat')&&response.status()===409);
+ await page.locator('#start').click();await refusedHeartbeat;
+ // A simultaneous media-gap notice can replace status text; assert the actual
+ // refused renewal and stopped tracks rather than racing one transient message.
+ await page.waitForFunction(()=>recoveryStreams.length>0&&recoveryStreams.every(stream=>stream.getTracks().every(track=>track.readyState==='ended')));
  assert.equal(await page.evaluate(()=>recoveryStreams.every(s=>s.getTracks().every(t=>t.readyState==='ended'))),true);
  assert.equal((await(await request('/meetings/'+m.id)).json()).reportStatus,'none');
  assert.equal((await(await request('/test/state')).json()).speechSessions,first.speechSessions);

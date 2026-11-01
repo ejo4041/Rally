@@ -1,0 +1,128 @@
+{
+  "at": "2026-11-01T15:55:50.773190+00:00",
+  "reference": {
+    "name": "CMU Pronouncing Dictionary",
+    "revision": "74790861f652b15e4ac49015a90074ad62a27690",
+    "wordCount": 126052,
+    "sha256": "81917843c7f44ce2b094ac63873c2c7a4cf802040792c455ba3ca406891c3d22"
+  },
+  "performance": {
+    "coldLoadMs": 145.01845799999998,
+    "warmedPreparation": {
+      "iterations": 3000,
+      "characters": 1200,
+      "medianMs": 0.03699499999999034,
+      "p95Ms": 0.08654100000001108,
+      "maxMs": 2.9762970000000166
+    },
+    "scope": "Synthetic local CPU preparation benchmark; excludes model generation, network and audio playback. Dictionary references do not guarantee acoustic pronunciation."
+  },
+  "narrationReferenceCoverage": {
+    "uniqueWords": 177,
+    "unknown": []
+  },
+  "localCandidates": {
+    "results": [
+      {
+        "name": "original",
+        "text": "Meta gives Rally its voice. Follow the evidence behind each decision.",
+        "seconds": 5.6845625,
+        "synthesisMs": 1494
+      },
+      {
+        "name": "candidate-a",
+        "text": "Metta gives Rally its voice. Follow the evidense behind each decision.",
+        "seconds": 5.6705,
+        "synthesisMs": 1401
+      },
+      {
+        "name": "candidate-b",
+        "text": "Meh tuh gives Rally its voice. Follow the eh vih duhns behind each decision.",
+        "seconds": 6.1200625,
+        "synthesisMs": 1512
+      }
+    ],
+    "apiCalls": 0,
+    "listenerAcceptance": "pending"
+  },
+  "hostedSample": {
+    "at": "2026-11-01T15:54:22.227Z",
+    "state": "completed",
+    "text": "Meta gives Rally its voice. Follow the evidence behind each decision. We can release only after verification. The check has not passed yet.",
+    "model": "facebook/seamless-m4t-v2-large",
+    "adapter": "seamless-aws",
+    "revision": null,
+    "firstByteMs": 1505,
+    "totalMs": 3228,
+    "seconds": 8.48,
+    "cached": false,
+    "cost": null,
+    "billing": "AWS infrastructure unknown",
+    "providerRequests": 1,
+    "apiRetries": 0,
+    "museCalls": 0,
+    "platformJoins": 0,
+    "playback": false,
+    "scope": "Real hosted speech with pronunciation expansion; acoustic naturalness requires listener review; provider controls sentence prosody."
+  },
+  "demo": {
+    "file": "artifacts/feedback/voice-lexicon-v2/rally-three-minute-narrated-draft.mp4",
+    "durationSeconds": 180.0,
+    "width": 1920,
+    "height": 1080,
+    "videoCodec": "h264",
+    "audioCodec": "aac",
+    "sizeBytes": 6783996,
+    "scope": "Actual current UI with labeled synthetic meeting/model replay; two bounded chapters",
+    "narration": "facebook/mms-tts-eng",
+    "narrationLicense": "CC-BY-NC-4.0",
+    "newPaidSpeechSampleCalls": 0,
+    "speechSampleReused": true,
+    "speechSampleOriginalCost": null,
+    "speechSampleFirstByteMs": 1643,
+    "speechSampleCached": false,
+    "uploaded": false,
+    "speechTimeStretch": false,
+    "sentenceProsody": true,
+    "sha256": "b24515e22f8826cadec0ab751bd707c6edf98682e1b5632c5530db7477b2f94d",
+    "fullyDecoded": true
+  },
+  "newMuseCalls": 0,
+  "newAWSRequests": 1,
+  "awsCost": null,
+  "listeningAcceptance": "Pending user review; dictionary targets and waveform generation do not establish pronunciation correctness.",
+  "limits": [
+    "MMS is grapheme-based; current hosted contract does not expose phoneme/SSML controls.",
+    "References are checked for ordinary words; only explicit corrective spellings are substituted.",
+    "Dictionary variants are not context-disambiguated; unknown names remain unchanged.",
+    "CMU generic meta is M IY1 T AH0; Meta brand uses explicit M EH1 T AH0 override."
+  ],
+  "regression": {
+    "backendTests": 153,
+    "frontendTests": 17,
+    "localSpeechAndReferenceTests": 25,
+    "pythonProsodyTests": 3,
+    "bothTypechecksPassed": true,
+    "frontendBuildPassed": true,
+    "browserRecovery": {
+      "at": "2026-11-01T15:58:28.666Z",
+      "passed": true,
+      "scope": "Real local HTTP/MFA/SQLite/LiveKit with synthetic browser microphone and injected providers; no Teams/human or paid provider calls.",
+      "paidModelCalls": 0,
+      "platformJoins": 0,
+      "checks": {
+        "actualAudioReceived": true,
+        "reloadDoesNotDuplicateASR": true,
+        "leaseRefusalStopsTracks": true,
+        "noAutomaticReportOrASRRestart": true,
+        "explicitRestartRecovers": true,
+        "endStopsTracks": true,
+        "finalDrainTurns": 4,
+        "reportFailureVisible": true,
+        "explicitReportRetry": true
+      },
+      "browserErrors": []
+    },
+    "initialBrowserAttempt": "Timed out awaiting transient status text; corrected assertion verifies actual refused heartbeat and stopped tracks."
+  }
+}

@@ -20,4 +20,4 @@ Start with the [current handoff](handoff.md) and [readiness check](readiness-202
 
 Research files preserve source attribution and distinguish documented capability, local synthetic experiments, real model calls and actual meeting evidence. The earlier Sites app is a separate iteration; use the integrated Node references above for current behavior.
 
-[Speech pronunciation and pacing](speech-naturalness.md) · [Long-turn source windows](long-turn-handling.md) · [Bounded real-provider endurance](provider-endurance.md).
+[Local pronunciation reference](pronunciation-reference.md) · [Speech pronunciation and pacing](speech-naturalness.md) · [Long-turn source windows](long-turn-handling.md) · [Bounded real-provider endurance](provider-endurance.md).

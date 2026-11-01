@@ -1,4 +1,4 @@
-import {spokenText,pronunciationMap} from '../../packages/rally-speech/text.mjs';
+import {createSpeechPreparer} from '../../packages/rally-speech/text.mjs';
 import {spawn} from 'node:child_process';
 import {createInterface} from 'node:readline';
 import {fileURLToPath} from 'node:url';
@@ -16,7 +16,7 @@ export function wav(pcm,rate){
 export class MMSSpeech {
  constructor({python,modelDirectory,worker=fileURLToPath(new URL('./worker.py',import.meta.url)),startTimeoutMs=45000,synthesisTimeoutMs=20000,model=MODEL,revision=REVISION,onReady=()=>{},pronunciations={},speakingRate=1,sentencePauseMs=300}){
   if(!python||!modelDirectory)throw new Error('Configure the Python environment and pinned model directory.');
-  pronunciationMap(pronunciations);
+  this.prepare=createSpeechPreparer({adapter:'mms',pronunciations});
   if(!Number.isFinite(speakingRate)||speakingRate<.85||speakingRate>1.15||!Number.isInteger(sentencePauseMs)||sentencePauseMs<120||sentencePauseMs>650)throw Error('Invalid MMS prosody');
   Object.assign(this,{pronunciations,speakingRate,sentencePauseMs,python,modelDirectory,worker,startTimeoutMs,synthesisTimeoutMs,model,revision,onReady});
  }
@@ -51,7 +51,7 @@ export class MMSSpeech {
  }
  async synthesize(text,{signal}={}){
   if(typeof text!=='string'||!text.trim()||text.trim().length>650||/[\x00-\x08\x0b-\x1f]/.test(text))throw new Error('Use 1–650 characters of moderator text.');
-  const spoken=spokenText(text,{adapter:'mms',pronunciations:this.pronunciations});
+  const spoken=this.prepare(text).text;
   if(spoken.length>650)throw Error('Pronunciation expansion exceeds MMS input limit.');
   if(this.busy)throw new Error('MMS is already generating speech.');
   if(signal?.aborted)throw new Error('Speech canceled.');

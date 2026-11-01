@@ -1,4 +1,4 @@
-import {spokenText, pronunciationMap} from '../../../packages/rally-speech/text.mjs';
+import {createSpeechPreparer} from '../../../packages/rally-speech/text.mjs';
 import { HttpError } from './auth.ts';
 
 export const opening = 'Let\'s get back on track.';
@@ -13,12 +13,12 @@ export type SpeechRequest = { input: string; voice?: 'default' };
 export class SeamlessSpeech {
   readonly identity = {adapter:'seamless-aws',model:'facebook/seamless-m4t-v2-large',sampleRate:16000,channels:1,format:'pcm_s16le',revision:null};
   private active = 0;
-  private token: string; private endpoint: string; private request: typeof fetch; private concurrency: number; private pronunciations: Record<string,string>;
-  constructor(token: string, endpoint = 'https://2tluh56msb.execute-api.us-west-2.amazonaws.com/prod/v1/audio/speech', request: typeof fetch = fetch, concurrency = 1, pronunciations: Record<string,string> = {}) { this.pronunciations=pronunciationMap(pronunciations); this.token=token; this.endpoint=endpoint; this.request=request; this.concurrency=concurrency; }
+  private token: string; private endpoint: string; private request: typeof fetch; private concurrency: number; private prepare: ReturnType<typeof createSpeechPreparer>;
+  constructor(token: string, endpoint = 'https://2tluh56msb.execute-api.us-west-2.amazonaws.com/prod/v1/audio/speech', request: typeof fetch = fetch, concurrency = 1, pronunciations: Record<string,string> = {}) { this.prepare=createSpeechPreparer({adapter:'seamless',pronunciations}); this.token=token; this.endpoint=endpoint; this.request=request; this.concurrency=concurrency; }
   async *stream(input: SpeechRequest, signal: AbortSignal, format: 'pcm' | 'wav' = 'pcm', onCache?: (cached:boolean|null)=>void): AsyncGenerator<Buffer> {
     signal.throwIfAborted();
     if (!input || typeof input.input !== 'string' || !input.input.trim() || [...input.input].length > 1200 || (input.voice !== undefined && input.voice !== 'default')) throw new SpeechError('Invalid speech input', 422);
-    const spoken=spokenText(input.input,{pronunciations:this.pronunciations});
+    const spoken=this.prepare(input.input).text;
     if([...spoken].length>1200)throw new SpeechError('Pronunciation expansion exceeds input limit',422);
     if (this.active >= this.concurrency) throw new SpeechError('Speech service busy', 429, '1');
     if (!this.token) throw new SpeechError('Speech service is not configured', 503);

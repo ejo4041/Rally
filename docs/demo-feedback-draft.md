@@ -37,3 +37,7 @@ A second local edit draft preserves the original and adds seven explicit live-fo
 ## November 1 voice revision
 
 A new local candidate under `artifacts/feedback/voice-natural-v1/` uses shorter narration, local MMS sentence synthesis with deliberate pauses, technical-term pronunciation and measured sentence captions. It remains exactly180seconds and uses no narration acceleration. Original draft and real-footage edit guide remain separate artifacts. [Voice changes, samples, limitations and usage](speech-naturalness.md). Listener preference and the actual human meeting test remain pending.
+
+## November 1 pronunciation reference candidate
+
+The latest local candidate is `artifacts/feedback/voice-lexicon-v2/rally-three-minute-narrated-draft.mp4`. It preserves sentence pacing and corrects model-facing Meta/evidence spelling through the shared [local pronunciation reference](pronunciation-reference.md). Canonical captions and the synthetic replay label remain unchanged. All177unique demo word tokens have references; that is coverage, not proof of correct sound. Full listening acceptance is pending.
