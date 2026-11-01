@@ -1139,10 +1139,21 @@ export class Engine {
         }
       } finally {
         const state = this.active.get(m.id);
-        await state?.media?.close();
-        this.speech?.forget(m.id);
-        this.active.delete(m.id);
-        this.reports.delete(m.id);
+        try {
+          await state?.media?.close();
+        } catch {
+          try {
+            const current = this.meetings.get(m.id);
+            current.error ??= "Media cleanup failed after analysis. The saved report is available; check the connection before another call.";
+            this.meetings.save(current);
+          } catch { /* deleted */ }
+        } finally {
+          try { this.speech?.forget(m.id); }
+          finally {
+            this.active.delete(m.id);
+            this.reports.delete(m.id);
+          }
+        }
       }
     });
     this.reports.set(m.id, task);

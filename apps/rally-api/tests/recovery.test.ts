@@ -114,3 +114,11 @@ test('shutdown still releases a failed media transport and preserves canonical e
   assert.equal(f.current().phase,'interrupted');assert.match(f.current().error!,/Media cleanup failed/);
   assert.equal(f.meetings.turns(f.id).length,2);assert.equal(f.engine.active.size,0);
 });
+
+test('a report finishes bookkeeping even when its final media cleanup fails', async t => {
+  const f=await fixture(t),gate=f.gateReport();await f.engine.end(f.current());
+  f.failMedia();gate.resolve();await Promise.allSettled(f.engine.reports.values());
+  assert.equal(f.current().reportStatus,'ready');assert.equal(f.reportCalls(),1);
+  assert.equal(f.engine.reports.size,0);assert.equal(f.engine.active.size,0);
+  assert.match(f.current().error!,/Media cleanup failed/);
+});
