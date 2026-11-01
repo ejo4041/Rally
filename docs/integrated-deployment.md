@@ -1,3 +1,5 @@
+**November 1 pronunciation-reference update: `9bca78a`** is active. Local dictionary verification/brand corrections are shared by speech adapters; the full dictionary is included with its license. Idle check and private backup preceded activation; public UI/API200 and anonymous auth401 pass. [Scope and listening samples](pronunciation-reference.md).
+
 **November 1 voice update: `080cf83`** is active, including shared speech pronunciation preparation and local MMS sentence pacing. Idle verification/private SQLite backup preceded activation; public UI/API200 and anonymous auth401 pass. [Voice evidence and limitations](speech-naturalness.md).
 
 **November 1 current release: `d0d4615`**, recovery cleanup and stale-room ownership guard, including the long-turn fix. Source is on main. Idle check/private SQLite backup preceded API restart; public UI/API health200 and anonymous auth401 pass. [Current recovery evidence](recovery-readiness-2026-11-01.md) and [handoff](handoff.md) supersede historical release identifiers below.

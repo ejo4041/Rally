@@ -124,5 +124,20 @@
       "browserErrors": []
     },
     "initialBrowserAttempt": "Timed out awaiting transient status text; corrected assertion verifies actual refused heartbeat and stopped tracks."
+  },
+  "deployment": {
+    "at": "2026-11-01T16:00:08.764735+00:00",
+    "release": "9bca78a",
+    "idleBeforeSwitch": true,
+    "privateSQLiteBackup": true,
+    "sourceAndDictionaryMatch": true,
+    "servicesActive": true,
+    "publicHTTP": {
+      "/": 200,
+      "/api/health": 200,
+      "/api/auth/me": 401
+    },
+    "platformJoins": 0,
+    "paidCallsFromDeployment": 0
   }
 }
