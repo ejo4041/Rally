@@ -47,6 +47,8 @@ def validate(data, inspect=probe):
         previous = end
         if not isinstance(slot['useSourceAudio'], bool):
             raise ValueError('useSourceAudio must be boolean')
+        if slot.get('sourceKind', 'live-teams') not in ('live-teams', 'synthetic-test'):
+            raise ValueError('Unknown source kind')
         # Text is displayed via textfile, never interpolated into shell/filter syntax.
         if not isinstance(slot['title'], str) or not slot['title'].strip() or len(slot['title']) > 100:
             raise ValueError('Slot title is required and bounded')
@@ -78,7 +80,8 @@ def build(data):
         start, end = slot['start'], slot['end']
         active = f'gte(t,{start})*lt(t,{end})'
         title = labels / f'slot-{n}.txt'
-        title.write_text(('LIVE TEAMS | EDITED EXCERPT\n' if slot['source'] else 'LIVE FOOTAGE PENDING | EDIT SLOT\n') + slot['title'])
+        label = ('LIVE TEAMS | EDITED EXCERPT\n' if slot.get('sourceKind', 'live-teams') == 'live-teams' else 'SYNTHETIC COMPOSITOR TEST\n') if slot['source'] else 'LIVE FOOTAGE PENDING | EDIT SLOT\n'
+        title.write_text(label + slot['title'])
         if slot['source']:
             index += 1
             command += ['-i', str((ROOT / slot['source']).resolve())]
@@ -97,7 +100,7 @@ def build(data):
     info = probe(output)
     if abs(float(info['format']['duration']) - 180) > .1:
         raise ValueError('Rendered duration failed')
-    manifest = {'file':str(output),'durationSeconds':float(info['format']['duration']),'sha256':hashlib.sha256(output.read_bytes()).hexdigest(),'sourceBaseSHA256':hashlib.sha256(base.read_bytes()).hexdigest(),'replacedSlots':[s['id'] for s in data['slots'] if s['source']],'pendingSlots':[s['id'] for s in data['slots'] if not s['source']],'scope':'Edited review draft; each missing live shot remains visibly pending; synthetic base retains its label.','uploaded':False,'submitted':False,'paidModelCalls':0}
+    manifest = {'file':str(output),'durationSeconds':float(info['format']['duration']),'sha256':hashlib.sha256(output.read_bytes()).hexdigest(),'sourceBaseSHA256':hashlib.sha256(base.read_bytes()).hexdigest(),'replacedSlots':[s['id'] for s in data['slots'] if s['source']],'sourceKinds':{s['id']:s.get('sourceKind','live-teams') for s in data['slots'] if s['source']},'pendingSlots':[s['id'] for s in data['slots'] if not s['source']],'scope':'Edited review draft; each missing live shot remains visibly pending; synthetic base retains its label.','uploaded':False,'submitted':False,'paidModelCalls':0}
     output.with_suffix('.json').write_text(json.dumps(manifest, indent=2)+'\n')
     return manifest
 

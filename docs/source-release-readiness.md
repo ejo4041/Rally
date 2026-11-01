@@ -28,3 +28,7 @@ The local exporter uses only Git-tracked files and filters runtime databases, cr
 - Authenticated portal fields and final publicly accessible video URL after footage review.
 
 Everything else can be tested/prepared without these inputs; do not mark these items complete by assumption. [Current submission draft](submission-package.md) and [judge access rehearsal](judge-access-rehearsal.md) keep entry actions pending.
+
+## Prepared private archive
+
+The [source snapshot audit](research/source-archive-2026-11-01.json) pins the actual source revision and ZIP hash/file count. ZIP integrity, configured-secret matching and explicit runtime/model/dependency/private-key/invite filters passed. The archive remains private under /tmp; it is not a public source release, historical-object audit or license/access confirmation.

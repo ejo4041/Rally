@@ -1,0 +1,36 @@
+{
+  "file": "/srv/hackathon/rally-feedback/artifacts/feedback/compositor-test-draft.mp4",
+  "durationSeconds": 180.0,
+  "sha256": "fc99e997267affbfc198dd72ee6b862563695a5143cf5c21dfdfd1755616a3c0",
+  "sourceBaseSHA256": "405e53be66f08245dd259d2cfa7b3d412bc8620509945a5f26c0911447e1e518",
+  "replacedSlots": [
+    "join",
+    "voice"
+  ],
+  "sourceKinds": {
+    "join": "synthetic-test",
+    "voice": "synthetic-test"
+  },
+  "pendingSlots": [
+    "transcript",
+    "guidance",
+    "controls",
+    "report",
+    "departure"
+  ],
+  "scope": "Edited review draft; each missing live shot remains visibly pending; synthetic base retains its label.",
+  "uploaded": false,
+  "submitted": false,
+  "paidModelCalls": 0,
+  "at": "2026-11-01T02:28:00.676795+00:00",
+  "passed": true,
+  "testScope": "Synthetic color/tone clips validate compositor replacement, not live Teams evidence.",
+  "replacementFrameRGB": [
+    48.0,
+    73.0,
+    95.0
+  ],
+  "sourceAudio880HzAmplitude": 0.1251049302052339,
+  "unwanted440HzAmplitude": 1.0495959526982465e-06,
+  "fullyDecoded": true
+}

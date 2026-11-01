@@ -60,4 +60,10 @@ class LiveEditTest(unittest.TestCase):
             self.data['slots'][0]['start'] = value
             with self.assertRaises(ValueError):editor.validate(self.data,self.inspect)
 
+    def test_test_footage_has_explicit_scope(self):
+        self.data['slots'][0]['sourceKind'] = 'synthetic-test'
+        editor.validate(self.data,self.inspect)
+        self.data['slots'][0]['sourceKind'] = 'unknown'
+        with self.assertRaisesRegex(ValueError, 'source kind'):editor.validate(self.data,self.inspect)
+
 if __name__ == '__main__':unittest.main()

@@ -1,0 +1,25 @@
+{
+  "at": "2026-11-01T02:26:23.540868+00:00",
+  "sourceRevision": "099680f0f405529e733f6bf7e964527c25817b1b",
+  "sourceDirty": false,
+  "archive": "/tmp/rally-source-draft-099680f-20261101.zip",
+  "fileCount": 626,
+  "sizeBytes": 1514425,
+  "sha256": "7d30f60fb51be6da76b7870b1edbce7611932ec3e2562b24b4307cabdc8574f9",
+  "passed": true,
+  "checks": {
+    "zipIntegrity": true,
+    "currentRecoverySourceIncluded": true,
+    "rehearsalDocsIncluded": true,
+    "configuredSecretMatches": 0,
+    "privateKeyMatches": 0,
+    "possibleRealTeamsInviteMatches": 0,
+    "forbiddenRuntimeDependencyModelFiles": 0
+  },
+  "limitations": [
+    "This scans current exported source against configured secret values and explicit patterns, not every historical Git object or every possible private datum.",
+    "Original application license, visual-artwork redistribution permission, human contributors and anonymous GitHub access remain pending."
+  ],
+  "uploaded": false,
+  "submitted": false
+}
