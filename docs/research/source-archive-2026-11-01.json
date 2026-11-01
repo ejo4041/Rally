@@ -1,11 +1,11 @@
 {
-  "at": "2026-11-01T02:26:23.540868+00:00",
-  "sourceRevision": "099680f0f405529e733f6bf7e964527c25817b1b",
+  "at": "2026-11-01T02:28:47.636410+00:00",
+  "sourceRevision": "6cbd74a07ee9693016d34a48faec66db48984d29",
   "sourceDirty": false,
-  "archive": "/tmp/rally-source-draft-099680f-20261101.zip",
-  "fileCount": 626,
-  "sizeBytes": 1514425,
-  "sha256": "7d30f60fb51be6da76b7870b1edbce7611932ec3e2562b24b4307cabdc8574f9",
+  "archive": "/tmp/rally-source-draft-6cbd74a-20261101.zip",
+  "fileCount": 628,
+  "sizeBytes": 1516728,
+  "sha256": "3821433b1f1f8d1613c6ff1ea443526ee2a8061c61846bc0c05f257a4ff7dca0",
   "passed": true,
   "checks": {
     "zipIntegrity": true,
