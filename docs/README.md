@@ -35,3 +35,5 @@ Research files preserve source attribution and distinguish documented capability
 [Laptop continuation handoff — November 2](laptop-handoff-2026-11-02.md): current source/deployment, listening archive transfer, test evidence, next actions and operating constraints.
 
 - [November 2 human voice listening feedback](phoneme-listening-feedback-2026-11-02.md)
+
+- [Rally market scan: Read AI and live-facilitation alternatives](research/meeting-market-2026-11-02.md)

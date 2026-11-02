@@ -70,3 +70,7 @@ Final prototype evidence: clean candidate `d620008` generated 80/80 corpus WAVs.
 ## November 2 human listening feedback
 
 [Five paired preferences](phoneme-listening-feedback-2026-11-02.md): direct-phone Meta preferred on3/5, MMS on2/5 (both agenda phrases). The user reports **postpone mispronounced in both**. No numerical ratings or overall production acceptance; production remains6fa6e2f. Next: investigate postpone and prepare targeted comparison before any voice promotion. [Structured record](research/phoneme-human-listening-2026-11-02.json). No new synthesis/paid calls.
+
+## November 2 market scan
+
+[Read AI and close alternatives](research/meeting-market-2026-11-02.md): vendor-documentation scan, no trial accounts or purchases. Read overlaps on live metrics/coaching; Teams Facilitator is a direct agenda/timing competitor; Otter documents Zoom voice Q&A; Fireflies/Hedy offer live suggestions. Proposed positioning centers on evidence-backed team outcomes, not unique transcription/voice claims. Production unchanged.
