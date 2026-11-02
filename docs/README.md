@@ -31,3 +31,5 @@ Research files preserve source attribution and distinguish documented capability
 [Direct phoneme speech prototype](phoneme-speech-prototype.md): opt-in Meta FastSpeech2/HiFi-GAN, deterministic stressed phones, reproducible configuration and explicit quality/coverage limits.
 
 [Phoneme prototype measurements](research/phoneme-prototype-results-2026-11-02.json): pinned candidate, all 80 real local synthesis clips, cold/warm timings, integration scope and pending human listening.
+
+[Laptop continuation handoff — November 2](laptop-handoff-2026-11-02.md): current source/deployment, listening archive transfer, test evidence, next actions and operating constraints.
