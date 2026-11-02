@@ -83,7 +83,7 @@ export function createApplication(
     },
   };
   const streamingSelected =
-    !!options.tts || process.env.RALLY_SPEECH_ADAPTER === "seamless-aws";
+    !!options.tts || ["seamless-aws","fastspeech2-local"].includes(process.env.RALLY_SPEECH_ADAPTER??"");
   const speech = new SpeechOutput(
     options.speechEngine ||
       (streamingSelected ? undefined : configuredSpeech()),
@@ -118,10 +118,11 @@ export function createApplication(
     options.tts || configuredTTS(),
     config.paidEnabled,
   );
+  if(config.paidEnabled&&streamingSelected)void tts.start()?.catch(()=>{});
   if (
     config.paidEnabled &&
     streamingSelected &&
-    (options.tts || process.env.RALLY_TTS_TOKEN)
+    (options.tts || process.env.RALLY_TTS_TOKEN || process.env.RALLY_SPEECH_ADAPTER==='fastspeech2-local')
   ) {
     speech.live = new LiveSpeech({
       current: (id) => meetings.get(id),
@@ -623,6 +624,7 @@ export function createApplication(
       await liveTeams.close();
       await engine.close();
       await speech.live?.close();
+      tts.close();
       speech.close();
       store.close();
     },

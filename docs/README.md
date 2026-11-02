@@ -27,3 +27,5 @@ Research files preserve source attribution and distinguish documented capability
 [Measured Steve Jobs speech pilot](jobs-tts-pilot.md): paired original/MMS recognition, timing diagnostics and private blind listening page; hosted speech failed and naturalness ratings remain pending.
 
 [Scientific TTS improvement protocol](tts-improvement-protocol.md): fixed development/held-out sentences, controlled changes, blind ratings/error labels and proposed quality/latency gates.
+
+[Direct phoneme speech prototype](phoneme-speech-prototype.md): opt-in Meta FastSpeech2/HiFi-GAN, deterministic stressed phones, reproducible configuration and explicit quality/coverage limits.

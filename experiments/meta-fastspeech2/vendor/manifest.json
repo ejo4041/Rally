@@ -1,0 +1,46 @@
+{
+  "repo": "facebookresearch/fairseq",
+  "revision": "3d262bb25690e4eb2e7d3c1309b1e9c406ca4b99",
+  "files": [
+    {
+      "file": "fastspeech2.py",
+      "url": "https://raw.githubusercontent.com/facebookresearch/fairseq/3d262bb25690e4eb2e7d3c1309b1e9c406ca4b99/fairseq/models/text_to_speech/fastspeech2.py",
+      "sha256": "8da3b1004683e02f305aa49e404bf4a1fb4d7f93e68b6aea72d501fe0bcf85c3"
+    },
+    {
+      "file": "hifigan.py",
+      "url": "https://raw.githubusercontent.com/facebookresearch/fairseq/3d262bb25690e4eb2e7d3c1309b1e9c406ca4b99/fairseq/models/text_to_speech/hifigan.py",
+      "sha256": "e0865dce08f2220ddcc83660ab9c012c1ef90acf7ddc78de0d8c064e44d9bb07"
+    },
+    {
+      "file": "sinusoidal_positional_embedding.py",
+      "url": "https://raw.githubusercontent.com/facebookresearch/fairseq/3d262bb25690e4eb2e7d3c1309b1e9c406ca4b99/fairseq/modules/sinusoidal_positional_embedding.py",
+      "sha256": "ab9897cc040a107e88691c3b7c80c319235c9148cd8822e68affe36bd07e49c0"
+    },
+    {
+      "file": "tacotron2.py",
+      "url": "https://raw.githubusercontent.com/facebookresearch/fairseq/3d262bb25690e4eb2e7d3c1309b1e9c406ca4b99/fairseq/models/text_to_speech/tacotron2.py",
+      "sha256": "773de4e6ddfccd1114cb1a1c3b06e278147ed8bff962c3919045c9e35b409543"
+    },
+    {
+      "file": "hub_interface.py",
+      "url": "https://raw.githubusercontent.com/facebookresearch/fairseq/3d262bb25690e4eb2e7d3c1309b1e9c406ca4b99/fairseq/models/text_to_speech/hub_interface.py",
+      "sha256": "be5903dd03f00305b2fe086b1526a72bf2e3ab84dafab6800f0cc0edfcb9fb63"
+    },
+    {
+      "file": "multihead_attention.py",
+      "url": "https://raw.githubusercontent.com/facebookresearch/fairseq/3d262bb25690e4eb2e7d3c1309b1e9c406ca4b99/fairseq/modules/multihead_attention.py",
+      "sha256": "0dde50b837751582b66d5f51cfdfe0f0d62ae0c57afc0ba9fabd2439c1da83be"
+    },
+    {
+      "file": "fairseq_dropout.py",
+      "url": "https://raw.githubusercontent.com/facebookresearch/fairseq/3d262bb25690e4eb2e7d3c1309b1e9c406ca4b99/fairseq/modules/fairseq_dropout.py",
+      "sha256": "59d0000b9a9b5eb50592bf0b5d308a0397946468bd0f59224cc407cd28b4d0c5"
+    },
+    {
+      "file": "LICENSE",
+      "url": "https://raw.githubusercontent.com/facebookresearch/fairseq/3d262bb25690e4eb2e7d3c1309b1e9c406ca4b99/LICENSE",
+      "sha256": "52412d7bc7ce4157ea628bbaacb8829e0a9cb3c58f57f99176126bc8cf2bfc85"
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "model": "facebook/fastspeech2-en-ljspeech",
+  "revision": "a3e3e5e2e62bb7ca7514b11aa469e9c5b01a20bf",
+  "files": [
+    {
+      "file": "config.yaml",
+      "size": 612,
+      "sha256": "b56c00450cc5e16a0b87c41f531a9c45aa7cd5effa0e4458be209f844c6bbf92",
+      "url": "https://huggingface.co/facebook/fastspeech2-en-ljspeech/resolve/a3e3e5e2e62bb7ca7514b11aa469e9c5b01a20bf/config.yaml"
+    },
+    {
+      "file": "fbank_mfa_gcmvn_stats.npz",
+      "size": 1140,
+      "sha256": "6735b35875c2614cee80bf861c6a604aba35671887e6f04b4449dc257bb15d34",
+      "url": "https://huggingface.co/facebook/fastspeech2-en-ljspeech/resolve/a3e3e5e2e62bb7ca7514b11aa469e9c5b01a20bf/fbank_mfa_gcmvn_stats.npz"
+    },
+    {
+      "file": "hifigan.bin",
+      "size": 55825897,
+      "sha256": "d4f4f016c791fd9ca9859a9e25e7eb0a823fee2ea997c1e5ae8e1a9ea5f99b1f",
+      "url": "https://huggingface.co/facebook/fastspeech2-en-ljspeech/resolve/a3e3e5e2e62bb7ca7514b11aa469e9c5b01a20bf/hifigan.bin"
+    },
+    {
+      "file": "hifigan.json",
+      "size": 762,
+      "sha256": "719a04c531031802c3da7207e5093057d5f2d7c6b0a457c77041d01bb7d93c6e",
+      "url": "https://huggingface.co/facebook/fastspeech2-en-ljspeech/resolve/a3e3e5e2e62bb7ca7514b11aa469e9c5b01a20bf/hifigan.json"
+    },
+    {
+      "file": "pytorch_model.pt",
+      "size": 494816801,
+      "sha256": "a48d454fe66939079d0ddb70f1c062ec669f521a7cfadc608968746e312986ab",
+      "url": "https://huggingface.co/facebook/fastspeech2-en-ljspeech/resolve/a3e3e5e2e62bb7ca7514b11aa469e9c5b01a20bf/pytorch_model.pt"
+    },
+    {
+      "file": "vocab.txt",
+      "size": 602,
+      "sha256": "b3a5491c921ebc25745abcd40494d94abb034cd4b6083b0390187781a6f20e4f",
+      "url": "https://huggingface.co/facebook/fastspeech2-en-ljspeech/resolve/a3e3e5e2e62bb7ca7514b11aa469e9c5b01a20bf/vocab.txt"
+    }
+  ]
+}

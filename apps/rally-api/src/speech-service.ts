@@ -2,9 +2,15 @@ import { randomUUID } from 'node:crypto';
 import type { Store } from './store.ts';
 import { HttpError } from './auth.ts';
 import { SeamlessSpeech, type SpeechRequest } from './seamless.ts';
-export type SpeechMetadata = {model:string;adapter:string;sampleRate:number;channels:number;format:string;revision:null};
+import {LocalPhonemeTTS} from './phoneme-tts.ts';
+export type SpeechMetadata = {model:string;adapter:string;sampleRate:number;channels:number;format:string;revision:string|null};
 export interface TextToSpeech {
  readonly identity: SpeechMetadata;
+ readonly billing?:string;
+ readonly apiCostUSD?:number;
+ start?():Promise<void>;
+ ready?():boolean;
+ close?():void;
  stream(input:SpeechRequest,signal:AbortSignal,format?:'pcm'|'wav',onCache?:(cached:boolean|null)=>void):AsyncIterable<Buffer>;
  synthesize(input:SpeechRequest,signal:AbortSignal,onCache?:(cached:boolean|null)=>void):Promise<Buffer>;
 }
@@ -14,7 +20,9 @@ export class SpeechService {
   this.store=store;this.adapter=adapter;this.enabled=enabled;
   store.db.exec("CREATE TABLE IF NOT EXISTS speech_usage(id TEXT PRIMARY KEY,user_id TEXT NOT NULL,meeting_id TEXT,at INTEGER NOT NULL,body TEXT NOT NULL); CREATE INDEX IF NOT EXISTS speech_usage_account_time ON speech_usage(user_id,at); UPDATE speech_usage SET body=json_set(body,'$.state','interrupted') WHERE json_extract(body,'$.state')='pending';");
  }
- status(){return {...this.adapter.identity,enabled:this.enabled,ready:this.enabled,transport:'livekit',billing:'AWS infrastructure; cost not supplied'};}
+ status(){return {...this.adapter.identity,enabled:this.enabled,ready:this.enabled&&(this.adapter.ready?.()??true),transport:'livekit',billing:this.adapter.billing??'AWS infrastructure; cost not supplied'};}
+ start(){return this.adapter.start?.();}
+ close(){this.adapter.close?.();}
  usage(userId:string){return (this.store.db.prepare('SELECT body FROM speech_usage WHERE user_id=? ORDER BY at DESC LIMIT 200').all(userId) as {body:string}[]).map(r=>JSON.parse(r.body));}
  private reserve(userId:string,meetingId?:string){
   if(!this.enabled)throw new HttpError('Provider speech is disabled',403);
@@ -22,7 +30,7 @@ export class SpeechService {
   const recent=this.store.db.prepare('SELECT count(*) AS count FROM speech_usage WHERE user_id=? AND at>?').get(userId,now-3600000) as {count:number};
   const global=this.store.db.prepare('SELECT count(*) AS count FROM speech_usage WHERE at>?').get(now-86400000) as {count:number};
   if(recent.count>=60 || global.count>=500)throw new HttpError('Speech request allowance exhausted',429);
-  const row={id:randomUUID(),at:now,meetingId:meetingId??null,...this.adapter.identity,state:'pending',bytes:0,seconds:null as number|null,firstByteMs:null as number|null,cached:null as boolean|null,cost:null,billing:'AWS infrastructure; cost unknown'};
+  const row={id:randomUUID(),at:now,meetingId:meetingId??null,...this.adapter.identity,state:'pending',bytes:0,seconds:null as number|null,firstByteMs:null as number|null,cached:null as boolean|null,cost:null,...(this.adapter.apiCostUSD===undefined?{}:{apiCostUSD:this.adapter.apiCostUSD}),billing:this.adapter.billing??'AWS infrastructure; cost unknown'};
   this.store.db.prepare('INSERT INTO speech_usage VALUES(?,?,?,?,?)').run(row.id,userId,meetingId??null,now,JSON.stringify(row));
   return row;
  }
@@ -46,6 +54,7 @@ export class SpeechService {
  }
 }
 export function configuredTTS():TextToSpeech {
+ if(process.env.RALLY_SPEECH_ADAPTER==='fastspeech2-local')return new LocalPhonemeTTS();
  const concurrency=Number(process.env.RALLY_TTS_CONCURRENCY||1);
  if(!Number.isInteger(concurrency)||concurrency<1||concurrency>8)throw new Error('Invalid speech concurrency');
  return new SeamlessSpeech(process.env.RALLY_TTS_TOKEN||'',undefined,fetch,concurrency,JSON.parse(process.env.RALLY_SPEECH_PRONUNCIATIONS || '{}'));

@@ -26,6 +26,22 @@ export interface SpeechEngine {
 }
 export type SpeechShield = { id: string; start: number; end: number };
 export function configuredSpeech(): SpeechEngine | undefined {
+  if (process.env.RALLY_SPEECH_ADAPTER === "fastspeech2-local") {
+    if (process.env.RALLY_EXPERIMENTAL_PHONEMES !== "1")
+      throw new Error("FastSpeech2 phoneme speech requires explicit experimental opt-in");
+    const { PhonemeSpeech } = createRequire(import.meta.url)(
+      "../../../experiments/phoneme-speech/adapter.mjs",
+    ) as {
+      PhonemeSpeech: new (options: {
+        python: string; modelDirectory: string; phoneOverrides: Record<string,string>;
+      }) => SpeechEngine;
+    };
+    return new PhonemeSpeech({
+      python: process.env.RALLY_PHONEME_PYTHON || "/srv/hackathon/tools/mms-venv/bin/python",
+      modelDirectory: process.env.RALLY_PHONEME_MODEL_DIR || "/srv/hackathon/models/meta-fastspeech2",
+      phoneOverrides: JSON.parse(process.env.RALLY_PHONE_OVERRIDES || "{}"),
+    });
+  }
   if (process.env.RALLY_MMS_ENABLED !== "1") return;
   const identity = speechSettingsSchema.parse(
     JSON.parse(process.env.RALLY_MODEL_CONFIG || "{}").speech || {},

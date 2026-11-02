@@ -1,0 +1,8 @@
+{
+  "version": 1,
+  "policy": "Reviewed first-dictionary choices for ordinary vowel reduction, dialect and optional consonants. This is not contextual homograph disambiguation. Every other multi-pronunciation word requires a phone override.",
+  "words": [
+    "a", "an", "and", "are", "as", "at", "be", "been", "but", "can", "cannot", "could", "do", "for", "from", "had", "has", "have", "he", "her", "him", "his", "is", "it", "of", "on", "or", "our", "she", "should", "some", "than", "that", "the", "them", "there", "these", "they", "this", "those", "to", "us", "was", "we", "were", "will", "would", "you", "your",
+    "accepted", "before", "current", "friday", "monday", "next", "passes", "postpone", "preserves", "proceeding", "question", "remaining", "report", "reports", "return", "returns", "saturday", "schedule", "sunday", "thursday", "tuesday", "wednesday", "what", "whenever", "which", "while"
+  ]
+}

@@ -18,3 +18,7 @@ This is a direct-component inventory, not a complete transitive legal audit. His
 ## Pronunciation reference
 
 The local English reference includes the CMU Pronouncing Dictionary, copyright Carnegie Mellon University, under its BSD-style two-condition redistribution license. Full notice: [CMUDICT-LICENSE](packages/rally-speech/vendor/CMUDICT-LICENSE). [Pinned source and SHA-256](packages/rally-speech/vendor/cmudict-manifest.json). This is a reference dataset, not a speech-generation model or an external service. Its entries can be ambiguous or incorrect for brands; Rally retains explicit brand corrections and unknown-word handling.
+
+## Experimental Meta phone synthesis
+
+The opt-in `facebook/fastspeech2-en-ljspeech` checkpoint and bundled HiFi-GAN vocoder are pinned in the [model manifest](experiments/meta-fastspeech2/model-manifest.json). Selected upstream fairseq definitions are copied without changes and verified against their [source manifest](experiments/meta-fastspeech2/vendor/manifest.json). Preserve the full [MIT license](experiments/meta-fastspeech2/vendor/LICENSE). Meta's upstream fairseq README expressly applies that license to pretrained models; this license basis differs from MMS English's CC BY-NC 4.0. Weights are provisioned outside Git/source exports. The existing licensed CMU dictionary supplies stressed phones; no third-party neural G2P or TTS checkpoint is used. [Research, provenance and limitations](docs/research/meta-phoneme-backend-feasibility-2026-11-02.md).

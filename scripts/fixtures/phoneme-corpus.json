@@ -1,0 +1,207 @@
+{
+  "version": 1,
+  "frozenAt": "2026-11-02",
+  "scope": "Authored English meeting utterances. Development selection allowed; validation clips opened only after candidate implementation frozen. No quality ratings yet.",
+  "utterances": [
+    {
+      "id": "development-01",
+      "split": "development",
+      "text": "Meta supports this meeting."
+    },
+    {
+      "id": "development-02",
+      "split": "development",
+      "text": "Follow the agenda."
+    },
+    {
+      "id": "development-03",
+      "split": "development",
+      "text": "The evidence supports that decision."
+    },
+    {
+      "id": "development-04",
+      "split": "development",
+      "text": "Please confirm the owner and deadline."
+    },
+    {
+      "id": "development-05",
+      "split": "development",
+      "text": "Do not ship until verification passes."
+    },
+    {
+      "id": "development-06",
+      "split": "development",
+      "text": "The rollback check has not passed yet."
+    },
+    {
+      "id": "development-07",
+      "split": "development",
+      "text": "Which task still needs an owner?"
+    },
+    {
+      "id": "development-08",
+      "split": "development",
+      "text": "We can discuss the remaining questions."
+    },
+    {
+      "id": "development-09",
+      "split": "development",
+      "text": "Please wait while the report finishes."
+    },
+    {
+      "id": "development-10",
+      "split": "development",
+      "text": "Thursday at three, not Friday at noon."
+    },
+    {
+      "id": "development-11",
+      "split": "development",
+      "text": "Rally can pause whenever you need."
+    },
+    {
+      "id": "development-12",
+      "split": "development",
+      "text": "We have a plan, but no approval."
+    },
+    {
+      "id": "development-13",
+      "split": "development",
+      "text": "Is that a proposal or an agreement?"
+    },
+    {
+      "id": "development-14",
+      "split": "development",
+      "text": "Please summarize the decision."
+    },
+    {
+      "id": "development-15",
+      "split": "development",
+      "text": "The accessibility check is unresolved."
+    },
+    {
+      "id": "development-16",
+      "split": "development",
+      "text": "We should keep the original deadline."
+    },
+    {
+      "id": "development-17",
+      "split": "development",
+      "text": "The release depends on successful testing."
+    },
+    {
+      "id": "development-18",
+      "split": "development",
+      "text": "The microphone is muted."
+    },
+    {
+      "id": "development-19",
+      "split": "development",
+      "text": "Please explain what changed."
+    },
+    {
+      "id": "development-20",
+      "split": "development",
+      "text": "Thank you for the clarification."
+    },
+    {
+      "id": "validation-01",
+      "split": "validation",
+      "text": "The agenda still includes accessibility."
+    },
+    {
+      "id": "validation-02",
+      "split": "validation",
+      "text": "Meta provides the speech model."
+    },
+    {
+      "id": "validation-03",
+      "split": "validation",
+      "text": "Which evidence supports the proposed deadline?"
+    },
+    {
+      "id": "validation-04",
+      "split": "validation",
+      "text": "We cannot release before the rollback check."
+    },
+    {
+      "id": "validation-05",
+      "split": "validation",
+      "text": "The team agreed to postpone the decision."
+    },
+    {
+      "id": "validation-06",
+      "split": "validation",
+      "text": "Who accepted responsibility for verification?"
+    },
+    {
+      "id": "validation-07",
+      "split": "validation",
+      "text": "Please correct the date before sharing."
+    },
+    {
+      "id": "validation-08",
+      "split": "validation",
+      "text": "The owner will confirm by Wednesday afternoon."
+    },
+    {
+      "id": "validation-09",
+      "split": "validation",
+      "text": "We need permission before proceeding."
+    },
+    {
+      "id": "validation-10",
+      "split": "validation",
+      "text": "The transcript preserves the original condition."
+    },
+    {
+      "id": "validation-11",
+      "split": "validation",
+      "text": "Please finish the current sentence."
+    },
+    {
+      "id": "validation-12",
+      "split": "validation",
+      "text": "There is no confirmed owner yet."
+    },
+    {
+      "id": "validation-13",
+      "split": "validation",
+      "text": "We can return to that question later."
+    },
+    {
+      "id": "validation-14",
+      "split": "validation",
+      "text": "Could you clarify the next step?"
+    },
+    {
+      "id": "validation-15",
+      "split": "validation",
+      "text": "The report includes unresolved questions."
+    },
+    {
+      "id": "validation-16",
+      "split": "validation",
+      "text": "Sam has not agreed to that proposal."
+    },
+    {
+      "id": "validation-17",
+      "split": "validation",
+      "text": "Please pause until the connection returns."
+    },
+    {
+      "id": "validation-18",
+      "split": "validation",
+      "text": "We should verify the source before deciding."
+    },
+    {
+      "id": "validation-19",
+      "split": "validation",
+      "text": "The schedule includes time for discussion."
+    },
+    {
+      "id": "validation-20",
+      "split": "validation",
+      "text": "Thank you, that answers the question."
+    }
+  ]
+}

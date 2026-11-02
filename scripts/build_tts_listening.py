@@ -46,6 +46,7 @@ ROWS
 <label>Which clip do you prefer?<select id="preference"><option value="">Not decided</option>PREFERENCES<option value="tie">Tie</option></select></label>
 <button id="download">Download my ratings</button><button id="reveal">Reveal identities after rating</button><pre id="identity"></pre>
 <p>No data is sent anywhere; the downloaded ratings stay on your device.</p><script>SCRIPT</script></html>'''
+page=page.replace('The reference is an archival public speech; differences in recording conditions can affect ratings. No voice cloning is used. This short pilot cannot establish overall product quality.',html.escape(data.get('comparisonContext','This informal comparison uses different speech conditions. No voice cloning is used. Ratings are pending.')))
 page=page.replace('REFERENCE',html.escape(data['referenceText'])).replace('ROWS',''.join(rows)).replace('PREFERENCES',''.join(f'<option value="{label}">Clip {label}</option>' for label in key)).replace('SCRIPT',script)
 args.output.write_text(page)
 args.output.with_suffix('.key.json').write_text(json.dumps({'key':key,'normalizations':normalizations,'ratingsCollected':0,'scope':'Randomized two-condition pilot; standalone offline file, no telemetry or submission.'},indent=2)+'\n')
