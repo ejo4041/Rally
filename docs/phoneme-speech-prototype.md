@@ -51,3 +51,29 @@ The authoritative authored corpus contains 20 development and 20 validation utte
 The actual local HTTP smoke uses Express/SQLite authentication fixtures, real Meta inference, injected ASR/reasoning/media, verifies approved WAV, other-owner denial, unchanged canonical text and audio revocation after pause. The browser and Teams common live speech smokes generate actual PCM and preserve model/revision/billing through injected transports. These are **not real Teams meetings, remote audibility or production MFA tests**. The two cold live smoke paths each took about three seconds to the first recorded transport byte; playback/device/network delay was not measured.
 
 Before production selection: listen blind to same-text, matched-loudness MMS/candidate pairs; label pronunciation separately from naturalness; review coverage/refusal behavior for real moderator text; measure warmed first-audio and real recipient audibility in a consented call. A completed waveform or low ASR WER cannot establish a naturalness score. No final entry action, external video upload or production voice switch occurs in this work.
+
+## Final measured run
+
+[Versioned measurements and per-clip hashes](research/phoneme-prototype-results-2026-11-02.json) record candidate `d620008`, a clean source tree at run start and the frozen corpus hash above. Both backends generated all 40 utterances (80 WAVs), with no unsupported corpus item. This deliberately bounded corpus does not measure unrestricted moderator-text coverage. The final real-model run used a systemd unit capped at 1600 MB/no swap/150% CPU/600 seconds.
+
+| Backend / split | Complete-waveform median | P95, nearest rank | Clips |
+| --- | --- | --- | --- |
+| MMS development | 859 ms | 1101 ms | 20 |
+| MMS validation | 871 ms | 1105 ms | 20 |
+| Direct-phone Meta development | 823 ms | 1068 ms | 20 |
+| Direct-phone Meta validation | 941 ms | 1149 ms | 20 |
+
+Worker cold start was 3.266 seconds for MMS and 2.084 seconds for FastSpeech2, measured separately from the warmed requests. These are sequential single-run CPU observations, not a statistical demonstration of speed superiority. Phone planning over 4,000 warmed corpus calls measured median 0.012 ms/P95 0.017 ms; import/construction took 144 ms once. The planner needs no per-word network round trip. Full-waveform generation still determines first-audio latency, and no recipient/device/network playback timing is included.
+
+Validation passed: 158 backend tests, 17 frontend tests, 46 shared speech/local adapter tests, nine actual-model integrity/protocol tests, both application type checks and frontend build. Focused API checks were repeated after the final adapter lifecycle/error-code fixes. The real HTTP and injected-transport smokes were performed before that final lifecycle review; their audio interface/phrase was unchanged. Review fixes cover broken worker pipes/readline errors, stale readiness, startup cancellation, repeated punctuation, sentence bounds and explicit refusal statuses.
+
+Five paired offline listening pages are at `artifacts/feedback/phoneme-listening-20261102/index.html`. The first three target Meta, agenda and evidence; two additional validation sentences are included. Each pair has the same text, randomized A/B identities and constant-gain loudness matching to −24 LUFS within 0.15 LUFS. A bounded headless browser decoded all ten audio files and exercised hidden identities and ratings download. Its synthetic test values were discarded; **zero human ratings have been collected**. These local artifacts are excluded from Git; the reproducible builder and measured hashes are committed.
+
+Reproduce from the repository root with a fresh run/output name:
+
+```bash
+RALLY_LOCAL_PHONEME_BENCHMARK=1 RALLY_PHONEME_RUN=my-phoneme-run node scripts/phoneme-benchmark.mjs
+python3 scripts/build_phoneme_listening.py --result artifacts/feedback/my-phoneme-run/result.json --output artifacts/feedback/my-phoneme-listening
+```
+
+Model downloads require network only during explicit provisioning. Inference, dictionary planning and page viewing work offline. Existing output directories are retained rather than overwritten. The implementation batch used zero paid model calls; local API fees are $0 and incremental shared-host infrastructure cost is unknown.

@@ -29,3 +29,5 @@ Research files preserve source attribution and distinguish documented capability
 [Scientific TTS improvement protocol](tts-improvement-protocol.md): fixed development/held-out sentences, controlled changes, blind ratings/error labels and proposed quality/latency gates.
 
 [Direct phoneme speech prototype](phoneme-speech-prototype.md): opt-in Meta FastSpeech2/HiFi-GAN, deterministic stressed phones, reproducible configuration and explicit quality/coverage limits.
+
+[Phoneme prototype measurements](research/phoneme-prototype-results-2026-11-02.json): pinned candidate, all 80 real local synthesis clips, cold/warm timings, integration scope and pending human listening.
