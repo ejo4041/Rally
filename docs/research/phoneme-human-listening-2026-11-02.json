@@ -1,0 +1,72 @@
+{
+  "recordedAt": "2026-11-02T18:27:47.034503+00:00",
+  "scope": "One human listener, five informal paired preferences supplied in chat. No numerical naturalness ratings or population inference.",
+  "pairs": [
+    {
+      "pair": "development-01",
+      "text": "Meta supports this meeting.",
+      "preferredClip": "B",
+      "identities": {
+        "A": "mms facebook/mms-tts-eng@c71de0fe7204c83f1c10820a7d696d0b450048ba",
+        "B": "phoneme facebook/fastspeech2-en-ljspeech@a3e3e5e2e62bb7ca7514b11aa469e9c5b01a20bf"
+      },
+      "preferredBackend": "phoneme",
+      "notes": null,
+      "naturalnessScores": null
+    },
+    {
+      "pair": "development-02",
+      "text": "Follow the agenda.",
+      "preferredClip": "A",
+      "identities": {
+        "A": "mms facebook/mms-tts-eng@c71de0fe7204c83f1c10820a7d696d0b450048ba",
+        "B": "phoneme facebook/fastspeech2-en-ljspeech@a3e3e5e2e62bb7ca7514b11aa469e9c5b01a20bf"
+      },
+      "preferredBackend": "mms",
+      "notes": null,
+      "naturalnessScores": null
+    },
+    {
+      "pair": "development-03",
+      "text": "The evidence supports that decision.",
+      "preferredClip": "A",
+      "identities": {
+        "A": "phoneme facebook/fastspeech2-en-ljspeech@a3e3e5e2e62bb7ca7514b11aa469e9c5b01a20bf",
+        "B": "mms facebook/mms-tts-eng@c71de0fe7204c83f1c10820a7d696d0b450048ba"
+      },
+      "preferredBackend": "phoneme",
+      "notes": null,
+      "naturalnessScores": null
+    },
+    {
+      "pair": "validation-01",
+      "text": "The agenda still includes accessibility.",
+      "preferredClip": "A",
+      "identities": {
+        "A": "mms facebook/mms-tts-eng@c71de0fe7204c83f1c10820a7d696d0b450048ba",
+        "B": "phoneme facebook/fastspeech2-en-ljspeech@a3e3e5e2e62bb7ca7514b11aa469e9c5b01a20bf"
+      },
+      "preferredBackend": "mms",
+      "notes": null,
+      "naturalnessScores": null
+    },
+    {
+      "pair": "validation-05",
+      "text": "The team agreed to postpone the decision.",
+      "preferredClip": "B",
+      "identities": {
+        "A": "mms facebook/mms-tts-eng@c71de0fe7204c83f1c10820a7d696d0b450048ba",
+        "B": "phoneme facebook/fastspeech2-en-ljspeech@a3e3e5e2e62bb7ca7514b11aa469e9c5b01a20bf"
+      },
+      "preferredBackend": "phoneme",
+      "notes": "User reports postpone mispronounced in both clips.",
+      "naturalnessScores": null
+    }
+  ],
+  "preferredCounts": {
+    "phoneme": 3,
+    "mms": 2
+  },
+  "productionChanged": false,
+  "paidCalls": 0
+}

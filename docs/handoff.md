@@ -66,3 +66,7 @@ User reported agenda still mispronounced. The shared correction now supplies `aj
 Final prototype evidence: clean candidate `d620008` generated 80/80 corpus WAVs. Direct-phone validation complete-waveform median/P95 was 941/1149 ms after a 2084 ms worker cold start; phone planning P95 was 0.017 ms. Five offline matched-loudness listening pairs and their browser decode/export check are ready; human ratings remain zero.158 backend,17 frontend,46 shared/local speech and9 native-model tests pass, with both type checks/build. [Measurements](research/phoneme-prototype-results-2026-11-02.json).
 
 [Laptop continuation handoff — November 2](laptop-handoff-2026-11-02.md): current source/deployment, listening archive transfer, test evidence, next actions and operating constraints.
+
+## November 2 human listening feedback
+
+[Five paired preferences](phoneme-listening-feedback-2026-11-02.md): direct-phone Meta preferred on3/5, MMS on2/5 (both agenda phrases). The user reports **postpone mispronounced in both**. No numerical ratings or overall production acceptance; production remains6fa6e2f. Next: investigate postpone and prepare targeted comparison before any voice promotion. [Structured record](research/phoneme-human-listening-2026-11-02.json). No new synthesis/paid calls.

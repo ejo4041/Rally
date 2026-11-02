@@ -33,3 +33,5 @@ Research files preserve source attribution and distinguish documented capability
 [Phoneme prototype measurements](research/phoneme-prototype-results-2026-11-02.json): pinned candidate, all 80 real local synthesis clips, cold/warm timings, integration scope and pending human listening.
 
 [Laptop continuation handoff — November 2](laptop-handoff-2026-11-02.md): current source/deployment, listening archive transfer, test evidence, next actions and operating constraints.
+
+- [November 2 human voice listening feedback](phoneme-listening-feedback-2026-11-02.md)
