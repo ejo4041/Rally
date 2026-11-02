@@ -181,3 +181,7 @@ Zero new Muse calls. Local pinned MMS generated a same-text before/after pair an
 ## Local pronunciation reference follow-up — November 1
 
 Zero new Muse calls. A pinned local CMU reference and model-specific grapheme corrections prepared the revised MMS narration without speech API charges. One new non-retrying hosted Seamless sample generated8.48seconds, uncached, first PCM1.505seconds. **AWS infrastructure cost remains unknown**, separate from Muse. [Measurements](pronunciation-reference-2026-11-01.json). Tracked Muse remains **$5.33846965**; conditional unverified-$150 remainder **$144.66153035**, excluding unverified unrelated runtime activity. No platform join or final submission.
+
+## Selected Jobs speech pilot — November 2
+
+Three production-adapter Muse ASR calls:45s discovery **$0.00225000**,13.4s original clip **$0.00065000**,6.496375s MMS clip **$0.00030000**; conservative whole sent-or-processed-second estimates. [Results](jobs-tts-pilot-2026-11-02.json). Batch **$0.00320000**, unknown0/running0. Tracked cumulative **$5.34166965**; conditional unverified-$150 remainder **$144.65833035**, excluding unverified unrelated activity. One failed Seamless request retains **unknown AWS infrastructure cost**; no automatic retry. Local MMS has no API fee. The selected21-word comparison uses a documented podcast recording of the Stanford speech; YouTube audio identity is unverified. No meeting join, upload, production restart or final submission.

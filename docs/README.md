@@ -23,3 +23,5 @@ Research files preserve source attribution and distinguish documented capability
 [Local pronunciation reference](pronunciation-reference.md) · [Speech pronunciation and pacing](speech-naturalness.md) · [Long-turn source windows](long-turn-handling.md) · [Bounded real-provider endurance](provider-endurance.md).
 
 [TTS evaluation methods and comparison plan](tts-evaluation.md) distinguishes listener naturalness, pronunciation, intelligibility and live latency.
+
+[Measured Steve Jobs speech pilot](jobs-tts-pilot.md): paired original/MMS recognition, timing diagnostics and private blind listening page; hosted speech failed and naturalness ratings remain pending.

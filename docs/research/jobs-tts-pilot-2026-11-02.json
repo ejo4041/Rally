@@ -1,0 +1,245 @@
+{
+  "referenceSource": {
+    "youtube": "https://www.youtube.com/watch?v=UF8uR6Z6KLc",
+    "transcript": "https://news.stanford.edu/stories/2005/06/youve-got-find-love-jobs-says",
+    "actualMediaPage": "https://grad-speeches.podigee.io/1-steve-jobs-stanford-university-2005",
+    "actualMedia": "https://audio.podigee-cdn.net/1539-m-86fce7541d53a4ce40d3418d4fbd4aff.mp3?source=web_download&dl=1",
+    "offsetSeconds": 21.2,
+    "durationSeconds": 13.4,
+    "youtubeAudioIdentityVerified": false
+  },
+  "naturalnessMOS": null,
+  "naturalnessReason": "No human listening ratings collected.",
+  "conditions": [
+    {
+      "name": "Original recording",
+      "audio": {
+        "durationSeconds": 13.4,
+        "aboveThresholdSpanSeconds": 13.34,
+        "thresholdDBFS": -35,
+        "internalLowEnergyRunsAtLeast150ms": [
+          {
+            "startSeconds": 0.44,
+            "durationSeconds": 0.18
+          },
+          {
+            "startSeconds": 0.8,
+            "durationSeconds": 0.26
+          },
+          {
+            "startSeconds": 1.12,
+            "durationSeconds": 0.26
+          },
+          {
+            "startSeconds": 1.56,
+            "durationSeconds": 4.26
+          },
+          {
+            "startSeconds": 6.28,
+            "durationSeconds": 0.48
+          },
+          {
+            "startSeconds": 10.7,
+            "durationSeconds": 1.32
+          }
+        ],
+        "lowEnergyFraction": 0.5776119402985075,
+        "clippedSampleFraction": 0.0,
+        "peakDBFS": -3.4779342570028113,
+        "referenceWordsPerMinute": 94.4527736131934,
+        "scope": "20ms mono16k analysis; low energy is not guaranteed silence and applause/noise is not classified as speech."
+      },
+      "intelligibility": {
+        "referenceWords": 21,
+        "hypothesisWords": 21,
+        "wordErrors": 0,
+        "wer": 0.0,
+        "errors": [],
+        "interpretation": "Recognizer-dependent intelligibility proxy; not acoustic pronunciation accuracy or naturalness."
+      },
+      "usage": {
+        "calls": 1,
+        "knownCost": 0.00065,
+        "unknown": 0,
+        "running": 0,
+        "rows": [
+          {
+            "id": "ffc61e57-4add-4c31-98bd-50a45ae82c75",
+            "at": 1793578552981,
+            "kind": "transcription",
+            "model": "muse-voice-transcribe-1.0",
+            "adapter": "meta-realtime-asr",
+            "pricing": {
+              "usdPerAudioHour": 0.18
+            },
+            "sessionId": "voyager/duplex/6DE0DF7351B644A59A0A84B4AE22E0E3",
+            "sentSeconds": 13.4,
+            "processedMs": 13440,
+            "costBasis": "conservative_sent_or_processed_seconds",
+            "cost": 0.00065,
+            "status": "known"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Rally local MMS",
+      "audio": {
+        "durationSeconds": 6.496375,
+        "aboveThresholdSpanSeconds": 6.08,
+        "thresholdDBFS": -35,
+        "internalLowEnergyRunsAtLeast150ms": [
+          {
+            "startSeconds": 0.78,
+            "durationSeconds": 0.6
+          },
+          {
+            "startSeconds": 1.54,
+            "durationSeconds": 0.18
+          }
+        ],
+        "lowEnergyFraction": 0.27692307692307694,
+        "clippedSampleFraction": 0.0,
+        "peakDBFS": -1.3413659621011496,
+        "referenceWordsPerMinute": 207.23684210526315,
+        "scope": "20ms mono16k analysis; low energy is not guaranteed silence and applause/noise is not classified as speech."
+      },
+      "intelligibility": {
+        "referenceWords": 21,
+        "hypothesisWords": 21,
+        "wordErrors": 0,
+        "wer": 0.0,
+        "errors": [],
+        "interpretation": "Recognizer-dependent intelligibility proxy; not acoustic pronunciation accuracy or naturalness."
+      },
+      "usage": {
+        "calls": 1,
+        "knownCost": 0.00030000000000000003,
+        "unknown": 0,
+        "running": 0,
+        "rows": [
+          {
+            "id": "3767fc52-708e-4a46-88c5-e26f8bb4a301",
+            "at": 1793578572370,
+            "kind": "transcription",
+            "model": "muse-voice-transcribe-1.0",
+            "adapter": "meta-realtime-asr",
+            "pricing": {
+              "usdPerAudioHour": 0.18
+            },
+            "sessionId": "voyager/duplex/5F789F3823C745AA8A12807FE9F8BE5A",
+            "sentSeconds": 6.5,
+            "processedMs": 6560,
+            "costBasis": "conservative_sent_or_processed_seconds",
+            "cost": 0.00030000000000000003,
+            "status": "known"
+          }
+        ]
+      }
+    }
+  ],
+  "at": "2026-11-02T00:17:39.644897+00:00",
+  "scope": "21-word pilot using podcast copy of Jobs Stanford address, not an exact verified YouTube download.",
+  "synthesis": {
+    "mms": {
+      "model": "facebook/mms-tts-eng",
+      "revision": "c71de0fe7204c83f1c10820a7d696d0b450048ba",
+      "seconds": 6.496375,
+      "loadMs": 3027.288684,
+      "wholeAudioReadyMs": 1859.2687720000004,
+      "streaming": false,
+      "phrases": [
+        {
+          "text": "Thank you.",
+          "startSeconds": 0,
+          "endSeconds": 0.8746875,
+          "pauseMs": 300
+        },
+        {
+          "text": "I'm honored to be with you today for your commencement from one of the finest universities in the world.",
+          "startSeconds": 1.1746875,
+          "endSeconds": 6.496375,
+          "pauseMs": 0
+        }
+      ],
+      "apiCalls": 0
+    },
+    "hostedSeamless": {
+      "state": "failed",
+      "cost": null,
+      "billing": "AWS infrastructure unknown",
+      "requests": 1,
+      "error": "Provider request failed; adapter HTTP status 502; upstream response status not retained"
+    }
+  },
+  "listenerReview": {
+    "file": "artifacts/feedback/jobs-tts-pilot/listening.html",
+    "ratingsCollected": 0,
+    "normalizations": [
+      {
+        "label": "A",
+        "targetLUFS": -24,
+        "gainDB": -5.739999999999998,
+        "measuredOutputLUFS": -23.99,
+        "method": "Constant gain only; pitch, timing and dynamics preserved."
+      },
+      {
+        "label": "B",
+        "targetLUFS": -24,
+        "gainDB": -0.7800000000000011,
+        "measuredOutputLUFS": -24.0,
+        "method": "Constant gain only; pitch, timing and dynamics preserved."
+      }
+    ]
+  },
+  "cost": {
+    "museCalls": 3,
+    "knownMuseBatchUSD": "0.00320000",
+    "trackedCumulativeMuseUSD": "5.34166965",
+    "conditionalUnverified150DollarGrantRemainderUSD": "144.65833035",
+    "unknownMuse": 0,
+    "runningMuse": 0,
+    "awsRequests": 1,
+    "awsCost": null,
+    "awsState": "Failed provider request; billing unknown, no retry.",
+    "actualBillingOrGrantVerified": false
+  },
+  "sourceFileSHA256": "ffd53d9b60abbdd9ba3d48ec60de1f24bad811ad77ad109f28b1d0a84cb362aa",
+  "clipHashes": {
+    "original": "e5dca691ee13e9e2b865429529e81c5853cc14fc3d7034ab64d54a9fe34e4008",
+    "mms": "b4e63b6009f25bc6b6bc8a00a63fd5bcb3847ef0cb8249d20e4ff57eef0a81bf"
+  },
+  "noProductionChanges": true,
+  "noSpeakerCloning": true,
+  "submitted": false,
+  "discoveryASRUsage": {
+    "calls": 1,
+    "knownCost": 0.00225,
+    "unknown": 0,
+    "running": 0,
+    "rows": [
+      {
+        "id": "f8f334dd-26bd-4e9b-a0e4-2c3dd70d9d84",
+        "at": 1793578484907,
+        "kind": "transcription",
+        "model": "muse-voice-transcribe-1.0",
+        "adapter": "meta-realtime-asr",
+        "pricing": {
+          "usdPerAudioHour": 0.18
+        },
+        "sessionId": "voyager/duplex/BD4640A847184E1E97A9DFCA2C084D63",
+        "sentSeconds": 45,
+        "processedMs": 45040,
+        "costBasis": "conservative_sent_or_processed_seconds",
+        "cost": 0.00225,
+        "status": "known"
+      }
+    ]
+  },
+  "verification": {
+    "offlineMetricTestsPassed": 4,
+    "apiTypecheck": true,
+    "listenerPageBrowserSmoke": true,
+    "listenerRatingsCollected": 0
+  }
+}

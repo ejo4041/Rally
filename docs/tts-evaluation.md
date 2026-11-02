@@ -35,3 +35,7 @@ Word/phone alignment must be validated on these voices before use as an automate
 Start with20–30short utterances and a small blind pilot, for example5–10listeners if available. Those are engineering starting points, not an ITU-mandated sample size or sufficient evidence for universal claims. Record accent/language, playback environment, rater count, clip count, failures and uncertainty. Report MOS and A/B preference separately from the automatic diagnostics. Reserve a held-out subset. Separate demo narration, local meeting MMS and actual hosted Seamless results.
 
 Store source/derived recordings privately and publish only consented excerpts and sanitized aggregate results. Use the source video as a natural-speech baseline and prosody guide; no identity similarity target is required. Await a selected clip or source before generating a real comparison. No score has yet been computed for a video comparison.
+
+## First selected-source pilot
+
+The user authorized selecting a public Steve Jobs video. [November2 pilot](jobs-tts-pilot.md) uses an explicitly identified podcast copy of the same Stanford address because YouTube blocked extraction. The short original/MMS comparison has actual WER/timing/audio measurements and a private randomized listening sheet. Human naturalness ratings remain uncollected; the attempted hosted speech request failed without retry. This is an initial21-word pilot, not the proposed full listening study.
