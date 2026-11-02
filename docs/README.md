@@ -25,3 +25,5 @@ Research files preserve source attribution and distinguish documented capability
 [TTS evaluation methods and comparison plan](tts-evaluation.md) distinguishes listener naturalness, pronunciation, intelligibility and live latency.
 
 [Measured Steve Jobs speech pilot](jobs-tts-pilot.md): paired original/MMS recognition, timing diagnostics and private blind listening page; hosted speech failed and naturalness ratings remain pending.
+
+[Scientific TTS improvement protocol](tts-improvement-protocol.md): fixed development/held-out sentences, controlled changes, blind ratings/error labels and proposed quality/latency gates.
