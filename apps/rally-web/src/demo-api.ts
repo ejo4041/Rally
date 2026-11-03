@@ -33,7 +33,7 @@ export async function api<T>(path:string,method='GET',body?:unknown,signal?:Abor
   }
   else if(tail==='/report/retry'){m.report=simulator.report(m);m.reportStatus='ready';m.reportStale=false;result=m;}
   else if(tail==='/report'&&method==='PATCH'){m.reportNotes??=[];m.reportNotes.push({at:Date.now(),text:String(b.note)});result=m;}
-  else if(tail==='/history')result={checks:[],nextCursor:null};
+  else if(tail.startsWith('/checks'))result={items:[],nextCursor:null};
   else if(tail==='/report-shares'&&method==='GET')result=shares.get(m.id)||[];
   else if(tail==='/report-shares'&&method==='POST'){const rows=shares.get(m.id)||[];rows.push({id:crypto.randomUUID(),username:String(b.username)});shares.set(m.id,rows);result={};}
   else if(tail.startsWith('/report-shares/')&&method==='DELETE'){shares.set(m.id,(shares.get(m.id)||[]).filter(r=>r.id!==tail.split('/').at(-1)));result={};}

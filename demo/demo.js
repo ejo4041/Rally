@@ -233,7 +233,7 @@ async function api(path, method = "GET", body, signal) {
       m.reportNotes ??= [];
       m.reportNotes.push({ at: Date.now(), text: String(b.note) });
       result = m;
-    } else if (tail === "/history") result = { checks: [], nextCursor: null };
+    } else if (tail.startsWith("/checks")) result = { items: [], nextCursor: null };
     else if (tail === "/report-shares" && method === "GET") result = shares.get(m.id) || [];
     else if (tail === "/report-shares" && method === "POST") {
       const rows = shares.get(m.id) || [];

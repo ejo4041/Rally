@@ -26,6 +26,7 @@ try{
  await page.locator('#mute').click();const paused=await page.locator('#transcript .turn').count();await page.waitForTimeout(500);assert.equal(await page.locator('#transcript .turn').count(),paused);await page.locator('#mute').click();
  await page.locator('#transcript [data-speaker]').first().click();await page.locator('#speaker-name').fill('<b>Sample host</b>');await page.locator('#speaker-form button[type=submit]').click();await page.locator('#speaker-dialog').waitFor({state:'hidden'});assert.equal(await page.locator('#transcript strong b').count(),0);
  await page.locator('#request-guidance').click();await page.locator('#rally-replies-section').waitFor();
+ await page.locator('#rally-history summary').click();await page.locator('#rally-history-status').filter({hasText:'No checks recorded yet.'}).waitFor();
  await page.locator('#end').click();await page.locator('#report-status').filter({hasText:'Ready'}).waitFor();
  const downloaded=page.waitForEvent('download');await page.locator('#export').click();const download=await downloaded;const file=JSON.parse(await readFile(await download.path(),'utf8'));assert.match(file.provenance,/Synthetic/);assert.ok(file.turns.length);
  await page.evaluate(()=>{window.__printed=false;window.print=()=>{window.__printed=true;};});await page.locator('#export-pdf').click();assert.equal(await page.evaluate(()=>window.__printed),true);
@@ -38,4 +39,6 @@ try{
  await page.locator('#reset-demo').click();await page.locator('#history [data-meeting="demo-1"]').waitFor();assert.equal(await page.locator('#history .history-row').count(),1);
  console.log(JSON.stringify({result:'passed',source:base,requests,consoleErrors:errors,checks:['same workspace/create modal/meeting/report UI','create and prepare','safe text rendering','simulated partial/final transcript','pause/resume replay','speaker correction','Ask Rally reply','end/report','JSON export','mock sharing/revoke','evidence navigation','desktop/mobile','reset','no API/model/WebSocket/media calls']}));
  await context.close();
+ if(process.env.DEMO_PUBLIC_URL){const protectedPage=await browser.newPage();await protectedPage.goto(new URL('/?demo=1',base).href,{waitUntil:'networkidle'});await protectedPage.locator('#auth-form').waitFor();assert.equal(await protectedPage.locator('#workspace').isHidden(),true);assert.equal(await protectedPage.locator('.demo-banner').count(),0);assert.equal(await protectedPage.evaluate(async()=>{const r=await fetch('/api/auth/me');return r.status;}),401);await protectedPage.close();console.log('Regular app remains authenticated even with a demo query parameter.');}
+
 }finally{await browser?.close();await new Promise(r=>server.close(r));}
