@@ -193,3 +193,7 @@ One actual Muse Spark1.3 agenda-preparation request through public HTTPS/MFA pas
 ## Blocked-draft recovery — November 3
 
 The user still saw the saved preparation failure after API continuation was enabled. Two explicitly requested draft-preparation retries succeeded, both drafts now ready with a plan and no error. [Evidence](blocked-draft-recovery-2026-11-03.json). Batch **$0.00720660** across two actual Muse requests, both settled; tracked development cumulative **$5.35182425**; conditional unverified-$150 remainder **$144.64817575**, excluding unverified unrelated runtime activity and unknown costs. Original unknown report row preserved. No automatic report retry or platform join.
+
+## AWS voice operating-hours diagnostic — November 3
+
+One authenticated synthetic-text speech POST returned HTTP503 with the service schedule: daily07:00–19:00America/New_York. [Evidence](voice-service-hours-2026-11-03.json). No audio, no automatic retry, no new Muse calls. AWS infrastructure cost remains unknown and separate from Muse; this failed request is not assumed free. Tracked development Muse remains $5.35182425, conditional unverified-$150 remainder $144.64817575 excluding unrelated runtime activity and unknown costs. Active meeting preserved.

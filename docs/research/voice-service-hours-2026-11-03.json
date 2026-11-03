@@ -1,0 +1,22 @@
+{
+  "at": "2026-11-03T03:22:55.036Z",
+  "configuredAdapter": "seamless-aws",
+  "tokenConfigured": true,
+  "paidEnabled": true,
+  "awsCalls": 1,
+  "museCalls": 0,
+  "httpStatus": 503,
+  "contentType": "application/json",
+  "awsRequestId": "c0775fd3-fb0c-44d7-9f2c-bfe13e7fcca8",
+  "awsErrorType": null,
+  "timeToHeadersMs": 364,
+  "errorBody": "{\"error\":\"Speech service operates daily 7:00\u201319:00 America/New_York\"}",
+  "elapsedMs": 367,
+  "infrastructureCost": "unknown",
+  "scope": "One authenticated short synthetic speech POST directly to the configured AWS endpoint, no automatic retry; no actual audio returned. No server restart or active meeting change.",
+  "finding": "Endpoint reachable; speech unavailable outside declared 07:00\u201319:00 America/New_York service hours. This does not establish the underlying AWS instance power state.",
+  "recentProductionSpeechFailures": 2,
+  "failedAudioBytes": 0,
+  "priorCompletedSpeechAt": "2026-11-02T18:56:39.531Z",
+  "awsManagementAccessAvailable": false
+}
