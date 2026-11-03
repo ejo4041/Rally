@@ -1,3 +1,11 @@
+### Completed: theme / spacing polish deployment
+
+Active release `/srv/hackathon/rally-deployed/releases/a0e3c4a-theme-spacing` (UI3b9e81d, theme metadataa0e3c4a). Branch `fix/theme-and-spacing-polish` mergedmain. Final public theme/keyboard/print test passed on exact release; previous public workflow and48 strict screens passed against identical UI/CSS bundles. Backend byte-identical, API PID755639 never restarted, healthgood, private SQLite backups saved before switches. Normal public app still requires invited account/MFA. No paid calls or real meeting tests.
+
+Final coverage: 20 frontend units/typecheck/build;288 local strict visual states plus48 public =336; complete72second/17participant-turn replay with theme/resize/history stress and stable bounded heap; actual PDF; keyboard/Escape/focus/theme sync/reduced motion; isolated feedback/security/setup/history integration suites, including dark sign-in and named-account report grants/revocation. Chromium automation; no physical Safari/iOS claim. Source, docs and validation scripts pushed to main. Refresh existing tabs to pick up static changes.
+
+[Authoritative polish report](theme-spacing-polish-2026-11-03.md). Private before/after gallery and `validation-summary.json`: `/srv/hackathon/artifacts/theme-polish-20261103/`. Existing video05 and submission preparation remain as before. No additional UI work pending from this request.
+
 ### Theme polish deployment and final browser-color detail
 
 Frontend release `3b9e81d-theme-spacing` deployed after private SQLite backup. Backend byte-identical to previous release; API PID755639 unchanged; API healthy. Public workflow (including protected normal site even with `?demo=1`) passed, followed by48 strict public dark/light screen states with zero page errors, API/socket requests, measured contrast warnings or layout violations. Local matrix288 + public48 =336 checked screenshots. No paid model calls.
