@@ -2,7 +2,7 @@
 
 Rally helps a host turn a decision meeting into clear next steps with reviewable source evidence. Meta models listen, reason and speak while the host controls when Rally participates.
 
-[Open Rally](https://rally.tail703f9e.ts.net/) · [Current handoff](docs/handoff.md) · [Three-minute demo script](docs/demo-script.md) · [API](docs/backend-api.md) · [Documentation](docs/README.md)
+[Try the interactive demo](https://rally.tail703f9e.ts.net/demo.html) · [Run with your own API key](docs/judge-quickstart.md) · [API](docs/backend-api.md) · [Documentation](docs/README.md)
 
 ## Judges: explore without credentials
 
@@ -54,8 +54,8 @@ The current application lives in `apps/rally-api/` and `apps/rally-web/`. The ea
 
 The [three-minute script](docs/demo-script.md) covers Meta transcription, reasoning, speech, host control and evidence review. The current three-minute cut uses human narration and recorded actual UI/Teams footage. The older synthetic replay and the new credential-free interactive sample are separate artifacts. Neither edited video nor scripted playback measures live model latency. [Current video provenance](docs/human-demo-edit-2026-11-02.md).
 
-Rally's application contribution includes meeting state, agenda policy, evidence validation, owner-isolated records, model capability interfaces, controlled speech, Teams transport, visual presence integration, report review/sharing and host controls. Meta models, visual assets, transport/runtime libraries and tools retain their own attribution. The [submission draft](docs/submission-package.md) records remaining access/licensing and contributor verification; final submission is on hold.
+Rally's application contribution includes meeting state, agenda policy, evidence validation, owner-isolated records, model capability interfaces, controlled speech, Teams transport, visual presence integration, report review/sharing and host controls. Meta models, visual assets, transport/runtime libraries and tools retain their own attribution. See [component attribution](THIRD_PARTY_NOTICES.md) and the [maintainer release checklist](docs/source-release-readiness.md) for source, model and artwork provenance.
 
 ## Rehearsal and release preparation
 
-[Monday live-test runbook](docs/monday-live-rehearsal.md) · [Real-footage shot list/edit workflow](docs/demo-live-edit.md) · [Judge access rehearsal](docs/judge-access-rehearsal.md) · [Component notices](THIRD_PARTY_NOTICES.md). The root application license, supplied artwork permission, public source access and final human contributor confirmation remain pending in [source readiness](docs/source-release-readiness.md). Final submission stays on hold.
+[Monday live-test runbook](docs/monday-live-rehearsal.md) · [Real-footage shot list/edit workflow](docs/demo-live-edit.md) · [Judge access rehearsal](docs/judge-access-rehearsal.md) · [Component notices](THIRD_PARTY_NOTICES.md). [Maintainer release checklist](docs/source-release-readiness.md) tracks repository access, contributor confirmation and remaining application/artwork license decisions.
