@@ -1,8 +1,8 @@
 # Judge access rehearsal — draft
 
-App: https://rally.tail703f9e.ts.net/ . Public HTTPS is available; accounts are invitation-only with mandatory MFA. Share an individual non-admin invitation privately through the owner's approved channel. Do not publish activation codes, passwords, authenticator secrets or recovery codes, and do not weaken MFA to simplify a demonstration. Do not create a shared judge account or activate MFA on someone else's behalf.
+App: https://rally.tail703f9e.ts.net/ . Public HTTPS is available; accounts currently require MFA. The owner has now explicitly requested dedicated judge username/password access. This supersedes the earlier internal recommendation against shared judge accounts; that recommendation was not a hackathon rule or an owner prohibition. A non-admin reviewer account and verified password are prepared privately. Its MFA enrollment is still required; the owner is choosing individual MFA accounts versus a temporary judge-only password flow. No global MFA change, factor enrollment on a judge's behalf, private-record grant or administrator reset was made. Keep passwords, activation codes, authenticator secrets and recovery codes out of public materials and Git.
 
-## Owner preparation
+## Individual MFA flow — if selected
 
 In the Admin interface, invite the intended recipient with role user. Invite codes expire; create one near the access rehearsal rather than allowing an unattended invitation to expire before judging. Have the recipient open Rally, choose account activation, set their own password, enroll their own authenticator and save their own recovery codes. No invitation/message is sent automatically by this document. Provide the app URL and these steps separately from any confidential activation material.
 
