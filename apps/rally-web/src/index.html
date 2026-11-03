@@ -275,7 +275,7 @@
                 >
               </div>
               </div>
-              <label id="live-teams-link-label" hidden>Teams invitation<input id="live-teams-link" type="url" aria-describedby="teams-invite-help" placeholder="https://teams.microsoft.com/l/meetup-join/…" /></label>
+              <label id="live-teams-link-label" hidden>Teams invitation<input id="live-teams-link" type="url" autocomplete="off" aria-describedby="teams-invite-help" placeholder="https://teams.microsoft.com/l/meetup-join/…" /></label>
               <p id="teams-invite-help" class="small muted" role="status" hidden></p>
               <p class="small muted">
                 A call tab is host-side capture. Select Rally joins Teams for its animated camera, spoken guidance and agenda display. Rally stays until End, even if this dashboard closes.
@@ -299,7 +299,7 @@
                 transcription session (speaker labels restart; uses Muse)</label
               >
               <div class="actions">
-                <button id="start" class="primary">Start meeting</button
+                <button id="start" class="primary" aria-describedby="join-requirements">Start meeting</button
                 ><button id="check-audio" class="secondary" type="button">
                   Check audio · free
                 </button>
@@ -309,6 +309,7 @@
                   Retry agenda preparation
                 </button>
               </div>
+              <p id="join-requirements" class="notice" role="status" hidden></p>
             </section>
             <div class="meeting-grid">
               <div class="main-column">

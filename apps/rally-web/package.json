@@ -16,7 +16,8 @@
     "test:recovery": "node tests/recovery-browser.mjs",
     "test:browser:capture": "RALLY_TEST_BROWSER_CHAPTER=capture node tests/browser.mjs",
     "test:browser:records": "RALLY_TEST_BROWSER_CHAPTER=records node tests/browser.mjs",
-    "test:history": "node tests/history-navigation.mjs"
+    "test:history": "node tests/history-navigation.mjs",
+    "test:setup": "node tests/meeting-setup.mjs"
   },
   "dependencies": {
     "livekit-client": "2.23.0",
