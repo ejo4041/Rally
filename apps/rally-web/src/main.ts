@@ -421,12 +421,12 @@ function render() {
   button("check-audio").disabled = state.busy || !!state.capture;
   const needsInvite=needsTeamsInvite(), inviteValid=validTeamsInvite();
   input("live-teams-link").required=needsInvite;
-  $("join-greeting-label").hidden=!(DEMO_MODE||input("audio-mode").value==="teams")||m.startedAt!==null;
+  $("join-greeting-label").hidden=!(DEMO_MODE||input("audio-mode").value==="teams");
   const customDemoAgenda=DEMO_MODE&&meetingGreeting(m)!==sampleGreeting;
   input("join-greeting").disabled=state.busy||m.startedAt!==null||customDemoAgenda;
   if(customDemoAgenda)input("join-greeting").checked=false;
   $("join-greeting-help").hidden=$("join-greeting-label").hidden;
-  $("join-greeting-help").textContent=customDemoAgenda?'The prerecorded demo welcome is available for the sample plan.':DEMO_MODE?'Reads the fixed sample agenda once, using prerecorded speech.':'Plays once after joining, using the prepared agenda.';
+  $("join-greeting-help").textContent=customDemoAgenda?'The prerecorded demo welcome is available for the sample plan.':DEMO_MODE?'Reads the fixed sample agenda once, using prerecorded speech.':m.startedAt!==null?'This meeting has already started. Create a new meeting to choose its welcome greeting.':'Off by default. Check the box above to enable the welcome for this meeting.';
   $("teams-invite-help").hidden=!needsInvite;
   $("teams-invite-help").textContent=inviteValid?"Teams invitation ready. Confirm participant consent to join.":"Paste a work/school Teams meeting link to enable joining.";
   button("start").disabled = state.busy || !m.plan || !input("consent").checked || (needsInvite && !inviteValid);

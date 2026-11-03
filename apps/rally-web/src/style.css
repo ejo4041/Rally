@@ -1471,3 +1471,10 @@ html[data-theme="dark"] .rally-card[data-feeling="urgent"] { --feeling:#efa69a; 
 .rally-observation .eyebrow { opacity:1; }
 
 .score strong { color:var(--green); }
+
+/* Keep the opt-in welcome distinct from meeting/feedback consent. */
+#join-greeting-label { margin:16px 0 6px; padding:12px 14px; max-width:44rem; border:1px solid var(--line); border-radius:8px; background:var(--surface-soft); font-size:13px; align-items:flex-start; cursor:pointer; }
+#join-greeting { appearance:auto; width:18px; height:18px; min-width:18px; margin:2px 0 0; flex:0 0 18px; accent-color:var(--green); }
+.greeting-option-detail { display:block; margin-top:3px; font-size:12px; color:var(--muted); }
+#join-greeting-help { margin:6px 0 14px; }
+#join-greeting-label:has(input:disabled) { cursor:default; }
