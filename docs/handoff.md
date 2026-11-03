@@ -1,3 +1,9 @@
+## Demo voice playback — 2026-11-03
+
+Owner authorized pronunciation-test voices for the public demo, preserving UI. Branch `feature/demo-audio`.23generated static clips:17participants (Alex/Sam MMS, Priya FastSpeech2) and6Rally (existing hosted Seamless, four script +two Ask variants). Three underlying voice sources, not four unique speakers. No runtime model/ASR/meeting calls. Same UI, existing Settings checkbox becomes Demo audio. Pause/reset/navigation/End/hidden page stop media; one player, playback-clock captions, Ask interrupts stale guidance, autoplay/missing-file fallback to text.
+
+25units/typecheck/build passed; real media controls/default-autoplay and negative cases passed; full proactive21clip/17turn run at test-only4× passed, report/PDF/reload/theme/resize tested;48strict theme/layout screens and ordinary-app feedback regression passed. Six hosted generation requests HTTP200, AWS costunknown; zeroMuse calls. Local17clips use cached pinned models with APIfee0/infrastructureunknown. [Full record](demo-audio-2026-11-03.md), [sanitized generation accounting](research/demo-audio-generation-2026-11-03.json). Private artifacts `/srv/hackathon/artifacts/demo-audio-20261103/`. No production backend/model config changes. Static deployment pending below.
+
 ### Completed: theme / spacing polish deployment
 
 Active release `/srv/hackathon/rally-deployed/releases/a0e3c4a-theme-spacing` (UI3b9e81d, theme metadataa0e3c4a). Branch `fix/theme-and-spacing-polish` mergedmain. Final public theme/keyboard/print test passed on exact release; previous public workflow and48 strict screens passed against identical UI/CSS bundles. Backend byte-identical, API PID755639 never restarted, healthgood, private SQLite backups saved before switches. Normal public app still requires invited account/MFA. No paid calls or real meeting tests.

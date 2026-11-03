@@ -3,7 +3,7 @@ import {createServer} from 'node:http';
 import {readFile} from 'node:fs/promises';
 import assert from 'node:assert/strict';
 const root=new URL('../../../demo/',import.meta.url);
-const server=createServer(async(req,res)=>{try{const name=new URL(req.url,'http://local').pathname.slice(1)||'index.html';if(!/^[a-zA-Z0-9.\-]+$/.test(name))throw Error();const data=await readFile(new URL(name,root));res.setHeader('Content-Type',name.endsWith('.js')?'text/javascript':name.endsWith('.css')?'text/css':name.endsWith('.svg')?'image/svg+xml':'text/html');res.end(data);}catch{res.writeHead(404).end();}});
+const server=createServer(async(req,res)=>{try{const name=new URL(req.url,'http://local').pathname.slice(1)||'index.html';if(!/^(?:demo-audio\/)?[a-zA-Z0-9.\-]+$/.test(name))throw Error();const data=await readFile(new URL(name,root));res.setHeader('Content-Type',name.endsWith('.wav')?'audio/wav':name.endsWith('.js')?'text/javascript':name.endsWith('.css')?'text/css':name.endsWith('.svg')?'image/svg+xml':'text/html');res.end(data);}catch{res.writeHead(404).end();}});
 await new Promise(r=>server.listen(0,'127.0.0.1',r));
 const base=process.env.DEMO_PUBLIC_URL||`http://127.0.0.1:${server.address().port}/`;
 let browser;

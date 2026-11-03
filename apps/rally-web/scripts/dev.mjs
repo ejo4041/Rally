@@ -42,6 +42,10 @@ const server = createServer(async (req, res) => {
   }
   try {
     const path = new URL(req.url || "/", "http://local").pathname;
+    if(path.startsWith('/demo-audio/')){
+      const name=path.slice('/demo-audio/'.length);if(!/^[a-zA-Z0-9.\-]+$/.test(name)){res.writeHead(404);res.end();return;}
+      const data=await readFile(new URL('../../../demo/demo-audio/'+name,import.meta.url));res.writeHead(200,{'content-type':name.endsWith('.wav')?'audio/wav':'application/json','cache-control':'no-store'});res.end(data);return;
+    }
     const types = {
       "/": "text/html; charset=utf-8",
       "/index.html": "text/html; charset=utf-8",

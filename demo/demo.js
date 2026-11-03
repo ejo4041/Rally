@@ -28,11 +28,252 @@ var init_api_types = __esm({
   }
 });
 
+// src/demo-audio-manifest.ts
+var demoClips;
+var init_demo_audio_manifest = __esm({
+  "src/demo-audio-manifest.ts"() {
+    "use strict";
+    demoClips = {
+      "turn-0": {
+        "file": "turn-0.wav",
+        "text": "Let\u2019s review the cache rollout. The canary is healthy, but we still need to decide whether the release is ready.",
+        "speaker": "Alex",
+        "duration": 7.5446875,
+        "model": "facebook/mms-tts-eng",
+        "revision": "c71de0fe7204c83f1c10820a7d696d0b450048ba",
+        "sha256": "b12f1f257e3f068bd78d97f886f3fedd19f1126094c174d18966973067f8f4dd",
+        "gain": 0.6378557564091731
+      },
+      "turn-1": {
+        "file": "turn-1.wav",
+        "text": "The new cache cut the ninety-fifth percentile response time from four hundred milliseconds to one hundred and eighty in the staging benchmark.",
+        "speaker": "Priya",
+        "duration": 7.9064375,
+        "model": "facebook/fastspeech2-en-ljspeech",
+        "revision": "a3e3e5e2e62bb7ca7514b11aa469e9c5b01a20bf",
+        "sha256": "d33025aab07fcba2854173ae59112c42ce94375f9394d3559d8a6d6a60040f26",
+        "gain": 1.216993962298339
+      },
+      "turn-2": {
+        "file": "turn-2.wav",
+        "text": "The error rate is steady. I would still like a rollback threshold written down before we expand traffic.",
+        "speaker": "Sam",
+        "duration": 7.1251875,
+        "model": "facebook/mms-tts-eng",
+        "revision": "c71de0fe7204c83f1c10820a7d696d0b450048ba",
+        "sha256": "ec278bb3fbe6a53f54f20d555eadd3ff832983351cefdb068ef92f329e5a7c5e",
+        "gain": 0.5563749972497403
+      },
+      "turn-3": {
+        "file": "turn-3.wav",
+        "text": "Good point. The mobile sign-in regression is our remaining blocker. We cannot ship that to customers.",
+        "speaker": "Alex",
+        "duration": 7.2926875,
+        "model": "facebook/mms-tts-eng",
+        "revision": "c71de0fe7204c83f1c10820a7d696d0b450048ba",
+        "sha256": "d4b2282d748a985691a4e5b1f6b758d851c6fa49963257bbc3b3c179d6f9b3f2",
+        "gain": 0.6411502601756414
+      },
+      "turn-4": {
+        "file": "turn-4.wav",
+        "text": "I will fix the mobile sign-in regression by Tuesday and add a regression test to the authentication suite.",
+        "speaker": "Priya",
+        "duration": 5.7005,
+        "model": "facebook/fastspeech2-en-ljspeech",
+        "revision": "a3e3e5e2e62bb7ca7514b11aa469e9c5b01a20bf",
+        "sha256": "35c4a537ed65588913639fd964ff6193b3c3001613ed1703027b89cd87d169ba",
+        "gain": 1.0562782868881349
+      },
+      "turn-5": {
+        "file": "turn-5.wav",
+        "text": "Could someone update the launch checklist? We have not agreed who owns that yet.",
+        "speaker": "Sam",
+        "duration": 4.683125,
+        "model": "facebook/mms-tts-eng",
+        "revision": "c71de0fe7204c83f1c10820a7d696d0b450048ba",
+        "sha256": "f4cb2aeef8e248ec69bb46ff49cdb5998e2aa9431170f84f04231c89597e724f",
+        "gain": 0.656797985810935
+      },
+      "turn-6": {
+        "file": "turn-6.wav",
+        "text": "The regression has an owner and a Tuesday target. Checklist ownership is still open. Should launch depend on the regression passing?",
+        "speaker": "Rally",
+        "duration": 7.32,
+        "model": "facebook/seamless-m4t-v2-large",
+        "revision": null,
+        "sha256": "aedc3d90219bf4d0a03b138884b2e74722b6d4b3f2636be151319d0b4740df45",
+        "gain": 0.6049716030093191
+      },
+      "turn-7": {
+        "file": "turn-7.wav",
+        "text": "Yes. We agree to launch only after the mobile regression passes. We have not chosen a launch date.",
+        "speaker": "Alex",
+        "duration": 7.5231875,
+        "model": "facebook/mms-tts-eng",
+        "revision": "c71de0fe7204c83f1c10820a7d696d0b450048ba",
+        "sha256": "5e0f98cc48f8c570d571cdb81b5e3e568bfc6540c8e7fa1d7d129dfc20d3a958",
+        "gain": 0.6176471392831107
+      },
+      "turn-8": {
+        "file": "turn-8.wav",
+        "text": "Agreed. Keep the launch date open and the checklist owner unassigned until someone accepts it.",
+        "speaker": "Sam",
+        "duration": 5.5606875,
+        "model": "facebook/mms-tts-eng",
+        "revision": "c71de0fe7204c83f1c10820a7d696d0b450048ba",
+        "sha256": "26aa8f7113b077b6c09698dd69c7690b6cffafa208785a409d14ef42b342612f",
+        "gain": 0.7392331185640291
+      },
+      "turn-9": {
+        "file": "turn-9.wav",
+        "text": "For the canary, we can compare the request latency and error budget against the existing release in the same region.",
+        "speaker": "Priya",
+        "duration": 6.49,
+        "model": "facebook/fastspeech2-en-ljspeech",
+        "revision": "a3e3e5e2e62bb7ca7514b11aa469e9c5b01a20bf",
+        "sha256": "a69d8e0dec6a03c5ce84ddaed18b9c638c8bc7d477c92c2bd37845d50e6d3c27",
+        "gain": 1.173344123713724
+      },
+      "turn-10": {
+        "file": "turn-10.wav",
+        "text": "I can write up the rollback thresholds. I need to check the baseline before I can commit to a deadline.",
+        "speaker": "Sam",
+        "duration": 7.382375,
+        "model": "facebook/mms-tts-eng",
+        "revision": "c71de0fe7204c83f1c10820a7d696d0b450048ba",
+        "sha256": "e14c4c8ab68656786ce7e535789e483dbf788afb83ec012372fb1ee09c61649f",
+        "gain": 0.6526854696600964
+      },
+      "turn-11": {
+        "file": "turn-11.wav",
+        "text": "Thanks, Sam. The owner is confirmed, but the deadline is still open. We should not invent one in the notes.",
+        "speaker": "Alex",
+        "duration": 8.08,
+        "model": "facebook/mms-tts-eng",
+        "revision": "c71de0fe7204c83f1c10820a7d696d0b450048ba",
+        "sha256": "0b8cf3cb923ed2e19d5ba55abe188ca04b8997612e01dd93c3d99e5cda723f96",
+        "gain": 0.6546761227591896
+      },
+      "turn-12": {
+        "file": "turn-12.wav",
+        "text": "Did anyone see the new developer conference schedule? The distributed systems session sounds interesting.",
+        "speaker": "Priya",
+        "duration": 6.372125,
+        "model": "facebook/fastspeech2-en-ljspeech",
+        "revision": "a3e3e5e2e62bb7ca7514b11aa469e9c5b01a20bf",
+        "sha256": "d732052df41d4ef611a69a17d2e1160ecbe20d9a404f9df926b23fa0fcc17bf2",
+        "gain": 1.2702507933211924
+      },
+      "turn-13": {
+        "file": "turn-13.wav",
+        "text": "Yes, though let\u2019s save that for later. We still need to check the release gates.",
+        "speaker": "Sam",
+        "duration": 4.6505625,
+        "model": "facebook/mms-tts-eng",
+        "revision": "c71de0fe7204c83f1c10820a7d696d0b450048ba",
+        "sha256": "ca5f040a392d8c3a6fa9a5992d201e044442cf979f0008f3377cc8e68402c0a0",
+        "gain": 0.6320208118830711
+      },
+      "turn-14": {
+        "file": "turn-14.wav",
+        "text": "One release gate is confirmed: the mobile regression must pass. Sam owns the rollback thresholds with no agreed deadline. The launch checklist still needs an owner.",
+        "speaker": "Rally",
+        "duration": 9.06,
+        "model": "facebook/seamless-m4t-v2-large",
+        "revision": null,
+        "sha256": "db1052bd6cf2c951c94327414ed00e30481f3446cb15a38bfbef2d566eb5daa7",
+        "gain": 0.6160368230230487
+      },
+      "turn-15": {
+        "file": "turn-15.wav",
+        "text": "Hey Rally, what did we decide about launch?",
+        "speaker": "Alex",
+        "duration": 2.5955,
+        "model": "facebook/mms-tts-eng",
+        "revision": "c71de0fe7204c83f1c10820a7d696d0b450048ba",
+        "sha256": "6cda69eebb53f137cd096953960fae7e3dbf612cf8c9237d717ab99a7eb3c011",
+        "gain": 0.5373739532935419
+      },
+      "turn-16": {
+        "file": "turn-16.wav",
+        "text": "The team agreed to launch only after the mobile sign-in regression passes. There is no agreed launch date, and the checklist owner remains unconfirmed.",
+        "speaker": "Rally",
+        "duration": 8.06,
+        "model": "facebook/seamless-m4t-v2-large",
+        "revision": null,
+        "sha256": "65202d0139bc1d513fb6f59ce639371ca24b9802df341d055c78d23c5a406ddf",
+        "gain": 0.6119720493770449
+      },
+      "turn-17": {
+        "file": "turn-17.wav",
+        "text": "That matches my understanding. My fix and its regression test are due Tuesday.",
+        "speaker": "Priya",
+        "duration": 4.8395625,
+        "model": "facebook/fastspeech2-en-ljspeech",
+        "revision": "a3e3e5e2e62bb7ca7514b11aa469e9c5b01a20bf",
+        "sha256": "994e5844a9805a4204646e712d5ddf290b02cbad3d7d2da36a31524aba18219f",
+        "gain": 1.1604021843195558
+      },
+      "turn-18": {
+        "file": "turn-18.wav",
+        "text": "I will document the rollback thresholds. The checklist assignment still needs a follow-up.",
+        "speaker": "Sam",
+        "duration": 5.732,
+        "model": "facebook/mms-tts-eng",
+        "revision": "c71de0fe7204c83f1c10820a7d696d0b450048ba",
+        "sha256": "3b4631404a4006268f99abbdaec600b9386c4fe96177d010eb8c6646cf995660",
+        "gain": 0.6206529584637722
+      },
+      "turn-19": {
+        "file": "turn-19.wav",
+        "text": "Exactly. Let\u2019s keep those open questions visible rather than treating them as completed work.",
+        "speaker": "Alex",
+        "duration": 6.30275,
+        "model": "facebook/mms-tts-eng",
+        "revision": "c71de0fe7204c83f1c10820a7d696d0b450048ba",
+        "sha256": "832e07c4a5fa67bd324625ce5823d5d8e3145afe46f3fa5669c9a430b2367cb0",
+        "gain": 0.679616982245045
+      },
+      "turn-20": {
+        "file": "turn-20.wav",
+        "text": "Ready to wrap up: a conditional launch decision, two assigned actions, and two open details. End the meeting when you are ready to review the sample report.",
+        "speaker": "Rally",
+        "duration": 8.64,
+        "model": "facebook/seamless-m4t-v2-large",
+        "revision": null,
+        "sha256": "a0d8d820347445366c0a1e67b92380f21b5c19b8c495c92ed08dc4691d93bf41",
+        "gain": 0.6506736915381311
+      },
+      "ask-early": {
+        "file": "ask-early.wav",
+        "text": "Sample answer: Review the release gates, then confirm owners and deadlines.",
+        "speaker": "Rally",
+        "duration": 4.52,
+        "model": "facebook/seamless-m4t-v2-large",
+        "revision": null,
+        "sha256": "de20e5ae0da80d0c26722cbfa838f7894d93ab64f0ad612ef1bfc69be0165cd4",
+        "gain": 0.6672479578237311
+      },
+      "ask-late": {
+        "file": "ask-late.wav",
+        "text": "Sample answer: Launch depends on the mobile regression passing. Checklist ownership and the launch date remain unresolved.",
+        "speaker": "Rally",
+        "duration": 6.86,
+        "model": "facebook/seamless-m4t-v2-large",
+        "revision": null,
+        "sha256": "68e0c0835bde95f0cdad4c5c2b07538b8f68384948427c29db93226b79fa4b37",
+        "gain": 0.6319054100507618
+      }
+    };
+  }
+});
+
 // src/demo-simulator.ts
 var sampleAgenda, dialogue, DemoSimulator;
 var init_demo_simulator = __esm({
   "src/demo-simulator.ts"() {
     "use strict";
+    init_demo_audio_manifest();
     sampleAgenda = "Review the cache rollout, resolve the mobile sign-in blocker, and agree on launch conditions, owners and next steps.";
     dialogue = [
       ["Alex", "Let\u2019s review the cache rollout. The canary is healthy, but we still need to decide whether the release is ready."],
@@ -63,6 +304,59 @@ var init_demo_simulator = __esm({
       offset = /* @__PURE__ */ new Map();
       gaps = /* @__PURE__ */ new Map();
       serial = 0;
+      playback = null;
+      activeId = null;
+      announced = /* @__PURE__ */ new Set();
+      turnStarted = /* @__PURE__ */ new Map();
+      asks = /* @__PURE__ */ new Map();
+      attachAudio(playback) {
+        this.playback = playback;
+      }
+      visible(id) {
+        if (id === this.activeId) return;
+        this.playback?.stop();
+        this.activeId = id;
+      }
+      pauseReplay(id, paused) {
+        if (paused) {
+          const m = this.records.get(id);
+          if (m) m.speechStatus = null;
+          this.muted.add(id);
+          if (this.activeId === id) this.playback?.pause();
+        } else {
+          this.muted.delete(id);
+          this.playback?.resume();
+        }
+      }
+      speech(m, replyId, text, status) {
+        if (!this.playback?.enabled) {
+          m.speechStatus = null;
+          return;
+        }
+        m.speechStatus = { id: replyId, interventionId: replyId, epoch: m.epoch, at: this.now(), destination: "browser", text, state: status.failed ? "failed" : status.done ? "completed" : status.audible ? "playing" : "preparing", ...status.failed ? { error: "Prerecorded audio unavailable; text replay continues." } : {}, playedMs: status.playedMs };
+      }
+      requestGuidance(m) {
+        const i = this.cursor.get(m.id) || 0;
+        if (dialogue[i]?.[0] === "Rally") {
+          this.cursor.set(m.id, i + 1);
+          this.offset.set(m.id, 0);
+          this.playback?.stop();
+        }
+        const early = m.turns.length < 8, asset = early ? "ask-early" : "ask-late";
+        const text = demoClips[asset].text;
+        const reply = this.reply(m, text);
+        this.asks.set(m.id, { key: reply.id, asset, replyId: reply.id });
+      }
+      dismiss(m) {
+        this.asks.delete(m.id);
+        const i = this.cursor.get(m.id) || 0;
+        if (dialogue[i]?.[0] === "Rally") {
+          this.cursor.set(m.id, i + 1);
+          this.offset.set(m.id, 0);
+        }
+        if (this.activeId === m.id) this.playback?.stop();
+        if (m.speechStatus) m.speechStatus = { ...m.speechStatus, state: "canceled", at: this.now() };
+      }
       reportDue = /* @__PURE__ */ new Map();
       muted = /* @__PURE__ */ new Set();
       now;
@@ -86,6 +380,7 @@ var init_demo_simulator = __esm({
         return { objective: m.agenda, durationMinutes: m.durationMinutes, wrapMinutes: wrap, topics: [{ id: "readiness", title: "Readiness and performance", outcome: "Review the fictional cache rollout evidence.", minutes: part, status: "pending" }, { id: "blockers", title: "Blockers and release gates", outcome: "Confirm the sign-in blocker and launch condition.", minutes: part, status: "pending" }, { id: "owners", title: "Owners and next steps", outcome: "Distinguish assigned work from unresolved details.", minutes: part, status: "pending" }] };
       }
       start(m) {
+        this.activeId = m.id;
         m.phase = "live";
         m.startedAt = this.now();
         m.epoch++;
@@ -102,7 +397,24 @@ var init_demo_simulator = __esm({
             m.report = this.report(m);
             m.reportStatus = "ready";
           }
-          if (m.phase !== "live" || this.muted.has(m.id)) continue;
+          if (m.phase !== "live" || this.playback && this.activeId !== m.id) continue;
+          if (this.muted.has(m.id)) {
+            this.playback?.pause();
+            continue;
+          }
+          this.playback?.resume();
+          const ask = this.asks.get(m.id);
+          if (ask) {
+            if (m.paused) {
+              this.asks.delete(m.id);
+              this.playback?.stop();
+            } else if (this.playback) {
+              const clip2 = demoClips[ask.asset], status2 = this.playback.progress(ask.key, clip2);
+              this.speech(m, ask.replyId, clip2.text, status2);
+              if (!status2.done) continue;
+              this.asks.delete(m.id);
+            } else this.asks.delete(m.id);
+          }
           const i = this.cursor.get(m.id) || 0, entry = dialogue[i];
           if (!entry) {
             m.progress = "Sample conversation complete. End meeting to review the report.";
@@ -111,6 +423,7 @@ var init_demo_simulator = __esm({
           if (entry[0] === "Rally" && (m.paused || m.moderationMode === "passive" && i !== 16 || m.moderationMode === "balanced" && i === 14)) {
             this.cursor.set(m.id, i + 1);
             this.offset.set(m.id, 0);
+            this.playback?.stop();
             continue;
           }
           const gap = this.gaps.get(m.id) || 0;
@@ -118,30 +431,46 @@ var init_demo_simulator = __esm({
             this.gaps.set(m.id, gap - 1);
             continue;
           }
-          const n = (this.offset.get(m.id) || 0) + 8;
+          const key = m.id + "-turn-" + i, clip = demoClips["turn-" + i];
+          let status;
+          if (this.playback && !this.turnStarted.has(key)) this.turnStarted.set(key, this.now());
+          if (this.playback) status = this.playback.progress(key, clip, (this.offset.get(m.id) || 0) / entry[1].length);
+          const n = status ? Math.floor(status.fraction * entry[1].length) : (this.offset.get(m.id) || 0) + 8;
           this.offset.set(m.id, n);
-          if (n >= entry[1].length) {
-            if (entry[0] === "Rally") this.reply(m, entry[1]);
-            else this.addTurn(m, i, entry[0], entry[1]);
+          if (entry[0] === "Rally" && !this.announced.has(key)) {
+            this.reply(m, entry[1]);
+            this.announced.add(key);
+          }
+          if (entry[0] === "Rally" && status) {
+            const reply = m.interventions.at(-1);
+            this.speech(m, reply.id, entry[1], status);
+          }
+          if (status?.done || !status && n >= entry[1].length) {
+            if (entry[0] !== "Rally") this.addTurn(m, i, entry[0], entry[1], this.turnStarted.get(key));
             this.cursor.set(m.id, i + 1);
             this.offset.set(m.id, 0);
-            this.gaps.set(m.id, 4);
+            this.gaps.set(m.id, 3);
           }
         }
       }
-      addTurn(m, i, speaker, text) {
-        m.turns.push({ id: m.id + "-turn-" + i, sessionId: "sample", turnId: i, revision: 1, text, speaker: "sample:" + ({ Alex: "A", Priya: "B", Sam: "C" }[speaker] || "A"), startMs: i * 6e3, endMs: i * 6e3 + 5e3 });
+      addTurn(m, i, speaker, text, at) {
+        m.turns.push({ id: m.id + "-turn-" + i, sessionId: "sample", turnId: i, revision: 1, text, speaker: "sample:" + ({ Alex: "A", Priya: "B", Sam: "C" }[speaker] || "A"), startMs: at !== void 0 ? Math.max(0, at - (m.startedAt ?? at)) : i * 6e3, endMs: at !== void 0 ? Math.max(0, this.now() - (m.startedAt ?? at)) : i * 6e3 + 5e3 });
         m.progress = `Sample turn ${i + 1} of ${dialogue.length} \xB7 fictional release readiness discussion`;
         if (m.plan) {
           m.plan.topics.forEach((t, j) => t.status = j < Math.floor(i / 7) ? "done" : j === Math.min(2, Math.floor(i / 7)) ? "active" : "pending");
         }
       }
       reply(m, text) {
-        m.interventions.push({ id: m.id + "-reply-" + m.interventions.length, at: this.now(), text, kind: "checkpoint" });
+        const item = { id: m.id + "-reply-" + m.interventions.length, at: this.now(), text, kind: "checkpoint" };
+        m.interventions.push(item);
         m.assessment = { health: 4, reason: "Scripted sample: release condition clear; some action details remain unresolved.", issues: ["missing_action_details"], evidence: m.turns.slice(-2).map((t) => t.id), progress: m.progress, intervention: { text, kind: "checkpoint", evidence: m.turns.slice(-2).map((t) => t.id) }, plan: null, planReason: "" };
         m.assessmentAt = this.now();
+        return item;
       }
       end(m) {
+        if (this.activeId === m.id) this.playback?.stop();
+        this.asks.delete(m.id);
+        if (m.speechStatus) m.speechStatus = { ...m.speechStatus, state: "canceled", at: this.now() };
         m.phase = "ended";
         m.endedAt = this.now();
         m.reportStatus = "processing";
@@ -219,9 +548,13 @@ async function api(path, method = "GET", body, signal) {
       result = m;
     } else if (tail === "/sharing") result = { enabled: false };
     else if (tail === "/commands") {
-      if (b.type === "pause") m.paused = true;
+      if (b.type === "pause") {
+        m.paused = true;
+        simulator.dismiss(m);
+      }
       if (b.type === "resume") m.paused = false;
-      if (b.type === "request_guidance" && !m.paused) simulator.reply(m, "Sample answer: " + (m.turns.length < 8 ? "Review the release gates, then confirm owners and deadlines." : "Launch depends on the mobile regression passing. Checklist ownership and the launch date remain unresolved."));
+      if (b.type === "request_guidance" && !m.paused) simulator.requestGuidance(m);
+      if (b.type === "dismiss") simulator.dismiss(m);
       if (b.type === "voice_on" || b.type === "voice_off") m.speechEnabled = b.type === "voice_on";
       result = m;
     } else if (tail === "/report/retry") {
@@ -257,6 +590,153 @@ var init_demo_api = __esm({
     clone = (value) => structuredClone(value);
     shares = /* @__PURE__ */ new Map();
     wait = () => new Promise((resolve) => setTimeout(resolve, 220));
+  }
+});
+
+// src/demo-audio.ts
+var demo_audio_exports = {};
+__export(demo_audio_exports, {
+  DemoAudio: () => DemoAudio
+});
+var DemoAudio;
+var init_demo_audio = __esm({
+  "src/demo-audio.ts"() {
+    "use strict";
+    DemoAudio = class {
+      notify;
+      element;
+      clock;
+      generation = 0;
+      paused = false;
+      notified = false;
+      allowed = true;
+      positions = /* @__PURE__ */ new Map();
+      active = null;
+      constructor(notify = () => {
+      }, element, clock = () => performance.now()) {
+        this.notify = notify;
+        this.element = element ?? new Audio();
+        this.element.preload = "auto";
+        this.clock = clock;
+      }
+      get enabled() {
+        return this.allowed;
+      }
+      unlock() {
+        if (this.active) {
+          this.active.failed = false;
+          if (!this.paused && this.allowed) this.play(this.generation);
+          return;
+        }
+        const generation = ++this.generation;
+        this.element.src = "demo-audio/silence.wav";
+        void this.element.play().then(() => {
+          if (generation === this.generation && !this.active) this.element.pause();
+        }).catch(() => {
+        });
+      }
+      play(generation) {
+        void this.element.play().catch(() => {
+          if (generation !== this.generation || !this.active || this.paused || !this.allowed) return;
+          this.fail();
+        });
+      }
+      fail() {
+        if (!this.active || this.active.failed) return;
+        this.active.failed = true;
+        this.element.pause();
+        if (!this.notified) this.notify("Demo audio is unavailable or blocked by your browser. The sample continues as text. Enable Demo audio in Settings to try again.");
+        this.notified = true;
+      }
+      progress(key, clip, from = 0) {
+        if (this.active?.key !== key) {
+          this.save();
+          this.element.pause();
+          const generation = ++this.generation;
+          const fraction = Math.max(0, Math.min(0.999, Math.max(from, this.positions.get(key) || 0)));
+          this.active = { key, clip, fraction, last: this.clock(), began: this.clock(), failed: false, done: false };
+          this.element.onloadedmetadata = () => {
+            if (generation === this.generation && this.active) {
+              this.element.currentTime = this.active.fraction * (Number.isFinite(this.element.duration) ? this.element.duration : clip.duration);
+            }
+          };
+          this.element.onended = () => {
+            if (generation === this.generation && this.active) {
+              this.active.fraction = 1;
+              this.active.done = true;
+            }
+          };
+          this.element.onerror = () => {
+            if (generation === this.generation) this.fail();
+          };
+          this.element.src = "demo-audio/" + clip.file;
+          this.element.load();
+          if (this.allowed && !this.paused) this.play(generation);
+        }
+        const a = this.active, now = this.clock(), elapsed = Math.max(0, now - a.last);
+        a.last = now;
+        if (!this.paused) {
+          if (!this.allowed || a.failed) a.fraction = Math.min(1, a.fraction + elapsed / (clip.duration * 1e3));
+          else if (this.element.currentTime > 0) a.fraction = Math.max(a.fraction, Math.min(1, this.element.currentTime / (Number.isFinite(this.element.duration) && this.element.duration > 0 ? this.element.duration : clip.duration)));
+          if (this.allowed && !a.failed && this.element.currentTime === 0 && now - a.began > 8e3) this.fail();
+        }
+        a.done = a.done || a.fraction >= 1;
+        return { fraction: a.fraction, done: a.done, audible: this.allowed && !this.paused && !a.failed && !this.element.paused && !a.done, failed: a.failed, playedMs: a.fraction * clip.duration * 1e3 };
+      }
+      save() {
+        if (this.active) {
+          if (this.allowed && !this.active.failed && this.element.currentTime > 0) this.active.fraction = Math.max(this.active.fraction, Math.min(1, this.element.currentTime / (Number.isFinite(this.element.duration) && this.element.duration > 0 ? this.element.duration : this.active.clip.duration)));
+          this.positions.set(this.active.key, this.active.fraction);
+        }
+      }
+      pause() {
+        this.paused = true;
+        this.element.pause();
+        if (this.active) this.active.last = this.clock();
+      }
+      resume() {
+        if (!this.paused) return;
+        this.paused = false;
+        if (this.active) {
+          this.active.last = this.clock();
+          this.active.began = this.clock();
+          if (this.allowed && !this.active.failed && !this.active.done) this.play(this.generation);
+        }
+      }
+      setEnabled(enabled) {
+        this.allowed = enabled;
+        if (this.active) {
+          this.active.last = this.clock();
+          if (enabled) {
+            const retry = this.active.failed;
+            this.active.failed = false;
+            this.active.began = this.clock();
+            this.notified = false;
+            if (retry) this.element.load();
+            try {
+              this.element.currentTime = this.active.fraction * this.active.clip.duration;
+            } catch {
+            }
+            if (!this.paused) this.play(this.generation);
+          } else this.element.pause();
+        }
+      }
+      stop() {
+        this.save();
+        this.generation++;
+        this.active = null;
+        this.element.onended = null;
+        this.element.onerror = null;
+        this.element.onloadedmetadata = null;
+        this.element.pause();
+        this.element.removeAttribute("src");
+        this.element.load();
+      }
+      dispose() {
+        this.stop();
+        this.positions.clear();
+      }
+    };
   }
 });
 
@@ -60881,6 +61361,7 @@ var escape3 = (v) => String(v ?? "").replace(
 var label = (v) => v.replaceAll("_", " ").replace(/^./, (c) => c.toUpperCase());
 var demoRuntime = null;
 var demoDismissed = "";
+var demoAudio = null;
 var state = {
   user: null,
   history: [],
@@ -60953,6 +61434,7 @@ function showAuth() {
   $4("workspace").hidden = true;
 }
 async function signOutLocal() {
+  demoRuntime?.simulator.visible(null);
   meetingLayout.clear();
   reportSharing.clear();
   $4("rally-replies").replaceChildren();
@@ -61040,6 +61522,7 @@ async function loadHistory() {
   ).join("");
 }
 function home() {
+  demoRuntime?.simulator.visible(null);
   speech.cancel();
   audioCheck.stop();
   const media = state.media;
@@ -61103,7 +61586,7 @@ async function route() {
   state.ending = false;
   input("restart-session").checked = false;
   state.status = meeting.phase === "live" ? "This meeting is active on the server. Audio is off here; reconnect explicitly." : "";
-  state.muted = false;
+  state.muted = DEMO_MODE ? demoRuntime?.simulator.muted.has(id) ?? false : false;
   input("consent").checked = false;
   input("live-teams-link").value = "";
   mascot.hide();
@@ -61125,6 +61608,7 @@ async function refresh() {
     const meeting = await api(`/meetings/${session.meeting.id}`);
     if (state.session !== session) return;
     session.replace(meeting);
+    if (DEMO_MODE) session.meeting.speechStatus = meeting.speechStatus;
     if (meeting.phase !== "live") stopCapture();
     if (meeting.phase === "ended" && meeting.reportStatus !== "processing" && state.media) {
       const media = state.media;
@@ -61184,6 +61668,7 @@ function render() {
     "mobile-logout"
   ])
     button(id).disabled = state.busy;
+  if (DEMO_MODE) demoRuntime?.simulator.visible(session && document.visibilityState === "visible" ? session.meeting.id : null);
   if (!session) return;
   const m = session.meeting, live = m.phase === "live", pre = ["draft", "ready", "interrupted"].includes(m.phase) || live && !state.capture && !state.media && !DEMO_MODE;
   $4("meeting-title").textContent = m.title;
@@ -61259,6 +61744,10 @@ function render() {
   $4("assessment-note").textContent = m.assessment ? `${m.assessmentAt ? "Assessed " + Math.floor((Date.now() - m.assessmentAt) / 1e3) + "s ago \xB7 " : ""}${m.assessment.reason}${m.assessment.issues.length ? " \xB7 " + m.assessment.issues.map(label).join(", ") : ""}` : "";
   updatePresence(m);
   rallyDisplay.render(m);
+  if (DEMO_MODE) {
+    if (m.speechStatus) rallyDisplay.playback(m.speechStatus.id, m.speechStatus.playedMs || 0, m.speechStatus.state === "playing");
+    else rallyDisplay.stop();
+  }
   const replyBox = $4("rally-replies"), replyKey = JSON.stringify([m.interventions, m.speechStatus]);
   if (replyBox.dataset.replyKey !== replyKey) {
     const atBottom = replyBox.scrollHeight - replyBox.scrollTop - replyBox.clientHeight < 80;
@@ -61378,6 +61867,7 @@ async function start() {
     return;
   }
   if (DEMO_MODE) {
+    demoAudio?.unlock();
     await perform(async () => {
       mergeMeeting(await api(`/meetings/${state.session.meeting.id}/start`, "POST", {}));
       state.status = "Simulated meeting: fictional transcript and Rally replies. No microphone, meeting or model connection.";
@@ -61538,6 +62028,7 @@ async function end() {
   });
 }
 async function command(type) {
+  if (DEMO_MODE && type === "request_guidance") demoAudio?.unlock();
   if (DEMO_MODE && type === "dismiss") demoDismissed = state.session?.meeting.interventions.at(-1)?.id || "";
   speech.cancel();
   state.media?.stopSpeech(void 0, type !== "request_guidance");
@@ -61701,8 +62192,7 @@ button("prepare").onclick = () => perform(async () => {
 button("mute").onclick = () => {
   state.muted = !state.muted;
   if (DEMO_MODE && demoRuntime && state.session) {
-    if (state.muted) demoRuntime.simulator.muted.add(state.session.meeting.id);
-    else demoRuntime.simulator.muted.delete(state.session.meeting.id);
+    demoRuntime.simulator.pauseReplay(state.session.meeting.id, state.muted);
   }
   state.media?.setMuted(state.muted);
   render();
@@ -61901,6 +62391,13 @@ setupTheme();
 setupActionFeedback();
 if (DEMO_MODE) void (async () => {
   demoRuntime = await Promise.resolve().then(() => (init_demo_api(), demo_api_exports));
+  const { DemoAudio: DemoAudio2 } = await Promise.resolve().then(() => (init_demo_audio(), demo_audio_exports));
+  demoAudio = new DemoAudio2(toast);
+  demoRuntime.simulator.attachAudio(demoAudio);
+  window.addEventListener("pagehide", () => demoAudio?.dispose());
+  document.addEventListener("visibilitychange", () => {
+    demoRuntime?.simulator.visible(document.visibilityState === "visible" ? state.session?.meeting.id ?? null : null);
+  });
   if (location.hash && !/^#(?:meeting|report)\/demo-1$/.test(location.hash)) history.replaceState(null, "", location.pathname + location.search);
   document.body.classList.add("demo-mode");
   const banner = document.createElement("aside");
@@ -61926,9 +62423,9 @@ if (DEMO_MODE) void (async () => {
   createNote.textContent = "Demo mode runs a fictional engineering discussion. You can edit the title and agenda; the scripted conversation remains the cache rollout scenario.";
   form.insertBefore(createNote, form.querySelector("label"));
   for (const option of $4("audio-mode").options) option.textContent += " \xB7 simulated";
-  $4("consent").parentElement.lastChild.textContent = " I understand this is a fictional simulation; no participants or audio are connected.";
+  $4("consent").parentElement.lastChild.textContent = " I understand this is a fictional simulation with prerecorded voices; no real participants or microphone are connected.";
   $4("transcript-label").textContent = "Simulated streaming transcript";
-  $4("rally-replies-section").querySelector("p").textContent = "Scripted Rally replies, shown as part of the simulation. No speech is generated or played.";
+  $4("rally-replies-section").querySelector("p").textContent = "Scripted Rally replies with prerecorded Meta speech, separate from the simulated participant transcript.";
   $4("share-report").textContent = "Simulate report sharing";
   $4("report-sharing-dialog").querySelector("p").textContent = "Simulation only: add or revoke a fictional recipient to explore this dialog. This grants no real account access.";
   $4("export-pdf").textContent = "Print / save PDF";
@@ -61937,7 +62434,14 @@ if (DEMO_MODE) void (async () => {
   printNotice.textContent = "Synthetic sample report. Fictional conversation; no live model analysis.";
   $4("report-panel").prepend(printNotice);
   $4("check-audio").onclick = () => toast("Demo mode does not access audio. Start a simulated meeting instead.");
-  $4("test-voice").onclick = () => toast("Demo mode shows scripted replies without voice playback.");
+  $4("test-voice").onclick = () => toast("Demo mode plays prerecorded Meta voice clips.");
+  const audioToggle = input("spoken-prompts");
+  audioToggle.checked = true;
+  $4("voice-toggle-label").lastChild.textContent = "Demo audio";
+  audioToggle.onchange = () => {
+    demoAudio?.setEnabled(audioToggle.checked);
+    if (audioToggle.checked) demoAudio?.unlock();
+  };
   $4("follow-up-whatsapp").removeAttribute("href");
   $4("follow-up-whatsapp").textContent = "WhatsApp delivery disabled in demo";
   $4("follow-up-whatsapp").addEventListener("click", (e2) => {

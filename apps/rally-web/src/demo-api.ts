@@ -27,8 +27,8 @@ export async function api<T>(path:string,method='GET',body?:unknown,signal?:Abor
   else if(tail==='/moderation'){m.moderationMode=b.mode as RecordView['moderationMode'];result=m;}
   else if(tail==='/sharing')result={enabled:false};
   else if(tail==='/commands'){
-   if(b.type==='pause')m.paused=true;if(b.type==='resume')m.paused=false;
-   if(b.type==='request_guidance'&&!m.paused)simulator.reply(m,'Sample answer: '+(m.turns.length<8?'Review the release gates, then confirm owners and deadlines.':'Launch depends on the mobile regression passing. Checklist ownership and the launch date remain unresolved.'));
+   if(b.type==='pause'){m.paused=true;simulator.dismiss(m);}if(b.type==='resume')m.paused=false;
+   if(b.type==='request_guidance'&&!m.paused)simulator.requestGuidance(m);if(b.type==='dismiss')simulator.dismiss(m);
    if(b.type==='voice_on'||b.type==='voice_off')m.speechEnabled=b.type==='voice_on';result=m;
   }
   else if(tail==='/report/retry'){m.report=simulator.report(m);m.reportStatus='ready';m.reportStale=false;result=m;}

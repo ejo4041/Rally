@@ -3,13 +3,14 @@
   "entry": "apps/rally-web/src/main.ts (demo build with isolated API adapter)",
   "data": "apps/rally-web/src/demo-simulator.ts",
   "build": "node scripts/build.mjs && node scripts/export-demo.mjs",
-  "network": "No API, model, microphone, meeting or recording access. External navigation links require an explicit click.",
+  "network": "Static pages and prerecorded same-origin Meta voice clips only. No runtime API/model/microphone/meeting access. External navigation links require an explicit click.",
   "files": {
-    "demo.html": "d1757576932b2375ad61d56ecdc5ffb6a445de5aad5ebab11fabed0e002a9be0",
-    "demo.js": "d2b66f9c7f3296d61711fa6698dba4ce96a761d3ed92b89a2084504604760198",
-    "demo.css": "0e624597819c1cbd0d1b812c17efaa937a33b6ee5d2dbe41b22326d994602a35",
+    "demo.html": "d11d6ea73e5ee81353a71e0e99437b5b6600851a626edd3e60fba96f95bdb151",
+    "demo.js": "f81f38b3f75c5e48ec7394aecbfbe7f65d961d99e840e4e326a21398b0c967f4",
+    "demo.css": "9932a8583a094af55357cbc400324510184bd3655d393a7e85975475dd354691",
     "style.css": "5015e9e9982f22d06e73453c41c97a96d9833b10e2a93f4695af448fa9e5f1a2",
     "theme-init.js": "7e855638d65cf607e786fb12c0544733683857d8eb6b6ff47f31bb1811b4bc73",
     "favicon.svg": "2fa3ba8c08bf3c0856ccfd9713e3da7bfa3af8b87478a758ff2eb868828e1e3e"
-  }
+  },
+  "audioManifest": "demo-audio/manifest.json"
 }

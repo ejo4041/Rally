@@ -59,3 +59,5 @@ Research files preserve source attribution and distinguish documented capability
 - [Credential-free judge demo and rehearsal](judge-access-rehearsal.md) — portable sample, evidence boundaries and public judge path.
 
 - [Theme and spacing polish / validation](theme-spacing-polish-2026-11-03.md) — dark canvas, responsive spacing, 288 screen checks and complete sample replay.
+
+- [Demo conversation voices](demo-audio-2026-11-03.md) — static Meta speech, playback synchronization, accounting, controls and tests.

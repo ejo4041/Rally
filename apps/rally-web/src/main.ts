@@ -47,6 +47,7 @@ const label = (v: string) =>
   v.replaceAll("_", " ").replace(/^./, (c) => c.toUpperCase());
 let demoRuntime: typeof import("./demo-api.ts") | null = null;
 let demoDismissed = "";
+let demoAudio: import("./demo-audio.ts").DemoAudio | null = null;
 const state = {
   user: null as User | null,
   history: [] as Summary[],
@@ -129,6 +130,7 @@ function showAuth() {
   $("workspace").hidden = true;
 }
 async function signOutLocal() {
+  demoRuntime?.simulator.visible(null);
   meetingLayout.clear();reportSharing.clear();
   $("rally-replies").replaceChildren();delete $("rally-replies").dataset.replyKey;
   disposePresence();
@@ -222,6 +224,7 @@ async function loadHistory() {
     .join("");
 }
 function home() {
+  demoRuntime?.simulator.visible(null);
   speech.cancel();
   audioCheck.stop();
   const media = state.media;
@@ -284,7 +287,7 @@ async function route() {
     meeting.phase === "live"
       ? "This meeting is active on the server. Audio is off here; reconnect explicitly."
       : "";
-  state.muted = false;
+  state.muted = DEMO_MODE ? demoRuntime?.simulator.muted.has(id) ?? false : false;
   input("consent").checked = false;
   input("live-teams-link").value = "";
   mascot.hide();
@@ -306,6 +309,7 @@ async function refresh() {
     const meeting = await api<RecordView>(`/meetings/${session.meeting.id}`);
     if (state.session !== session) return;
     session.replace(meeting);
+    if(DEMO_MODE)session.meeting.speechStatus=meeting.speechStatus;
     if (meeting.phase !== "live") stopCapture();
     if (
       meeting.phase === "ended" &&
@@ -379,6 +383,7 @@ function render() {
     "mobile-logout",
   ])
     button(id).disabled = state.busy;
+  if(DEMO_MODE)demoRuntime?.simulator.visible(session&&document.visibilityState==="visible"?session.meeting.id:null);
   if (!session) return;
   const m = session.meeting,
     live = m.phase === "live",
@@ -483,6 +488,7 @@ function render() {
     : "";
   updatePresence(m);
   rallyDisplay.render(m);
+  if(DEMO_MODE){if(m.speechStatus)rallyDisplay.playback(m.speechStatus.id,m.speechStatus.playedMs||0,m.speechStatus.state==="playing");else rallyDisplay.stop();}
   const replyBox=$("rally-replies"),replyKey=JSON.stringify([m.interventions,m.speechStatus]);
   if(replyBox.dataset.replyKey!==replyKey){const atBottom=replyBox.scrollHeight-replyBox.scrollTop-replyBox.clientHeight<80;replyBox.innerHTML=rallyRepliesHTML(m);replyBox.dataset.replyKey=replyKey;if(atBottom)replyBox.scrollTop=replyBox.scrollHeight;}
   $("rally-replies-section").hidden=!(m.interventions?.length);
@@ -622,7 +628,7 @@ function validTeamsInvite() {
 async function start() {
   if (!state.session || !input("consent").checked || state.busy) return;
   if(needsTeamsInvite() && !validTeamsInvite()) { render();input("live-teams-link").focus();return; }
-  if(DEMO_MODE){await perform(async()=>{mergeMeeting(await api<Meeting>(`/meetings/${state.session!.meeting.id}/start`,"POST",{}));state.status="Simulated meeting: fictional transcript and Rally replies. No microphone, meeting or model connection.";await refresh();});return;}
+  if(DEMO_MODE){demoAudio?.unlock();await perform(async()=>{mergeMeeting(await api<Meeting>(`/meetings/${state.session!.meeting.id}/start`,"POST",{}));state.status="Simulated meeting: fictional transcript and Rally replies. No microphone, meeting or model connection.";await refresh();});return;}
   audioCheck.stop();
   unlockPresenceAudio();
   const session = state.session,
@@ -809,6 +815,7 @@ async function end() {
   });
 }
 async function command(type: string) {
+  if(DEMO_MODE && type==="request_guidance")demoAudio?.unlock();
   if(DEMO_MODE && type==="dismiss")demoDismissed=state.session?.meeting.interventions.at(-1)?.id||"";
   speech.cancel();
   state.media?.stopSpeech(undefined, type !== "request_guidance");
@@ -995,7 +1002,7 @@ button("prepare").onclick = () =>
   });
 button("mute").onclick = () => {
   state.muted = !state.muted;
-  if(DEMO_MODE&&demoRuntime&&state.session){if(state.muted)demoRuntime.simulator.muted.add(state.session.meeting.id);else demoRuntime.simulator.muted.delete(state.session.meeting.id);}
+  if(DEMO_MODE&&demoRuntime&&state.session){demoRuntime.simulator.pauseReplay(state.session.meeting.id,state.muted);}
   state.media?.setMuted(state.muted);
   render();
 };
@@ -1221,6 +1228,8 @@ setupActionFeedback();
 
 if(DEMO_MODE)void (async()=>{
  demoRuntime=await import('./demo-api.ts');
+ const {DemoAudio}=await import('./demo-audio.ts');demoAudio=new DemoAudio(toast);demoRuntime.simulator.attachAudio(demoAudio);
+ window.addEventListener('pagehide',()=>demoAudio?.dispose());document.addEventListener('visibilitychange',()=>{demoRuntime?.simulator.visible(document.visibilityState==='visible'?state.session?.meeting.id??null:null);});
  // Ephemeral records do not survive reload; retain only the preloaded example deep link.
  if(location.hash&&!/^#(?:meeting|report)\/demo-1$/.test(location.hash))history.replaceState(null,'',location.pathname+location.search);
  document.body.classList.add('demo-mode');
@@ -1235,15 +1244,16 @@ if(DEMO_MODE)void (async()=>{
  form.querySelector<HTMLTextAreaElement>('[name=agenda]')!.value=demoRuntime.simulator.records.values().next().value!.agenda;
  const createNote=document.createElement('p');createNote.className='notice';createNote.textContent='Demo mode runs a fictional engineering discussion. You can edit the title and agenda; the scripted conversation remains the cache rollout scenario.';form.insertBefore(createNote,form.querySelector('label'));
  for(const option of $<HTMLSelectElement>('audio-mode').options)option.textContent+=' · simulated';
- $('consent').parentElement!.lastChild!.textContent=' I understand this is a fictional simulation; no participants or audio are connected.';
+ $('consent').parentElement!.lastChild!.textContent=' I understand this is a fictional simulation with prerecorded voices; no real participants or microphone are connected.';
  $('transcript-label').textContent='Simulated streaming transcript';
- $('rally-replies-section').querySelector('p')!.textContent='Scripted Rally replies, shown as part of the simulation. No speech is generated or played.';
+ $('rally-replies-section').querySelector('p')!.textContent='Scripted Rally replies with prerecorded Meta speech, separate from the simulated participant transcript.';
  $('share-report').textContent='Simulate report sharing';
  $('report-sharing-dialog').querySelector('p')!.textContent='Simulation only: add or revoke a fictional recipient to explore this dialog. This grants no real account access.';
  $('export-pdf').textContent='Print / save PDF';
  const printNotice=document.createElement('p');printNotice.className='demo-print-only';printNotice.textContent='Synthetic sample report. Fictional conversation; no live model analysis.';$('report-panel').prepend(printNotice);
  $('check-audio').onclick=()=>toast('Demo mode does not access audio. Start a simulated meeting instead.');
- $('test-voice').onclick=()=>toast('Demo mode shows scripted replies without voice playback.');
+ $('test-voice').onclick=()=>toast('Demo mode plays prerecorded Meta voice clips.');
+ const audioToggle=input('spoken-prompts');audioToggle.checked=true;$('voice-toggle-label').lastChild!.textContent='Demo audio';audioToggle.onchange=()=>{demoAudio?.setEnabled(audioToggle.checked);if(audioToggle.checked)demoAudio?.unlock();};
  $('follow-up-whatsapp').removeAttribute('href');$('follow-up-whatsapp').textContent='WhatsApp delivery disabled in demo';$('follow-up-whatsapp').addEventListener('click',e=>{e.preventDefault();toast('This is a local draft; demo mode does not send messages.');});
  document.querySelectorAll('#meeting .model-attribution').forEach(el=>{const note=document.createElement('small');note.textContent=' · simulated in demo';el.append(note);});
  await signedIn({id:'demo-user',username:'Demo workspace',role:'user'});

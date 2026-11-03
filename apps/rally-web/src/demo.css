@@ -33,3 +33,6 @@
 }
 
 @media print{html:has(body.demo-mode){background:white;color-scheme:light}.demo-mode .meeting-heading{display:block!important}.demo-mode .meeting-heading .actions{display:none!important}.demo-mode .meeting-heading h1{font-size:24px;margin:16px 0 8px}}
+
+/* Reuse the existing Settings voice checkbox; keep the rest of the UI frozen. */
+.demo-mode #voice-toggle-label{display:flex!important}
