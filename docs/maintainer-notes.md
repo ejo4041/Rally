@@ -63,3 +63,6 @@ Research files preserve source attribution and distinguish documented capability
 - [Demo conversation voices](demo-audio-2026-11-03.md) — static Meta speech, playback synchronization, accounting, controls and tests.
 
 - [Optional join welcome](optional-join-greeting-2026-11-03.md) — off-by-default Teams checkbox, prepared agenda, once-only playback and validation.
+
+
+[Merged branch cleanup](branch-cleanup-2026-11-03.md):26remote branches reduced to main, with ancestry checks and recovery hashes; local developer work preserved.

@@ -215,3 +215,8 @@ Reported welcome-control problem on the regular site: source fix23d31f4 on fix/w
 ## README dark-mode media — November 3
 
 User requested the README GIF in dark mode. Recaptured the same fictional portable sample with the actual `rally:appearance` preference set to dark and asserted `data-theme=dark` before all13screenshots. Replaced docs/assets/workspace-tour.gif and the matching still; refreshed provenance hashes. Zero external capture requests or model calls. Documentation checks passed. App code/deployment, repository visibility and numbered demo videos unchanged.
+
+
+## November 3 — merged branch cleanup
+
+[Cleanup audit and recovery refs](branch-cleanup-2026-11-03.md):25fully merged GitHub branches removed atomically with expected-tip checks; only main remains. All local branches/worktrees retained. No unique work, deployment, video or visibility changed.
