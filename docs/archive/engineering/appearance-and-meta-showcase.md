@@ -16,6 +16,6 @@ Artifacts remain on droplet under `apps/rally-web/test-results/showcase-*.png`, 
 
 ## Deployed and merged
 
-Asset release37d5740 active at https://rally.tail703f9e.ts.net/. Backend source was compared byte-for-byte with8054fb5; static symlink switch preserved the running API process and media, with zero restarts. Public real-MFA browser check confirms Light/Dark selection and persisted Dark after reload, closed signup, Meta cards, SVG favicon, wait states, PDF and report grant/revocation; temporary records removed. [Evidence](research/appearance-deployed.json). No model calls/platform joins.
+Asset release37d5740 active at https://rally.tail703f9e.ts.net/. Backend source was compared byte-for-byte with8054fb5; static symlink switch preserved the running API process and media, with zero restarts. Public real-MFA browser check confirms Light/Dark selection and persisted Dark after reload, closed signup, Meta cards, SVG favicon, wait states, PDF and report grant/revocation; temporary records removed. [Evidence](../../research/appearance-deployed.json). No model calls/platform joins.
 
 All previous work and the visual pass are on origin/main. Final documentation/operator check updates are merged as part of the same completion checkpoint. For phone continuation, use the existing droplet Omnigent session/workspace and read current handoff; workspace branch is now polish/meta-showcase-20261030, not the older feedback branch. Start future changes on a new branch from latest main. Laptop Omnigent remains disabled.

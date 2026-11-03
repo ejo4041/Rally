@@ -14,7 +14,7 @@ Browser validation checks selector alignment/width, checkbox alignment/order, li
 
 ## Deployment
 
-Merged into main and deployed static release `7af2a98`. The API/media services were not restarted; backend source is unchanged. SQLite backup preceded the atomic release switch. [Public MFA/PDF/access-control smoke checks passed](research/participant-setup-deployed.json), with disposable synthetic records removed and zero paid calls.
+Merged into main and deployed static release `7af2a98`. The API/media services were not restarted; backend source is unchanged. SQLite backup preceded the atomic release switch. [Public MFA/PDF/access-control smoke checks passed](../../research/participant-setup-deployed.json), with disposable synthetic records removed and zero paid calls.
 
 ## Teams invitation required before joining
 

@@ -30,19 +30,19 @@ Active release `/srv/hackathon/rally-deployed/releases/a0e3c4a-theme-spacing` (U
 
 Final coverage: 20 frontend units/typecheck/build;288 local strict visual states plus48 public =336; complete72second/17participant-turn replay with theme/resize/history stress and stable bounded heap; actual PDF; keyboard/Escape/focus/theme sync/reduced motion; isolated feedback/security/setup/history integration suites, including dark sign-in and named-account report grants/revocation. Chromium automation; no physical Safari/iOS claim. Source, docs and validation scripts pushed to main. Refresh existing tabs to pick up static changes.
 
-[Authoritative polish report](theme-spacing-polish-2026-11-03.md). Private before/after gallery and `validation-summary.json`: `/srv/hackathon/artifacts/theme-polish-20261103/`. Existing video05 and submission preparation remain as before. No additional UI work pending from this request.
+[Authoritative polish report](archive/engineering/theme-spacing-polish-2026-11-03.md). Private before/after gallery and `validation-summary.json`: `/srv/hackathon/artifacts/theme-polish-20261103/`. Existing video05 and submission preparation remain as before. No additional UI work pending from this request.
 
 ### Theme polish deployment and final browser-color detail
 
 Frontend release `3b9e81d-theme-spacing` deployed after private SQLite backup. Backend byte-identical to previous release; API PID755639 unchanged; API healthy. Public workflow (including protected normal site even with `?demo=1`) passed, followed by48 strict public dark/light screen states with zero page errors, API/socket requests, measured contrast warnings or layout violations. Local matrix288 + public48 =336 checked screenshots. No paid model calls.
 
-A final theme-init patch synchronizes `meta[name=theme-color]` with resolved dark/light/system appearance, so mobile browser chrome can follow the palette. Keyboard/theme-sync/reduced-motion/print regression passed again, including metadata checks in both themes. Final patch release and verification recorded next. [Full polish report](theme-spacing-polish-2026-11-03.md).
+A final theme-init patch synchronizes `meta[name=theme-color]` with resolved dark/light/system appearance, so mobile browser chrome can follow the palette. Keyboard/theme-sync/reduced-motion/print regression passed again, including metadata checks in both themes. Final patch release and verification recorded next. [Full polish report](archive/engineering/theme-spacing-polish-2026-11-03.md).
 
 ## Theme and spacing polish — 2026-11-03
 
 Owner requested autonomous overnight dark-mode/spacing fixes and extensive testing. Branch `fix/theme-and-spacing-polish`, worktree `/srv/hackathon/rally-public-demo`. Dark document canvas fixed, surfaces tokenized, padding/typography/Back alignment corrected, readable secondary copy in both themes, agenda decimals bounded. Mobile start controls precede full plan; live presence compact enough for guidance. Demo banner uses measured height, settings hide unavailable voice controls, short-laptop welcome fits both sections. Demo reload clears stale ephemeral deep links without an error. Ordinary app account/MFA/API policy retained.
 
-20 frontend units/typecheck/build pass. Final strict matrix: 240 screens across10widths/both themes/12states plus48 short-laptop captures; zero checked contrast/surface/overflow/modal violations, errors or API/socket requests. Full72second natural sample replay with17 finalized participant turns, viewport/theme switching and8 history cycles passed; actual browser PDF, complete report/evidence and reload cleanup passed. Keyboard/theme sync/reduced motion/print tests pass. Existing feedback/security/setup/history suites passed against isolated synthetic fixtures, including dark sign-in. No paid model calls or real meeting access. [Full findings, tests and limits](theme-spacing-polish-2026-11-03.md). Private artifacts/gallery `/srv/hackathon/artifacts/theme-polish-20261103/`. Static deployment and public smoke pending below this entry.
+20 frontend units/typecheck/build pass. Final strict matrix: 240 screens across10widths/both themes/12states plus48 short-laptop captures; zero checked contrast/surface/overflow/modal violations, errors or API/socket requests. Full72second natural sample replay with17 finalized participant turns, viewport/theme switching and8 history cycles passed; actual browser PDF, complete report/evidence and reload cleanup passed. Keyboard/theme sync/reduced motion/print tests pass. Existing feedback/security/setup/history suites passed against isolated synthetic fixtures, including dark sign-in. No paid model calls or real meeting access. [Full findings, tests and limits](archive/engineering/theme-spacing-polish-2026-11-03.md). Private artifacts/gallery `/srv/hackathon/artifacts/theme-polish-20261103/`. Static deployment and public smoke pending below this entry.
 
 Final public rehearsal passed on4f86f4e: actual workspace/create modal/start/streaming partial+final turns, pause/resume, speaker labeling, Ask Rally, empty check-history state, end/report, JSON export, browser print invocation, mock grant/revoke, evidence navigation, desktop/mobile/reset. Only static demo assets requested, no page errors or mic/screen/WebSocket calls. Fresh normal page with `?demo=1` still requires login and `/api/auth/me`401. Earlier staging guard caught that the guarded demo module changes the normal bundle bytes; normal assets were preserved and the atomic switch completed before this final successful rehearsal.
 
@@ -113,7 +113,7 @@ Use the ordered [readiness list](readiness-2026-10-31.md): a 30–60-minute curr
 
 Workspace `/srv/hackathon/rally-feedback`. API/web/media system services are `rally-integrated-api`, `rally-integrated-web`, `rally-integrated-media`; immutable releases and persistent state/configuration are under `/srv/hackathon/rally-deployed`. Before deployment, check active capture/report/usage, compare release ancestry, build fully and back up SQLite. Preserve MFA secrets, the shared Teams camera lock and runtime data. Shared-host browser checks must use the bounded systemd settings in AGENTS.md.
 
-[API](backend-api.md) · [Model interfaces](model-interfaces.md) · [Presence operations](living-presence-operations.md) · [MFA/admin](mfa-admin-judge-audit.md) · [Deployment](integrated-deployment.md) · [Dated prior handoffs](handoff-history-through-2026-10-31.md).
+[API](backend-api.md) · [Model interfaces](model-interfaces.md) · [Presence operations](living-presence-operations.md) · [MFA/admin](mfa-admin-judge-audit.md) · [Deployment](integrated-deployment.md) · [Dated prior handoffs](archive/engineering/handoff-history-through-2026-10-31.md).
 
 ## Long-turn correction and completed provider endurance
 
@@ -207,7 +207,7 @@ Local export: Downloads/Rally Demo Edit2026-11-02/`05 - Rally - 3 Minute Demo.mp
 
 ## November 3 — repository presentation and welcome control
 
-User explicitly requests keeping GitHub private, no package publication to Nexus, and no further demo-video improvements for now. [Repository presentation record](repository-showcase-2026-11-03.md) covers the product-first README,747KB fictional-data tour, starter/dev guides, issue/PR templates, read-only docs workflow and local verification. No dependency downloads or package publishing occurred. docs/assets/provenance.json records the synthetic capture and checksums. Existing maintainers' index is preserved as maintainer-notes.md; the main docs index is now user/developer oriented.
+User explicitly requests keeping GitHub private, no package publication to Nexus, and no further demo-video improvements for now. [Repository presentation record](archive/engineering/repository-showcase-2026-11-03.md) covers the product-first README,747KB fictional-data tour, starter/dev guides, issue/PR templates, read-only docs workflow and local verification. No dependency downloads or package publishing occurred. docs/assets/provenance.json records the synthetic capture and checksums. Existing maintainers' index is preserved as maintainer-notes.md; the main docs index is now user/developer oriented.
 
 Reported welcome-control problem on the regular site: source fix23d31f4 on fix/welcome-checkbox-visibility is merged. Dedicated18px checkbox/label row remains off by default, and previously started meetings explain why the selection is unavailable. Web typecheck,26unit tests,build and bounded fixture-browser desktop/mobile label-click/checkbox-size/join-payload checks passed. Static frontend-only promotion to `/srv/hackathon/rally-deployed/releases/23d31f4-welcome-checkbox` copied the active backend unchanged; no API restart or production DB write. Local served HTML includes the new label and API health stayed OK. Physical real-Teams welcome playback was not retested by this change. Prior release1a33198-optional-greeting remains available for rollback.
 
@@ -220,3 +220,8 @@ User requested the README GIF in dark mode. Recaptured the same fictional portab
 ## November 3 — merged branch cleanup
 
 [Cleanup audit and recovery refs](branch-cleanup-2026-11-03.md):25fully merged GitHub branches removed atomically with expected-tip checks; only main remains. All local branches/worktrees retained. No unique work, deployment, video or visibility changed.
+
+
+## November 3 — archive completed operational notes
+
+Moved seven completed presentation/rollout records and two already-superseded historical indexes into [the engineering archive](archive/engineering/README.md). Preserved original prose, attribution/context, caveats, evidence and Git history; adjusted relative links throughout tracked Markdown. Current setup, security, provenance, source/license decisions, provider billing uncertainty and unverified integration requirements remain outside the archive. No application, deployment, visibility, model usage or video changes.

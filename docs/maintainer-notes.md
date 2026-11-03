@@ -1,5 +1,7 @@
 # Maintainer and engineering records
 
+[Engineering archive](archive/engineering/README.md): completed presentation milestones and superseded history, with evidence and original narrative preserved. Current unresolved requirements remain linked below.
+
 [Voice service hours](voice-service-hours-2026-11-03.md): confirmed upstream 503 outside daily 07:00–19:00 America/New_York; distinct from Muse billing.
 
 [Saved-draft recovery](blocked-draft-recovery-2026-11-03.md): the two blocked drafts now have ready agendas; stale preparation messages corrected.
@@ -28,7 +30,7 @@ Start with the [current handoff](handoff.md) and [readiness check](readiness-202
 | Accounts/privacy | [MFA/admin and optional sharing](mfa-admin-judge-audit.md), [speaker attribution](speaker-attribution.md) |
 | Hosting | [Deployment](integrated-deployment.md), [resource-limited browser checks](hero-balance.md) |
 | Usage | [Budget](api-budget.md), [dated development cost ledger](research/muse-cost-ledger.md); runtime usage is separate |
-| Historical implementation | [Prior handoffs](handoff-history-through-2026-10-31.md), [prior index](index-history-through-2026-10-31.md), [original roadmap](rally-roadmap.md) |
+| Historical implementation | [Prior handoffs](archive/engineering/handoff-history-through-2026-10-31.md), [prior index](archive/engineering/index-history-through-2026-10-31.md), [original roadmap](rally-roadmap.md) |
 
 Research files preserve source attribution and distinguish documented capability, local synthetic experiments, real model calls and actual meeting evidence. The earlier Sites app is a separate iteration; use the integrated Node references above for current behavior.
 
@@ -58,7 +60,7 @@ Research files preserve source attribution and distinguish documented capability
 
 - [Credential-free judge demo and rehearsal](judge-access-rehearsal.md) — portable sample, evidence boundaries and public judge path.
 
-- [Theme and spacing polish / validation](theme-spacing-polish-2026-11-03.md) — dark canvas, responsive spacing, 288 screen checks and complete sample replay.
+- [Theme and spacing polish / validation](archive/engineering/theme-spacing-polish-2026-11-03.md) — dark canvas, responsive spacing, 288 screen checks and complete sample replay.
 
 - [Demo conversation voices](demo-audio-2026-11-03.md) — static Meta speech, playback synchronization, accounting, controls and tests.
 
