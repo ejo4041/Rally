@@ -1,10 +1,16 @@
+### Deployment confirmation — public judge sample
+
+Feature `feature/public-judge-demo`, implementation `2827dfd`, fast-forwarded to origin/main. Static deployment: `/srv/hackathon/rally-deployed/releases/2827dfd-public-demo`. API process PID755639 remained running. Backend was copied byte-for-byte from `161fbcc-web-status` (main contains undeployed phoneme experiments; those were deliberately not promoted). SQLite backup created with mode0600. No API/media restart. Initial staging comparison caught source/backend differences and aborted before switching; the old-page predeploy smoke timed out. Corrected static-only staging and final PUBLIC smoke passed. Do not mistake main's experimental API sources for the running backend.
+
+Judge credentials remain outside Git and are superseded for judging; no MFA/account reset performed. Owner local submission draft and private credential file annotated with credential-free path. GitHub anonymous404 persists; public source release and final public video URL remain owner submission items. No video changes or paid service calls in this work.
+
 ## Public judge demo — 2026-11-03
 
 Owner supplied organizer guidance: no approved private credential channel; public repo/setup and three-minute video required, credential-free samples/evidence acceptable. Replaced shared judge-login delivery plan with `/demo.html`, an isolated static, explicitly synthetic interaction sample. No auth bypass, API route, model call, microphone or record grant. Full app MFA remains.
 
 Source: `apps/rally-web/src/demo*`; build/export scripts create checked-in `demo/` portable artifacts. Judge local path: `python3 -m http.server 8000 --bind 127.0.0.1 --directory demo`. README evidence table separates sample, real recorded footage and full integration. Judge runbook updated. Local submission answers remain owner-side, outside Git.
 
-Validation: frontend typecheck, 20 unit tests, and capped Playwright static browser rehearsal passed (play/pause/step/reset, evidence, speaker edit, passive/proactive, export, escaped input, desktop/mobile, zero API/model/WebSocket requests). Headless environment shows renderer text fallback when WebGL unavailable. Public post-deploy check recorded below. Rebuild portable assets after changing sample source; provenance.json contains bundle hashes. No paid processing invoked. Prior video05 preserved.
+Validation: frontend typecheck, 20 unit tests, and capped Playwright static browser rehearsal passed (play/pause/step/reset, evidence, speaker edit, passive/proactive, export, escaped input, desktop/mobile, zero API/model/WebSocket requests). Headless environment shows renderer text fallback when WebGL unavailable. Public post-deploy check passed at https://rally.tail703f9e.ts.net/demo.html: identical interaction checks, only five static page/asset requests, no console errors. Protected `/api/auth/me` anonymously401; `/api/health` healthy. Rebuild portable assets after changing sample source; provenance.json contains bundle hashes. No paid processing invoked. Prior video05 preserved.
 
 # Rally current handoff — October 31, 2026
 
