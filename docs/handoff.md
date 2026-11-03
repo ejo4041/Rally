@@ -82,3 +82,7 @@ Final prototype evidence: clean candidate `d620008` generated 80/80 corpus WAVs.
 The laptop session is assembling the user's26portrait phone takes from Downloads/Photos-1-001(3).zip. Working files remain local in Downloads/Rally Demo Edit2026-11-02, originals preserved. A clean presenter cut and180-second assembly with explicitly marked pending live-demo slots are being prepared; source audio stays at original speed. User is locating B-roll; no video uploaded or submitted.
 
 [Production unknown-report cost investigation](report-cost-incident-2026-11-02.md) found one failed final-report request without returned token usage, reservation$0.253929. The app-wide unknown-cost guard is blocking paid work.223transcript turns remain saved. No ledger edits, provider retries or guard bypass were performed.
+
+## November 2 finished demo review master
+
+[Human presenter + real-footage edit](human-demo-edit-2026-11-02.md):180second1080p30review master with four real Teams excerpts and website GIF. Private files under `artifacts/feedback/human-demo-20261102/`; laptop originals/intermediates remain in Downloads/Rally Demo Edit2026-11-02. Separate120second presenter cut retained. Full decode and duration/frame count checks pass. Completed-report/PDF close-up and final listener approval remain pending. No paid calls, production changes, public upload or submission.

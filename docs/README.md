@@ -43,3 +43,5 @@ Research files preserve source attribution and distinguish documented capability
 [November 3 presenter recording package](demo-presenter-recording-2026-11-03.md): human intro/problem/product/Meta-role script, free capture tools, B-roll cues and raw-file handoff for a three-minute review edit. Recording and new compositor work remain pending.
 
 - [November 2 unknown report cost investigation](report-cost-incident-2026-11-02.md)
+
+- [Human presenter and real-footage demo edit](human-demo-edit-2026-11-02.md)
