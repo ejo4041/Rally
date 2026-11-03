@@ -37,3 +37,10 @@ Local export: Downloads/Rally Demo Edit2026-11-02/`04 - Rally - 3 Minute Demo.mp
 Version05extends the post-cold-open website insert through21.93seconds: homepage,3.5second hold,Create click,title and agenda entry. It replaces the return to the problem slide at13.03seconds, then transitions directly into the unchanged group-meeting shot. The version04soundtrack/caption text and subsequent timeline content are retained. Brief isolated GIF home-screen flashes during modal entry are suppressed by holding the preceding real modal frame. Exactly180seconds/5400frames at1080p30; full decode and audio-stream hash match pass.01–04are preserved.
 
 Local export: Downloads/Rally Demo Edit2026-11-02/`05 - Rally - 3 Minute Demo.mp4`. Private server copy: `artifacts/feedback/human-demo-20261102/versions/05/`. SHA256:`f586149c984b2265252f9496e33d5cf4aaa774d1801cd8f53ca480a988953c07`. The local submission working draft points to05as latest. No provider calls, production changes, upload or submission.
+
+
+## Version 06 — November 3 recordings
+
+New 180-second cut preserves version 05's human narration, cold open, home/create sequence and authentic spoken examples. New high-quality multi-participant Teams footage replaces older muted B-roll. `rally3.gif` supplies setup, streaming transcript, and Rally response close-ups. New B-roll is muted and labeled; it does not assert synchronization with older speech examples or measure model latency. No paid model call was used for editing. Versions 01–05 and original input media are retained.
+
+Private local review file: `Downloads/Rally Demo Edit 2026-11-02/06 - Rally - 3 Minute Demo.mp4`, with numbered captions, edit manifest, verification record and build script. Final YouTube URL remains a submission task; no video has been uploaded automatically.

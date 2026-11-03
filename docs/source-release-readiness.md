@@ -32,3 +32,12 @@ Everything else can be tested/prepared without these inputs; do not mark these i
 ## Prepared private archive
 
 The [source snapshot audit](research/source-archive-2026-11-01.json) pins the actual source revision and ZIP hash/file count. ZIP integrity, configured-secret matching and explicit runtime/model/dependency/private-key/invite filters passed. The archive remains private under /tmp; it is not a public source release, historical-object audit or license/access confirmation.
+
+
+## November 3 judge setup audit
+
+The credential-free hosted path is `/demo.html`; the prior private judge-credential proposal is superseded. Current setup instructions are in [judge quickstart](judge-quickstart.md), including offline sample serving, Nexus installs for all three packages, generated persistent MFA key, closed-registration administrator activation and optional paid calls with an evaluator's own key. The root `.env.example` now describes the current Node application rather than the historical Azure/Sites prototype. The combined launcher loads the selected checkout's configuration before calculating child settings.
+
+Anonymous GitHub access still returned HTTP 404 on November 3. Repository visibility has not been changed by this audit. Full fresh API dependency installation could not complete: Nexus is unresolved from the droplet and the offline cache lacks a required tarball. Frontend and Living Silk installs succeeded from the existing offline cache through the Nexus configuration. Backend tests therefore used the previously installed backend dependencies; do not describe that as a clean API install. No npmjs fallback was used.
+
+Source candidate scanning found only environment reads and explicit test fixtures among the scanned credential patterns; this is not an exhaustive history or credential audit. Existing application-license/artwork attribution decisions above remain recorded; this update does not choose or grant a license.

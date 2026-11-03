@@ -1,7 +1,10 @@
 // Starts the separate Node backend/media and the integrated frontend locally.
 // Paid processing is explicitly off unless enabled in the calling environment.
+import { loadEnvironment } from "../apps/rally-api/src/config.ts";
 import { spawn } from "node:child_process";
 import { fileURLToPath } from "node:url";
+process.env.RALLY_ENV_FILE ||= fileURLToPath(new URL("../.env.local", import.meta.url));
+loadEnvironment();
 const root = new URL("../", import.meta.url),
   children = [];
 const apiPort = process.env.PORT || "3001",

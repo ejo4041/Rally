@@ -46,7 +46,7 @@ Review finalized transcript evidence, identify recognized voices, and inspect re
 
 ## Run locally
 
-Use Node 24 and the locked dependencies. Follow [API setup](apps/rally-api/README.md) and [frontend setup](apps/rally-web/README.md), including persistent MFA key/account bootstrap, media configuration and optional native camera dependencies. Paid processing defaults off. Keep credentials in ignored runtime configuration; model keys stay server-side.
+**[Full application: judge quickstart](docs/judge-quickstart.md)** — Node 24, locked dependencies through Nexus, generated private configuration, administrator activation/MFA, local media and your own Meta Model API key. The guide distinguishes basic browser capture from optional speech/Teams provisioning and includes validation commands. Paid processing defaults off; keys remain server-side. No Azure ACS setup is required for the guest-Teams route.
 
 The current application lives in `apps/rally-api/` and `apps/rally-web/`. The earlier `apps/rally/` Sites application is retained as a historical implementation. The [current handoff](docs/handoff.md) identifies the running release and validation boundaries.
 
