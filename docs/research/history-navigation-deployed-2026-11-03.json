@@ -1,0 +1,40 @@
+{
+  "at": "2026-11-03T02:51:19.520Z",
+  "passed": true,
+  "sourceCommit": "624d52b",
+  "activeRelease": "624d52b-web-history",
+  "backendRelease": "6fa6e2f",
+  "frontendOnly": true,
+  "apiPIDBefore": 625268,
+  "apiPIDAfter": 625268,
+  "privateSQLiteBackup": true,
+  "modelCalls": 0,
+  "realMeetingJoins": 0,
+  "scope": "Public HTTPS UI with disposable synthetic account/record and real MFA. One record GET intentionally returns 503 via browser interception; repeated click must retry and show the report. No model requests, no PDF assertion in this targeted check.",
+  "checks": {
+    "mfaLogin": true,
+    "secureCookie": true,
+    "closedRegistration": true,
+    "sameHashRetry": true,
+    "rallyResponseLog": true,
+    "historyOpened": true,
+    "historyReopened": true,
+    "temporaryRecordsRemoved": true
+  },
+  "local": {
+    "browserRegression": true,
+    "cases": [
+      "failed GET same-hash retry",
+      "ready report rendering",
+      "failed report rendering",
+      "back and reopen",
+      "sidebar navigation",
+      "browser Back and Forward",
+      "390x844 mobile"
+    ],
+    "frontendUnitTests": 17,
+    "frontendTypecheck": true,
+    "frontendBuild": true
+  },
+  "diagnosticLimits": "Normal history links and existing ended-record shapes rendered during investigation. The initiating failure on the user browser was not observed; the same-hash retry dead end was reproduced deterministically and fixed. Unknown report usage reconciliation is a separate unresolved incident."
+}

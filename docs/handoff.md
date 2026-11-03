@@ -1,5 +1,7 @@
 # Rally current handoff — October 31, 2026
 
+**November 3 frontend update:** `624d52b-web-history` is active with backend `6fa6e2f` unchanged. A failed saved-record load can now be retried by clicking the same history item; previously the unchanged hash produced no navigation event. Public MFA/history/retry/report checks, desktop/mobile browser regression and 17 frontend tests/typecheck/build pass. Private backup preceded the static release switch; API PID unchanged. [Diagnosis and deployment evidence](history-navigation-fix-2026-11-03.md). No provider analysis retry or cost reconciliation was performed.
+
 The public app is https://rally.tail703f9e.ts.net/ . Access requires an invited account and MFA. The agenda pronunciation update is deployed as `6fa6e2f` (including recovery and long-turn fixes); it preserves the static frontend from `a9f0004`. Source is pushed to main. The prior October31 readiness snapshot matched main `a2278e0`. [Fresh live UI readiness check](readiness-2026-10-31.md).
 
 ## Implemented
