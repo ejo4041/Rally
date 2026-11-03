@@ -21,3 +21,11 @@ Full master backend suite initially163passed, plus2new HTTP tests passed separat
 ## Costs / scope
 
 One additional authorized existing AWS speech request generated the8.52second fixed demo welcome; HTTP200, provider/infrastructure costunknown. No new Muse/Meta Model API call or local model generation. Runtime actual Teams speech incurs the normal provider usage only when opted in. Existing demo assets’ bytes were preserved. Production API deployment must retain the current backend baseline and apply only engine/contracts/Teams hook and connect-schema changes; unpromoted phoneme backend code on main must not be deployed incidentally. Existing UI styles and protected signup/MFA remain.
+
+## Deployed verification
+
+Release `1a33198-optional-greeting` is active. The deployed backend retains the prior baseline plus only `engine.ts`, `contracts.ts`, `teams-live.ts` and greeting-specific hunks in `app.ts`; shared deterministic greeting helper added. Unpromoted phoneme adapter code was not rolled out.
+
+Actual staged backend typecheck and its full159test suite passed, followed by the staged real UI setup regression verifying defaultfalse and explicittrue. The165master tests were covered by the earlier163suite plus2HTTP tests;26frontend units/typecheck/build passed. Public demo welcome/audio controls and negative asset/autoplay cases passed after deployment, with no API/model/WebSocket/capture calls. Protected auth still401 and API health good.
+
+Before the API restart, metadata-only checks confirmed0live meetings,0processing reports,0pending model usage and0active speech. Private SQLite backup saved. API restarted once from755639 to812792; health verified. No real Teams meeting was joined; audible welcome to actual remote participants remains a rehearsal item, not an automated claim. Code merged to main; handoff and artifacts saved under `/srv/hackathon/artifacts/optional-greeting-20261103/`.
