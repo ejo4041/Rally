@@ -225,3 +225,8 @@ User requested the README GIF in dark mode. Recaptured the same fictional portab
 ## November 3 — archive completed operational notes
 
 Moved seven completed presentation/rollout records and two already-superseded historical indexes into [the engineering archive](archive/engineering/README.md). Preserved original prose, attribution/context, caveats, evidence and Git history; adjusted relative links throughout tracked Markdown. Current setup, security, provenance, source/license decisions, provider billing uncertainty and unverified integration requirements remain outside the archive. No application, deployment, visibility, model usage or video changes.
+
+
+## November 3 — judge-style review
+
+[Review](judge-review-2026-11-03.md) compares current repo/evidence with stored participant rules and saved organizer FAQ; public event page confirmed theme/tracks/deadline, full details/waiver not recovered today. Private source, final URL/attribution/rights and fresh own-key setup remain submission gates or unresolved risks. Subjective rubric estimate about75/100 after eligibility, not a win probability. Highest-value work: accurate access/rights, clean source reproduction, one real decision-changing exchange and measured pilot/commitment quality. No app/video/deployment/visibility changes or paid calls.

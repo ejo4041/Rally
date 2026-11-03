@@ -22,3 +22,6 @@
 ## Engineering history
 
 The [engineering archive](archive/engineering/README.md) collects completed presentation/rollout records and superseded indexes. The [maintainer index](maintainer-notes.md) links the remaining experiments, reliability work, research and demo/submission preparation. These records describe their measured release and may differ from the current app. The historical Sites implementation is separate from the current Node frontend/backend.
+
+
+[Judge-style review](judge-review-2026-11-03.md): stored-rule checks, submission risks, competitive assessment and prioritized improvements.
