@@ -203,3 +203,10 @@ Local export: Downloads/Rally Demo Edit2026-11-02/`05 - Rally - 3 Minute Demo.mp
 ## November 3 — video 06 and own-key judge setup
 
 [Continuation handoff](video06-judge-readiness-handoff-2026-11-03.md) records the new numbered export, private droplet artifact path, merged setup changes,191passing unit tests/HTTP bootstrap, and remaining GitHub/Nexus access limits. Production UI unchanged; no paid provider calls.
+
+
+## November 3 — repository presentation and welcome control
+
+User explicitly requests keeping GitHub private, no package publication to Nexus, and no further demo-video improvements for now. [Repository presentation record](repository-showcase-2026-11-03.md) covers the product-first README,747KB fictional-data tour, starter/dev guides, issue/PR templates, read-only docs workflow and local verification. No dependency downloads or package publishing occurred. docs/assets/provenance.json records the synthetic capture and checksums. Existing maintainers' index is preserved as maintainer-notes.md; the main docs index is now user/developer oriented.
+
+Reported welcome-control problem on the regular site: source fix23d31f4 on fix/welcome-checkbox-visibility is merged. Dedicated18px checkbox/label row remains off by default, and previously started meetings explain why the selection is unavailable. Web typecheck,26unit tests,build and bounded fixture-browser desktop/mobile label-click/checkbox-size/join-payload checks passed. Static frontend-only promotion to `/srv/hackathon/rally-deployed/releases/23d31f4-welcome-checkbox` copied the active backend unchanged; no API restart or production DB write. Local served HTML includes the new label and API health stayed OK. Physical real-Teams welcome playback was not retested by this change. Prior release1a33198-optional-greeting remains available for rollback.

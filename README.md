@@ -1,61 +1,133 @@
-# Rally
+<p align="center">
+  <img src="docs/assets/rally-banner.svg" alt="Rally — Better meetings. Clear decisions. Real next steps." width="100%" />
+</p>
 
-Rally helps a host turn a decision meeting into clear next steps with reviewable source evidence. Meta models listen, reason and speak while the host controls when Rally participates.
+<p align="center">
+  <a href="https://rally.tail703f9e.ts.net/demo.html"><strong>Try Rally</strong></a> ·
+  <a href="#quick-start">Quick start</a> ·
+  <a href="docs/judge-quickstart.md">Use your own API key</a> ·
+  <a href="docs/README.md">Documentation</a> ·
+  <a href="CONTRIBUTING.md">Contribute</a>
+</p>
 
-[Try the interactive demo](https://rally.tail703f9e.ts.net/demo.html) · [Run with your own API key](docs/judge-quickstart.md) · [API](docs/backend-api.md) · [Documentation](docs/README.md)
+**Leave the meeting knowing what you decided, who owns the work, and what is still open.**
 
-## Judges: explore without credentials
+Rally is an AI meeting facilitator built around Meta models. Give it your agenda, choose how involved it should be, and let it follow the conversation. It can offer guidance while you meet, then turn the transcript into decisions, action items and a report you can trace back to what was said.
 
-**[Open the interactive sample](https://rally.tail703f9e.ts.net/demo.html)** — no login, setup, microphone, model keys or paid calls. The login page also links to this sample. Ordinary meeting accounts still require invitations and MFA.
+<p align="center"><img src="docs/assets/workspace-tour.gif" alt="Rally's fictional sample workspace: home page, agenda preparation, streaming transcript and an evidence-linked meeting report." width="1000" /></p>
 
-Alternatively, run the checked-in portable sample from a repository checkout with Python 3; no npm dependencies or backend are needed:
+*An edited tour of the simulated workspace, using fictional participants and sample text. Cuts and holds shorten the walkthrough; this GIF does not show live inference or model latency.*
+
+<details>
+<summary>Prefer a still image?</summary>
+
+![Rally sample home page](docs/assets/workspace-home.png)
+
+</details>
+
+## What you can do
+
+| Before the call | During the conversation | After the meeting |
+| --- | --- | --- |
+| Turn an agenda into an editable plan | Follow streaming transcription | Review decisions, actions and open questions |
+| Set the time available and desired outcomes | Ask Rally a question or receive timely guidance | Jump from report claims to source excerpts |
+| Choose passive, balanced or proactive participation | Pause, dismiss or mute Rally; identify speakers | Add notes, export PDF/JSON and share with Rally users |
+
+Rally keeps **unconfirmed owners, dates and decisions visibly unresolved**. You control its participation. Its animated meeting presence reflects agenda guidance—not participant emotion or personality.
+
+## Quick start
+
+### Explore in your browser
+
+**[Open the interactive demo →](https://rally.tail703f9e.ts.net/demo.html)**
+
+No login, API key or microphone needed. Create a meeting, watch a fictional engineering discussion stream in with prerecorded Meta voices, ask Rally a scripted question, then inspect a sample report. A completed meeting in history offers the full evidence trail immediately.
+
+### Run the sample locally
 
 ```sh
+git clone https://github.com/ejo4041/Rally.git
+cd Rally
 python3 -m http.server 8000 --bind 127.0.0.1 --directory demo
 ```
 
-Open http://127.0.0.1:8000/ . The sample uses the **same home page, Create meeting modal, live meeting screen and report UI as the regular site**. Create a meeting, review its prepared sample plan, check the simulation acknowledgment and click Start simulated meeting. A fictional engineering discussion plays with prerecorded Meta voices as its simulated transcript streams in. Alex and Sam share the MMS voice; Priya uses FastSpeech2; Rally uses Seamless. Pause/resume playback, identify speakers, ask Rally for a scripted reply, change its approach and end the meeting to prepare a sample report. Explore the preloaded completed meeting for the full evidence trail, JSON export, print/PDF, fictional report-sharing controls and a local follow-up draft. Edits stay in memory and reset on reload. Appearance preference alone is saved locally. Start unlocks audio; Settings → Demo audio can silence playback while text continues. Pause replay, End, navigation and reset stop audio.
+Open **http://127.0.0.1:8000/**. Python 3 is the only prerequisite. No package install, backend or model download is required. While this repository is private, cloning requires an account with repository access.
 
-### Evidence and limitations
+### Connect real models with your own key
 
-| Judge path | What it establishes | Limits |
+Follow the **[full local setup guide](docs/judge-quickstart.md)** for Node 24, locked dependencies, local LiveKit, private configuration and administrator activation with MFA. Enable your own Meta Model API key only when you are ready for paid processing.
+
+Start with **browser microphone or tab capture**. Spoken replies and a guest Teams participant require additional model/media provisioning; they are optional setup paths. No Azure ACS resource or app registration is needed for the implemented guest-client Teams route.
+
+| Evaluation path | Models and data | Requirements |
 | --- | --- | --- |
-| Interactive sample (`demo/`, shared `main.ts` UI with `demo-api.ts` / `demo-simulator.ts`) | Runnable agenda/transcript/report interaction, source navigation and exports | Authored fictional text, speakers, replies and report, plus prerecorded Meta speech. Captions follow playback approximately; no live AI, ASR, Teams or authentication. Sharing/revocation is in-memory role-play, with no real grants. |
-| Three-minute video and [edit provenance](docs/human-demo-edit-2026-11-02.md) | Human-narrated actual Rally UI and recorded multi-participant Teams/transcription footage, with identified edits | Edited excerpts do not establish end-to-end latency. Final public video URL is added to the submission separately. |
-| Full application setup below | Source and configuration for real service integrations | Requires service credentials, invited accounts/MFA, media setup and model availability; processing can incur charges. |
+| Hosted or local sample | Fictional text and prerecorded voices; no live model calls | Browser; Python 3 for local serving |
+| Full app: browser capture | Real reasoning and transcription using your key | Node 24+, dependencies, LiveKit, invited account/MFA and model access |
+| Full app: speech / Teams guest | Real meeting participant and configured speech adapter | Additional Linux browser, virtual media and model/service provisioning |
 
-The demo bundles the regular app interface with a build-time substitution of the API client for an in-memory simulator, plus a `connect-src 'none'` content policy and same-origin-only prerecorded media. The regular build always uses the authenticated API client; a URL parameter cannot change it. It cannot access private meetings or invoke model endpoints. Checked-in bundle hashes and source paths are in [demo/provenance.json](demo/provenance.json). Rebuild it with the frontend build followed by `node scripts/export-demo.mjs` from `apps/rally-web`. Component attribution is included with the portable files.
+The sample shares the real app's interface but uses an isolated in-memory simulator. It cannot access private meetings. Reload resets its meeting edits; report sharing is simulated. The full app retains invitation-only accounts and MFA.
 
-## Meta technologies
+## Built with Meta AI
 
-| Model | Role in Rally | Provenance |
-| --- | --- | --- |
-| Muse Voice Transcribe | Streaming audio transcription and anonymous speaker labels | Meta Model API; Rally does not use native Teams transcripts. |
-| Muse Spark 1.3 | Agenda preparation, continuous guidance and complete final reports | Meta Model API; validated structured output and source references. |
-| SeamlessM4T-v2-large | Streamed production speech for approved prompts | Configured AWS-hosted Meta-model endpoint; exact remote checkpoint revision is not supplied. |
-| Meta MMS English | Configurable local voice, prerecorded demo participants and earlier narration experiments | Self-hosted `facebook/mms-tts-eng`, pinned revision `c71de0fe7204c83f1c10820a7d696d0b450048ba`; weights CC BY-NC 4.0. |
-| Meta FastSpeech2 + HiFi-GAN | Prerecorded demo participant speech; not selected for production meetings | Pinned Meta checkpoint and bundled vocoder; [provenance](experiments/meta-fastspeech2/README.md). |
+| Technology | What it does |
+| --- | --- |
+| **Muse Spark 1.3** | Prepares the plan, evaluates the conversation and builds the final report |
+| **Muse Voice Transcribe** | Streams transcription and anonymous speaker labels; Rally does not rely on native Teams transcripts |
+| **SeamlessM4T** | Provides the deployed streamed voice through a configured hosted endpoint |
+| **Meta MMS** | Supplies an optional local voice and prerecorded sample participants |
+| **Meta FastSpeech2 + HiFi-GAN** | Supplies another prerecorded sample voice; not the default production adapter |
 
-Living Silk is visual artwork/runtime, not a Meta vision model or participant emotion detector. LiveKit supplies self-hosted media transport. Component authorship and licenses remain with their owners. [Model interfaces and configuration](docs/model-interfaces.md), [MMS provisioning](experiments/meta-mms/README.md).
+[Model interfaces and configuration](docs/model-interfaces.md) · [Speech provisioning](experiments/meta-mms/README.md) · [Model and component attribution](THIRD_PARTY_NOTICES.md)
 
-## Meeting workflow
+## How it fits together
 
-Prepare an agenda and choose passive, balanced or proactive guidance. With participant consent, select a microphone, browser call tab, or a valid Teams invitation for Rally's integrated voice/video participant. The host can pause, dismiss, mute or stop speech. Teams calls continue independently of the dashboard until End/Leave.
+```mermaid
+flowchart LR
+    Host[Host's browser] --> API[Node API]
+    Audio[Microphone / call tab / Teams guest] --> Media[LiveKit media]
+    Media --> ASR[Muse Voice Transcribe]
+    ASR --> API
+    API <--> Spark[Muse Spark]
+    API --> Voice[Configured speech adapter]
+    Voice --> Host
+    Voice --> Teams[Teams virtual audio]
+    API --> Store[(SQLite: meetings, evidence, accounts)]
+```
 
-Review finalized transcript evidence, identify recognized voices, and inspect reported agreement, proposals and unresolved details. Reports preserve unknown owners/dates. Add host notes, export PDF/JSON or grant read-only report access to a named Rally account. Access can be revoked. WhatsApp follow-up is a reviewed manual draft; WhatsApp guest joining remains experimental.
+The host chooses when to capture, speak and stop. Reports cite finalized transcript evidence. Keys stay server-side. **[Architecture and source map →](docs/architecture-overview.md)**
 
-## Run locally
+## Develop Rally
 
-**[Full application: judge quickstart](docs/judge-quickstart.md)** — Node 24, locked dependencies through Nexus, generated private configuration, administrator activation/MFA, local media and your own Meta Model API key. The guide distinguishes basic browser capture from optional speech/Teams provisioning and includes validation commands. Paid processing defaults off; keys remain server-side. No Azure ACS setup is required for the guest-Teams route.
+The current app is in `apps/rally-api/` and `apps/rally-web/`. After following the local setup guide:
 
-The current application lives in `apps/rally-api/` and `apps/rally-web/`. The earlier `apps/rally/` Sites application is retained as a historical implementation. The [current handoff](docs/handoff.md) identifies the running release and validation boundaries.
+```sh
+node scripts/dev-rally.mjs
+```
 
-## Demonstration and contribution
+The workspace opens at http://127.0.0.1:5173/. Model processing defaults off. To check a change:
 
-The [three-minute script](docs/demo-script.md) covers Meta transcription, reasoning, speech, host control and evidence review. The current three-minute cut uses human narration and recorded actual UI/Teams footage. The older synthetic replay and the new credential-free interactive sample are separate artifacts. Neither edited video nor scripted playback measures live model latency. [Current video provenance](docs/human-demo-edit-2026-11-02.md).
+```sh
+npm run typecheck --prefix apps/rally-api
+npm test --prefix apps/rally-api
+npm run typecheck --prefix apps/rally-web
+npm test --prefix apps/rally-web
+npm run build --prefix apps/rally-web
+python3 scripts/check-repo-docs.py
+```
 
-Rally's application contribution includes meeting state, agenda policy, evidence validation, owner-isolated records, model capability interfaces, controlled speech, Teams transport, visual presence integration, report review/sharing and host controls. Meta models, visual assets, transport/runtime libraries and tools retain their own attribution. See [component attribution](THIRD_PARTY_NOTICES.md) and the [maintainer release checklist](docs/source-release-readiness.md) for source, model and artwork provenance.
+The ordinary unit suites use fixtures and do not need a model key. Browser and media integration checks have separate prerequisites. See [contributing](CONTRIBUTING.md) for branch conventions, validation and useful bug reports.
 
-## Rehearsal and release preparation
+## Current scope
 
-[Monday live-test runbook](docs/monday-live-rehearsal.md) · [Real-footage shot list/edit workflow](docs/demo-live-edit.md) · [Judge access rehearsal](docs/judge-access-rehearsal.md) · [Component notices](THIRD_PARTY_NOTICES.md). [Maintainer release checklist](docs/source-release-readiness.md) tracks repository access, contributor confirmation and remaining application/artwork license decisions.
+Rally is a hackathon prototype with real Teams/browser capture, Meta model integration and report workflows. The source also includes a portable simulated sample for evaluation without service access. **[Implemented capabilities and limits](docs/capabilities.md)** explains the distinction.
+
+WhatsApp follow-up is a reviewed manual draft; link-based WhatsApp joining remains experimental. Anonymous speaker labels need human identification. Meeting summaries are model interpretations for review. Local setup and optional integrations have different requirements; check the [tested setup boundaries](docs/judge-setup-verification-2026-11-03.md).
+
+## Explore further
+
+- **Use it:** [local setup](docs/judge-quickstart.md), [capabilities](docs/capabilities.md), [common questions](docs/faq.md).
+- **Build on it:** [architecture](docs/architecture-overview.md), [API contract](docs/backend-api.md), [contributing](CONTRIBUTING.md).
+- **Understand the sample:** [provenance](demo/provenance.json), [voice assets](demo/demo-audio/README.md), [demo isolation](docs/judge-access-rehearsal.md).
+- **Report a problem:** [bug report](https://github.com/ejo4041/Rally/issues/new?template=bug_report.yml), [security guidance](SECURITY.md).
+
+Rally's application source license has not yet been selected. Models, libraries and supplied visual artwork retain their own rights and attribution; see [component notices](THIRD_PARTY_NOTICES.md) and the [maintainer release checklist](docs/source-release-readiness.md).

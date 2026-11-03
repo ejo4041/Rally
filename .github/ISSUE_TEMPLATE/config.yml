@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Setup and common questions
+    url: https://github.com/ejo4041/Rally/blob/main/docs/faq.md
+    about: Start here for the sample, accounts and local setup.
+  - name: Security reporting
+    url: https://github.com/ejo4041/Rally/blob/main/SECURITY.md
+    about: Keep vulnerability details and real meeting data private.

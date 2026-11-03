@@ -1,0 +1,20 @@
+name: Documentation
+on:
+  pull_request:
+    paths: ["README.md", "CONTRIBUTING.md", "SECURITY.md", "CHANGELOG.md", "docs/**", "scripts/check-repo-docs.py", ".github/**"]
+  push:
+    branches: [main]
+    paths: ["README.md", "CONTRIBUTING.md", "SECURITY.md", "CHANGELOG.md", "docs/**", "scripts/check-repo-docs.py", ".github/**"]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  documentation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Check curated documentation and media
+        run: python3 scripts/check-repo-docs.py
