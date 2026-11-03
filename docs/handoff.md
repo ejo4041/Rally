@@ -96,3 +96,9 @@ The laptop session is assembling the user's26portrait phone takes from Downloads
 ## November 2 finished demo review master
 
 [Human presenter + real-footage edit](human-demo-edit-2026-11-02.md):180second1080p30review master with four real Teams excerpts and website GIF. Private files under `artifacts/feedback/human-demo-20261102/`; laptop originals/intermediates remain in Downloads/Rally Demo Edit2026-11-02. Separate120second presenter cut retained. Full decode and duration/frame count checks pass. Completed-report/PDF close-up and final listener approval remain pending. No paid calls, production changes, public upload or submission.
+
+## Demo video version02 — November2
+
+Version02replaces the reviewer-name discussion with23.5seconds of actual streaming transcription from the new user-supplied Teams recording. Audio and partial-caption progression remain at original speed. The final closing card is one second shorter to preserve exactly180seconds/5400frames at1080p30. Reviewer-name references are removed from both the replaced audio and sidecar captions. Version01is preserved byte-for-byte.
+
+Local numbered exports: Downloads/Rally Demo Edit2026-11-02/`01 - Rally - 3 Minute Demo.mp4` and `02 - Rally - 3 Minute Demo.mp4`. Private server copy and edit/verification records: `artifacts/feedback/human-demo-20261102/versions/02/`. Version02SHA256:`7d7489d75e67b815246bc9ec76008b3f5b74dade7276fe91b086ef99586086f2`. Full decode, duration/frame count and previous-version hash checks pass. The replacement runs from1:27.47to1:50.97and uses source6.0–29.5seconds of Meeting with Eric Offermann-20261102_222047-Meeting Recording.mp4. The earlier real Rally speech sample remains. No new provider calls, service changes, public uploads or submission. Completed-report/PDF close-up and final listener review remain pending.
