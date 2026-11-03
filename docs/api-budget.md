@@ -1,5 +1,9 @@
 # Muse API budget and reporting
 
+## November 3 authorized continuation
+
+The user explicitly authorized continued API use despite the unconfirmed failed-report charge after checking Meta Billing and seeing no problem. Production enables `RALLY_ALLOW_UNKNOWN_COST_ESTIMATES=1`: unknown rows retain their status and null actual cost, while their reserved estimates count toward both existing spending caps. New requests may proceed within those caps. This is a provisional accounting policy, not billing reconciliation or an automatic retry. Default configuration remains strict for other deployments. Production caps remain $6 per meeting and $20 application-wide; this instruction does not increase them. See the [continuation record](api-continuation-2026-11-03.md).
+
 User instruction: conserve the $150 hackathon grant across the whole week, including final tests and demos. Whenever Muse API calls are made, report their cost and remaining credits. Never equate an estimated remainder with an actual Billing balance.
 
 ## Working limits

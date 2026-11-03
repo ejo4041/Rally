@@ -1,5 +1,7 @@
 # Rally documentation
 
+[Authorized API continuation](api-continuation-2026-11-03.md): API use may proceed with unconfirmed costs provisionally reserved against the existing caps.
+
 [New-meeting setup fix](meeting-setup-fix-2026-11-03.md): blank invitation between meetings, visible Join requirements and the remaining provider-charge reconciliation blocker.
 
 [Saved meeting navigation fix](history-navigation-fix-2026-11-03.md): deployed same-item retry after a failed load, ready/failed report checks and desktop/mobile browser evidence.

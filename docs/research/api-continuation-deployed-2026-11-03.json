@@ -1,0 +1,56 @@
+{
+  "at": "2026-11-03T03:12:16.095Z",
+  "passed": true,
+  "scope": "One actual Muse agenda preparation through public HTTPS with MFA and a disposable synthetic account. Paid usage retained in production ledger; synthetic meeting/account removed.",
+  "modelCalls": 1,
+  "platformJoins": 0,
+  "mfaLogin": true,
+  "semanticOTP": true,
+  "prepared": true,
+  "batchCostUSD": 0.002948,
+  "usageId": "e0b64cd2-8092-4d52-845b-1da0b674767b",
+  "usageDetails": {
+    "id": "e0b64cd2-8092-4d52-845b-1da0b674767b",
+    "at": 1793675537780,
+    "kind": "prepare",
+    "reasoningEffort": "low",
+    "maxOutputTokens": 4096,
+    "model": "muse-spark-1.3",
+    "adapter": "meta-chat-json",
+    "pricing": {
+      "input": 1.25,
+      "cachedInput": 0.15,
+      "output": 4.25
+    },
+    "requestId": "c2f21dcf-364c-4f9a-a8d3-4879cfd67654",
+    "httpStatus": 200,
+    "finishReason": "stop",
+    "usage": {
+      "completion_tokens": 536,
+      "prompt_tokens": 536,
+      "total_tokens": 1072,
+      "completion_tokens_details": {
+        "reasoning_tokens": 449
+      },
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    },
+    "cost": 0.002948,
+    "status": "known"
+  },
+  "originalUnknownRowsPreserved": true,
+  "temporaryRecordsRemoved": true,
+  "backendSource": "35f86ed",
+  "activeRelease": "35f86ed-api-continuation",
+  "frontendSource": "817b08b",
+  "allowUnknownCostEstimates": true,
+  "meetingBudgetUSD": 6,
+  "applicationBudgetUSD": 20,
+  "backendTests": 159,
+  "apiTypecheck": true,
+  "trackedDevelopmentSpendUSD": "5.34461765",
+  "conditionalUnverified150RemainderUSD": "144.65538235",
+  "accountingScope": "Tracked development spend excludes unverified unrelated runtime activity. Actual Billing balance is unverified. Original unknown reserved estimate 0.253929 USD remains separate and unconfirmed.",
+  "preflightProbeFailure": "First Playwright APIRequestContext attempt failed local TLS resolution before reaching the server/provider; no provider usage row or automatic provider retry. A corrected explicit browser-fetch probe made the single successful request."
+}
