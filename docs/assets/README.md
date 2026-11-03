@@ -1,6 +1,6 @@
 # README media
 
-`workspace-tour.gif` and `workspace-home.png` were captured from the checked-in, isolated simulated workspace. The participants, transcript, report and agenda are fictional; the workspace has no real account or meeting access. A fresh browser profile made zero external requests. No browser/desktop chrome or supplied real meeting video was used.
+`workspace-tour.gif` and `workspace-home.png` were captured in dark mode from the checked-in, isolated simulated workspace. The participants, transcript, report and agenda are fictional; the workspace has no real account or meeting access. A fresh browser profile made zero external requests. No browser/desktop chrome or supplied real meeting video was used.
 
 The GIF is a23-second edited screenshot tour with cuts and holds. It is not a live model demo or latency measurement. Its sample banner stays visible. The PNG is a still alternative for readers who prefer no animation. File hashes, source revision and capture details are in [provenance.json](provenance.json).
 
