@@ -37,3 +37,5 @@ Research files preserve source attribution and distinguish documented capability
 - [November 2 human voice listening feedback](phoneme-listening-feedback-2026-11-02.md)
 
 - [Rally market scan: Read AI and live-facilitation alternatives](research/meeting-market-2026-11-02.md)
+
+[November 3 presenter recording package](demo-presenter-recording-2026-11-03.md): human intro/problem/product/Meta-role script, free capture tools, B-roll cues and raw-file handoff for a three-minute review edit. Recording and new compositor work remain pending.
