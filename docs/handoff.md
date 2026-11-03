@@ -76,3 +76,9 @@ Final prototype evidence: clean candidate `d620008` generated 80/80 corpus WAVs.
 [Read AI and close alternatives](research/meeting-market-2026-11-02.md): vendor-documentation scan, no trial accounts or purchases. Read overlaps on live metrics/coaching; Teams Facilitator is a direct agenda/timing competitor; Otter documents Zoom voice Q&A; Fireflies/Hedy offer live suggestions. Proposed positioning centers on evidence-backed team outcomes, not unique transcription/voice claims. Production unchanged.
 
 [November 3 presenter recording package](demo-presenter-recording-2026-11-03.md): human intro/problem/product/Meta-role script, free capture tools, B-roll cues and raw-file handoff for a three-minute review edit. Recording and new compositor work remain pending.
+
+## November 2 demo edit and usage investigation
+
+The laptop session is assembling the user's26portrait phone takes from Downloads/Photos-1-001(3).zip. Working files remain local in Downloads/Rally Demo Edit2026-11-02, originals preserved. A clean presenter cut and180-second assembly with explicitly marked pending live-demo slots are being prepared; source audio stays at original speed. User is locating B-roll; no video uploaded or submitted.
+
+[Production unknown-report cost investigation](report-cost-incident-2026-11-02.md) found one failed final-report request without returned token usage, reservation$0.253929. The app-wide unknown-cost guard is blocking paid work.223transcript turns remain saved. No ledger edits, provider retries or guard bypass were performed.
