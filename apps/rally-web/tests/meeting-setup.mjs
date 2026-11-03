@@ -33,8 +33,8 @@ try{
  assert.match(await page.locator('#join-requirements').textContent(),/agenda preparation failed/i);assert.match(await page.locator('#join-requirements').textContent(),/Fixture agenda failure/);
  await page.locator('#back').click();
  await page.route('**/api/meetings/'+failed.id,route=>route.fulfill({json:{...failed,turns:[],error:'Unknown provider costs must be reconciled before further paid work'}}));
- await page.locator(`#history [data-meeting="${failed.id}"]`).click();await page.waitForFunction(()=>document.querySelector('#join-requirements').textContent.includes('unconfirmed charge'));
- assert.equal(await page.locator('#start').isEnabled(),false);assert.match(await page.locator('#join-requirements').textContent(),/provider billing/);
+ await page.locator(`#history [data-meeting="${failed.id}"]`).click();await page.waitForFunction(()=>document.querySelector('#join-requirements').textContent.includes('unconfirmed usage'));
+ assert.equal(await page.locator('#start').isEnabled(),false);assert.match(await page.locator('#join-requirements').textContent(),/last agenda preparation attempt/);assert.doesNotMatch(await page.locator('#join-requirements').textContent(),/Reconcile/);
  await page.unroute('**/api/meetings/'+failed.id);await page.locator('#back').click();await page.locator(`#history [data-meeting="${failed.id}"]`).click();await page.waitForFunction(()=>document.querySelector('#meeting-title').textContent==='Preparation failure is visible');
  await page.locator('#live-teams-link').fill(invite);await page.locator('#consent').check();
  await page.request.post(base+'/api/test/prepare-failure',{data:{enabled:false}});await page.locator('#prepare').click();await page.waitForFunction(()=>!document.querySelector('#start').disabled);

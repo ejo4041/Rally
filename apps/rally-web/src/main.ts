@@ -416,10 +416,12 @@ function render() {
   button("start").disabled = state.busy || !m.plan || !input("consent").checked || (needsInvite && !inviteValid);
   const requirements: string[] = [];
   if (!m.plan) {
-    requirements.push(m.error ? `Agenda preparation failed: ${m.error}.` : "Prepare the agenda before joining.");
     if (m.error?.includes("Unknown provider costs"))
-      requirements.push("A previous AI request has an unconfirmed charge. Reconcile that charge in provider billing before retrying agenda preparation.");
-    else requirements.push("Use Retry agenda preparation when ready.");
+      requirements.push("The last agenda preparation attempt was blocked by unconfirmed usage. Use Retry agenda preparation to try again.");
+    else {
+      requirements.push(m.error ? `Agenda preparation failed: ${m.error}.` : "Prepare the agenda before joining.");
+      requirements.push("Use Retry agenda preparation when ready.");
+    }
   }
   if (needsInvite && !inviteValid) requirements.push("Paste a valid work/school Teams invitation.");
   if (!input("consent").checked) requirements.push("Confirm participant consent.");
