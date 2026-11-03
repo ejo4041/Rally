@@ -1,0 +1,39 @@
+{
+  "at": "2026-11-03T03:07:54.614Z",
+  "passed": true,
+  "scope": "Public HTTPS and actual MFA with disposable synthetic ready/draft meetings; join POST intercepted, no model request or actual platform join.",
+  "modelCalls": 0,
+  "platformJoins": 0,
+  "mfaLogin": true,
+  "semanticOTP": true,
+  "preparedJoinEnabled": true,
+  "joinClickDispatched": true,
+  "previousInviteCleared": true,
+  "blockedPreparationExplained": true,
+  "temporaryRecordsRemoved": true,
+  "sourceCommit": "817b08b",
+  "activeRelease": "817b08b-web-setup",
+  "backendRelease": "6fa6e2f",
+  "frontendOnly": true,
+  "apiPIDBefore": 625268,
+  "apiPIDAfter": 625268,
+  "backupCreated": true,
+  "frontendUnitTests": 17,
+  "frontendTypecheck": true,
+  "frontendBuild": true,
+  "localBrowserRegression": {
+    "passed": true,
+    "covers": [
+      "previous invitation cleared after second meeting renders",
+      "consent reset",
+      "invalid invite disabled",
+      "valid invite enabled with plan and consent",
+      "join POST dispatched once",
+      "preparation failure reason visible",
+      "unknown-cost explanation",
+      "explicit agenda retry recovery",
+      "390x844 viewport"
+    ]
+  },
+  "remainingBlocker": "Actual production newest meetings have no plan because the unknown-provider-cost guard rejected agenda preparation. One unknown request remains; reserved estimate 0.253929 USD is not confirmed usage. No reconciliation or guard bypass performed."
+}

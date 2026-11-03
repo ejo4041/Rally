@@ -1,5 +1,7 @@
 # Rally documentation
 
+[New-meeting setup fix](meeting-setup-fix-2026-11-03.md): blank invitation between meetings, visible Join requirements and the remaining provider-charge reconciliation blocker.
+
 [Saved meeting navigation fix](history-navigation-fix-2026-11-03.md): deployed same-item retry after a failed load, ready/failed report checks and desktop/mobile browser evidence.
 
 [Presenter closing and next-chapter vision](demo-next-chapter-pitch.md): proposed conversation-to-follow-through direction, delivery cues and an opening/closing callback.
