@@ -1,24 +1,18 @@
-# Judge access rehearsal — draft
+# Judge access: public sample and evidence
 
-App: https://rally.tail703f9e.ts.net/ . Public HTTPS is available; accounts currently require MFA. The owner has now explicitly requested dedicated judge username/password access. This supersedes the earlier internal recommendation against shared judge accounts; that recommendation was not a hackathon rule or an owner prohibition. A non-admin reviewer account and verified password are prepared privately. Its MFA enrollment is still required; the owner is choosing individual MFA accounts versus a temporary judge-only password flow. No global MFA change, factor enrollment on a judge's behalf, private-record grant or administrator reset was made. Keep passwords, activation codes, authenticator secrets and recovery codes out of public materials and Git.
+The organizer guidance supplied by the owner says there is no private submission field or approved credential channel. Do not publish credentials in the README. This supersedes the earlier shared reviewer-account delivery plan; no MFA relaxation is needed.
 
-## Individual MFA flow — if selected
+## Credential-free rehearsal
 
-In the Admin interface, invite the intended recipient with role user. Invite codes expire; create one near the access rehearsal rather than allowing an unattended invitation to expire before judging. Have the recipient open Rally, choose account activation, set their own password, enroll their own authenticator and save their own recovery codes. No invitation/message is sent automatically by this document. Provide the app URL and these steps separately from any confidential activation material.
+1. Signed out, open https://rally.tail703f9e.ts.net/demo.html . Confirm the synthetic-content notice is visible.
+2. Prepare the sample, play/step transcript turns, inspect authored Rally replies, edit speaker labels and compare passive/proactive sample modes.
+3. Open the sample report and follow source links. Check that conditional launch, unknown ownership and an unset launch date remain explicit. Export JSON or print to PDF.
+4. Run `python3 -m http.server 8000 --bind 127.0.0.1 --directory demo` from the checkout. Repeat at http://127.0.0.1:8000/ without installing packages or configuring models.
+5. Read `demo/provenance.json`, the root README evidence table and `docs/human-demo-edit-2026-11-02.md`. Sample playback is authored, while the current narrated video includes recorded actual UI and Teams footage. Neither establishes unedited real-time latency.
+6. Check final GitHub/video URLs while signed out before submitting. A working hosted sample does not establish public source/video access.
 
-Use an existing synthetic demonstration record, or a real rehearsal record approved for sharing. Grant report-only access to the recipient's exact Rally username after they activate; a copied URL alone grants no access. Do not grant access to unrelated meetings or real work records. Judge-account creation is pending the actual recipient identity and a private delivery channel.
+## Submission invitation
 
-## Recipient rehearsal
+“Try Rally without credentials at https://rally.tail703f9e.ts.net/demo.html . Explore a clearly labeled synthetic meeting from agenda through transcript evidence and report export. The public repo includes this runnable sample with no service setup; the three-minute video shows actual Rally UI and recorded Teams/transcription footage. The full integration setup is documented separately.”
 
-1. From an independent browser/device, open public HTTPS without VPN. Confirm landing/login works and public signup remains closed.
-2. Activate and enroll; sign out and sign back in with password plus authenticator. Do not record enrollment QR or recovery codes for B-roll.
-3. Open the exact report URL the owner granted. Confirm it renders, PDF downloads and transcript evidence available to that report is readable.
-4. Verify access to the full meeting and other users' records is denied. Report-only recipients must not gain host controls.
-5. Ask the owner to revoke the temporary report grant; refresh and confirm denial. Restore only the specifically intended demonstration grant.
-6. Open the source and final video links signed out. App authentication does not establish public GitHub or video access. Record each independently.
-
-## Draft invitation text
-
-“Rally is available at https://rally.tail703f9e.ts.net/ . It uses invited accounts and an authenticator. Your individual activation details will arrive privately from the project owner. Choose ‘Activate or reset account’, set a password, enroll your authenticator, and save recovery codes. After activation, tell the owner your exact Rally username so the intended demonstration report can be shared. No access to private meetings is included.”
-
-This is prepared text only; no invitation has been sent. [Current submission preparation](submission-package.md) records source/license/video and portal items. Final entry remains on hold.
+The sample contains no real meeting records, credentials, audio or paid-model invocation. It does not bypass the protected production application. Real accounts retain invitations and mandatory MFA. Account-based report sharing is explained, not exercised, in the sample. No invitation or submission has been sent by preparing this material.

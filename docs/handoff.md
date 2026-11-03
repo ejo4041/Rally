@@ -1,3 +1,11 @@
+## Public judge demo — 2026-11-03
+
+Owner supplied organizer guidance: no approved private credential channel; public repo/setup and three-minute video required, credential-free samples/evidence acceptable. Replaced shared judge-login delivery plan with `/demo.html`, an isolated static, explicitly synthetic interaction sample. No auth bypass, API route, model call, microphone or record grant. Full app MFA remains.
+
+Source: `apps/rally-web/src/demo*`; build/export scripts create checked-in `demo/` portable artifacts. Judge local path: `python3 -m http.server 8000 --bind 127.0.0.1 --directory demo`. README evidence table separates sample, real recorded footage and full integration. Judge runbook updated. Local submission answers remain owner-side, outside Git.
+
+Validation: frontend typecheck, 20 unit tests, and capped Playwright static browser rehearsal passed (play/pause/step/reset, evidence, speaker edit, passive/proactive, export, escaped input, desktop/mobile, zero API/model/WebSocket requests). Headless environment shows renderer text fallback when WebGL unavailable. Public post-deploy check recorded below. Rebuild portable assets after changing sample source; provenance.json contains bundle hashes. No paid processing invoked. Prior video05 preserved.
+
 # Rally current handoff — October 31, 2026
 
 **November 3 voice availability:** direct AWS Seamless probe returns HTTP503 with “Speech service operates daily 7:00–19:00 America/New_York”. Endpoint is reachable; voice is unavailable outside declared service hours, separate from Muse accounting. Two recent production voice failures returned zero bytes. Active meeting preserved, no model switch/restart. [Diagnosis](voice-service-hours-2026-11-03.md). One AWS probe, cost unknown; zero new Muse calls.

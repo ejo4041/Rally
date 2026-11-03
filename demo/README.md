@@ -1,0 +1,5 @@
+# Rally portable synthetic sample
+
+From the repository root: `python3 -m http.server 8000 --bind 127.0.0.1 --directory demo`, then open http://127.0.0.1:8000/ . Python 3 is the only requirement for this path. Do not use file://; ES modules require HTTP.
+
+Authored fictional agenda, transcript, replies and report. No live inference, speech, recording, account or meeting connection. This is an interaction sample, not evidence of model latency/accuracy. The real app source, integration setup, recorded-video provenance and component licensing boundaries are documented in the root README and docs. Bundle hashes/source paths: provenance.json. Attribution: THIRD_PARTY_NOTICES.md. Rebuild: frontend build, then apps/rally-web/scripts/export-demo.mjs from apps/rally-web.

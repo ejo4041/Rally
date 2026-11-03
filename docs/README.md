@@ -55,3 +55,5 @@ Research files preserve source attribution and distinguish documented capability
 - [November 2 unknown report cost investigation](report-cost-incident-2026-11-02.md)
 
 - [Human presenter and real-footage demo edit](human-demo-edit-2026-11-02.md)
+
+- [Credential-free judge demo and rehearsal](judge-access-rehearsal.md) — portable sample, evidence boundaries and public judge path.

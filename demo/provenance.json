@@ -1,0 +1,15 @@
+{
+  "kind": "authored-synthetic-sample",
+  "entry": "apps/rally-web/src/demo.ts",
+  "data": "apps/rally-web/src/demo-data.ts",
+  "build": "node scripts/build.mjs && node scripts/export-demo.mjs",
+  "network": "No API, model, microphone, meeting or recording access. External navigation links require an explicit click.",
+  "files": {
+    "demo.html": "f422ff6e099a183f763f7d44c3a5ed077e62dfcd09ed7ac73188bb7caf0534bd",
+    "demo.js": "8af20c4bc010b34d31ed79def27c6f05308029a27eb270424b78f457e3d6a380",
+    "demo.css": "64a1894eeb69ee9d83d22976975ae0481e9344dc32322980be53b5c35dd5cb9c",
+    "style.css": "c9a157b42f356df21eb3653b6c0a8e7c9312a7c74f212bc7d593b638e2c56e1e",
+    "theme-init.js": "7448d4c4451094ac1ed3e2b0c8fc58234e33e705259e77505ff78cd8cfcaf3f5",
+    "favicon.svg": "2fa3ba8c08bf3c0856ccfd9713e3da7bfa3af8b87478a758ff2eb868828e1e3e"
+  }
+}

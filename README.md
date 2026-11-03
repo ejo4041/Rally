@@ -4,7 +4,27 @@ Rally helps a host turn a decision meeting into clear next steps with reviewable
 
 [Open Rally](https://rally.tail703f9e.ts.net/) · [Current handoff](docs/handoff.md) · [Three-minute demo script](docs/demo-script.md) · [API](docs/backend-api.md) · [Documentation](docs/README.md)
 
-The hosted app uses invited accounts and mandatory MFA. Public signup is closed. Ask the project owner for an invitation; existing users sign in with their password and authenticator.
+## Judges: explore without credentials
+
+**[Open the interactive sample](https://rally.tail703f9e.ts.net/demo.html)** — no login, setup, microphone, model keys or paid calls. The login page also links to this sample. Ordinary meeting accounts still require invitations and MFA.
+
+Alternatively, run the checked-in portable sample from a repository checkout with Python 3; no npm dependencies or backend are needed:
+
+```sh
+python3 -m http.server 8000 --bind 127.0.0.1 --directory demo
+```
+
+Open http://127.0.0.1:8000/ . Explore **Plan → Conversation → Report**. Play or step through the transcript, change Rally’s sample approach, identify a speaker, follow report source links, add a review note, export JSON, or use the browser’s Print / Save PDF dialog. Edits stay in memory and reset on reload. Appearance preference alone is saved locally.
+
+### Evidence and limitations
+
+| Judge path | What it establishes | Limits |
+| --- | --- | --- |
+| Interactive sample (`demo/`, source `apps/rally-web/src/demo*`) | Runnable agenda/transcript/report interaction, source navigation and exports | Authored fictional text, speakers, replies and report. Streaming is simulated. No live AI, voice, Teams, authentication or access-grant validation. |
+| Three-minute video and [edit provenance](docs/human-demo-edit-2026-11-02.md) | Human-narrated actual Rally UI and recorded multi-participant Teams/transcription footage, with identified edits | Edited excerpts do not establish end-to-end latency. Final public video URL is added to the submission separately. |
+| Full application setup below | Source and configuration for real service integrations | Requires service credentials, invited accounts/MFA, media setup and model availability; processing can incur charges. |
+
+The static sample never loads the authenticated app entrypoint and has a `connect-src 'none'` content policy. It cannot access private meetings or invoke model endpoints. Checked-in bundle hashes and source paths are in [demo/provenance.json](demo/provenance.json). Rebuild it with the frontend build followed by `node scripts/export-demo.mjs` from `apps/rally-web`. Component attribution is included with the portable files.
 
 ## Meta technologies
 
@@ -13,7 +33,7 @@ The hosted app uses invited accounts and mandatory MFA. Public signup is closed.
 | Muse Voice Transcribe | Streaming audio transcription and anonymous speaker labels | Meta Model API; Rally does not use native Teams transcripts. |
 | Muse Spark 1.3 | Agenda preparation, continuous guidance and complete final reports | Meta Model API; validated structured output and source references. |
 | SeamlessM4T-v2-large | Streamed production speech for approved prompts | Configured AWS-hosted Meta-model endpoint; exact remote checkpoint revision is not supplied. |
-| Meta MMS English | Configurable local voice and this demonstration's narration | Self-hosted `facebook/mms-tts-eng`, pinned revision `c71de0fe7204c83f1c10820a7d696d0b450048ba`; weights CC BY-NC 4.0. |
+| Meta MMS English | Configurable local voice and earlier synthetic narration experiments | Self-hosted `facebook/mms-tts-eng`, pinned revision `c71de0fe7204c83f1c10820a7d696d0b450048ba`; weights CC BY-NC 4.0. |
 
 Living Silk is visual artwork/runtime, not a Meta vision model or participant emotion detector. LiveKit supplies self-hosted media transport. Component authorship and licenses remain with their owners. [Model interfaces and configuration](docs/model-interfaces.md), [MMS provisioning](experiments/meta-mms/README.md).
 
@@ -31,7 +51,7 @@ The current application lives in `apps/rally-api/` and `apps/rally-web/`. The ea
 
 ## Demonstration and contribution
 
-The [three-minute script](docs/demo-script.md) covers Meta transcription, reasoning, speech, host control and evidence review. The produced walkthrough is visibly labeled as synthetic replay; it does not claim live model latency or a new Teams trial. Recorded live-call evidence remains separate. [Video provenance](docs/demo-feedback-draft.md).
+The [three-minute script](docs/demo-script.md) covers Meta transcription, reasoning, speech, host control and evidence review. The current three-minute cut uses human narration and recorded actual UI/Teams footage. The older synthetic replay and the new credential-free interactive sample are separate artifacts. Neither edited video nor scripted playback measures live model latency. [Current video provenance](docs/human-demo-edit-2026-11-02.md).
 
 Rally's application contribution includes meeting state, agenda policy, evidence validation, owner-isolated records, model capability interfaces, controlled speech, Teams transport, visual presence integration, report review/sharing and host controls. Meta models, visual assets, transport/runtime libraries and tools retain their own attribution. The [submission draft](docs/submission-package.md) records remaining access/licensing and contributor verification; final submission is on hold.
 

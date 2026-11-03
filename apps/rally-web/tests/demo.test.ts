@@ -1,0 +1,6 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {turns,outcomes,initialReplay,advance,visibleTurn,makeExport} from '../src/demo-data.ts';
+test('replay resets and cannot advance past final turn',()=>{assert.deepEqual(initialReplay(),{cursor:0,playing:false});let cursor=0;for(let i=0;i<100;i++)cursor=advance(cursor);assert.equal(cursor,turns.length);assert.equal(initialReplay().cursor,0);});
+test('passive mode suppresses only Rally; every report reference resolves to human evidence',()=>{turns.forEach((t,i)=>assert.equal(visibleTurn(i,'passive'),t.speaker!=='Rally'));for(const item of outcomes)for(const ref of item.evidence){assert.ok(turns[ref]);assert.notEqual(turns[ref].speaker,'Rally');}assert.match(outcomes[0].text,/only after/);assert.match(outcomes[2].text,/unconfirmed/);});
+test('export retains synthetic provenance, host input and corrected labels without mutating script',()=>{const result=makeExport('<script>sample</script>','Review this', {Alex:'Example host'});assert.equal(result.kind,'rally-synthetic-sample');assert.match(result.provenance,/No live model/);assert.equal(result.transcript[0].speaker,'Example host');assert.equal(turns[0].speaker,'Alex');assert.equal(result.hostNote,'Review this');assert.equal(result.agenda,'<script>sample</script>');});
