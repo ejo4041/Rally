@@ -21,6 +21,14 @@ try{
  const create=async title=>{const response=await page.request.post(base+'/api/meetings',{data:{title,agenda:'Review release readiness',durationMinutes:10}});assert.equal(response.status(),201);return response.json();};
  const first=await create('First meeting invite');await page.locator('#refresh-history').click();await page.locator(`#history [data-meeting="${first.id}"]`).click();await page.locator('#audio-mode').selectOption('teams');
  assert.equal(await page.locator('#join-greeting-label').isVisible(),true);assert.equal(await page.locator('#join-greeting').isChecked(),false);
+ for(const width of [1280,390]){
+  await page.setViewportSize({width,height:844});
+  const box=await page.locator('#join-greeting').boundingBox();assert.ok(box&&box.width>=18&&box.height>=18,'Welcome checkbox has a visible, usable size');
+  await page.getByText('Play a welcome greeting',{exact:true}).click();assert.equal(await page.locator('#join-greeting').isChecked(),true);
+  await page.getByText('Play a welcome greeting',{exact:true}).click();assert.equal(await page.locator('#join-greeting').isChecked(),false);
+ }
+ await page.setViewportSize({width:1280,height:800});
+
  const invite='https://teams.microsoft.com/l/meetup-join/synthetic-first-invite';await page.locator('#live-teams-link').fill(invite);await page.locator('#consent').check();assert.equal(await page.locator('#start').isEnabled(),true);
  await page.locator('#back').click();const second=await create('New meeting invite must be blank');await page.locator('#refresh-history').click();await page.locator(`#history [data-meeting="${second.id}"]`).click();await page.waitForFunction(title=>document.querySelector('#meeting-title').textContent===title,second.title);
  assert.equal(await page.locator('#live-teams-link').inputValue(),'','A previous meeting invite must never carry into another meeting');
