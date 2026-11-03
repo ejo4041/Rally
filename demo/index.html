@@ -1,10 +1,672 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'none'; media-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'"><title>Rally · Interactive sample</title><script src="theme-init.js"></script><link rel="icon" href="favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="demo.css"><script type="module" src="demo.js"></script></head>
-<body class="demo"><header class="demo-top"><a class="brand" href="demo.html">▥ rally<span>.</span></a><span>Make the time together count.</span><label>Appearance <select data-theme-selector aria-label="Appearance"><option value="system">System</option><option value="light">Light</option><option value="dark">Dark</option></select></label></header>
-<main id="workspace"><section class="sample-notice"><strong>Interactive sample · scripted, synthetic content</strong><p>No account, microphone, meeting connection or AI calls. Everything runs in this tab; sample edits disappear on reload. This replay does not measure model quality or latency.</p></section>
-<section id="home" class="demo-hero"><div><div class="eyebrow">MEET RALLY</div><h1>A clearer conversation.<br><span>A useful next step.</span></h1><p>Explore a fictional release-planning meeting, from an agenda to decisions grounded in transcript evidence.</p><div class="meta-chip">Built with Meta in the full app</div><p class="small">Muse Voice Transcribe listens · Muse Spark reasons · Seamless speaks.<br>In this sample, their outputs are authored examples.</p></div><div id="rally-mascot" aria-label="Rally visual mascot"></div></section>
-<nav class="demo-tabs" aria-label="Sample stages"><button data-stage="plan">1 · Plan</button><button data-stage="conversation">2 · Conversation</button><button data-stage="report">3 · Report</button></nav>
-<section id="plan" class="demo-panel"><div class="eyebrow">BEFORE THE MEETING</div><h2>Start with an outcome.</h2><label>Sample agenda<textarea id="agenda" rows="3" maxlength="1000">Decide whether the release is ready. Confirm blockers, assign next steps, and agree on the launch condition.</textarea></label><button id="prepare" class="primary">Explore prepared sample</button><div id="prepared" hidden><h3>Prepared sample plan</h3><p>Your agenda: <span id="agenda-preview"></span></p><ol><li>Review readiness and remaining blockers.</li><li>Separate confirmed decisions from proposals.</li><li>Read back owners, dates and unresolved details.</li></ol><p class="small">Fixed example plan; no model generated this output.</p></div></section>
-<section id="conversation" class="demo-panel" hidden><div class="demo-section-title"><div><div class="eyebrow">DURING THE MEETING</div><h2>Follow the evidence.</h2></div><label>Rally approach<select id="approach"><option value="passive">Passive</option><option value="balanced" selected>Balanced</option><option value="proactive">Proactive</option></select></label></div><p id="mode-note"></p><div class="demo-actions"><button id="play" class="primary">Play sample</button><button id="next">Next turn</button><button id="reset">Reset replay</button><button id="finish">Skip to report</button></div><p id="progress" role="status"></p><div id="transcript" aria-label="Synthetic transcript"></div></section>
-<section id="report" class="demo-panel" hidden><div class="eyebrow">AFTER THE MEETING</div><h2>Decisions you can check.</h2><p>Scripted report from the complete sample, independent of replay progress.</p><div id="outcomes"></div><label>Host review note<textarea id="host-note" rows="2" maxlength="2000" placeholder="Try adding a review note (this tab only)"></textarea></label><div class="demo-actions"><button id="export">Export sample JSON</button><button id="print">Print / save PDF</button></div><p class="small">PDF uses your browser’s print dialog. In the full app, hosts can grant and revoke report access for named Rally accounts. This public sample creates no accounts or access grants.</p></section>
-<footer><h3>What this demonstrates</h3><p>Agenda planning, streaming-style transcript playback, Rally replies, speaker labeling, evidence review and exports. Transcript text, speaker identities, guidance and report conclusions are synthetic. Playback speed is a UI illustration.</p><p>The full app uses Meta models and protected meeting records. See the repository’s real-footage provenance and integration setup for actual service evidence and requirements.</p><a href="https://github.com/ejo4041/Rally">Source, setup &amp; evidence</a> · <a href="/">Protected Rally app</a></footer></main></body></html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#f5f6f2" />
+    <title>Rally · Simulated workspace</title><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'none'; media-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+    <script src="theme-init.js"></script>
+    <link rel="stylesheet" href="style.css" /><link rel="stylesheet" href="demo.css" />
+    <script type="module" src="demo.js"></script>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+</head>
+  <body>
+    <label class="auth-appearance appearance-control">Appearance<select data-theme-selector aria-label="Appearance"><option value="system">System</option><option value="light">Light</option><option value="dark">Dark</option></select></label>
+    <section id="auth-screen" class="auth-screen">
+      <a class="brand" href="/">▥ rally<span>.</span></a>
+      <div class="auth-card">
+        <div class="eyebrow">MAKE THE TIME TOGETHER COUNT</div>
+        <h1>A little focus.<br />A lot more progress.</h1>
+        <p class="muted">
+          An agenda before the conversation.<br />Clarity when it’s time to move
+          forward.
+        </p>
+        <p><a href="/demo.html" class="primary">Try interactive sample · no account</a></p>
+        <form id="auth-form">
+          <h2 id="auth-title">Welcome back</h2>
+          <label
+            >Username<input
+              id="username"
+              autocomplete="username"
+              minlength="3"
+              maxlength="40"
+              pattern="[a-z0-9_-]{3,40}"
+              required /></label
+          ><label
+            >Password<input
+              id="password"
+              type="password"
+              autocomplete="current-password"
+              minlength="10"
+              maxlength="200"
+              required
+          /></label>
+
+          <button id="auth-submit" class="primary" type="submit">Sign in</button
+          ><button id="auth-toggle" hidden class="text" type="button">
+            Create an account
+          </button>
+        </form>
+        <p class="small muted">Registration is invitation-only. An authenticator app is required.</p>
+        <button id="activate-open" class="text" type="button">Activate or reset account</button>
+        <form id="activate-form" hidden>
+          <h2>Activate or reset account</h2>
+          <p>Use the code delivered privately by the administrator. For an invitation, choose your password. For an MFA reset, enter your existing password.</p>
+          <label>Username<input id="activate-username" autocomplete="username" required pattern="[a-z0-9_-]{3,40}" /></label>
+          <label>Password<input id="activate-password" type="password" autocomplete="new-password" required minlength="10" maxlength="200" /></label>
+          <label>Activation code<input id="activate-code" autocomplete="off" required /></label>
+          <button id="activate-submit" type="submit" class="primary">Continue to MFA setup</button>
+        </form>
+        <form id="mfa-form" hidden>
+          <h2 id="mfa-title">Verify your sign-in</h2>
+          <div id="enrollment" hidden><p>Scan this QR code in your authenticator app, then enter the six-digit code.</p><img id="enrollment-qr" alt="Authenticator enrollment QR code" width="240" height="240" /><p>Manual setup key: <code id="enrollment-secret"></code></p></div>
+          <label>Authenticator or recovery code<input id="mfa-code" name="totp" type="text" inputmode="numeric" spellcheck="false" autocapitalize="off" aria-label="Verification code" placeholder="6-digit verification code" autocomplete="one-time-code" maxlength="80" required /></label>
+          <button id="mfa-submit" type="submit" class="primary">Verify</button>
+          <button id="use-recovery" type="button" class="text">Use a recovery code</button>
+        </form>
+        <div id="recovery-panel" hidden><h2>Save your recovery codes</h2><p>Store these somewhere safe. Each code works once and requires setting up MFA again. These codes will not be shown again.</p><pre id="recovery-codes"></pre><button id="recovery-continue" class="primary">I saved my codes — continue</button></div>
+        <p id="auth-error" class="error" role="alert"></p>
+        <button id="auth-restart" type="button" class="text">Back to sign in</button>
+      </div>
+      <p class="small muted">
+        Your meetings and reports belong to your account. Administrators see basic usage; transcript sharing is optional.
+      </p>
+    </section>
+    <div id="workspace" hidden>
+      <aside class="sidebar">
+        <a class="brand" href="#" id="brand">▥ rally<span>.</span></a>
+        <div class="eyebrow">YOUR WORKSPACE</div>
+        <button id="home-nav" class="nav active">▤ Meetings</button
+        ><button id="new-nav" class="nav">+ New meeting</button>
+        <div class="eyebrow recent-label">RECENT</div>
+        <div id="recent" class="recent"></div>
+        <div class="sidebar-foot">
+          <span id="current-user"></span
+          ><button id="logout" class="text">Sign out</button>
+        </div>
+      </aside>
+      <div class="shell">
+        <header class="topbar">
+          <button class="text" id="mobile-home">Meetings</button
+          ><span id="breadcrumb">Workspace / Meetings</span
+          ><button id="mobile-logout" class="text mobile-only">Sign out</button>
+          <div class="topbar-tools"><label class="appearance-control">Appearance<select data-theme-selector aria-label="Appearance"><option value="system">System</option><option value="light">Light</option><option value="dark">Dark</option></select></label><details id="account-menu" class="account-menu"><summary>Account</summary><div><button id="admin-open" class="secondary" hidden>Administration</button><button id="usage-button" class="secondary">Usage</button></div></details></div>
+        </header>
+        <main>
+          <section id="home">
+            <div class="hero">
+              <div>
+                <div class="eyebrow">
+                  YOUR MEETING, WITH MOMENTUM.
+                </div>
+                <h1>Make the time<br /><span>together count.</span></h1>
+                <p class="muted">
+                  Your agenda, a clearer conversation,<br />and next steps
+                  grounded in what was said.
+                </p>
+                <button id="new-meeting" class="primary">
+                  + Start a new meeting
+                </button>
+              </div>
+              <div class="hero-art" aria-hidden="true">
+                <div class="hero-halo"></div>
+                <div id="rally-mascot" class="rally-mascot"></div>
+                <span class="hero-float hero-float-plan">✦ A plan before the first word</span>
+                <span class="hero-float hero-float-action">↗ Clarity after the last</span>
+                <span class="hero-art-caption">Meet Rally. Your meeting guide.</span>
+              </div>
+            </div>
+            <section class="meta-products" aria-label="Meta AI in Rally">
+              <div class="meta-heading"><div><span class="eyebrow">THE INTELLIGENCE BEHIND RALLY</span><h2>Built with <span>Meta AI</span></h2></div><p>One conversation.<br />Intelligence at every step.</p></div>
+              <div class="meta-product-grid">
+                <article class="meta-model-card meta-think">
+                  <div class="model-art" aria-hidden="true"><span class="art-label">01 / THINK</span><svg viewBox="0 0 320 140" fill="none"><path class="art-connector" d="M90 52L160 72L238 39M160 72L230 111"/><rect class="art-node" x="24" y="25" width="91" height="42" rx="9"/><text class="art-text" x="39" y="50">Your agenda</text><rect class="art-node" x="219" y="17" width="80" height="38" rx="9"/><text class="art-text" x="232" y="41">Decisions</text><rect class="art-node" x="206" y="94" width="94" height="37" rx="9"/><text class="art-text" x="218" y="117">Next steps</text><circle class="art-orbit" cx="160" cy="72" r="36"/><circle class="art-core" cx="160" cy="72" r="25"/><path class="art-spark" d="M160 53L165 67L179 72L165 77L160 91L155 77L141 72L155 67Z"/></svg></div>
+                  <div class="model-card-body"><span class="meta-badge">Meta · Muse Spark 1.3</span><h3>A sharper sense of direction.</h3><p>Turns your agenda into a plan, guides the conversation and builds the final report.</p><span class="model-role">PLAN <span aria-hidden="true">→</span> GUIDE <span aria-hidden="true">→</span> REVIEW</span></div>
+                </article>
+                <article class="meta-model-card meta-listen">
+                  <div class="model-art" aria-hidden="true"><span class="art-label">02 / LISTEN</span><svg viewBox="0 0 320 140" fill="none"><rect class="art-node" x="24" y="35" width="125" height="82" rx="14"/><g class="art-wave" stroke="currentColor" stroke-width="4" stroke-linecap="round"><path d="M40 69V83"/><path d="M52 58V94"/><path d="M64 66V86"/><path d="M76 48V104"/><path d="M88 57V95"/><path d="M100 65V87"/><path d="M112 52V100"/><path d="M124 63V89"/><path d="M136 70V82"/></g><path class="art-connector" d="M158 76H187M180 69L187 76L180 83"/><rect class="art-node" x="197" y="35" width="102" height="82" rx="14"/><rect class="art-line" x="212" y="53" width="67" height="5" rx="2.5"/><rect class="art-line" x="212" y="67" width="52" height="5" rx="2.5"/><rect class="art-line" x="212" y="81" width="73" height="5" rx="2.5"/><rect class="art-line" x="212" y="95" width="40" height="5" rx="2.5"/></svg></div>
+                  <div class="model-card-body"><span class="meta-badge">Meta · Muse Voice Transcribe</span><h3>Keep the conversation.</h3><p>Transcribes what’s said, with anonymous speaker labels you can identify.</p><span class="model-role">STREAM <span aria-hidden="true">→</span> TRANSCRIBE</span></div>
+                </article>
+                <article class="meta-model-card meta-speak">
+                  <div class="model-art" aria-hidden="true"><span class="art-label">03 / RESPOND</span><svg viewBox="0 0 320 140" fill="none"><circle class="art-ripple" cx="160" cy="78" r="53"/><circle class="art-orbit" cx="160" cy="78" r="39"/><circle class="art-core" cx="160" cy="78" r="28"/><path class="art-speaker" d="M142 72H149L158 64V92L149 84H142ZM166 70Q175 78 166 86M174 63Q190 78 174 93"/><path class="art-connector" d="M43 78H94M226 78H277"/><circle class="art-dot" cx="40" cy="78" r="4"/><circle class="art-dot" cx="280" cy="78" r="4"/></svg></div>
+                  <div class="model-card-body"><span class="meta-badge">Meta · SeamlessM4T + MMS</span><h3>Give useful guidance a voice.</h3><p>SeamlessM4T streams Rally’s voice; MMS provides the local browser voice option.</p><span class="model-role">RESPOND <span aria-hidden="true">→</span> SPEAK</span></div>
+                </article>
+              </div>
+            </section>
+            <div class="benefits">
+              <div>
+                <b>01</b><strong>Start with intention</strong>
+                <p>An editable plan before the first word.</p>
+              </div>
+              <div>
+                <b>02</b><strong>Stay in the conversation</strong>
+                <p>Useful guidance, with you in control.</p>
+              </div>
+              <div>
+                <b>03</b><strong>Leave with clarity</strong>
+                <p>Due-outs and a path back to the source.</p>
+              </div>
+            </div>
+            <section class="card setup" id="platform-setup">
+              <h2>How will Rally listen?</h2>
+              <p class="small muted">
+                For Zoom, WhatsApp, Meet or a Teams call you join yourself,
+                create a Rally meeting and choose
+                <strong>Meeting browser tab</strong>. Select the call tab and
+                enable Share tab audio when prompted. No meeting link is needed
+                for that mode.
+              </p>
+              <button id="create-browser-meeting" class="secondary">
+                Set up browser-tab capture
+              </button>
+              <details id="teams-invite">
+                <summary>Invite Rally to Teams using a meeting link</summary>
+                <p class="small muted">
+                  Rally joins a work/school Teams call as “Rally audio test.”
+                  Three-minute test including connection and lobby time. This
+                  path captures text; live guidance and spoken moderation are
+                  not run in the call.
+                </p>
+                <p id="teams-runner-status" role="status">Checking runner…</p>
+                <form id="teams-join-form">
+                  <label
+                    >Teams meeting link<input
+                      id="teams-url"
+                      type="url"
+                      maxlength="4000"
+                      autocomplete="off"
+                      placeholder="https://teams.microsoft.com/l/meetup-join/…"
+                      required
+                  /></label>
+                  <label class="check"
+                    ><input id="teams-consent" type="checkbox" required />The
+                    host and participants consent to Rally joining this audio
+                    test.</label
+                  >
+                  <label class="check"
+                    ><input id="teams-transcribe" type="checkbox" />Transcribe
+                    with Muse: participants consent to sending audio to Meta and
+                    saving the transcript, and to Rally speaking and displaying its camera in a connected Teams call.</label
+                  >
+                  <p class="small muted">
+                    Full three-minute transcription estimate: $0.009. This uses
+                    the existing Teams service budget; its usage is recorded
+                    separately from this app’s API usage.
+                  </p>
+                  <button
+                    id="teams-join"
+                    class="primary"
+                    type="submit"
+                    disabled
+                  >
+                    Invite Rally to Teams
+                  </button>
+                </form>
+                <div class="actions">
+                  <button id="teams-leave" class="danger" hidden>
+                    Leave Teams meeting</button
+                  ><button id="teams-refresh" class="text">
+                    Refresh status</button
+                  ><button id="teams-save" class="secondary" hidden>
+                    Save transcript to my history
+                  </button>
+                </div>
+                <p id="teams-message" role="status"></p>
+                <p id="teams-error" class="error" role="alert"></p>
+                <div id="teams-transcript" class="transcript"></div>
+                <p id="teams-partial" class="partial"></p>
+                <p class="small muted">
+                  Admit Rally from the Teams lobby when asked. Closing this page
+                  or signing out does not stop this server participant; use
+                  Leave. Verify departure in the Teams roster. Saved history
+                  contains only the finalized text and does not automatically
+                  request analysis.
+                </p>
+              </details>
+            </section>
+            <div class="section-title">
+              <div>
+                <h2>Your meetings</h2>
+                <p class="muted small">
+                  The conversation ends. The clarity stays.
+                </p>
+              </div>
+              <button id="refresh-history" class="text">Refresh</button>
+            </div>
+            <div id="history" class="card"></div><section class="card shared-reports-card"><h2>Shared with you</h2><p class="small muted">Read-only reports shared by other Rally users.</p><div id="shared-reports"></div></section>
+          </section>
+          <section id="meeting" hidden>
+            <button id="back" class="text">← All meetings</button>
+            <div class="section-title meeting-heading">
+              <div>
+                <h1 id="meeting-title"></h1>
+                <p id="meeting-meta" class="muted small"></p>
+              </div>
+              <div class="actions">
+                <span id="phase" class="pill"></span
+                ><button id="export" class="secondary">Export record</button
+                ><button id="delete" class="danger">Delete</button>
+              </div>
+            </div>
+            <div id="meeting-navigation" class="meeting-navigation" hidden><button id="open-plan" class="secondary">Plan</button><button id="open-conversation" class="secondary">Transcript</button><button id="open-settings" class="secondary">Settings</button></div>
+
+            <p id="record-error" class="banner error" role="alert" hidden></p>
+            <div id="wrap-up-status" class="notice" hidden role="status"><p id="wrap-up-message"></p><a id="wrap-up-link" hidden>Open meeting summary</a><p class="small muted">Other Rally accounts need an explicit report grant from the host.</p></div>
+            <p id="connection-status" class="banner" role="status" hidden></p>
+            <section class="card setup" id="start-panel">
+              <h2 id="start-title">Review the plan. Then bring everyone in.</h2>
+              <p class="small muted">
+                Agenda preparation, transcription, guidance and final analysis
+                use Muse and incur usage. Audio is processed transiently;
+                transcripts and reports are saved. Names and speaker labels can
+                need correction.
+              </p>
+              <div class="meeting-setup-options">
+              <div id="moderation-control"><label>Rally’s approach<select id="moderation-mode"><option value="passive">Passive · observe, respond when asked</option><option value="balanced" selected>Balanced · occasional helpful nudges</option><option value="proactive">Proactive · actively guide the agenda</option></select></label><p class="small muted">Visual feedback stays active. Pause always takes priority; settings never authorize external actions.</p></div>
+              <div class="input-options">
+                <label
+                  >Meeting connection<select id="audio-mode">
+                    <option value="microphone">Room microphone</option>
+                    <option value="tab">Meeting browser tab</option>
+                    <option value="teams">Rally joins Teams · voice and video</option>
+                  </select></label
+                ><label id="include-mic-label" class="check" hidden
+                  ><input id="include-mic" type="checkbox" checked />Include my
+                  microphone</label
+                >
+              </div>
+              </div>
+              <label id="live-teams-link-label" hidden>Teams invitation<input id="live-teams-link" type="url" autocomplete="off" aria-describedby="teams-invite-help" placeholder="https://teams.microsoft.com/l/meetup-join/…" /></label>
+              <p id="teams-invite-help" class="small muted" role="status" hidden></p>
+              <p class="small muted">
+                A call tab is host-side capture. Select Rally joins Teams for its animated camera, spoken guidance and agenda display. Rally stays until End, even if this dashboard closes.
+                Zoom/WhatsApp link-based joining is not available.
+              </p>
+              <p id="tab-help" class="small muted" hidden>
+                Join your call in another tab, then choose it and enable Share
+                tab audio. Use headphones. Rally’s guidance stays in this
+                workspace.
+              </p>
+              <div id="meeting-consents">
+              <label class="check"
+                ><input id="consent" type="checkbox" />Everyone has been
+                informed and consents to sending audio to Meta and saving the
+                transcript, and to Rally speaking and displaying its camera in a connected Teams call.</label
+              >
+              <section class="card feedback-card" id="feedback-consent"><label class="check"><input id="share-feedback" type="checkbox" disabled />Share this test’s transcript and report with the developer for feedback</label><p class="small muted">Optional, off by default. Inform participants before sharing. Administrators can read shared text; access is logged. Uncheck to withdraw future access. Basic usage, errors and processing costs are visible to the administrator regardless. No replayable audio is stored by this app.</p></section>
+              </div>
+              <label id="restart-session-label" class="check" hidden
+                ><input id="restart-session" type="checkbox" />Start a new
+                transcription session (speaker labels restart; uses Muse)</label
+              >
+              <div class="actions">
+                <button id="start" class="primary" aria-describedby="join-requirements">Start meeting</button
+                ><button id="check-audio" class="secondary" type="button">
+                  Check audio · free
+                </button>
+                <button id="cancel-start" class="secondary" hidden>
+                  Cancel audio selection</button
+                ><button id="prepare" class="secondary">
+                  Retry agenda preparation
+                </button>
+              </div>
+              <p id="join-requirements" class="notice" role="status" hidden></p>
+            </section>
+            <div class="meeting-grid">
+              <div class="main-column">
+                <section id="rally-display" class="rally-card" data-feeling="neutral" aria-label="Rally live assessment">
+                  <div class="eyebrow">
+                    ▥ RALLY <span id="rally-feeling" class="rally-feeling">Listening</span> <span id="health" class="pill"></span>
+                  </div>
+                  <p class="model-attribution">Live guidance by <strong>Meta Muse Spark 1.3</strong></p>
+                  <p id="rally-freshness" class="small muted" role="status"></p>
+                  <p id="guidance" aria-live="off">
+                    You lead the meeting. Rally helps it move forward.
+                  </p>
+                  <p id="progress" class="small muted"></p>
+                  <div class="actions" id="voice-controls">
+                    <label class="check" id="voice-toggle-label"
+                      ><input id="spoken-prompts" type="checkbox" />Spoken
+                      prompts</label
+                    ><button id="test-voice" class="text" type="button">
+                      Test local voice · free
+                    </button>
+                    <button id="stop-speaking" class="secondary" hidden>
+                      Stop speaking
+                    </button>
+                  </div>
+                  <p class="model-attribution">Streaming voice: Meta SeamlessM4T · Local voice option: Meta MMS</p>
+                  <p id="speech-status" class="small muted" role="status"></p>
+                  <p id="readalong-note" class="small muted" hidden>Approximate read-along</p>
+                  <div class="rally-observation"><span class="eyebrow">Current observation</span><p id="assessment-note" class="small" aria-live="polite"></p></div>
+                  <p id="rally-timing" class="small muted" hidden></p>
+                  <div id="rally-extension" class="rally-extension" hidden></div>
+                  <details id="rally-history"><summary>Check history <span class="small muted">and agenda changes</span></summary><p id="rally-budget-forecast" class="small muted" hidden></p><div id="rally-history-items"></div><p id="rally-history-status" class="small muted" role="status"></p><button id="rally-history-more" class="text" type="button" hidden>Earlier checks</button></details>
+                </section>
+                <section class="card conversation-card" id="conversation-panel">
+                  <div class="card-heading">
+                    <h2>Conversation</h2>
+                    <span class="small muted" id="transcript-label"
+                      >Meta · Muse Voice Transcribe</span
+                    >
+                  </div>
+                  <section id="rally-replies-section" hidden aria-label="Rally responses">
+                    <h3>Rally’s responses</h3>
+                    <p class="small muted">Generated response text, separate from participant speech. Playback status reflects Rally’s audio output; it does not confirm everyone heard it.</p>
+                    <div id="rally-replies" class="rally-replies" role="log" aria-live="polite" aria-relevant="additions text" aria-label="Rally response history"></div>
+                  </section>
+                  <div id="transcript" class="transcript"></div>
+                  <p id="partial" class="partial"></p>
+                </section>
+                <section id="report-panel" class="card report-panel">
+                  <div class="card-heading">
+                    <h2>Meeting report</h2>
+                    <span id="report-status" class="pill"></span>
+                  </div>
+                  <p class="model-attribution">Meeting analysis by <strong>Meta Muse Spark 1.3</strong></p>
+                  <div id="report-body"></div>
+                  <div class="report-actions"><button id="export-pdf" class="secondary" disabled>Export PDF</button><button id="share-report" class="secondary" disabled>Share report</button>
+                    <button id="draft-follow-up" class="secondary" hidden>
+                      Draft WhatsApp follow-up
+                    </button>
+                    <button id="retry-report" class="secondary" hidden>
+                      Retry analysis · uses Muse
+                    </button>
+                    <form id="correction-form" hidden>
+                      <label
+                        >Host correction note<textarea
+                          id="correction-note"
+                          maxlength="4000"
+                          rows="2"
+                          required
+                        ></textarea></label
+                      ><button class="secondary" type="submit">
+                        Add correction
+                      </button>
+                    </form>
+                  </div>
+                </section>
+              </div>
+              <aside class="meeting-aside">
+                <section class="card" id="agenda-panel">
+                  <div class="card-heading">
+                    <h2>The plan</h2><span class="meta-badge">Meta · Muse Spark</span>
+                    <button id="edit-plan" class="text">Edit</button>
+                  </div>
+                  <details id="entered-agenda" open><summary>Your entered agenda</summary><p id="source-agenda" class="source-agenda"></p></details>
+                  <div id="plan"></div>
+                  <details id="plan-history">
+                    <summary>Original plan & changes</summary>
+                    <div id="revisions"></div>
+                  </details>
+                </section>
+                <section class="card participants">
+                  <div class="card-heading"><h2>In the conversation</h2></div>
+                  <div id="speakers"></div>
+                  <p class="small muted">
+                    Labels describe voices within a transcription session. They
+                    do not verify a person’s identity or import names from your
+                    call.
+                  </p>
+                </section>
+              </aside>
+            </div>
+            <section id="controls" class="control-bar" hidden>
+              <span id="capture-label">Audio off</span>
+              <div class="actions">
+                <button id="mute" class="secondary">Mute audio</button
+                ><button id="pause" class="secondary">Pause Rally</button
+                ><button id="request-guidance" class="secondary">
+                  Ask Rally</button
+                ><button id="dismiss" class="secondary">Dismiss prompt</button
+                ><button id="end" class="danger">End meeting</button>
+              </div>
+            </section>
+          </section>
+        </main>
+        <footer>Powered by Meta AI · Muse Spark · Muse Voice Transcribe · SeamlessM4T · MMS</footer>
+      </div>
+    </div>
+    <dialog id="plan-sheet" class="bottom-sheet"><div class="section-title"><h2>Meeting plan</h2><button data-close="plan-sheet" aria-label="Close plan">Close</button></div><div id="plan-sheet-content"></div></dialog>
+    <dialog id="conversation-sheet" class="bottom-sheet"><div class="section-title"><h2>Transcript</h2><button data-close="conversation-sheet" aria-label="Close transcript">Close</button></div><div id="conversation-sheet-content"></div></dialog>
+    <dialog id="meeting-settings" class="bottom-sheet"><div class="section-title"><h2>Meeting settings</h2><button data-close="meeting-settings" aria-label="Close settings">Close</button></div><div id="meeting-settings-content"></div></dialog>
+    <dialog id="report-sharing-dialog"><div class="section-title"><h2>Share report</h2><button data-close="report-sharing-dialog" aria-label="Close sharing">Close</button></div><p>Share this report and its cited transcript excerpts with a named Rally account. Recipients have read-only access to this report and future updates until you revoke access. This does not share the full transcript or private live history.</p><form id="report-share-form"><label>Rally username<input id="report-recipient" required pattern="[a-z0-9_-]{3,40}" autocomplete="off" /></label><button type="submit" class="primary">Grant access</button></form><p id="report-share-status" role="status"></p><div id="report-recipient-list"></div></dialog>
+    <dialog id="shared-report-dialog" class="shared-report-dialog"><div class="section-title"><h2 id="shared-report-title">Shared report</h2><button data-close="shared-report-dialog" aria-label="Close shared report">Close</button></div><a id="shared-report-pdf" class="secondary">Export PDF</a><div id="shared-report-body"></div></dialog>
+    <dialog id="follow-up-dialog">
+      <div class="section-title">
+        <h2>Review your follow-up</h2>
+        <button
+          type="button"
+          class="text"
+          data-close="follow-up-dialog"
+          aria-label="Close follow-up"
+        >
+          ×
+        </button>
+      </div>
+      <p class="small muted">
+        Choose the report items to include, then review and edit the draft.
+        Changing your selection rebuilds the draft. Opening WhatsApp shares the
+        draft text with WhatsApp; you choose the recipient and send there.
+      </p>
+      <p id="follow-up-warning" class="error" role="status"></p>
+      <div id="follow-up-choices"></div>
+      <label
+        >Your draft<textarea id="follow-up-text" rows="7"></textarea>
+      </label>
+      <p id="follow-up-status" class="small muted" role="status"></p>
+      <div class="actions">
+        <button id="follow-up-copy" class="secondary" disabled>
+          Copy draft</button
+        ><a
+          id="follow-up-whatsapp"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-disabled="true"
+          >Open WhatsApp draft ↗</a
+        >
+      </div>
+    </dialog>
+    <dialog id="admin-dialog" class="admin-dialog">
+      <div class="section-title"><h2>Administration</h2><button id="admin-close">Close</button></div>
+      <p>Only explicitly shared transcripts and reports can be opened here. Content views and account changes are audited.</p>
+      <form id="admin-reauth"><h3>Admin security</h3><p>Confirm a fresh authenticator code and password before changing accounts.</p><label>Password<input id="admin-password" type="password" autocomplete="current-password" required /></label><label>MFA code<input id="admin-code" name="totp" inputmode="numeric" maxlength="6" autocomplete="one-time-code" required pattern="[0-9]{6}" /></label><button type="submit">Confirm admin security</button></form>
+      <p id="admin-status" role="status"></p>
+      <form id="admin-create"><h3>Invite user</h3><label>Username<input id="admin-new-username" required pattern="[a-z0-9_-]{3,40}" /></label><label>Role<select id="admin-new-role"><option value="user">User</option><option value="admin">Administrator</option></select></label><button type="submit">Create invitation</button></form>
+      <pre id="admin-secret" aria-live="polite"></pre>
+      <h3>Accounts</h3><div id="admin-users"></div><button id="admin-refresh">Refresh activity</button>
+      <h3>Meeting activity</h3><div id="admin-activity"></div>
+      <h3>Shared transcript and report</h3><pre id="admin-content"></pre>
+      <h3>Model usage</h3><div id="admin-usage"></div>
+      <h3>Audit events</h3><pre id="admin-events"></pre>
+    </dialog>
+    <dialog id="audio-check-dialog">
+      <div class="section-title">
+        <h2>Check your audio</h2>
+        <button
+          class="text"
+          data-close="audio-check-dialog"
+          aria-label="Close audio check"
+        >
+          ×
+        </button>
+      </div>
+      <p class="small muted">
+        Local levels only. Nothing is recorded, transcribed or sent to a model.
+        Ask someone in the call to speak, then speak yourself. Return to Rally
+        if the browser focuses the call tab. Stops after 15 seconds. Starting a
+        meeting will ask for audio again.
+      </p>
+      <div id="check-tab-row">
+        <label for="check-tab-level">Meeting tab</label
+        ><meter id="check-tab-level" min="0" max="1" value="0"></meter>
+        <p id="check-tab-result" class="small muted"></p>
+      </div>
+      <div id="check-microphone-row">
+        <label for="check-microphone-level">Your microphone</label
+        ><meter id="check-microphone-level" min="0" max="1" value="0"></meter>
+        <p id="check-microphone-result" class="small muted"></p>
+      </div>
+      <p id="audio-check-status" role="status"></p>
+      <button id="stop-audio-check" class="secondary">Stop check</button>
+    </dialog>
+    <dialog id="create-dialog">
+      <form id="create-form">
+        <div class="section-title">
+          <h2>What are we here to do?</h2>
+          <button
+            type="button"
+            data-close="create-dialog"
+            class="text"
+            aria-label="Close"
+          >
+            ×
+          </button>
+        </div>
+        <label
+          >Meeting title<input
+            name="title"
+            maxlength="160"
+            required
+            placeholder="Friday release check-in" /></label
+        ><label
+          >Agenda or objective<textarea
+            name="agenda"
+            rows="5"
+            maxlength="20000"
+            required
+            placeholder="Decide release scope, review blockers and agree next steps."
+          ></textarea>
+        </label>
+        <div class="form-row">
+          <label
+            >Duration in minutes<input
+              name="durationMinutes"
+              type="number"
+              min="1"
+              max="240"
+              value="30"
+              required /></label>
+        </div>
+        <p class="small muted">
+          <span class="meta-badge">Meta · Muse Spark 1.3</span><br />
+          Prepares an editable plan from your agenda. This is a paid model action; audio
+          starts separately after consent.
+        </p>
+        <label>Rally’s approach<select name="moderationMode" id="create-moderation-mode"><option value="passive">Passive · respond when asked</option><option value="balanced" selected>Balanced</option><option value="proactive">Proactive</option></select></label>
+        <p id="create-error" class="error" role="alert"></p>
+        <button id="create-submit" class="primary" type="submit">
+          Prepare with Muse
+        </button>
+      </form>
+    </dialog>
+    <dialog id="plan-dialog">
+      <form id="plan-form">
+        <div class="section-title">
+          <h2>Your meeting plan</h2>
+          <button
+            type="button"
+            class="text"
+            data-close="plan-dialog"
+            aria-label="Close"
+          >
+            ×
+          </button>
+        </div>
+        <label
+          >Objective<textarea
+            id="plan-objective"
+            maxlength="2000"
+            required
+            rows="2"
+          ></textarea>
+        </label>
+        <div id="plan-editor"></div>
+        <button type="button" id="add-topic" class="text">＋ Add topic</button>
+        <div class="form-row">
+          <label
+            >Total minutes<input
+              id="plan-duration"
+              type="number"
+              min="1"
+              max="480"
+              step="0.5"
+              required /></label
+          ><label
+            >Wrap-up minutes<input
+              id="plan-wrap"
+              type="number"
+              min="0"
+              max="30"
+              step="0.5"
+              required
+          /></label>
+        </div>
+        <p class="small muted">
+          Active topic budgets plus wrap-up must equal the total. Parked topics
+          do not consume time.
+        </p>
+        <p id="plan-error" class="error" role="alert"></p>
+        <button class="primary" type="submit">Save plan</button>
+      </form>
+    </dialog>
+    <dialog id="speaker-dialog">
+      <form id="speaker-form">
+        <div class="section-title">
+          <h2>Identify speaker</h2>
+          <button
+            type="button"
+            class="text"
+            data-close="speaker-dialog"
+            aria-label="Close"
+          >
+            ×
+          </button>
+        </div>
+        <p id="speaker-label" class="small muted"></p>
+        <label
+          >Host label<input
+            id="speaker-name"
+            maxlength="100"
+            list="participant-names" /><datalist
+            id="participant-names"
+          ></datalist
+        ></label>
+        <p class="small muted">
+          Assign a name only when you recognize the speaker. This is your label,
+          not automatic identity verification. Leave blank to restore the
+          anonymous label. Several people in one room can have different voice
+          labels, and one person may receive more than one. Reconnects start a
+          new label session.
+        </p>
+        <p id="speaker-error" class="error" role="alert"></p>
+        <button class="primary" type="submit">Save name</button>
+      </form>
+    </dialog>
+    <dialog id="delete-dialog">
+      <h2>Delete this meeting?</h2>
+      <p>
+        The transcript and report will be removed. Usage accounting remains.
+      </p>
+      <div class="actions">
+        <button data-close="delete-dialog" class="secondary">
+          Keep meeting</button
+        ><button id="confirm-delete" class="danger">Delete meeting</button>
+      </div>
+    </dialog>
+    <dialog id="usage-dialog">
+      <div class="section-title">
+        <h2>Recorded API usage</h2>
+        <button data-close="usage-dialog" class="text" aria-label="Close">
+          ×
+        </button>
+      </div>
+      <div id="usage"></div>
+      <p class="small muted">
+        Recorded estimates and reservations, not a verified Billing or credit
+        balance.
+      </p>
+    </dialog>
+    <div id="toast" role="status" class="toast" hidden></div>
+  </body>
+</html>

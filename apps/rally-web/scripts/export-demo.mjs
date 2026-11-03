@@ -7,5 +7,5 @@ for(const name of files)await copyFile('dist/'+name,dest+'/'+(name==='demo.html'
 await copyFile('dist/demo.html',dest+'/demo.html');
 await copyFile('../../THIRD_PARTY_NOTICES.md',dest+'/THIRD_PARTY_NOTICES.md');
 const hashes={};for(const name of files)hashes[name]=createHash('sha256').update(await readFile('dist/'+name)).digest('hex');
-await writeFile(dest+'/provenance.json',JSON.stringify({kind:'authored-synthetic-sample',entry:'apps/rally-web/src/demo.ts',data:'apps/rally-web/src/demo-data.ts',build:'node scripts/build.mjs && node scripts/export-demo.mjs',network:'No API, model, microphone, meeting or recording access. External navigation links require an explicit click.',files:hashes},null,2)+'\n');
+await writeFile(dest+'/provenance.json',JSON.stringify({kind:'authored-synthetic-sample',entry:'apps/rally-web/src/main.ts (demo build with isolated API adapter)',data:'apps/rally-web/src/demo-simulator.ts',build:'node scripts/build.mjs && node scripts/export-demo.mjs',network:'No API, model, microphone, meeting or recording access. External navigation links require an explicit click.',files:hashes},null,2)+'\n');
 console.log('Exported portable demo (no API/runtime configuration).');

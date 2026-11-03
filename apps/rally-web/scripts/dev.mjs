@@ -1,3 +1,4 @@
+import {demoApiPlugin,demoHTML} from './demo-build.mjs';
 import { createServer } from "node:http";
 import { request } from "node:http";
 import { readFile } from "node:fs/promises";
@@ -8,11 +9,13 @@ if (target.protocol !== "http:")
   throw new Error("Development API proxy expects a local HTTP server");
 const bundle = (entry = "main") =>
   build({
-    entryPoints: [fileURLToPath(new URL("../src/" + entry + ".ts", import.meta.url))],
+    entryPoints: [fileURLToPath(new URL("../src/" + (entry === "demo" ? "main" : entry) + ".ts", import.meta.url))],
     bundle: true,
     format: "esm",
     target: "es2022",
     write: false,
+    define:{__RALLY_DEMO__:entry === "demo" ? "true" : "false"},
+    plugins:entry === "demo" ? [demoApiPlugin] : [],
   });
 const server = createServer(async (req, res) => {
   if (req.url?.startsWith("/api/")) {
@@ -57,7 +60,7 @@ const server = createServer(async (req, res) => {
       res.end();
       return;
     }
-    const body =
+    const body = path === "/demo.html" ? await demoHTML() :
       (path === "/app.js" || path === "/renderer.js" || path === "/demo.js")
         ? (await bundle(path === "/app.js" ? "main" : path.slice(1,-3))).outputFiles[0].contents
         : await readFile(

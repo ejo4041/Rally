@@ -14,17 +14,17 @@ Alternatively, run the checked-in portable sample from a repository checkout wit
 python3 -m http.server 8000 --bind 127.0.0.1 --directory demo
 ```
 
-Open http://127.0.0.1:8000/ . Explore **Plan → Conversation → Report**. Play or step through the transcript, change Rally’s sample approach, identify a speaker, follow report source links, add a review note, export JSON, or use the browser’s Print / Save PDF dialog. Edits stay in memory and reset on reload. Appearance preference alone is saved locally.
+Open http://127.0.0.1:8000/ . The sample uses the **same home page, Create meeting modal, live meeting screen and report UI as the regular site**. Create a meeting, review its prepared sample plan, check the simulation acknowledgment and click Start simulated meeting. A fictional engineering discussion streams into the transcript. Pause/resume playback, identify speakers, ask Rally for a scripted reply, change its approach and end the meeting to prepare a sample report. Explore the preloaded completed meeting for the full evidence trail, JSON export, print/PDF, fictional report-sharing controls and a local follow-up draft. Edits stay in memory and reset on reload. Appearance preference alone is saved locally.
 
 ### Evidence and limitations
 
 | Judge path | What it establishes | Limits |
 | --- | --- | --- |
-| Interactive sample (`demo/`, source `apps/rally-web/src/demo*`) | Runnable agenda/transcript/report interaction, source navigation and exports | Authored fictional text, speakers, replies and report. Streaming is simulated. No live AI, voice, Teams, authentication or access-grant validation. |
+| Interactive sample (`demo/`, shared `main.ts` UI with `demo-api.ts` / `demo-simulator.ts`) | Runnable agenda/transcript/report interaction, source navigation and exports | Authored fictional text, speakers, replies and report. Streaming is simulated. No live AI, voice, Teams or authentication. Sharing/revocation is in-memory role-play, with no real grants. |
 | Three-minute video and [edit provenance](docs/human-demo-edit-2026-11-02.md) | Human-narrated actual Rally UI and recorded multi-participant Teams/transcription footage, with identified edits | Edited excerpts do not establish end-to-end latency. Final public video URL is added to the submission separately. |
 | Full application setup below | Source and configuration for real service integrations | Requires service credentials, invited accounts/MFA, media setup and model availability; processing can incur charges. |
 
-The static sample never loads the authenticated app entrypoint and has a `connect-src 'none'` content policy. It cannot access private meetings or invoke model endpoints. Checked-in bundle hashes and source paths are in [demo/provenance.json](demo/provenance.json). Rebuild it with the frontend build followed by `node scripts/export-demo.mjs` from `apps/rally-web`. Component attribution is included with the portable files.
+The demo bundles the regular app interface with a build-time substitution of the API client for an in-memory simulator, plus a `connect-src 'none'` content policy. The regular build always uses the authenticated API client; a URL parameter cannot change it. It cannot access private meetings or invoke model endpoints. Checked-in bundle hashes and source paths are in [demo/provenance.json](demo/provenance.json). Rebuild it with the frontend build followed by `node scripts/export-demo.mjs` from `apps/rally-web`. Component attribution is included with the portable files.
 
 ## Meta technologies
 

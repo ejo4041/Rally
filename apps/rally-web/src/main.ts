@@ -1,3 +1,4 @@
+import {DEMO_MODE} from "./demo-mode.ts";
 import {setupMascot} from "./mascot.ts";
 import {setupTheme} from "./theme.ts";
 import {rallyRepliesHTML} from "./rally-replies.ts";
@@ -44,6 +45,8 @@ const escape = (v: unknown) =>
   );
 const label = (v: string) =>
   v.replaceAll("_", " ").replace(/^./, (c) => c.toUpperCase());
+let demoRuntime: typeof import("./demo-api.ts") | null = null;
+let demoDismissed = "";
 const state = {
   user: null as User | null,
   history: [] as Summary[],
@@ -381,7 +384,7 @@ function render() {
     live = m.phase === "live",
     pre =
       ["draft", "ready", "interrupted"].includes(m.phase) ||
-      (live && !state.capture && !state.media);
+      (live && !state.capture && !state.media && !DEMO_MODE);
   $("meeting-title").textContent = m.title;
   $("meeting-meta").textContent =
     `${m.durationMinutes} minutes planned${m.paused ? " · Moderator paused" : ""}`;
@@ -457,6 +460,7 @@ function render() {
     m.assessment?.health == null
       ? "Unscored"
       : `Health ${m.assessment.health}/5`;
+  if(DEMO_MODE){const reply=m.interventions.at(-1);session.intervention=reply&&!m.paused&&reply.id!==demoDismissed?reply:null;}
   $("guidance").textContent =
     session.intervention?.text ||
     (m.phase === "ended"
@@ -483,6 +487,7 @@ function render() {
   if(replyBox.dataset.replyKey!==replyKey){const atBottom=replyBox.scrollHeight-replyBox.scrollTop-replyBox.clientHeight<80;replyBox.innerHTML=rallyRepliesHTML(m);replyBox.dataset.replyKey=replyKey;if(atBottom)replyBox.scrollTop=replyBox.scrollHeight;}
   $("rally-replies-section").hidden=!(m.interventions?.length);
   renderTranscript();
+  if(DEMO_MODE && demoRuntime) session.partial=demoRuntime.simulator.partial(m.id);
   $("partial").textContent = session.partial;
   const speakerIds = [
     ...new Set(m.turns.flatMap((t) => (t.speaker ? [t.speaker] : []))),
@@ -510,6 +515,7 @@ function render() {
   for (const name of ["pause", "request-guidance", "dismiss", "end"])
     button(name).disabled = state.busy;
   button("request-guidance").disabled = state.busy || m.paused;
+  if(DEMO_MODE){$("capture-label").textContent=live?(state.muted?"Sample replay paused":"Simulated transcript · no audio captured"):"Simulation ended";button("mute").disabled=state.busy;button("mute").textContent=state.muted?"Resume replay":"Pause replay";button("start").textContent="Start simulated meeting";}
   renderReport();
   $("report-status").classList.toggle("is-loading",m.reportStatus==="processing");
   $("report-panel").setAttribute("aria-busy",String(m.reportStatus==="processing"));
@@ -604,6 +610,7 @@ function stopCapture() {
   state.muted = false;
 }
 function needsTeamsInvite() {
+  if(DEMO_MODE)return false;
   return input("audio-mode").value === "teams" && state.session?.meeting.phase !== "live";
 }
 function validTeamsInvite() {
@@ -615,6 +622,7 @@ function validTeamsInvite() {
 async function start() {
   if (!state.session || !input("consent").checked || state.busy) return;
   if(needsTeamsInvite() && !validTeamsInvite()) { render();input("live-teams-link").focus();return; }
+  if(DEMO_MODE){await perform(async()=>{mergeMeeting(await api<Meeting>(`/meetings/${state.session!.meeting.id}/start`,"POST",{}));state.status="Simulated meeting: fictional transcript and Rally replies. No microphone, meeting or model connection.";await refresh();});return;}
   audioCheck.stop();
   unlockPresenceAudio();
   const session = state.session,
@@ -801,6 +809,7 @@ async function end() {
   });
 }
 async function command(type: string) {
+  if(DEMO_MODE && type==="dismiss")demoDismissed=state.session?.meeting.interventions.at(-1)?.id||"";
   speech.cancel();
   state.media?.stopSpeech(undefined, type !== "request_guidance");
   if (!state.session) return;
@@ -986,6 +995,7 @@ button("prepare").onclick = () =>
   });
 button("mute").onclick = () => {
   state.muted = !state.muted;
+  if(DEMO_MODE&&demoRuntime&&state.session){if(state.muted)demoRuntime.simulator.muted.add(state.session.meeting.id);else demoRuntime.simulator.muted.delete(state.session.meeting.id);}
   state.media?.setMuted(state.muted);
   render();
 };
@@ -1024,6 +1034,7 @@ button("confirm-delete").onclick = () =>
     await loadHistory();
   });
 button("export").onclick = () => {
+  if(DEMO_MODE && state.session){const blob=new Blob([JSON.stringify({provenance:"Synthetic in-browser simulation; no live AI or meeting recording.",...state.session.meeting},null,2)],{type:"application/json"});const url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="rally-simulated-meeting.json";a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);return;}
   if (state.session)
     location.href = `/api/meetings/${state.session.meeting.id}/export`;
 };
@@ -1118,7 +1129,7 @@ setInterval(() => {
   )
     void refresh();
 }, 3000);
-void api<User>("/auth/me")
+if(!DEMO_MODE)void api<User>("/auth/me")
   .then(signedIn)
   .catch((error) => {
     showAuth();
@@ -1207,3 +1218,30 @@ input('moderation-mode').onchange=()=>{const m=state.session?.meeting;if(!m)retu
 
 setupTheme();
 setupActionFeedback();
+
+if(DEMO_MODE)void (async()=>{
+ demoRuntime=await import('./demo-api.ts');
+ document.body.classList.add('demo-mode');
+ const banner=document.createElement('aside');banner.className='demo-banner';banner.innerHTML='<p><strong>Demo mode · simulated meeting</strong><br>Fictional conversation and replies. No audio capture, meetings or AI calls. Changes reset on reload.</p><div><button id="reset-demo">Reset demo</button> <a href="/">Exit demo</a></div>';document.body.prepend(banner);
+ button('reset-demo').onclick=()=>{location.hash='';location.reload();};
+ button('logout').textContent='Exit demo';button('logout').onclick=()=>location.assign('/');
+ button('mobile-logout').textContent='Exit demo';
+ const form=$<HTMLFormElement>('create-form');
+ form.querySelector<HTMLInputElement>('[name=title]')!.value='Cache rollout · release readiness';
+ form.querySelector<HTMLTextAreaElement>('[name=agenda]')!.value=demoRuntime.simulator.records.values().next().value!.agenda;
+ const createNote=document.createElement('p');createNote.className='notice';createNote.textContent='Demo mode runs a fictional engineering discussion. You can edit the title and agenda; the scripted conversation remains the cache rollout scenario.';form.insertBefore(createNote,form.querySelector('label'));
+ for(const option of $<HTMLSelectElement>('audio-mode').options)option.textContent+=' · simulated';
+ $('consent').parentElement!.lastChild!.textContent=' I understand this is a fictional simulation; no participants or audio are connected.';
+ $('transcript-label').textContent='Simulated streaming transcript';
+ $('rally-replies-section').querySelector('p')!.textContent='Scripted Rally replies, shown as part of the simulation. No speech is generated or played.';
+ $('share-report').textContent='Simulate report sharing';
+ $('report-sharing-dialog').querySelector('p')!.textContent='Simulation only: add or revoke a fictional recipient to explore this dialog. This grants no real account access.';
+ $('export-pdf').textContent='Print / save PDF';
+ const printNotice=document.createElement('p');printNotice.className='demo-print-only';printNotice.textContent='Synthetic sample report. Fictional conversation; no live model analysis.';$('report-panel').prepend(printNotice);
+ $('check-audio').onclick=()=>toast('Demo mode does not access audio. Start a simulated meeting instead.');
+ $('test-voice').onclick=()=>toast('Demo mode shows scripted replies without voice playback.');
+ $('follow-up-whatsapp').removeAttribute('href');$('follow-up-whatsapp').textContent='WhatsApp delivery disabled in demo';$('follow-up-whatsapp').addEventListener('click',e=>{e.preventDefault();toast('This is a local draft; demo mode does not send messages.');});
+ document.querySelectorAll('#meeting .model-attribution').forEach(el=>{const note=document.createElement('small');note.textContent=' · simulated in demo';el.append(note);});
+ await signedIn({id:'demo-user',username:'Demo workspace',role:'user'});
+ setInterval(()=>{demoRuntime!.simulator.step();if(state.session)void refresh();},200);
+})();

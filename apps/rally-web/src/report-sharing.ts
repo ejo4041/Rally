@@ -1,3 +1,4 @@
+import {DEMO_MODE} from './demo-mode.ts';
 import {api,APIError,type Meeting} from './api.ts';
 import type {SharedReport} from '../../rally-api/src/report-sharing.ts';
 const $=<T extends HTMLElement=HTMLElement>(id:string)=>document.getElementById(id) as T;
@@ -17,7 +18,7 @@ export function setupReportSharing(current:()=>Meeting|undefined,fail:(e:unknown
  };
  $('report-recipient-list').onclick=e=>{const b=(e.target as HTMLElement).closest<HTMLButtonElement>('[data-revoke-report]');if(!b)return;return api(`/meetings/${ownerId}/report-shares/${b.dataset.revokeReport}`,'DELETE').then(recipients).catch(fail);};
  $('export-pdf').onclick=()=>{
-  const m=current();if(!m)return;const b=$<HTMLButtonElement>('export-pdf');b.disabled=true;
+  const m=current();if(!m)return;if(DEMO_MODE){window.print();return;}const b=$<HTMLButtonElement>('export-pdf');b.disabled=true;
   return (async()=>{const r=await fetch(`/api/meetings/${m.id}/report.pdf`,{credentials:'include'});if(!r.ok){const body=await r.json();throw new APIError(body.error??'PDF export failed',r.status);}const url=URL.createObjectURL(await r.blob()),a=document.createElement('a');a.href=url;a.download=`rally-report-${m.id}.pdf`;a.click();setTimeout(()=>URL.revokeObjectURL(url),30000);})().catch(fail).finally(()=>{b.disabled=false;b.textContent='Export PDF';});
  };
  function openShared(id:string){const epoch=generation;return api<SharedReport>(`/shared-reports/${id}`).then(view=>{
