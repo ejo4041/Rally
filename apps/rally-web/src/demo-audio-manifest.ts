@@ -1,4 +1,14 @@
 export const demoClips = {
+  "greeting": {
+    "file": "greeting.wav",
+    "text": "Hi team, Rally here. Let's get this meeting started. Here is the agenda: Readiness and performance; Blockers and release gates; Owners and next steps.",
+    "speaker": "Rally",
+    "duration": 8.52,
+    "model": "facebook/seamless-m4t-v2-large",
+    "revision": null,
+    "sha256": "ac10261a22dd4d29447eec26c16281f380471c7139551cb593b1ae72371d6065",
+    "gain": 0.6716421345607062
+  },
   "turn-0": {
     "file": "turn-0.wav",
     "text": "Let’s review the cache rollout. The canary is healthy, but we still need to decide whether the release is ready.",

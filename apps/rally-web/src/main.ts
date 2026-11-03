@@ -1,3 +1,4 @@
+import {meetingGreeting,sampleGreeting} from '../../../packages/rally-speech/greeting.mts';
 import {DEMO_MODE} from "./demo-mode.ts";
 import {setupMascot} from "./mascot.ts";
 import {setupTheme} from "./theme.ts";
@@ -290,6 +291,7 @@ async function route() {
   state.muted = DEMO_MODE ? demoRuntime?.simulator.muted.has(id) ?? false : false;
   input("consent").checked = false;
   input("live-teams-link").value = "";
+  input("join-greeting").checked=false;
   mascot.hide();
   $("home").hidden = true;
   $("meeting").hidden = false;
@@ -419,6 +421,12 @@ function render() {
   button("check-audio").disabled = state.busy || !!state.capture;
   const needsInvite=needsTeamsInvite(), inviteValid=validTeamsInvite();
   input("live-teams-link").required=needsInvite;
+  $("join-greeting-label").hidden=!(DEMO_MODE||input("audio-mode").value==="teams")||m.startedAt!==null;
+  const customDemoAgenda=DEMO_MODE&&meetingGreeting(m)!==sampleGreeting;
+  input("join-greeting").disabled=state.busy||m.startedAt!==null||customDemoAgenda;
+  if(customDemoAgenda)input("join-greeting").checked=false;
+  $("join-greeting-help").hidden=$("join-greeting-label").hidden;
+  $("join-greeting-help").textContent=customDemoAgenda?'The prerecorded demo welcome is available for the sample plan.':DEMO_MODE?'Reads the fixed sample agenda once, using prerecorded speech.':'Plays once after joining, using the prepared agenda.';
   $("teams-invite-help").hidden=!needsInvite;
   $("teams-invite-help").textContent=inviteValid?"Teams invitation ready. Confirm participant consent to join.":"Paste a work/school Teams meeting link to enable joining.";
   button("start").disabled = state.busy || !m.plan || !input("consent").checked || (needsInvite && !inviteValid);
@@ -628,7 +636,7 @@ function validTeamsInvite() {
 async function start() {
   if (!state.session || !input("consent").checked || state.busy) return;
   if(needsTeamsInvite() && !validTeamsInvite()) { render();input("live-teams-link").focus();return; }
-  if(DEMO_MODE){demoAudio?.unlock();await perform(async()=>{mergeMeeting(await api<Meeting>(`/meetings/${state.session!.meeting.id}/start`,"POST",{}));state.status="Simulated meeting: fictional transcript and Rally replies. No microphone, meeting or model connection.";await refresh();});return;}
+  if(DEMO_MODE){demoAudio?.unlock();await perform(async()=>{mergeMeeting(await api<Meeting>(`/meetings/${state.session!.meeting.id}/start`,"POST",{greetingEnabled:input("join-greeting").checked}));state.status="Simulated meeting: fictional transcript and Rally replies. No microphone, meeting or model connection.";await refresh();});return;}
   audioCheck.stop();
   unlockPresenceAudio();
   const session = state.session,
@@ -664,6 +672,7 @@ async function start() {
         await api(`/meetings/${id}/teams/connect`, "POST", {
           meetingUrl: input("live-teams-link").value.trim(),
           consented: true,
+          greetingEnabled:input("join-greeting").checked,
         });
         while (true) {
           if (controller.signal.aborted) {

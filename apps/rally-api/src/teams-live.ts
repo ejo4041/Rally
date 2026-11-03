@@ -29,6 +29,7 @@ type Hooks = {
   interrupt(m: Meeting): Promise<unknown>;
   connect: TeamsConnector;
   renew?(id: string): void;
+  connected?(m: Meeting): void;
 };
 type Job = {
   starting: boolean;
@@ -60,7 +61,7 @@ export class TeamsLive {
     m.callState = state;
     this.hooks.save(m);
   }
-  join(m: Meeting, urlText: string, consented: boolean) {
+  join(m: Meeting, urlText: string, consented: boolean, greetingEnabled=false) {
     if (!consented) throw new HttpError("Recording consent required");
     if (!["ready", "interrupted"].includes(m.phase) || !m.plan)
       throw new HttpError("Prepare and review the agenda first", 409);
@@ -80,6 +81,9 @@ export class TeamsLive {
     )
       throw new HttpError("Use a work/school Teams invitation");
     if (this.occupied) throw new HttpError("Teams runner busy", 409);
+    m.greetingEnabled=greetingEnabled===true&&m.startedAt==null&&!m.greetingAttemptedAt;
+    m.greetingEpoch=m.greetingEnabled?m.epoch+1:undefined;
+    this.hooks.save(m);
     this.occupied = true;
     const j: Job = {
       starting: true,
@@ -111,6 +115,8 @@ export class TeamsLive {
           return;
         }
         this.update(j, "connected");
+        try{this.hooks.connected?.(this.hooks.current(j.id));}
+        catch{const current=this.hooks.current(j.id);current.greetingAttemptedAt??=Date.now();current.error='Welcome unavailable. The meeting can continue.';this.hooks.save(current);}
         j.watch = setInterval(() => {
           if (j.call?.alive()) {
             j.leaseUntil = Date.now() + 90000;

@@ -61,3 +61,5 @@ Research files preserve source attribution and distinguish documented capability
 - [Theme and spacing polish / validation](theme-spacing-polish-2026-11-03.md) — dark canvas, responsive spacing, 288 screen checks and complete sample replay.
 
 - [Demo conversation voices](demo-audio-2026-11-03.md) — static Meta speech, playback synchronization, accounting, controls and tests.
+
+- [Optional join welcome](optional-join-greeting-2026-11-03.md) — off-by-default Teams checkbox, prepared agenda, once-only playback and validation.

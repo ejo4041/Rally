@@ -20,7 +20,7 @@ export async function api<T>(path:string,method='GET',body?:unknown,signal?:Abor
   if(!tail&&method==='GET')result=m;
   else if(!tail&&method==='DELETE'){simulator.records.delete(m.id);result={};}
   else if(tail==='/prepare'){await wait();m.plan=simulator.plan(m);m.phase='ready';result=m;}
-  else if(tail==='/start'){simulator.start(m);result=m;}
+  else if(tail==='/start'){simulator.start(m,b.greetingEnabled===true);result=m;}
   else if(tail==='/end'){simulator.end(m);result=m;}
   else if(tail==='/plan'){m.plan=b as RecordView['plan'];result=m;}
   else if(tail==='/speakers'){if(b.name)m.speakerNames[String(b.speakerId)]=String(b.name);else delete m.speakerNames[String(b.speakerId)];m.reportStale=m.reportStatus==='ready';result=m;}

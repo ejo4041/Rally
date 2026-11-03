@@ -5,8 +5,8 @@
   "build": "node scripts/build.mjs && node scripts/export-demo.mjs",
   "network": "Static pages and prerecorded same-origin Meta voice clips only. No runtime API/model/microphone/meeting access. External navigation links require an explicit click.",
   "files": {
-    "demo.html": "d11d6ea73e5ee81353a71e0e99437b5b6600851a626edd3e60fba96f95bdb151",
-    "demo.js": "f81f38b3f75c5e48ec7394aecbfbe7f65d961d99e840e4e326a21398b0c967f4",
+    "demo.html": "b34ce4d3edbaf5dc563cd3a76e47f9657dd167f1221aa76182284a87aa078ddd",
+    "demo.js": "127469b62da17ffbbf9a7d275a10530b598c36bb01e39d9b69abe78f493b39c2",
     "demo.css": "9932a8583a094af55357cbc400324510184bd3655d393a7e85975475dd354691",
     "style.css": "5015e9e9982f22d06e73453c41c97a96d9833b10e2a93f4695af448fa9e5f1a2",
     "theme-init.js": "7e855638d65cf607e786fb12c0544733683857d8eb6b6ff47f31bb1811b4bc73",

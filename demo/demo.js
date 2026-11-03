@@ -13,6 +13,36 @@ var __export = (target, all) => {
     __defProp(target, name, { get: all[name], enumerable: true });
 };
 
+// ../../packages/rally-speech/greeting.mts
+function meetingGreeting(m) {
+  const intro = "Hi team, Rally here. Let's get this meeting started. Here is the agenda: ";
+  const topics = m.plan?.topics.filter((t) => t.status !== "parked").map((t) => clean(t.title)).filter(Boolean) ?? [];
+  if (!topics.length && m.agenda) topics.push(clean(m.agenda));
+  if (!topics.length) return "Hi team, Rally here. Let's get this meeting started. Your meeting plan is on screen.";
+  const chosen = [];
+  let omitted = false;
+  for (const topic of topics) {
+    if ((intro + chosen.concat(topic).join("; ")).length > 250) {
+      omitted = true;
+      break;
+    }
+    chosen.push(topic);
+  }
+  if (!chosen.length) {
+    const first = topics[0].slice(0, Math.max(20, 245 - intro.length));
+    chosen.push(first.replace(/\s+\S*$/, "") || first);
+    omitted = true;
+  }
+  return intro + chosen.join("; ") + (omitted ? ". The full agenda is on screen." : ".");
+}
+var clean, sampleGreeting;
+var init_greeting = __esm({
+  "../../packages/rally-speech/greeting.mts"() {
+    clean = (text) => text.replace(/[\x00-\x1f\x7f]/g, " ").replace(/\s+/g, " ").trim().replace(/[.;:!?]+$/, "");
+    sampleGreeting = meetingGreeting({ plan: { topics: [{ title: "Readiness and performance" }, { title: "Blockers and release gates" }, { title: "Owners and next steps" }] } });
+  }
+});
+
 // src/api-types.ts
 var APIError;
 var init_api_types = __esm({
@@ -34,6 +64,16 @@ var init_demo_audio_manifest = __esm({
   "src/demo-audio-manifest.ts"() {
     "use strict";
     demoClips = {
+      "greeting": {
+        "file": "greeting.wav",
+        "text": "Hi team, Rally here. Let's get this meeting started. Here is the agenda: Readiness and performance; Blockers and release gates; Owners and next steps.",
+        "speaker": "Rally",
+        "duration": 8.52,
+        "model": "facebook/seamless-m4t-v2-large",
+        "revision": null,
+        "sha256": "ac10261a22dd4d29447eec26c16281f380471c7139551cb593b1ae72371d6065",
+        "gain": 0.6716421345607062
+      },
       "turn-0": {
         "file": "turn-0.wav",
         "text": "Let\u2019s review the cache rollout. The canary is healthy, but we still need to decide whether the release is ready.",
@@ -273,6 +313,7 @@ var sampleAgenda, dialogue, DemoSimulator;
 var init_demo_simulator = __esm({
   "src/demo-simulator.ts"() {
     "use strict";
+    init_greeting();
     init_demo_audio_manifest();
     sampleAgenda = "Review the cache rollout, resolve the mobile sign-in blocker, and agree on launch conditions, owners and next steps.";
     dialogue = [
@@ -379,10 +420,17 @@ var init_demo_simulator = __esm({
         const wrap = Math.min(2, m.durationMinutes / 5), part = (m.durationMinutes - wrap) / 3;
         return { objective: m.agenda, durationMinutes: m.durationMinutes, wrapMinutes: wrap, topics: [{ id: "readiness", title: "Readiness and performance", outcome: "Review the fictional cache rollout evidence.", minutes: part, status: "pending" }, { id: "blockers", title: "Blockers and release gates", outcome: "Confirm the sign-in blocker and launch condition.", minutes: part, status: "pending" }, { id: "owners", title: "Owners and next steps", outcome: "Distinguish assigned work from unresolved details.", minutes: part, status: "pending" }] };
       }
-      start(m) {
+      start(m, greetingEnabled = false) {
+        const first = m.startedAt === null;
         this.activeId = m.id;
         m.phase = "live";
-        m.startedAt = this.now();
+        m.startedAt ??= this.now();
+        if (first && greetingEnabled && !m.greetingAttemptedAt) {
+          m.greetingEnabled = true;
+          m.greetingAttemptedAt = this.now();
+          const reply = this.reply(m, sampleGreeting, "welcome");
+          this.asks.set(m.id, { key: reply.id, asset: "greeting", replyId: reply.id });
+        }
         m.epoch++;
         m.progress = "Simulated discussion starting \xB7 no audio or AI connection.";
       }
@@ -460,9 +508,10 @@ var init_demo_simulator = __esm({
           m.plan.topics.forEach((t, j) => t.status = j < Math.floor(i / 7) ? "done" : j === Math.min(2, Math.floor(i / 7)) ? "active" : "pending");
         }
       }
-      reply(m, text) {
-        const item = { id: m.id + "-reply-" + m.interventions.length, at: this.now(), text, kind: "checkpoint" };
+      reply(m, text, kind = "checkpoint") {
+        const item = { id: m.id + "-reply-" + m.interventions.length, at: this.now(), text, kind };
         m.interventions.push(item);
+        if (kind === "welcome") return item;
         m.assessment = { health: 4, reason: "Scripted sample: release condition clear; some action details remain unresolved.", issues: ["missing_action_details"], evidence: m.turns.slice(-2).map((t) => t.id), progress: m.progress, intervention: { text, kind: "checkpoint", evidence: m.turns.slice(-2).map((t) => t.id) }, plan: null, planReason: "" };
         m.assessmentAt = this.now();
         return item;
@@ -530,7 +579,7 @@ async function api(path, method = "GET", body, signal) {
       m.phase = "ready";
       result = m;
     } else if (tail === "/start") {
-      simulator.start(m);
+      simulator.start(m, b.greetingEnabled === true);
       result = m;
     } else if (tail === "/end") {
       simulator.end(m);
@@ -739,6 +788,9 @@ var init_demo_audio = __esm({
     };
   }
 });
+
+// src/main.ts
+init_greeting();
 
 // src/demo-mode.ts
 var DEMO_MODE = true;
@@ -61589,6 +61641,7 @@ async function route() {
   state.muted = DEMO_MODE ? demoRuntime?.simulator.muted.has(id) ?? false : false;
   input("consent").checked = false;
   input("live-teams-link").value = "";
+  input("join-greeting").checked = false;
   mascot.hide();
   $4("home").hidden = true;
   $4("meeting").hidden = false;
@@ -61699,6 +61752,12 @@ function render() {
   button("check-audio").disabled = state.busy || !!state.capture;
   const needsInvite = needsTeamsInvite(), inviteValid = validTeamsInvite();
   input("live-teams-link").required = needsInvite;
+  $4("join-greeting-label").hidden = !(DEMO_MODE || input("audio-mode").value === "teams") || m.startedAt !== null;
+  const customDemoAgenda = DEMO_MODE && meetingGreeting(m) !== sampleGreeting;
+  input("join-greeting").disabled = state.busy || m.startedAt !== null || customDemoAgenda;
+  if (customDemoAgenda) input("join-greeting").checked = false;
+  $4("join-greeting-help").hidden = $4("join-greeting-label").hidden;
+  $4("join-greeting-help").textContent = customDemoAgenda ? "The prerecorded demo welcome is available for the sample plan." : DEMO_MODE ? "Reads the fixed sample agenda once, using prerecorded speech." : "Plays once after joining, using the prepared agenda.";
   $4("teams-invite-help").hidden = !needsInvite;
   $4("teams-invite-help").textContent = inviteValid ? "Teams invitation ready. Confirm participant consent to join." : "Paste a work/school Teams meeting link to enable joining.";
   button("start").disabled = state.busy || !m.plan || !input("consent").checked || needsInvite && !inviteValid;
@@ -61869,7 +61928,7 @@ async function start() {
   if (DEMO_MODE) {
     demoAudio?.unlock();
     await perform(async () => {
-      mergeMeeting(await api(`/meetings/${state.session.meeting.id}/start`, "POST", {}));
+      mergeMeeting(await api(`/meetings/${state.session.meeting.id}/start`, "POST", { greetingEnabled: input("join-greeting").checked }));
       state.status = "Simulated meeting: fictional transcript and Rally replies. No microphone, meeting or model connection.";
       await refresh();
     });
@@ -61903,7 +61962,8 @@ async function start() {
       if (callMode && session.meeting.phase !== "live") {
         await api(`/meetings/${id}/teams/connect`, "POST", {
           meetingUrl: input("live-teams-link").value.trim(),
-          consented: true
+          consented: true,
+          greetingEnabled: input("join-greeting").checked
         });
         while (true) {
           if (controller.signal.aborted) {
