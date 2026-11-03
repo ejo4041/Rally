@@ -28,3 +28,11 @@ Audio uses constant RMS gain toward−22dBFS with peak capped at−2dBFS; no spe
 -48strict light/dark screens at390/1280px passed with no page errors, unexpected API/socket requests, measured contrast warnings or layout defects. Existing ordinary-app feedback integration passed (isolated MFA/HTTP/database/LiveKit/synthetic providers, PDF and named sharing/revoke). No real Teams meeting was joined.
 
 Private validation artifacts: `/srv/hackathon/artifacts/demo-audio-20261103/`. Chromium automation does not establish physical Android/iOS/Safari behavior or subjective pronunciation/naturalness. Final deployed URL/asset smoke and release are recorded in the handoff.
+
+## Deployed result
+
+Release `bcebcb0-demo-audio` is active at https://rally.tail703f9e.ts.net/demo.html . Public real-playback controls, pending reply cancellation, pause/history restore, audio Settings toggle, navigation/End and blocked-autoplay/missing-file fallback all passed on that URL. No client API/model/WebSocket or mic/screen-capture calls. API health good and anonymous `/api/auth/me` remains401.
+
+Tested dist (including all WAV assets) was compared byte-for-byte with staged files before the atomic switch. Backend byte-identical to `a0e3c4a-theme-spacing`, API PID755639 unchanged, private SQLite backup saved. Shared style.css is byte-identical to the polished release; the demo adds only the reused Settings audio checkbox’s visibility and factual audio labels. No deployment restart, production voice switch, new account or real meeting join.
+
+Changes merged from `feature/demo-audio` to main. Existing demo tabs need refresh; create and start a new simulated meeting to hear playback. The preloaded completed record remains a report example and does not auto-play. Ask Rally plays a canned spoken answer. The normal UI’s pause/dismiss/end controls remain in use. Generation receipts and public/full/browser reports remain on the droplet; video05 is unchanged.

@@ -1,3 +1,11 @@
+### Completed: public demo audio deployment
+
+Active release `/srv/hackathon/rally-deployed/releases/bcebcb0-demo-audio`, mergedmain from `feature/demo-audio`. Public URL https://rally.tail703f9e.ts.net/demo.html . Refresh existing tabs, create/start a new simulated meeting. Alex/Sam share MMS, Priya uses FastSpeech2/HiFi-GAN, Rally uses its existing Seamless voice; prerecorded23clips, no runtime model calls. Ask Rally has spoken canned answers. Settings → Demo audio silences playback while text continues; pause, dismiss, End/navigation/reset/hidden-page cleanup tested. Existing completed sample is a report, no auto-play.
+
+Public real-media workflow and negative autoplay/missing-asset cases passed against exact release, no unexpected API/socket/capture calls or page errors.25units/typecheck/build, full21clip proactive playback at test-only4× with17human turns/report/PDF,48strict mobile/desktop light/dark screenshots, ordinary-app feedback regression all passed. Main style.css byte-identical to polished UI. Backend byte-identical, API PID755639 unchanged, backup saved, healthy; anonymous auth401. No real meeting joined and no production voice/model config changed.
+
+Six authorized AWS generation requests (all200),17local model clips, zeroMuse calls; hosted/infrastructure costunknown, no claimed zero total cost. [Full record](demo-audio-2026-11-03.md). Asset/license/hash manifest in `demo/demo-audio/`. Private validation `/srv/hackathon/artifacts/demo-audio-20261103/`; detailed generation receipts `artifacts/feedback/demo-audio-generation-20261103/`. Local submission working draft annotated; numbered video05 untouched. No remaining work for this request.
+
 ## Demo voice playback — 2026-11-03
 
 Owner authorized pronunciation-test voices for the public demo, preserving UI. Branch `feature/demo-audio`.23generated static clips:17participants (Alex/Sam MMS, Priya FastSpeech2) and6Rally (existing hosted Seamless, four script +two Ask variants). Three underlying voice sources, not four unique speakers. No runtime model/ASR/meeting calls. Same UI, existing Settings checkbox becomes Demo audio. Pause/reset/navigation/End/hidden page stop media; one player, playback-clock captions, Ask interrupts stale guidance, autoplay/missing-file fallback to text.
