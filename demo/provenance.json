@@ -6,9 +6,9 @@
   "network": "No API, model, microphone, meeting or recording access. External navigation links require an explicit click.",
   "files": {
     "demo.html": "d1757576932b2375ad61d56ecdc5ffb6a445de5aad5ebab11fabed0e002a9be0",
-    "demo.js": "72f12692d9df139d4523263c0e5ee03f747e60267a59b8a915b31a40bbde6471",
-    "demo.css": "8cda6c2b75a5904243d4f2181f1c23e78bf8aecb4693f845a336da2b790c3cd5",
-    "style.css": "c9a157b42f356df21eb3653b6c0a8e7c9312a7c74f212bc7d593b638e2c56e1e",
+    "demo.js": "d2b66f9c7f3296d61711fa6698dba4ce96a761d3ed92b89a2084504604760198",
+    "demo.css": "0e624597819c1cbd0d1b812c17efaa937a33b6ee5d2dbe41b22326d994602a35",
+    "style.css": "5015e9e9982f22d06e73453c41c97a96d9833b10e2a93f4695af448fa9e5f1a2",
     "theme-init.js": "7448d4c4451094ac1ed3e2b0c8fc58234e33e705259e77505ff78cd8cfcaf3f5",
     "favicon.svg": "2fa3ba8c08bf3c0856ccfd9713e3da7bfa3af8b87478a758ff2eb868828e1e3e"
   }

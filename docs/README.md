@@ -57,3 +57,5 @@ Research files preserve source attribution and distinguish documented capability
 - [Human presenter and real-footage demo edit](human-demo-edit-2026-11-02.md)
 
 - [Credential-free judge demo and rehearsal](judge-access-rehearsal.md) — portable sample, evidence boundaries and public judge path.
+
+- [Theme and spacing polish / validation](theme-spacing-polish-2026-11-03.md) — dark canvas, responsive spacing, 288 screen checks and complete sample replay.

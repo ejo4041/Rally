@@ -1,1 +1,35 @@
 .demo-banner{position:sticky;top:0;min-height:64px;z-index:100;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 22px;background:#534095;color:#fff;font-size:13px}.demo-banner p{margin:0}.demo-banner a{color:white}.demo-banner button{font-size:12px;padding:5px 10px;background:#ffffff22;color:white;border:1px solid #ffffff66}.demo-mode #workspace{height:calc(100dvh - 64px)}.demo-mode .auth-screen{display:none}.demo-mode #feedback-consent,.demo-mode #voice-controls,.demo-mode #teams-invite{display:none!important}.demo-mode #start-panel>.small{display:none}.demo-mode #live-teams-link-label,.demo-mode #teams-invite-help,.demo-mode #include-mic-label,.demo-mode #tab-help,.demo-mode #check-audio{display:none!important}.demo-mode #wrap-up-status{display:none}.demo-mode .demo-print-only{display:none}@media(max-width:650px){.demo-banner{font-size:11px;padding:8px 12px}.demo-banner p{max-width:75%}.demo-mode #workspace{height:calc(100dvh - 84px)}}@media print{.demo-mode .sidebar,.demo-mode .topbar,.demo-mode #home,.demo-mode #start-panel,.demo-mode #controls,.demo-mode .meeting-aside,.demo-mode #rally-display,.demo-mode #conversation-panel,.demo-mode .meeting-heading,.demo-mode .meeting-navigation,.demo-mode button,.demo-mode .report-actions,.demo-mode footer{display:none!important}.demo-mode,.demo-mode #workspace,.demo-mode .shell,.demo-mode main,.demo-mode #meeting,.demo-mode .meeting-grid,.demo-mode .main-column,.demo-mode #report-panel{display:block!important;height:auto!important;overflow:visible!important;width:auto!important;background:white!important;color:#111!important}.demo-mode #report-panel *{color:#111!important}.demo-mode .demo-print-only{display:block!important}.demo-banner{background:white;color:#111}.demo-banner a{display:none}}.demo-mode .sidebar{top:64px}.demo-mode .auth-appearance{display:none}@media(max-width:650px){.demo-banner{min-height:84px}}
+
+.demo-mode #workspace{height:auto;min-height:calc(100dvh - var(--demo-banner-height,64px));}
+.demo-mode .sidebar{top:var(--demo-banner-height,64px);}
+.demo-banner{min-height:0;gap:20px;align-items:center;padding:12px 22px;line-height:1.45;}
+.demo-banner p{max-width:none;flex:1;min-width:0;font-size:12px;}
+.demo-banner>div{display:flex;align-items:center;justify-content:flex-end;gap:12px;flex:0 0 auto;}
+.demo-banner button{min-height:34px;padding:6px 12px;white-space:nowrap;}
+.demo-banner a{white-space:nowrap;font-size:12px;}
+.demo-mode #voice-toggle-label,.demo-mode #test-voice{display:none!important;}
+@media(max-width:650px){.demo-banner{padding:10px 14px;gap:12px;align-items:flex-start}.demo-banner p{font-size:11px}.demo-banner>div{flex-direction:column;gap:6px;align-items:stretch}.demo-banner a{text-align:center;font-size:11px}.demo-banner button{font-size:11px;min-height:32px;padding:5px 9px}}
+@media print{.demo-banner{position:static;color:#111;background:white}.demo-mode .shell{margin:0}.demo-mode #workspace{min-height:0}.demo-banner>div{display:none}.demo-mode #report-panel{border-color:#999;box-shadow:none}.demo-mode #report-panel .score,.demo-mode #report-panel .pill{background:white;border-color:#bbb}.demo-mode #report-panel .score{break-inside:avoid}}
+
+@media(max-width:760px){.demo-mode #meeting[data-view=live] #connection-status{display:none}}
+
+/* The demo notice spends some vertical space. Retain both welcome sections on
+   common laptop heights without changing the normal site's hero proportions. */
+@media(min-width:1000px) and (max-height:800px){
+ .demo-mode #home .hero{min-height:220px;padding:20px 26px;}
+ .demo-mode #home .hero h1{font-size:34px;line-height:1.1;}
+ .demo-mode #home .hero>.hero-art{height:175px;}
+ .demo-mode #home .hero-halo{width:160px;height:160px;}
+ .demo-mode #home .meta-products{padding:12px;margin-block:12px;}
+ .demo-mode #home .meta-heading{margin-bottom:8px;}
+ .demo-mode #home .meta-heading h2{font-size:27px;}
+ .demo-mode #home .model-art{height:64px;}
+ .demo-mode #home .model-art svg{padding-top:6px;}
+ .demo-mode #home .art-label{top:7px;font-size:8px;}
+ .demo-mode #home .model-card-body{padding:12px;}
+ .demo-mode #home .meta-model-card h3{font-size:15px;margin:10px 0 6px;}
+ .demo-mode #home .meta-model-card p{font-size:12px;line-height:1.6;margin-bottom:10px;}
+ .demo-mode #home .meta-model-card .meta-badge{font-size:9px;}
+}
+
+@media print{html:has(body.demo-mode){background:white;color-scheme:light}.demo-mode .meeting-heading{display:block!important}.demo-mode .meeting-heading .actions{display:none!important}.demo-mode .meeting-heading h1{font-size:24px;margin:16px 0 8px}}

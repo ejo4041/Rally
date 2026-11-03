@@ -346,10 +346,10 @@ function topicHTML(plan: Plan | null) {
     plan.topics
       .map(
         (t) =>
-          `<div class="topic ${escape(t.status)}"><span class="topic-minutes">${escape(t.minutes)} min · ${escape(label(t.status))}</span><h3>${escape(t.title)}</h3><p>${escape(t.outcome)}</p></div>`,
+          `<div class="topic ${escape(t.status)}"><span class="topic-minutes">${escape(Number(t.minutes.toFixed(1)))} min · ${escape(label(t.status))}</span><h3>${escape(t.title)}</h3><p>${escape(t.outcome)}</p></div>`,
       )
       .join("") +
-    `<div class="topic"><p>Wrap-up ${escape(plan.wrapMinutes)} min · Total ${escape(plan.durationMinutes)} min</p></div>`
+    `<div class="topic"><p>Wrap-up ${escape(Number(plan.wrapMinutes.toFixed(1)))} min · Total ${escape(plan.durationMinutes)} min</p></div>`
   );
 }
 function speakerName(id: string | null) {
@@ -427,7 +427,7 @@ function render() {
     }
   }
   if (needsInvite && !inviteValid) requirements.push("Paste a valid work/school Teams invitation.");
-  if (!input("consent").checked) requirements.push("Confirm participant consent.");
+  if (!input("consent").checked) requirements.push(DEMO_MODE?"Acknowledge the simulated meeting to start.":"Confirm participant consent.");
   if (state.busy) requirements.push("Wait for the current operation to finish.");
   $("join-requirements").textContent = requirements.join(" ");
   $("join-requirements").hidden = requirements.length === 0;
@@ -1221,8 +1221,12 @@ setupActionFeedback();
 
 if(DEMO_MODE)void (async()=>{
  demoRuntime=await import('./demo-api.ts');
+ // Ephemeral records do not survive reload; retain only the preloaded example deep link.
+ if(location.hash&&!/^#(?:meeting|report)\/demo-1$/.test(location.hash))history.replaceState(null,'',location.pathname+location.search);
  document.body.classList.add('demo-mode');
  const banner=document.createElement('aside');banner.className='demo-banner';banner.innerHTML='<p><strong>Demo mode · simulated meeting</strong><br>Fictional conversation and replies. No audio capture, meetings or AI calls. Changes reset on reload.</p><div><button id="reset-demo">Reset demo</button> <a href="/">Exit demo</a></div>';document.body.prepend(banner);
+ const bannerSize=new ResizeObserver(()=>document.documentElement.style.setProperty('--demo-banner-height',`${banner.getBoundingClientRect().height}px`));bannerSize.observe(banner);window.addEventListener('pagehide',()=>bannerSize.disconnect());
+ $('start-title').textContent='Review the plan. Then run the sample.';
  button('reset-demo').onclick=()=>{location.hash='';location.reload();};
  button('logout').textContent='Exit demo';button('logout').onclick=()=>location.assign('/');
  button('mobile-logout').textContent='Exit demo';

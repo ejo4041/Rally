@@ -56,6 +56,10 @@ try {
     page = await ctx.newPage();
   page.on("pageerror", (e) => errors.push(e.message));
   await page.goto(base);
+  await page.locator('.auth-appearance [data-theme-selector]').selectOption('dark');
+  assert.equal(await page.locator('html').getAttribute('data-theme'),'dark');
+  assert.equal(await page.evaluate(()=>getComputedStyle(document.documentElement).backgroundColor===getComputedStyle(document.body).backgroundColor),true);
+  assert.notEqual(await page.locator('.auth-card').evaluate(e=>getComputedStyle(e).backgroundColor),'rgb(255, 255, 255)');
   assert.equal(await page.locator("#auth-toggle").isVisible(), false);
   await page.locator("#username").fill("admin_test");
   await page.locator("#password").fill(password);

@@ -26640,7 +26640,7 @@ function setupMeetingLayout() {
   function positionPlan() {
     if (!current || restore.has("plan-sheet")) return;
     const panel = $("agenda-panel");
-    if (matchMedia("(max-width:760px)").matches && !["live", "ended"].includes(current.phase)) $("meeting").insertBefore(panel, $("start-panel"));
+    if (matchMedia("(max-width:760px)").matches && !["live", "ended"].includes(current.phase)) $("meeting").insertBefore(panel, $("start-panel").nextSibling);
     else if (panel.parentNode !== planHome) planHome.insertBefore(panel, planNext?.parentNode === planHome ? planNext : null);
   }
   addEventListener("resize", positionPlan);
@@ -61157,8 +61157,8 @@ function topicHTML(plan) {
   if (!plan)
     return '<p class="empty-note">Agenda preparation has not completed. Retry or enter a plan.</p>';
   return `<div class="topic"><p>${escape3(plan.objective)}</p></div>` + plan.topics.map(
-    (t) => `<div class="topic ${escape3(t.status)}"><span class="topic-minutes">${escape3(t.minutes)} min \xB7 ${escape3(label(t.status))}</span><h3>${escape3(t.title)}</h3><p>${escape3(t.outcome)}</p></div>`
-  ).join("") + `<div class="topic"><p>Wrap-up ${escape3(plan.wrapMinutes)} min \xB7 Total ${escape3(plan.durationMinutes)} min</p></div>`;
+    (t) => `<div class="topic ${escape3(t.status)}"><span class="topic-minutes">${escape3(Number(t.minutes.toFixed(1)))} min \xB7 ${escape3(label(t.status))}</span><h3>${escape3(t.title)}</h3><p>${escape3(t.outcome)}</p></div>`
+  ).join("") + `<div class="topic"><p>Wrap-up ${escape3(Number(plan.wrapMinutes.toFixed(1)))} min \xB7 Total ${escape3(plan.durationMinutes)} min</p></div>`;
 }
 function speakerName(id) {
   if (!id) return "Unknown speaker";
@@ -61227,7 +61227,7 @@ function render() {
     }
   }
   if (needsInvite && !inviteValid) requirements.push("Paste a valid work/school Teams invitation.");
-  if (!input("consent").checked) requirements.push("Confirm participant consent.");
+  if (!input("consent").checked) requirements.push(DEMO_MODE ? "Acknowledge the simulated meeting to start." : "Confirm participant consent.");
   if (state.busy) requirements.push("Wait for the current operation to finish.");
   $4("join-requirements").textContent = requirements.join(" ");
   $4("join-requirements").hidden = requirements.length === 0;
@@ -61901,11 +61901,16 @@ setupTheme();
 setupActionFeedback();
 if (DEMO_MODE) void (async () => {
   demoRuntime = await Promise.resolve().then(() => (init_demo_api(), demo_api_exports));
+  if (location.hash && !/^#(?:meeting|report)\/demo-1$/.test(location.hash)) history.replaceState(null, "", location.pathname + location.search);
   document.body.classList.add("demo-mode");
   const banner = document.createElement("aside");
   banner.className = "demo-banner";
   banner.innerHTML = '<p><strong>Demo mode \xB7 simulated meeting</strong><br>Fictional conversation and replies. No audio capture, meetings or AI calls. Changes reset on reload.</p><div><button id="reset-demo">Reset demo</button> <a href="/">Exit demo</a></div>';
   document.body.prepend(banner);
+  const bannerSize = new ResizeObserver(() => document.documentElement.style.setProperty("--demo-banner-height", `${banner.getBoundingClientRect().height}px`));
+  bannerSize.observe(banner);
+  window.addEventListener("pagehide", () => bannerSize.disconnect());
+  $4("start-title").textContent = "Review the plan. Then run the sample.";
   button("reset-demo").onclick = () => {
     location.hash = "";
     location.reload();
