@@ -96,7 +96,9 @@ export class UsageLedger {
       cost: number | null;
       estimate: number;
     }[];
-    if (rows.some((r) => r.status === "unknown"))
+    // Operator opt-in keeps unconfirmed charges reserved against both caps;
+    // it never invents settled usage or retries the failed provider request.
+    if (!this.config.allowUnknownCostEstimates && rows.some((r) => r.status === "unknown"))
       throw new HttpError(
         "Unknown provider costs must be reconciled before further paid work",
         409,
