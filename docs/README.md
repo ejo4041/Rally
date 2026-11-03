@@ -1,5 +1,7 @@
 # Rally documentation
 
+[Saved-draft recovery](blocked-draft-recovery-2026-11-03.md): the two blocked drafts now have ready agendas; stale preparation messages corrected.
+
 [Authorized API continuation](api-continuation-2026-11-03.md): API use may proceed with unconfirmed costs provisionally reserved against the existing caps.
 
 [New-meeting setup fix](meeting-setup-fix-2026-11-03.md): blank invitation between meetings, visible Join requirements and the remaining provider-charge reconciliation blocker.

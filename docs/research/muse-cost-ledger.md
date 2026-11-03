@@ -189,3 +189,7 @@ Three production-adapter Muse ASR calls:45s discovery **$0.00225000**,13.4s orig
 ## Authorized API continuation — November 3
 
 One actual Muse Spark1.3 agenda-preparation request through public HTTPS/MFA passed and settled at **$0.002948**. [Usage and deployment evidence](api-continuation-deployed-2026-11-03.json). Batch **$0.002948**; tracked development cumulative **$5.34461765**; conditional unverified-$150 remainder **$144.65538235**, excluding unverified unrelated runtime activity. The existing production unknown report reservation **$0.253929** remains unconfirmed and counts against the unchanged local $6/$20 caps under the user-authorized continuation policy. It was not zeroed or settled. A local TLS probe failure made no provider request; no automatic provider retry occurred. No platform join or submission.
+
+## Blocked-draft recovery — November 3
+
+The user still saw the saved preparation failure after API continuation was enabled. Two explicitly requested draft-preparation retries succeeded, both drafts now ready with a plan and no error. [Evidence](blocked-draft-recovery-2026-11-03.json). Batch **$0.00720660** across two actual Muse requests, both settled; tracked development cumulative **$5.35182425**; conditional unverified-$150 remainder **$144.64817575**, excluding unverified unrelated runtime activity and unknown costs. Original unknown report row preserved. No automatic report retry or platform join.
