@@ -1,5 +1,7 @@
 # Rally documentation
 
+[Presenter closing and next-chapter vision](demo-next-chapter-pitch.md): proposed conversation-to-follow-through direction, delivery cues and an opening/closing callback.
+
 Start with the [current handoff](handoff.md) and [readiness check](readiness-2026-10-31.md). Dated records describe their measured release and may differ from the current application.
 
 | Topic | Current reference |

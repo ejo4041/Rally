@@ -1,5 +1,7 @@
 # Presenter recording package — November 3, 2026
 
+Closing revision: [next-chapter pitch](demo-next-chapter-pitch.md) offers a stronger future-direction close, an optional opening callback and visual cues. Record it as an alternative to the closing below; do not append both.
+
 Draft for a three-minute presenter-led Rally video. Record the human presenter and screen footage separately, then assemble face-to-camera opening/closing, product footage and a movable corner overlay. The timeline below is a target edit, not measured delivery timing. Leave room for an actual Rally voice excerpt. Final submission remains on hold.
 
 ## Script and edit cues
