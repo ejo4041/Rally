@@ -1051,8 +1051,13 @@ document.addEventListener("click", (event) => {
   const target = (event.target as Element).closest<HTMLElement>("button");
   if (!target) return;
   if (target.dataset.close) dialog(target.dataset.close).close();
-  if (target.dataset.meeting && canNavigate())
-    location.hash = `meeting/${target.dataset.meeting}`;
+  if (target.dataset.meeting && canNavigate()) {
+    const destination = `#meeting/${target.dataset.meeting}`;
+    // A failed record load leaves its URL in place. Setting the same hash does
+    // not fire hashchange, so a repeated history click must explicitly retry.
+    if (location.hash === destination) void route().catch(fail);
+    else location.hash = destination;
+  }
   if (target.hasAttribute("data-remove-topic"))
     target.closest(".topic-editor")?.remove();
   if (target.dataset.speaker && state.session) {
