@@ -1,3 +1,9 @@
+### Theme polish deployment and final browser-color detail
+
+Frontend release `3b9e81d-theme-spacing` deployed after private SQLite backup. Backend byte-identical to previous release; API PID755639 unchanged; API healthy. Public workflow (including protected normal site even with `?demo=1`) passed, followed by48 strict public dark/light screen states with zero page errors, API/socket requests, measured contrast warnings or layout violations. Local matrix288 + public48 =336 checked screenshots. No paid model calls.
+
+A final theme-init patch synchronizes `meta[name=theme-color]` with resolved dark/light/system appearance, so mobile browser chrome can follow the palette. Keyboard/theme-sync/reduced-motion/print regression passed again, including metadata checks in both themes. Final patch release and verification recorded next. [Full polish report](theme-spacing-polish-2026-11-03.md).
+
 ## Theme and spacing polish — 2026-11-03
 
 Owner requested autonomous overnight dark-mode/spacing fixes and extensive testing. Branch `fix/theme-and-spacing-polish`, worktree `/srv/hackathon/rally-public-demo`. Dark document canvas fixed, surfaces tokenized, padding/typography/Back alignment corrected, readable secondary copy in both themes, agenda decimals bounded. Mobile start controls precede full plan; live presence compact enough for guidance. Demo banner uses measured height, settings hide unavailable voice controls, short-laptop welcome fits both sections. Demo reload clears stale ephemeral deep links without an error. Ordinary app account/MFA/API policy retained.

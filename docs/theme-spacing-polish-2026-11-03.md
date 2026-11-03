@@ -4,6 +4,7 @@ Owner request: fix unexpected white areas in dark mode and inconsistent spacing 
 
 ## Findings and changes
 
+- Browser theme-color metadata now follows light/dark/system selection as well as the CSS palette, instead of remaining light on mobile.
 - The root document retained the original light background, even when body was dark. Document canvas and body now share theme tokens, including short pages and overscroll. Core panel backgrounds use surface tokens.
 - The demo workspace had a fixed viewport height and a fixed banner offset. Content can now grow normally; a ResizeObserver measures the banner height for sidebar and sticky meeting tabs, including wrapped text.
 - A first-paragraph selector enlarged the provider attribution instead of guidance in the live card. Guidance and attribution now have explicit typography rules.
@@ -41,3 +42,18 @@ Coverage limits: automated Chromium on the Linux droplet, with renderer fallback
 ## Deployment
 
 Prepared for a static frontend-only release after tested branch merge. Preserve the current API/media process and byte-identical backend; make a private SQLite backup and atomically switch only after staging/copy checks. Final release and public smoke result are recorded in the handoff.
+
+## Re-running checks
+
+From `apps/rally-web`, build the shared UI and portable sample first:
+
+```sh
+node scripts/build.mjs
+node scripts/export-demo.mjs
+node --test tests/*.test.ts
+node node_modules/typescript/bin/tsc --noEmit
+```
+
+Browser entrypoints: `tests/theme-layout.browser.mjs`, `tests/demo-stability.browser.mjs`, `tests/demo-keyboard.browser.mjs`, `tests/demo.browser.mjs`, and the existing feedback/security/setup/history scripts. On the shared droplet, always use the bounded systemd wrapper mandated in `AGENTS.md`; do not launch browser checks directly. Run one browser unit at a time. Visual configuration: `RALLY_VISUAL_WIDTHS` comma-separated widths; `RALLY_VISUAL_HEIGHT` for a fixed height; `RALLY_VISUAL_STRICT=1`; `RALLY_VISUAL_OUT` artifact directory. `DEMO_PUBLIC_URL` selects the deployed demo for the visual and workflow smoke checks; omit it for the portable local sample. The complete replay test intentionally waits for natural playback instead of fast-forwarding synthetic timing.
+
+Public verification on the first polish release passed the real hosted demo workflow and48 strict screen states, including both themes at390 and1280px. Normal app authentication remains required. API health stayed good and process PID unchanged. An additional keyboard/theme test covers synchronized browser theme-color metadata. Final release confirmation is in `docs/handoff.md`.
