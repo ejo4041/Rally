@@ -31,7 +31,7 @@ Record actual devices, selected call surface, who heard the voice, response-time
 
 ## What to record for the demo
 
-Use [the three-minute script](demo-script.md). Lead with a complete useful decision loop and close with the future platform idea. The integrated report uses model interpretations, not a mandatory host-confirmation workflow. Presenter mode, a demo clock and the older confirmed-outcome sharing workflow belong to the Sites release. The integrated [WhatsApp draft](integrated-whatsapp-follow-up.md) uses host-selected report interpretations and manual editing. Do not narrate controls that are absent from the demonstrated release.
+Use [the three-minute script](https://github.com/ejo4041/Rally/blob/b9bdd26b12b6eadc7b276ca91e6817be0d6ceca5/docs/demo-script.md). Lead with a complete useful decision loop and close with the future platform idea. The integrated report uses model interpretations, not a mandatory host-confirmation workflow. Presenter mode, a demo clock and the older confirmed-outcome sharing workflow belong to the Sites release. The integrated [WhatsApp draft](integrated-whatsapp-follow-up.md) uses host-selected report interpretations and manual editing. Do not narrate controls that are absent from the demonstrated release.
 
 ## Remaining access work
 

@@ -1,6 +1,6 @@
 # Morning rehearsal — October 29 (earlier Sites release)
 
-For the October 30 Node deployment, use the [integrated rehearsal packet](integrated-rehearsal.md) and [updated demo script](demo-script.md). This older checklist describes Sites-specific controls.
+For the October 30 Node deployment, use the [integrated rehearsal packet](integrated-rehearsal.md) and [updated demo script](https://github.com/ejo4041/Rally/blob/b9bdd26b12b6eadc7b276ca91e6817be0d6ceca5/docs/demo-script.md). This older checklist describes Sites-specific controls.
 
 The deployed app is version 12. [Browser meeting inputs and WhatsApp follow-up](browser-meetings.md) are available; actual call/device validation is pending. Use Check audio first to verify local input levels without a model charge. Self-hosted Meta MMS browser output is available; the latest server runner also includes the morning cancellation/race fixes. The Teams participant receives audio and streams it to Muse Voice Transcribe. The new local virtual-microphone output controller has passed an isolated audio test; live Teams speech moderation is still being connected.
 
@@ -19,7 +19,7 @@ For WhatsApp Web, Zoom Web, Meet or Jitsi, join the call yourself and follow [th
 
 ## Roles and demonstration
 
-Use [the draft script](demo-script.md) as a rehearsal outline. The goal is to demonstrate a useful meeting interaction followed by a brief future-platform description. Human speakers can prepare the discussion scenario; retain actual model responses and response timing. Keep the future meeting-platform slide visibly labeled as a future direction.
+Use [the draft script](https://github.com/ejo4041/Rally/blob/b9bdd26b12b6eadc7b276ca91e6817be0d6ceca5/docs/demo-script.md) as a rehearsal outline. The goal is to demonstrate a useful meeting interaction followed by a brief future-platform description. Human speakers can prepare the discussion scenario; retain actual model responses and response timing. Keep the future meeting-platform slide visibly labeled as a future direction.
 
 The first rehearsal should confirm the chosen browser, microphone and speakers. Then run the complete three-person sequence, including consent, an intervention, source-linked proposals, explicit host confirmation, override, saved evidence and export. Keep Teams voice output separate until the route is implemented and verified in a consented meeting.
 

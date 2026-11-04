@@ -54,7 +54,7 @@ Start with the [current handoff](../../handoff.md). The integrated Node app and 
 | Input checks | [Free local tab/microphone preflight](../../audio-preflight.md) |
 | Follow-through | [Reviewed manual WhatsApp drafts](../../integrated-whatsapp-follow-up.md), [official-source check and device limits](../../research/whatsapp-manual-draft-check-2026-10-30.md) |
 | Meeting connectors | [Teams invitation UI and bounds](../../teams-integrated-ui.md), [WhatsApp guest prototype](../../whatsapp-guest-prototype.md), [Meta call integration research](../../research/meta-call-integration-options-2026-10-30.md) |
-| Demonstration | [Rehearsal packet](../../integrated-rehearsal.md), [three-minute script and future-platform close](../../demo-script.md), [longer show-and-tell/pitch](../../show-and-tell-script.md), [current access observations](../../research/submission-access-check-2026-10-30.md) |
+| Demonstration | [Rehearsal packet](../../integrated-rehearsal.md), [three-minute script and future-platform close](https://github.com/ejo4041/Rally/blob/b9bdd26b12b6eadc7b276ca91e6817be0d6ceca5/docs/demo-script.md), [longer show-and-tell/pitch](https://github.com/ejo4041/Rally/blob/b9bdd26b12b6eadc7b276ca91e6817be0d6ceca5/docs/show-and-tell-script.md), [current access observations](../../research/submission-access-check-2026-10-30.md) |
 
 [Local draft archive/privacy check](../../research/source-draft-archive-check.json) · [clean source reproduction](../../research/source-draft-reproduction-check.json). These are local preparation evidence, not a submitted entry.
 
@@ -69,9 +69,9 @@ Start with the [current handoff](../../handoff.md). The integrated Node app and 
 
 ## Product and submission drafts
 
-- [Participant guide](../../hackathon-participant-guide.md), [requirements/model-eligibility review](../../research/submission-requirements-meta-audit-2026-10-29.md), [submission draft](../../submission-package.md). Final submission is on hold.
+- [Participant guide](../../hackathon-participant-guide.md), [requirements/model-eligibility review](../../research/submission-requirements-meta-audit-2026-10-29.md), [submission draft](https://github.com/ejo4041/Rally/blob/b9bdd26b12b6eadc7b276ca91e6817be0d6ceca5/docs/submission-package.md). Final submission is on hold.
 - [Planning interview](../../planning-interview.md), [roadmap](../../rally-roadmap.md), [implementation backlog](../../implementation-backlog.md), [initial architecture](../../rally-architecture.md), [reliability/cost model](../../reliability-and-cost-model.md).
-- [Original walkthrough](../../demo-walkthrough.md) includes earlier product controls; use the updated [integrated script](../../demo-script.md) for today's app. No complete human/device rehearsal or published video is established by automated tests.
+- [Original walkthrough](https://github.com/ejo4041/Rally/blob/b9bdd26b12b6eadc7b276ca91e6817be0d6ceca5/docs/demo-walkthrough.md) includes earlier product controls; use the updated [integrated script](https://github.com/ejo4041/Rally/blob/b9bdd26b12b6eadc7b276ca91e6817be0d6ceca5/docs/demo-script.md) for today's app. No complete human/device rehearsal or published video is established by automated tests.
 
 ## Earlier Sites release and checkpoints
 

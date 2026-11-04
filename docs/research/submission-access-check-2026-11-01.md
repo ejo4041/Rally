@@ -6,7 +6,7 @@ The [submission portal](https://cerebralvalley.ai/e/meta-ai-developer-hackathon/
 
 An anonymous request to [GitHub](https://github.com/ejo4041/Rally) returned404. Source is pushed via SSH, but outside-viewer access remains unverified. A404 alone does not distinguish private, unavailable or renamed source. No visibility change was made. Root source licensing, human contributors and supplied visual-artwork redistribution evidence remain pending in [source readiness](../source-release-readiness.md).
 
-The local video remains unuploaded. A second exact180-second draft now identifies seven pending real-footage edit slots; all are still empty. It does not establish actual Teams or human meeting behavior. [Edit workflow](../demo-live-edit.md).
+The local video remains unuploaded. A second exact180-second draft now identifies seven pending real-footage edit slots; all are still empty. It does not establish actual Teams or human meeting behavior. [Edit workflow](https://github.com/ejo4041/Rally/blob/b9bdd26b12b6eadc7b276ca91e6817be0d6ceca5/docs/demo-live-edit.md).
 
 Meta's [SeamlessM4T-v2-large publisher card](https://huggingface.co/facebook/seamless-m4t-v2-large) identifies CC BY-NC4.0 for the model. Original app licensing stays distinct from that model, local MMS and supplied artwork. [Component notices](../../THIRD_PARTY_NOTICES.md).
 

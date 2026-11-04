@@ -97,7 +97,7 @@ Concrete model assignments and feasibility are research outputs, not assumed cap
 
 - Confirmed competition track: **Indie Developer**.
 - Prove that transcription → reasoning → audible intervention can keep pace with a meeting through brief real-service tests before broadening the build. Minute-scale response time is unacceptable to the user. Targets and timing definitions are in [latency test plan](latency-test-plan.md); actual measurements are still pending credentials.
-- Plan the three-minute video around the working meeting lifecycle and documented validation. See [demonstration walkthrough](demo-walkthrough.md).
+- Plan the three-minute video around the working meeting lifecycle and documented validation. See [demonstration walkthrough](https://github.com/ejo4041/Rally/blob/b9bdd26b12b6eadc7b276ca91e6817be0d6ceca5/docs/demo-walkthrough.md).
 - Persist all substantive outputs and important context as organized Markdown with good handoff points. See [documentation index](README.md) and [current handoff](handoff.md).
 
 Initial official-source research is complete: [Rally feasibility](research/rally-feasibility.md). No authenticated calls or meeting experiments have been run.

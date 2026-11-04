@@ -1,6 +1,6 @@
 # Rally submission requirements and Meta integration review
 
-**Current release:** [Version 12](../releases/2026-10-29-v12.md) adds browser-call inputs, a free local audio check, presenter view and manual WhatsApp follow-up drafts. MMS browser playback and saved review are deployed. The initial research below records earlier implementation status; use the current release and [submission draft](../submission-package.md) for current behavior. Real calls/device rehearsal and final submission remain pending.
+**Current release:** [Version 12](../releases/2026-10-29-v12.md) adds browser-call inputs, a free local audio check, presenter view and manual WhatsApp follow-up drafts. MMS browser playback and saved review are deployed. The initial research below records earlier implementation status; use the current release and [submission draft](https://github.com/ejo4041/Rally/blob/b9bdd26b12b6eadc7b276ca91e6817be0d6ceca5/docs/submission-package.md) for current behavior. Real calls/device rehearsal and final submission remain pending.
 
 **Implementation update later the same night:** [Saved review and the measured local MMS CPU spike](../overnight-build-2026-10-29.md) are now completed locally. MMS generated four synthetic phrases; hosted/Teams playback and live validation remain pending. The research findings below distinguish eligibility from runtime proof.
 
@@ -32,7 +32,7 @@ The excerpt does not prohibit Teams, hosting, source control or coding tools. Do
 
 ## Submission work, owners and gates
 
-This checklist uses the supplied guide and existing [demo plan](../demo-walkthrough.md). Dates before the official cutoff are internal targets.
+This checklist uses the supplied guide and existing [demo plan](https://github.com/ejo4041/Rally/blob/b9bdd26b12b6eadc7b276ca91e6817be0d6ceca5/docs/demo-walkthrough.md). Dates before the official cutoff are internal targets.
 
 | Item | Current evidence | Owner and target | Completion check |
 | --- | --- | --- | --- |

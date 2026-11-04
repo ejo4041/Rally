@@ -66,7 +66,7 @@ Open `phoneme-listening-20261102/index.html` in your browser. Listen before reve
 4. After quality and coverage acceptance, test actual recipient audibility, duplex/echo, pause/cancel and latency in a consented call. Then consider production selection through the documented deployment process, preserving active calls, database and secrets.
 5. If accepted for the demo, regenerate narration with original captions and recheck the three-minute edit. Existing demo drafts remain available; the new voice has not replaced them.
 
-For the broader product acceptance, follow [Monday live rehearsal](monday-live-rehearsal.md), [demo edit workflow](demo-live-edit.md), and [current handoff](handoff.md). Real meeting endurance, recipient playback/camera and final footage acceptance remain distinct from local prototype tests.
+For the broader product acceptance, follow [Monday live rehearsal](monday-live-rehearsal.md), [demo edit workflow](https://github.com/ejo4041/Rally/blob/b9bdd26b12b6eadc7b276ca91e6817be0d6ceca5/docs/demo-live-edit.md), and [current handoff](handoff.md). Real meeting endurance, recipient playback/camera and final footage acceptance remain distinct from local prototype tests.
 
 ## Runtime and reproducibility
 

@@ -34,6 +34,6 @@ After the long run and usage review, run two separate 10–15-minute calls if pa
 
 ## B-roll and evidence
 
-Use the [shot list](demo-live-edit.md) for clean clips. Keep the call master untouched; public excerpts should label edits and preserve actual-speed response sequences. Public footage must not include material that participants did not approve for release. Record platform/audio evidence separately from edited footage.
+Use the [shot list](https://github.com/ejo4041/Rally/blob/b9bdd26b12b6eadc7b276ca91e6817be0d6ceca5/docs/demo-live-edit.md) for clean clips. Keep the call master untouched; public excerpts should label edits and preserve actual-speed response sequences. Public footage must not include material that participants did not approve for release. Record platform/audio evidence separately from edited footage.
 
 Copy [the result template](live-test-result-template.md) into a dated research record after the test. Mark each item pass/fail/not exercised and attach only sanitized evidence. Note source revision, actual run duration, raw versus edited timing, speaker mapping limitations and pending costs. A report that receives all text does not establish perfect interpretation.

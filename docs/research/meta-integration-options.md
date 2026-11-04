@@ -18,7 +18,7 @@ Rally’s product scope is: “Rally keeps a decision meeting moving, asks who o
 
 ## Three-minute demonstration outline
 
-This supplements [the existing storyboard](../demo-walkthrough.md); it does not expand scope. Use three consenting speakers discussing a software release. Label the planned scenario as a rehearsal and use actual model responses.
+This supplements [the existing storyboard](https://github.com/ejo4041/Rally/blob/b9bdd26b12b6eadc7b276ca91e6817be0d6ceca5/docs/demo-walkthrough.md); it does not expand scope. Use three consenting speakers discussing a software release. Label the planned scenario as a rehearsal and use actual model responses.
 
 | Time | Beat | Visible proof |
 | --- | --- | --- |

@@ -105,7 +105,7 @@ Latest broad recorded regression: 144 backend tests and 17 frontend tests, both 
 
 ## Demo and source preparation
 
-[Current three-minute script](demo-script.md), [narration/footage provenance](demo-feedback-draft.md) and [submission draft](submission-package.md) describe the current product and separate actual model/meeting evidence from the synthetic walkthrough. The video remains a local artifact pending review; final submission is on hold. Preserve Meta/component attribution and accurate original-work disclosure.
+[Current three-minute script](https://github.com/ejo4041/Rally/blob/b9bdd26b12b6eadc7b276ca91e6817be0d6ceca5/docs/demo-script.md), [narration/footage provenance](demo-feedback-draft.md) and [submission draft](https://github.com/ejo4041/Rally/blob/b9bdd26b12b6eadc7b276ca91e6817be0d6ceca5/docs/submission-package.md) describe the current product and separate actual model/meeting evidence from the synthetic walkthrough. The video remains a local artifact pending review; final submission is on hold. Preserve Meta/component attribution and accurate original-work disclosure.
 
 ## Remaining acceptance
 
@@ -125,7 +125,7 @@ The [65-minute real-provider experiment](provider-endurance.md) passed on source
 
 ## November 1 recovery and rehearsal preparation
 
-[Current preparation evidence](recovery-readiness-2026-11-01.md): seven new recovery tests expose/correct stale-room callbacks and cleanup skipped after ASR drain exceptions.151backend/17frontend tests and both type checks/build pass. [Monday runbook](monday-live-rehearsal.md), [shot list and local edit workflow](demo-live-edit.md), [judge access rehearsal](judge-access-rehearsal.md) and [prepared entry text](submission-field-draft.md) are ready for review. The separate180-second edit guide visibly leaves all seven live slots pending. Source-license/contributor/artwork/access decisions remain explicit; no final submission/upload/message was made. Deployment status is recorded in the linked evidence after validation.
+[Current preparation evidence](recovery-readiness-2026-11-01.md): seven new recovery tests expose/correct stale-room callbacks and cleanup skipped after ASR drain exceptions.151backend/17frontend tests and both type checks/build pass. [Monday runbook](monday-live-rehearsal.md), [shot list and local edit workflow](https://github.com/ejo4041/Rally/blob/b9bdd26b12b6eadc7b276ca91e6817be0d6ceca5/docs/demo-live-edit.md), [judge access rehearsal](judge-access-rehearsal.md) and [prepared entry text](https://github.com/ejo4041/Rally/blob/b9bdd26b12b6eadc7b276ca91e6817be0d6ceca5/docs/submission-field-draft.md) are ready for review. The separate180-second edit guide visibly leaves all seven live slots pending. Source-license/contributor/artwork/access decisions remain explicit; no final submission/upload/message was made. Deployment status is recorded in the linked evidence after validation.
 
 The recovery release is now live as `d0d4615`. [Deployment check](research/recovery-deployed-2026-11-01.json): idle check, private SQLite backup, matching tested engine source, active services, public UI/API200 and anonymous auth401. No live capture/report was interrupted. The focused local real-browser recovery test passed; broader browser chapters retain separate results.
 
@@ -163,7 +163,7 @@ Final prototype evidence: clean candidate `d620008` generated 80/80 corpus WAVs.
 
 [Read AI and close alternatives](research/meeting-market-2026-11-02.md): vendor-documentation scan, no trial accounts or purchases. Read overlaps on live metrics/coaching; Teams Facilitator is a direct agenda/timing competitor; Otter documents Zoom voice Q&A; Fireflies/Hedy offer live suggestions. Proposed positioning centers on evidence-backed team outcomes, not unique transcription/voice claims. Production unchanged.
 
-[November 3 presenter recording package](demo-presenter-recording-2026-11-03.md): human intro/problem/product/Meta-role script, free capture tools, B-roll cues and raw-file handoff for a three-minute review edit. Recording and new compositor work remain pending.
+[November 3 presenter recording package](https://github.com/ejo4041/Rally/blob/b9bdd26b12b6eadc7b276ca91e6817be0d6ceca5/docs/demo-presenter-recording-2026-11-03.md): human intro/problem/product/Meta-role script, free capture tools, B-roll cues and raw-file handoff for a three-minute review edit. Recording and new compositor work remain pending.
 
 ## November 2 demo edit and usage investigation
 
@@ -237,3 +237,8 @@ Moved seven completed presentation/rollout records and two already-superseded hi
 ## November 4 — draft07 and visualization description
 
 User approved06content and requested reduced flashing plus the earlier agitated visualization, preserving other content. Preparing numbered draft07locally;01–06preserved. New submission description paragraph in docs/submission-portal-answers-2026-11-04.md describes Rally’s visible personality: color/movement reflect its meeting-guidance state, not participant emotion analysis. Matching local form draft updated. Video narration is unchanged; paragraph is submission prose only. [Completed draft07verification and artifact paths](demo-video07-2026-11-04.md):180seconds/5400frames, audio/captions unchanged, nine capture flashes reduced, earlier amber/agitated gallery restored at71.60–74.57seconds. Full decode and prior-export preservation passed; final SHA256is recorded in the linked note. Private server artifact copy saved.
+
+
+## November 4 — remove submission preparation from current source tree
+
+Moved nine form-answer, presenter-script and editing-plan documents to the private droplet archive `/srv/hackathon/artifacts/submission-preparation-20261104/`, with source revision and SHA256manifest; a matching local review copy is saved under Downloads/Rally Submission Preparation2026-11-04. Historical references now use preserved-commit GitHub links. Current setup/security, licensing, original-work/model/component attribution, provenance and outstanding validation records remain in the repo. No history rewrite, contribution concealment, app/deployment/visibility change or video edit.

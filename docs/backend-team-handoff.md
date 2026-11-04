@@ -41,7 +41,7 @@ Before restarting production, check for live capture/report processing and back 
 
 ## Next human checks
 
-Run the [three-person/device rehearsal](integrated-rehearsal.md) before recording the [demo](demo-script.md). Verify actual capture surfaces, physical voice, cancellation, name corrections, conditional due-outs and report review. Speaker labels are anonymous and scores are model judgments, not calibrated identity or participation measurements.
+Run the [three-person/device rehearsal](integrated-rehearsal.md) before recording the [demo](https://github.com/ejo4041/Rally/blob/b9bdd26b12b6eadc7b276ca91e6817be0d6ceca5/docs/demo-script.md). Verify actual capture surfaces, physical voice, cancellation, name corrections, conditional due-outs and report review. Speaker labels are anonymous and scores are model judgments, not calibrated identity or participation measurements.
 
 Teams invitation is a bounded transcription test; WhatsApp guest calling still needs a fresh consented host link, admission and audio validation. Neither is a verified general meeting bot or remote spoken moderator. A usable judge-access path, source visibility/license, contributor verification and finished video remain open. Final submission is on hold.
 

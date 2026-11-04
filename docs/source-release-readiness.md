@@ -27,7 +27,7 @@ The local exporter uses only Git-tracked files and filters runtime databases, cr
 - GitHub anonymous access/visibility and actual judge recipient identity/private invitation delivery.
 - Authenticated portal fields and final publicly accessible video URL after footage review.
 
-Everything else can be tested/prepared without these inputs; do not mark these items complete by assumption. [Current submission draft](submission-package.md) and [judge access rehearsal](judge-access-rehearsal.md) keep entry actions pending.
+Everything else can be tested/prepared without these inputs; do not mark these items complete by assumption. [Current submission draft](https://github.com/ejo4041/Rally/blob/b9bdd26b12b6eadc7b276ca91e6817be0d6ceca5/docs/submission-package.md) and [judge access rehearsal](judge-access-rehearsal.md) keep entry actions pending.
 
 ## Prepared private archive
 

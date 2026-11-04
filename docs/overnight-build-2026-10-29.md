@@ -24,7 +24,7 @@ The new app code disables browser/OS speech diagnostics by default (`RALLY_DEVIC
 
 ### Submission requirements
 
-The audit identifies the official submission portal, deadline, track/Representative/contributor requirements, public-source/video/access checks and remaining validation tasks. [Submission draft and capture checklist](submission-package.md) turns these into concrete work. The signature demo remains a useful intervention → explicit commitment → host confirmation → transcript evidence loop. Additional Meta priorities are MMS first, then a bounded Wonder evidence audit, with WhatsApp follow-through gated on usable account/access and explicit send approval.
+The audit identifies the official submission portal, deadline, track/Representative/contributor requirements, public-source/video/access checks and remaining validation tasks. [Submission draft and capture checklist](https://github.com/ejo4041/Rally/blob/b9bdd26b12b6eadc7b276ca91e6817be0d6ceca5/docs/submission-package.md) turns these into concrete work. The signature demo remains a useful intervention → explicit commitment → host confirmation → transcript evidence loop. Additional Meta priorities are MMS first, then a bounded Wonder evidence audit, with WhatsApp follow-through gated on usable account/access and explicit send approval.
 
 The supplied TTS FAQ does not establish a Teams/hosting/Codex ban. Public GitHub access and a source license remain unresolved; successful SSH publication is not proof of anonymous judge access. No visibility change, new account or source-license grant was made.
 

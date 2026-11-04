@@ -10,7 +10,7 @@ The video records the current Node frontend from a branch based on main `a2278e0
 - Meta MMS: all newly generated narration uses locally provisioned `facebook/mms-tts-eng` revision `c71de0fe7204c83f1c10820a7d696d0b450048ba`. Model weights are CC BY-NC 4.0. This narration is separately credited from production Seamless speech.
 - Living Silk: supplied visual artwork/runtime, not Meta vision inference or participant emotion analysis. LiveKit, Chromium, FFmpeg and application dependencies retain their attribution.
 
-[Word-for-word script and screen plan](demo-script.md). There are no adoption, revenue, accuracy or saved-time claims. Future-platform remarks are labeled as future direction.
+[Word-for-word script and screen plan](https://github.com/ejo4041/Rally/blob/b9bdd26b12b6eadc7b276ca91e6817be0d6ceca5/docs/demo-script.md). There are no adoption, revenue, accuracy or saved-time claims. Future-platform remarks are labeled as future direction.
 
 ## Reproduce locally
 
@@ -32,7 +32,7 @@ The source/footage scripts and narration text are versioned; large video/audio a
 
 ## November 1 live-footage preparation
 
-A second local edit draft preserves the original and adds seven explicit live-footage placeholders. [Shot list, timing and assembly instructions](demo-live-edit.md). The compositor supports normal-speed approved clips and source audio only during the narration-free voice slot. Until those clips are supplied, the output is an edit guide over the synthetic base, not a real meeting recording.
+A second local edit draft preserves the original and adds seven explicit live-footage placeholders. [Shot list, timing and assembly instructions](https://github.com/ejo4041/Rally/blob/b9bdd26b12b6eadc7b276ca91e6817be0d6ceca5/docs/demo-live-edit.md). The compositor supports normal-speed approved clips and source audio only during the narration-free voice slot. Until those clips are supplied, the output is an edit guide over the synthetic base, not a real meeting recording.
 
 ## November 1 voice revision
 

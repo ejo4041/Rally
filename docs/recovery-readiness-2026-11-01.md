@@ -12,9 +12,9 @@ All seven recovery cases and the adjacent rotation/streaming tests pass (23 test
 
 ## Demo and owner rehearsal
 
-[Monday's runbook](monday-live-rehearsal.md), [result template](live-test-result-template.md), [shot list/edit workflow](demo-live-edit.md) and [judge access rehearsal](judge-access-rehearsal.md) are prepared. The exact180-second local edit draft has seven visibly pending live-footage slots. The original video is preserved; full decoding and a bounded preview frame were checked. Seven offline compositor guards and two source-export privacy/completeness tests pass. [Edit artifact manifest](research/live-demo-edit-2026-11-01.json).
+[Monday's runbook](monday-live-rehearsal.md), [result template](live-test-result-template.md), [shot list/edit workflow](https://github.com/ejo4041/Rally/blob/b9bdd26b12b6eadc7b276ca91e6817be0d6ceca5/docs/demo-live-edit.md) and [judge access rehearsal](judge-access-rehearsal.md) are prepared. The exact180-second local edit draft has seven visibly pending live-footage slots. The original video is preserved; full decoding and a bounded preview frame were checked. Seven offline compositor guards and two source-export privacy/completeness tests pass. [Edit artifact manifest](research/live-demo-edit-2026-11-01.json).
 
-Copy-ready [submission text](submission-field-draft.md), [component notices](../THIRD_PARTY_NOTICES.md) and [source-release decisions](source-release-readiness.md) retain current limits. [Public requirements/access recheck](research/submission-access-check-2026-11-01.md) still finds November4 at9PM ET, anonymous GitHub404 and no authenticated portal form. No final submission, video upload or invitation/message has been sent.
+Copy-ready [submission text](https://github.com/ejo4041/Rally/blob/b9bdd26b12b6eadc7b276ca91e6817be0d6ceca5/docs/submission-field-draft.md), [component notices](../THIRD_PARTY_NOTICES.md) and [source-release decisions](source-release-readiness.md) retain current limits. [Public requirements/access recheck](research/submission-access-check-2026-11-01.md) still finds November4 at9PM ET, anonymous GitHub404 and no authenticated portal form. No final submission, video upload or invitation/message has been sent.
 
 ## Costs and remaining acceptance
 

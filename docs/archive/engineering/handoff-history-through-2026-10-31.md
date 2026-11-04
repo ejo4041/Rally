@@ -103,7 +103,7 @@ New overnight work:
 - Voice playback coverage windows are saved as upper bounds and shown as a report caveat; they are not evidence of participant silence.
 - Delayed moderator controls/prompts from older epochs cannot undo Resume or replace current guidance.
 - Scoped live captions survive older asynchronous completions; late partials cannot resurrect finalized words. Legacy unscoped adapters retain their existing clear-on-final behavior.
-- [Updated demo script](../../demo-script.md), [longer show-and-tell/pitch](../../show-and-tell-script.md), [human rehearsal packet](../../integrated-rehearsal.md) and [submission/access observations](../../research/submission-access-check-2026-10-30.md).
+- [Updated demo script](https://github.com/ejo4041/Rally/blob/b9bdd26b12b6eadc7b276ca91e6817be0d6ceca5/docs/demo-script.md), [longer show-and-tell/pitch](https://github.com/ejo4041/Rally/blob/b9bdd26b12b6eadc7b276ca91e6817be0d6ceca5/docs/show-and-tell-script.md), [human rehearsal packet](../../integrated-rehearsal.md) and [submission/access observations](../../research/submission-access-check-2026-10-30.md).
 
 ## Validation and running check
 

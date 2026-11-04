@@ -12,17 +12,17 @@
 
 [Saved meeting navigation fix](history-navigation-fix-2026-11-03.md): deployed same-item retry after a failed load, ready/failed report checks and desktop/mobile browser evidence.
 
-[Presenter closing and next-chapter vision](demo-next-chapter-pitch.md): proposed conversation-to-follow-through direction, delivery cues and an opening/closing callback.
+[Presenter closing and next-chapter vision](https://github.com/ejo4041/Rally/blob/b9bdd26b12b6eadc7b276ca91e6817be0d6ceca5/docs/demo-next-chapter-pitch.md): proposed conversation-to-follow-through direction, delivery cues and an opening/closing callback.
 
 Start with the [current handoff](handoff.md) and [readiness check](readiness-2026-10-31.md). Dated records describe their measured release and may differ from the current application.
 
 | Topic | Current reference |
 | --- | --- |
 | Monday rehearsal | [65-minute runbook](monday-live-rehearsal.md), [result template](live-test-result-template.md), [recovery evidence](recovery-readiness-2026-11-01.md) |
-| Live footage | [Shot list and edit workflow](demo-live-edit.md), [judge access rehearsal](judge-access-rehearsal.md) |
-| Source release | [License/access decisions](source-release-readiness.md), [component notices](../THIRD_PARTY_NOTICES.md), [prepared submission text](submission-field-draft.md) |
-| Demonstration | [Three-minute script](demo-script.md), [video/provenance](demo-feedback-draft.md), [longer show-and-tell](show-and-tell-script.md) |
-| Submission preparation | [Working draft](submission-package.md), [supplied participant guide](hackathon-participant-guide.md) |
+| Live footage | [Shot list and edit workflow](https://github.com/ejo4041/Rally/blob/b9bdd26b12b6eadc7b276ca91e6817be0d6ceca5/docs/demo-live-edit.md), [judge access rehearsal](judge-access-rehearsal.md) |
+| Source release | [License/access decisions](source-release-readiness.md), [component notices](../THIRD_PARTY_NOTICES.md), [prepared submission text](https://github.com/ejo4041/Rally/blob/b9bdd26b12b6eadc7b276ca91e6817be0d6ceca5/docs/submission-field-draft.md) |
+| Demonstration | [Three-minute script](https://github.com/ejo4041/Rally/blob/b9bdd26b12b6eadc7b276ca91e6817be0d6ceca5/docs/demo-script.md), [video/provenance](demo-feedback-draft.md), [longer show-and-tell](https://github.com/ejo4041/Rally/blob/b9bdd26b12b6eadc7b276ca91e6817be0d6ceca5/docs/show-and-tell-script.md) |
+| Submission preparation | [Working draft](https://github.com/ejo4041/Rally/blob/b9bdd26b12b6eadc7b276ca91e6817be0d6ceca5/docs/submission-package.md), [supplied participant guide](hackathon-participant-guide.md) |
 | Frontend/backend | [Frontend setup](../apps/rally-web/README.md), [API setup](../apps/rally-api/README.md), [HTTP/streaming contract](backend-api.md) |
 | Meta models | [Capability interfaces](model-interfaces.md), [AI processing](ai-processing.md), [recorded real AI examples](backend-ai-examples.md) |
 | Teams | [Canonical presence operations](living-presence-operations.md), [wrap-up and chat evidence](teams-wrapup.md) |
@@ -52,7 +52,7 @@ Research files preserve source attribution and distinguish documented capability
 
 - [Rally market scan: Read AI and live-facilitation alternatives](research/meeting-market-2026-11-02.md)
 
-[November 3 presenter recording package](demo-presenter-recording-2026-11-03.md): human intro/problem/product/Meta-role script, free capture tools, B-roll cues and raw-file handoff for a three-minute review edit. Recording and new compositor work remain pending.
+[November 3 presenter recording package](https://github.com/ejo4041/Rally/blob/b9bdd26b12b6eadc7b276ca91e6817be0d6ceca5/docs/demo-presenter-recording-2026-11-03.md): human intro/problem/product/Meta-role script, free capture tools, B-roll cues and raw-file handoff for a three-minute review edit. Recording and new compositor work remain pending.
 
 - [November 2 unknown report cost investigation](report-cost-incident-2026-11-02.md)
 
@@ -68,3 +68,6 @@ Research files preserve source attribution and distinguish documented capability
 
 
 [Merged branch cleanup](branch-cleanup-2026-11-03.md):26remote branches reduced to main, with ancestry checks and recovery hashes; local developer work preserved.
+
+
+Submission answers, presenter scripts and editing plans are maintained outside the product source in the private droplet archive `/srv/hackathon/artifacts/submission-preparation-20261104/`. Earlier references link to the preserved source revision. Runtime/setup/security, original-work and model attribution, licensing, source/sample provenance and current validation limits remain in the repo.

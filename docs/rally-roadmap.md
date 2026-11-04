@@ -6,7 +6,7 @@ Scope agreed through four interview rounds on October 28, 2026. See [decision lo
 
 ## Goal
 
-Competition track: **Indie Developer**. Day 1 performance gate: [latency spike](latency-test-plan.md). Demonstration plan: [walkthrough](demo-walkthrough.md). Service-stage measurements are available in the linked reports; actual audible response latency remains unverified.
+Competition track: **Indie Developer**. Day 1 performance gate: [latency spike](latency-test-plan.md). Demonstration plan: [walkthrough](https://github.com/ejo4041/Rally/blob/b9bdd26b12b6eadc7b276ca91e6817be0d6ceca5/docs/demo-walkthrough.md). Service-stage measurements are available in the linked reports; actual audible response latency remains unverified.
 
 First-build update: [Rally v0.1 is privately deployed](https://rally-meeting-moderator.excavator3496.chatgpt.site). [Build report](build-progress.md) records implemented paths, 16 passing core/API/lifecycle tests, rendered browser checks, real app Muse integration and remaining physical-device limits. Service-stage latency has been measured; actual audible latency remains unverified. Move from research to three-person rehearsal/device validation before adding Teams or optional models.
 

@@ -13,7 +13,7 @@ Rally's original application code and documentation are licensed under the [MIT 
 | Express 5.3.0, ws 8.22.0, Zod 4.6.7, OTPAuth 9.5.2, qrcode 1.5.4 | API, protocols, validation and local MFA enrollment | MIT, from installed locked package metadata. |
 | Chromium/Playwright, Node, FFmpeg, esbuild, TypeScript and Python packages | Development, runtime, recording and editing tools | Separate upstream licenses apply; these binaries/environments are not included in the tracked-source archive. Retain distribution-specific notices if packaging them later. |
 
-This is a direct-component inventory, not a complete transitive legal audit. Historical source under apps/rally and experiments retains its own dependency records. Application originality is described in [the submission draft](docs/submission-package.md); current model contracts are in [model interfaces](docs/model-interfaces.md). The [owner's remaining license/access decisions](docs/source-release-readiness.md) remain explicit. Final submission is on hold.
+This is a direct-component inventory, not a complete transitive legal audit. Historical source under apps/rally and experiments retains its own dependency records. Application originality is described in [the submission draft](https://github.com/ejo4041/Rally/blob/b9bdd26b12b6eadc7b276ca91e6817be0d6ceca5/docs/submission-package.md); current model contracts are in [model interfaces](docs/model-interfaces.md). The [owner's remaining license/access decisions](docs/source-release-readiness.md) remain explicit. Final submission is on hold.
 
 ## Pronunciation reference
 
