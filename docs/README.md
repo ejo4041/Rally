@@ -1,5 +1,7 @@
 # Rally documentation
 
+[Living Silk provenance research](research/living-silk-license-2026-11-04.md): original supplied archives inspected; component license and ownership remain unconfirmed.
+
 [Licensing](licensing.md): MIT for original application code and documentation; third-party/model terms and artwork permission remain separate.
 
 [Actual submission portal answer draft](submission-portal-answers-2026-11-04.md): mapped to the user-supplied form; personal ratings and final video URL require entrant review.

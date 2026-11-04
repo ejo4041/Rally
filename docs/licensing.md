@@ -26,3 +26,5 @@ The root license covers original Rally code and documentation where a more speci
 Confirm the supplied artwork/runtime's redistribution license or replace/remove that component and its bundled copies before treating the entire distribution as cleared for public release. Verify the human contributor roster and permissions for contributed material. Model commercial-use conditions must be reviewed against the exact deployment; the MIT application license alone does not clear a commercial voice stack.
 
 This resolves the missing root application license. Existing asset-rights and repository-access checks remain open in [source release readiness](source-release-readiness.md). Full component details remain in [THIRD_PARTY_NOTICES.md](../THIRD_PARTY_NOTICES.md).
+
+[Original Living Silk archive inspection](research/living-silk-license-2026-11-04.md) found no component license or identifying upstream metadata. Its application-specific delivery may have originated in the entrant's own development work; ownership remains unconfirmed, rather than established as external authorship.
