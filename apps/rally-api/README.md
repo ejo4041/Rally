@@ -10,9 +10,10 @@ Run local commands from this directory after following that guide:
 npm run setup:media
 npm run dev
 npm run typecheck
+node node_modules/playwright/cli.js install chromium
 npm test
 ```
 
 Install dependencies with npm as documented in the quickstart. `npm run dev` starts a loopback LiveKit instance and the API. The root `node scripts/dev-rally.mjs` starts the frontend too. API defaults to 127.0.0.1:3001; LiveKit to 127.0.0.1:7880. SQLite lives in ignored `.data/`. `RALLY_ENV_FILE` selects an explicit configuration file; the combined launcher defaults to its own checkout's `.env.local`.
 
-`npm run test:media` and `npm run test:muse` are separate integration checks with service/device or paid-call prerequisites. Ordinary tests use fixtures. See [API contract](../../docs/backend-api.md), [model interfaces](../../docs/model-interfaces.md), and [current handoff](../../docs/handoff.md) for details and deployment verification boundaries.
+`npm run test:media` and `npm run test:muse` are separate integration checks with service/device or paid-call prerequisites. Ordinary tests use fixture providers; three also launch Chromium for offline PDF and local Teams chat/leave checks. The browser installation above is a one-time test prerequisite. See [API contract](../../docs/backend-api.md), [model interfaces](../../docs/model-interfaces.md), and [current handoff](../../docs/handoff.md) for details and deployment verification boundaries.

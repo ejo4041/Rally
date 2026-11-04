@@ -37,7 +37,7 @@ cd ../..
 node scripts/dev-rally.mjs
 ```
 
-Open http://127.0.0.1:5173/. Choose **Activate or reset account**, use the username and activation code from `apps/rally-api/.data/admin-invitation.txt`, choose your password, enroll an authenticator and save recovery codes. The invitation expires in 24 hours. Delete the invitation file after activation. Registration is closed; additional users are invited through Admin. There are no supplied judge passwords and no MFA bypass. Do not run the legacy seed command as an administrator bootstrap.
+Open http://127.0.0.1:5173/. Choose **Activate or reset account**, use the username and activation code from `apps/rally-api/.data/admin-invitation.txt`, choose your password, enroll an authenticator and save recovery codes. The invitation expires in 24 hours. Delete the invitation file after activation. Registration is closed; additional users are invited through **Account → Administration**. There are no supplied judge passwords and no MFA bypass. Do not run the legacy seed command as an administrator bootstrap.
 
 With processing disabled you can sign in and inspect the application; **Prepare with Muse and real transcription require the next step**. To enable genuine model calls, stop the launcher, edit `.env.local` locally:
 
@@ -59,7 +59,10 @@ The Teams guest route additionally needs Linux Chromium/Playwright, PulseAudio v
 
 ## Validation and troubleshooting
 
+The backend suite includes local Chromium checks for PDF rendering and Teams chat/leave behavior. Install the pinned Playwright browser before running the tests. On a minimal Linux system, Chromium also needs its [system libraries](https://playwright.dev/docs/browsers#install-system-dependencies); Playwright reports missing dependencies when it launches.
+
 ```sh
+node apps/rally-api/node_modules/playwright/cli.js install chromium
 npm run typecheck --prefix apps/rally-api
 npm test --prefix apps/rally-api
 npm run typecheck --prefix apps/rally-web

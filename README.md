@@ -119,9 +119,10 @@ The current app is in `apps/rally-api/` and `apps/rally-web/`. After following t
 node scripts/dev-rally.mjs
 ```
 
-The workspace opens at http://127.0.0.1:5173/. Model processing defaults off. To check a change:
+The workspace opens at http://127.0.0.1:5173/. Model processing defaults off. To check a change, first install Chromium for the backend’s PDF and Teams-chat fixture tests:
 
 ```sh
+node apps/rally-api/node_modules/playwright/cli.js install chromium
 npm run typecheck --prefix apps/rally-api
 npm test --prefix apps/rally-api
 npm run typecheck --prefix apps/rally-web
