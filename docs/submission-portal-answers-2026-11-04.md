@@ -30,6 +30,8 @@ Rally is an active meeting guide powered by Meta AI. It helps small software and
 
 Start with an outcome, an agenda and a time budget. Rally prepares a plan, follows the conversation through Muse transcription, and uses Muse Spark to generate relevant guidance. It can participate through the Teams integration or consented browser audio. The host controls how actively it participates and can pause, dismiss or stop it.
 
+Rally also has a visible personality. Its animated presence changes color and movement as it follows the meeting—calm and fluid when the discussion is focused, warmer and more animated when time is tight or the agenda drifts. These visual cues give the team a shared sense of momentum before Rally needs to speak.
+
 Afterward, Rally produces a report with decisions, action items and unresolved questions linked to supporting transcript evidence. Missing owners and dates remain unresolved. Hosts can correct the record, export a PDF and grant or revoke read-only report access.
 
 The hackathon work includes the meeting lifecycle, model adapters, evidence validation, controlled speech, Teams and visual-presence integration, report workflow and account controls. Meta models and supplied/open-source components are separately attributed.

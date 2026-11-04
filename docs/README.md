@@ -31,3 +31,6 @@ The [engineering archive](archive/engineering/README.md) collects completed pres
 
 
 [Judge-style review](judge-review-2026-11-03.md): stored-rule checks, submission risks, competitive assessment and prioritized improvements.
+
+
+[Draft07video and visualization description](demo-video07-2026-11-04.md): reduced capture flashes, restored warm/agitated footage, preserved audio/captions and revised submission prose.

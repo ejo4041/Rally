@@ -232,3 +232,8 @@ Moved seven completed presentation/rollout records and two already-superseded hi
 ## November 3 — judge-style review
 
 [Review](judge-review-2026-11-03.md) compares current repo/evidence with stored participant rules and saved organizer FAQ; public event page confirmed theme/tracks/deadline, full details/waiver not recovered today. Private source, final URL/attribution/rights and fresh own-key setup remain submission gates or unresolved risks. Subjective rubric estimate about75/100 after eligibility, not a win probability. Highest-value work: accurate access/rights, clean source reproduction, one real decision-changing exchange and measured pilot/commitment quality. No app/video/deployment/visibility changes or paid calls.
+
+
+## November 4 — draft07 and visualization description
+
+User approved06content and requested reduced flashing plus the earlier agitated visualization, preserving other content. Preparing numbered draft07locally;01–06preserved. New submission description paragraph in docs/submission-portal-answers-2026-11-04.md describes Rally’s visible personality: color/movement reflect its meeting-guidance state, not participant emotion analysis. Matching local form draft updated. Video narration is unchanged; paragraph is submission prose only. [Completed draft07verification and artifact paths](demo-video07-2026-11-04.md):180seconds/5400frames, audio/captions unchanged, nine capture flashes reduced, earlier amber/agitated gallery restored at71.60–74.57seconds. Full decode and prior-export preservation passed; final SHA256is recorded in the linked note. Private server artifact copy saved.
