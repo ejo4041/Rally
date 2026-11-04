@@ -76,6 +76,8 @@ Validation: frontend typecheck, 20 unit tests, and capped Playwright static brow
 
 # Rally current handoff — October 31, 2026
 
+**November 4 licensing:** owner authorized a license selection; root MIT LICENSE now covers original Rally code/documentation. Demo exports preserve a copy. Models/dependencies retain their own terms. Supplied Living Silk artwork/runtime redistribution permission remains unresolved and excluded from the original-work grant. [License scope](licensing.md). No visibility change or final submission.
+
 **November 3 voice availability:** direct AWS Seamless probe returns HTTP503 with “Speech service operates daily 7:00–19:00 America/New_York”. Endpoint is reachable; voice is unavailable outside declared service hours, separate from Muse accounting. Two recent production voice failures returned zero bytes. Active meeting preserved, no model switch/restart. [Diagnosis](voice-service-hours-2026-11-03.md). One AWS probe, cost unknown; zero new Muse calls.
 
 **November 3 saved-draft recovery:** both drafts previously blocked by the old unknown-cost policy were explicitly prepared and now have ready plans with null errors. Two real Muse calls settled at $0.00720660; the old unknown report row remains unchanged. Frontend `161fbcc` describes saved failures as previous attempts and preserves backend `35f86ed` continuation. Refresh the meeting, paste the intended invitation and confirm consent. [Recovery and evidence](blocked-draft-recovery-2026-11-03.md).

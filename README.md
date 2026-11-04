@@ -130,4 +130,4 @@ WhatsApp follow-up is a reviewed manual draft; link-based WhatsApp joining remai
 - **Understand the sample:** [provenance](demo/provenance.json), [voice assets](demo/demo-audio/README.md), [demo isolation](docs/judge-access-rehearsal.md).
 - **Report a problem:** [bug report](https://github.com/ejo4041/Rally/issues/new?template=bug_report.yml), [security guidance](SECURITY.md).
 
-Rally's application source license has not yet been selected. Models, libraries and supplied visual artwork retain their own rights and attribution; see [component notices](THIRD_PARTY_NOTICES.md) and the [maintainer release checklist](docs/source-release-readiness.md).
+Rally's original application code and documentation are licensed under the [MIT License](LICENSE). The scope and third-party exclusions are explained in [licensing](docs/licensing.md). Models, libraries and supplied visual artwork retain their own rights and attribution; see [component notices](THIRD_PARTY_NOTICES.md) and the [maintainer release checklist](docs/source-release-readiness.md).

@@ -1,6 +1,6 @@
 # Third-party components and model provenance
 
-This record identifies components used by Rally; it does not select a license for Rally's original application code or relicense any dependency, model, artwork or tool. Preserve upstream license files when distributing their work. Locked dependency metadata and model provenance are separate from the application license.
+Rally's original application code and documentation are licensed under the [MIT License](LICENSE). This record identifies separately licensed components; Rally's license does not relicense any dependency, model, supplied artwork or tool. See [license scope](docs/licensing.md). Preserve upstream license files when distributing their work. Locked dependency metadata and model provenance are separate from the application license.
 
 | Component | Use | Recorded license/provenance |
 | --- | --- | --- |

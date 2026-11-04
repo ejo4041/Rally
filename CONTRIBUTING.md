@@ -35,3 +35,5 @@ For security issues, follow [SECURITY.md](SECURITY.md) instead of filing a publi
 The [documentation index](docs/README.md) separates user/developer guides from dated engineering records. Add links to an existing authoritative guide rather than duplicating operating instructions. Screenshots in `docs/assets/` use only the synthetic sample; record provenance and make edited timing explicit. Preserve earlier numbered demo-video exports unless an owner explicitly requests a replacement.
 
 Attribution and licensing are documented in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). Do not add a license badge or change third-party/model licenses by assumption.
+
+Original contributions submitted for inclusion in Rally are intended to be distributed under the repository's [MIT License](LICENSE). Retain applicable attribution and identify third-party material with its own license; do not submit material you lack permission to contribute. See [license scope](docs/licensing.md).

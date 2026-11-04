@@ -10,7 +10,7 @@ Git author labels are software/operational identities, not proof of the human co
 
 ## License decision
 
-A root application license has not been selected. Prepare [MIT](https://opensource.org/license/mit) as the short permissive option and [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0) as an alternative with an express patent-license framework; the owner must select which applies to their original code and confirm ownership. Neither selection changes model licenses, supplied artwork rights or service terms. This is a pending product-owner decision, not a license grant. No root LICENSE was inserted without that choice.
+On November 4, the owner authorized selecting and implementing a license. Rally's original code and documentation now use the [MIT License](../LICENSE), with copyright attributed to Eric Offermann and Rally contributors. [Scope and outstanding third-party rights](licensing.md) distinguish this grant from model/service/artwork terms. Earlier records describing an unselected application license are historical. Contributor ownership and supplied-artwork permissions remain separate from this application license.
 
 The supplied Living Silk artwork/runtime lacks a separate explicit redistribution-license record in the inspected package; only its included Three.js notice is present. Obtain the original supplier/owner's permission or license record before publishing that component. Do not replace the original attribution or infer rights from it having been supplied. The owner can identify the asset origin and approved distribution scope.
 
@@ -22,7 +22,7 @@ The local exporter uses only Git-tracked files and filters runtime databases, cr
 
 ## Remaining owner inputs
 
-- Application license selection and actual human contributor list.
+- Confirm the actual human contributor list and rights to contributed work; application license selection is complete (MIT).
 - Living Silk artwork redistribution permission/source record.
 - GitHub anonymous access/visibility and actual judge recipient identity/private invitation delivery.
 - Authenticated portal fields and final publicly accessible video URL after footage review.
