@@ -1,6 +1,10 @@
 # Living Silk license provenance — November 4, 2026
 
-## Result
+## Owner clarification after research
+
+The owner subsequently recalled that Living Silk was a separate visualization prototype developed by an AI agent for this hackathon. This is owner-reported origin, consistent with the application-specific handoff; it corrects the earlier assumption that the component necessarily came from an external creator. The owner qualified this recollection with “I think”; no original creation transcript was reviewed. Missing metadata alone should not be treated as evidence of third-party ownership. If the prototype is original project work, it can be explicitly included under Rally's MIT grant while preserving Three.js and any other underlying notices. This note records the clarification without asserting independently verified provenance or modifying the archived delivery.
+
+## Archive inspection result
 
 No explicit license grant for Living Silk itself was found in the original supplied archives, companion handoff, README or installed source. The package is a privately supplied local component; its metadata does not identify a public upstream repository, author or license. This does not establish who owns it or whether it was originally developed by the entrant in another session. Those facts need the original creation record or the owner's confirmation.
 

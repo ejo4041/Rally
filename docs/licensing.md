@@ -28,3 +28,5 @@ Confirm the supplied artwork/runtime's redistribution license or replace/remove 
 This resolves the missing root application license. Existing asset-rights and repository-access checks remain open in [source release readiness](source-release-readiness.md). Full component details remain in [THIRD_PARTY_NOTICES.md](../THIRD_PARTY_NOTICES.md).
 
 [Original Living Silk archive inspection](research/living-silk-license-2026-11-04.md) found no component license or identifying upstream metadata. Its application-specific delivery may have originated in the entrant's own development work; ownership remains unconfirmed, rather than established as external authorship.
+
+Owner clarification: the owner recalls Living Silk as an AI-assisted visualization prototype created separately for this hackathon. This supports project-origin provenance rather than an assumed external supplier. The recollection is qualified and the original creation session has not been reviewed; explicit package licensing can follow confirmation of original project ownership. Preserve the Three.js notice regardless. See [the updated provenance record](research/living-silk-license-2026-11-04.md).
