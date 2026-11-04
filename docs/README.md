@@ -1,5 +1,7 @@
 # Rally documentation
 
+[Actual submission portal answer draft](submission-portal-answers-2026-11-04.md): mapped to the user-supplied form, with personal ratings and final video URL left for the entrant.
+
 [Voice service hours](voice-service-hours-2026-11-03.md): confirmed upstream 503 outside daily 07:00–19:00 America/New_York; distinct from Muse billing.
 
 [Saved-draft recovery](blocked-draft-recovery-2026-11-03.md): the two blocked drafts now have ready agendas; stale preparation messages corrected.
