@@ -242,3 +242,8 @@ User approved06content and requested reduced flashing plus the earlier agitated 
 ## November 4 — remove submission preparation from current source tree
 
 Moved nine form-answer, presenter-script and editing-plan documents to the private droplet archive `/srv/hackathon/artifacts/submission-preparation-20261104/`, with source revision and SHA256manifest; a matching local review copy is saved under Downloads/Rally Submission Preparation2026-11-04. Historical references now use preserved-commit GitHub links. Current setup/security, licensing, original-work/model/component attribution, provenance and outstanding validation records remain in the repo. No history rewrite, contribution concealment, app/deployment/visibility change or video edit.
+
+
+## November4 — final README and judge check
+
+README links the published180second YouTube demo and describes Rally’s visible personality, with a short fictional-sample evaluation path. Signed-out YouTube playability and anonymous GitHub/raw-source access pass; public sample Ready report, unresolved details and source highlighting checked. Documentation checks passed. Private final review saved under artifacts/submission-preparation-20261104/final-judge-review.md; no new submission-draft files added to source. Remaining records: visualization package rights/license confirmation and unverified fresh full API install. No runtime/video/deployment/visibility changes or final form submission.

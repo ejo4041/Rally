@@ -4,6 +4,7 @@
 
 <p align="center">
   <a href="https://rally.tail703f9e.ts.net/demo.html"><strong>Try Rally</strong></a> ·
+  <a href="https://youtu.be/e_YyNFAHWGE">Watch the 3-minute demo</a> ·
   <a href="#quick-start">Quick start</a> ·
   <a href="docs/judge-quickstart.md">Use your own API key</a> ·
   <a href="docs/README.md">Documentation</a> ·
@@ -13,6 +14,8 @@
 **Leave the meeting knowing what you decided, who owns the work, and what is still open.**
 
 Rally is an AI meeting facilitator built around Meta models. Give it your agenda, choose how involved it should be, and let it follow the conversation. It can offer guidance while you meet, then turn the transcript into decisions, action items and a report you can trace back to what was said.
+
+**[Watch the 3-minute YouTube demo →](https://youtu.be/e_YyNFAHWGE)**
 
 <p align="center"><img src="docs/assets/workspace-tour.gif" alt="Rally's fictional sample workspace: home page, agenda preparation, streaming transcript and an evidence-linked meeting report." width="1000" /></p>
 
@@ -33,7 +36,11 @@ Rally is an AI meeting facilitator built around Meta models. Give it your agenda
 | Set the time available and desired outcomes | Ask Rally a question or receive timely guidance | Jump from report claims to source excerpts |
 | Choose passive, balanced or proactive participation | Pause, dismiss or mute Rally; identify speakers | Add notes, export PDF/JSON and share with Rally users |
 
-Rally keeps **unconfirmed owners, dates and decisions visibly unresolved**. You control its participation. Its animated meeting presence reflects agenda guidance—not participant emotion or personality.
+Rally keeps **unconfirmed owners, dates and decisions visibly unresolved**. You control its participation.
+
+### A visible personality
+
+Rally’s animated presence changes color and movement as it follows the meeting—calm and fluid when the discussion is focused, warmer and more animated when time is tight or the agenda drifts. These visual cues give the team a shared sense of momentum before Rally needs to speak. They express Rally’s facilitation state; they do not analyze participant emotions or personalities.
 
 ## Quick start
 
@@ -43,6 +50,14 @@ Rally keeps **unconfirmed owners, dates and decisions visibly unresolved**. You 
 
 No login, API key or microphone needed. Create a meeting, watch a fictional engineering discussion stream in with prerecorded Meta voices, ask Rally a scripted question, then inspect a sample report. A completed meeting in history offers the full evidence trail immediately.
 
+For a quick evaluation:
+
+1. Open **Cache rollout · sample completed meeting** in the sidebar.
+2. Review the conditional launch decision, click a **Source** button, and inspect the owners and dates left unresolved.
+3. Create a meeting and start its simulation to try **Ask Rally**, pause/replay controls and the end-of-meeting report.
+
+The YouTube demo above shows the recorded product walkthrough; this interactive sample uses fictional data and prerecorded speech.
+
 ### Run the sample locally
 
 ```sh
@@ -51,7 +66,7 @@ cd Rally
 python3 -m http.server 8000 --bind 127.0.0.1 --directory demo
 ```
 
-Open **http://127.0.0.1:8000/**. Python 3 is the only prerequisite. No package install, backend or model download is required. While this repository is private, cloning requires an account with repository access.
+Open **http://127.0.0.1:8000/**. Python 3 is the only prerequisite. No package install, backend or model download is required.
 
 ### Connect real models with your own key
 

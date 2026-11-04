@@ -68,3 +68,8 @@ Weighted estimate: **74.75/100, approximately75**. That is a credible entrant wi
 6. **Spend remaining polish on reliability.** Clear provider-offline states, consistent End/summary delivery, cancel/override and model readiness. Avoid adding more models, platforms or large features merely to increase the integration count.
 
 The priority is demonstrable usefulness and reliable access. No new app/video changes were implemented by this review.
+
+
+## November4 pre-submission update
+
+Anonymous repository/raw-source access now returns200; root MIT is present. The published YouTube demo https://youtu.be/e_YyNFAHWGE loads signed out with playability OK and180second length. Public sample report/source navigation checked without login. README adds the video, visual-personality description and an evaluation walkthrough. Earlier private-source/missing-root-license findings are superseded. Visualization ownership/package licensing and full fresh own-key reproduction remain unresolved in the current records. The latest private review is `/srv/hackathon/artifacts/submission-preparation-20261104/final-judge-review.md`; no submission performed.
