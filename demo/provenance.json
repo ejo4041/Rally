@@ -1,0 +1,16 @@
+{
+  "kind": "authored-synthetic-sample",
+  "entry": "apps/rally-web/src/main.ts (demo build with isolated API adapter)",
+  "data": "apps/rally-web/src/demo-simulator.ts",
+  "build": "node scripts/build.mjs && node scripts/export-demo.mjs",
+  "network": "Static pages and prerecorded same-origin Meta voice clips only. No runtime API/model/microphone/meeting access. External navigation links require an explicit click.",
+  "files": {
+    "demo.html": "b34ce4d3edbaf5dc563cd3a76e47f9657dd167f1221aa76182284a87aa078ddd",
+    "demo.js": "127469b62da17ffbbf9a7d275a10530b598c36bb01e39d9b69abe78f493b39c2",
+    "demo.css": "9932a8583a094af55357cbc400324510184bd3655d393a7e85975475dd354691",
+    "style.css": "5015e9e9982f22d06e73453c41c97a96d9833b10e2a93f4695af448fa9e5f1a2",
+    "theme-init.js": "7e855638d65cf607e786fb12c0544733683857d8eb6b6ff47f31bb1811b4bc73",
+    "favicon.svg": "2fa3ba8c08bf3c0856ccfd9713e3da7bfa3af8b87478a758ff2eb868828e1e3e"
+  },
+  "audioManifest": "demo-audio/manifest.json"
+}

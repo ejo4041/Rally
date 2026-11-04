@@ -1,3 +1,4 @@
+import {meetingGreeting} from "../../../packages/rally-speech/greeting.mts";
 import {addressedRequest,allowIntervention,moderationModeSchema} from "./moderation-policy.ts";
 import { sceneFor } from "../../../packages/rally-presence/scene.ts";
 import {
@@ -454,6 +455,16 @@ export class Engine {
     } finally {
       this.starting.delete(m.id);
     }
+  }
+  greet(joined:Meeting){
+    const m=this.meetings.get(joined.id),state=this.active.get(m.id);
+    if(!m.greetingEnabled||m.greetingAttemptedAt||m.greetingEpoch!==m.epoch||m.captureSource!=='teams'||m.callState!=='connected'||m.phase!=='live'||m.paused||m.speechEnabled===false||!this.speech?.live||!state||state.ending)return;
+    const item={id:randomUUID(),at:Date.now(),kind:'welcome',text:meetingGreeting(m)};
+    // Persist before dispatch: no repeated welcome after failed speech, refresh or reconnect.
+    m.greetingAttemptedAt=item.at;m.interventions.push(item);state.lastIntervention=item.at;this.meetings.save(m);
+    try{this.speech.offer(m.id,{...item,epoch:m.epoch});}
+    catch{const current=this.meetings.get(m.id);current.speechStatus={id:item.id,interventionId:item.id,epoch:current.epoch,at:Date.now(),state:'failed',destination:'teams',text:item.text,error:'Welcome voice unavailable. The meeting can continue.'};this.meetings.save(current);}
+    this.emit(m.id,'intervention',{...item,epoch:m.epoch,streaming:true});
   }
   heartbeat(m: Meeting, token: unknown) {
     const state = this.active.get(m.id);

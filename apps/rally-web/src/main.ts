@@ -1,3 +1,5 @@
+import {meetingGreeting,sampleGreeting} from '../../../packages/rally-speech/greeting.mts';
+import {DEMO_MODE} from "./demo-mode.ts";
 import {setupMascot} from "./mascot.ts";
 import {setupTheme} from "./theme.ts";
 import {rallyRepliesHTML} from "./rally-replies.ts";
@@ -44,6 +46,9 @@ const escape = (v: unknown) =>
   );
 const label = (v: string) =>
   v.replaceAll("_", " ").replace(/^./, (c) => c.toUpperCase());
+let demoRuntime: typeof import("./demo-api.ts") | null = null;
+let demoDismissed = "";
+let demoAudio: import("./demo-audio.ts").DemoAudio | null = null;
 const state = {
   user: null as User | null,
   history: [] as Summary[],
@@ -126,6 +131,7 @@ function showAuth() {
   $("workspace").hidden = true;
 }
 async function signOutLocal() {
+  demoRuntime?.simulator.visible(null);
   meetingLayout.clear();reportSharing.clear();
   $("rally-replies").replaceChildren();delete $("rally-replies").dataset.replyKey;
   disposePresence();
@@ -219,6 +225,7 @@ async function loadHistory() {
     .join("");
 }
 function home() {
+  demoRuntime?.simulator.visible(null);
   speech.cancel();
   audioCheck.stop();
   const media = state.media;
@@ -281,9 +288,10 @@ async function route() {
     meeting.phase === "live"
       ? "This meeting is active on the server. Audio is off here; reconnect explicitly."
       : "";
-  state.muted = false;
+  state.muted = DEMO_MODE ? demoRuntime?.simulator.muted.has(id) ?? false : false;
   input("consent").checked = false;
   input("live-teams-link").value = "";
+  input("join-greeting").checked=false;
   mascot.hide();
   $("home").hidden = true;
   $("meeting").hidden = false;
@@ -303,6 +311,7 @@ async function refresh() {
     const meeting = await api<RecordView>(`/meetings/${session.meeting.id}`);
     if (state.session !== session) return;
     session.replace(meeting);
+    if(DEMO_MODE)session.meeting.speechStatus=meeting.speechStatus;
     if (meeting.phase !== "live") stopCapture();
     if (
       meeting.phase === "ended" &&
@@ -343,10 +352,10 @@ function topicHTML(plan: Plan | null) {
     plan.topics
       .map(
         (t) =>
-          `<div class="topic ${escape(t.status)}"><span class="topic-minutes">${escape(t.minutes)} min · ${escape(label(t.status))}</span><h3>${escape(t.title)}</h3><p>${escape(t.outcome)}</p></div>`,
+          `<div class="topic ${escape(t.status)}"><span class="topic-minutes">${escape(Number(t.minutes.toFixed(1)))} min · ${escape(label(t.status))}</span><h3>${escape(t.title)}</h3><p>${escape(t.outcome)}</p></div>`,
       )
       .join("") +
-    `<div class="topic"><p>Wrap-up ${escape(plan.wrapMinutes)} min · Total ${escape(plan.durationMinutes)} min</p></div>`
+    `<div class="topic"><p>Wrap-up ${escape(Number(plan.wrapMinutes.toFixed(1)))} min · Total ${escape(plan.durationMinutes)} min</p></div>`
   );
 }
 function speakerName(id: string | null) {
@@ -376,12 +385,13 @@ function render() {
     "mobile-logout",
   ])
     button(id).disabled = state.busy;
+  if(DEMO_MODE)demoRuntime?.simulator.visible(session&&document.visibilityState==="visible"?session.meeting.id:null);
   if (!session) return;
   const m = session.meeting,
     live = m.phase === "live",
     pre =
       ["draft", "ready", "interrupted"].includes(m.phase) ||
-      (live && !state.capture && !state.media);
+      (live && !state.capture && !state.media && !DEMO_MODE);
   $("meeting-title").textContent = m.title;
   $("meeting-meta").textContent =
     `${m.durationMinutes} minutes planned${m.paused ? " · Moderator paused" : ""}`;
@@ -411,6 +421,12 @@ function render() {
   button("check-audio").disabled = state.busy || !!state.capture;
   const needsInvite=needsTeamsInvite(), inviteValid=validTeamsInvite();
   input("live-teams-link").required=needsInvite;
+  $("join-greeting-label").hidden=!(DEMO_MODE||input("audio-mode").value==="teams");
+  const customDemoAgenda=DEMO_MODE&&meetingGreeting(m)!==sampleGreeting;
+  input("join-greeting").disabled=state.busy||m.startedAt!==null||customDemoAgenda;
+  if(customDemoAgenda)input("join-greeting").checked=false;
+  $("join-greeting-help").hidden=$("join-greeting-label").hidden;
+  $("join-greeting-help").textContent=customDemoAgenda?'The prerecorded demo welcome is available for the sample plan.':DEMO_MODE?'Reads the fixed sample agenda once, using prerecorded speech.':m.startedAt!==null?'This meeting has already started. Create a new meeting to choose its welcome greeting.':'Off by default. Check the box above to enable the welcome for this meeting.';
   $("teams-invite-help").hidden=!needsInvite;
   $("teams-invite-help").textContent=inviteValid?"Teams invitation ready. Confirm participant consent to join.":"Paste a work/school Teams meeting link to enable joining.";
   button("start").disabled = state.busy || !m.plan || !input("consent").checked || (needsInvite && !inviteValid);
@@ -424,7 +440,7 @@ function render() {
     }
   }
   if (needsInvite && !inviteValid) requirements.push("Paste a valid work/school Teams invitation.");
-  if (!input("consent").checked) requirements.push("Confirm participant consent.");
+  if (!input("consent").checked) requirements.push(DEMO_MODE?"Acknowledge the simulated meeting to start.":"Confirm participant consent.");
   if (state.busy) requirements.push("Wait for the current operation to finish.");
   $("join-requirements").textContent = requirements.join(" ");
   $("join-requirements").hidden = requirements.length === 0;
@@ -457,6 +473,7 @@ function render() {
     m.assessment?.health == null
       ? "Unscored"
       : `Health ${m.assessment.health}/5`;
+  if(DEMO_MODE){const reply=m.interventions.at(-1);session.intervention=reply&&!m.paused&&reply.id!==demoDismissed?reply:null;}
   $("guidance").textContent =
     session.intervention?.text ||
     (m.phase === "ended"
@@ -479,10 +496,12 @@ function render() {
     : "";
   updatePresence(m);
   rallyDisplay.render(m);
+  if(DEMO_MODE){if(m.speechStatus)rallyDisplay.playback(m.speechStatus.id,m.speechStatus.playedMs||0,m.speechStatus.state==="playing");else rallyDisplay.stop();}
   const replyBox=$("rally-replies"),replyKey=JSON.stringify([m.interventions,m.speechStatus]);
   if(replyBox.dataset.replyKey!==replyKey){const atBottom=replyBox.scrollHeight-replyBox.scrollTop-replyBox.clientHeight<80;replyBox.innerHTML=rallyRepliesHTML(m);replyBox.dataset.replyKey=replyKey;if(atBottom)replyBox.scrollTop=replyBox.scrollHeight;}
   $("rally-replies-section").hidden=!(m.interventions?.length);
   renderTranscript();
+  if(DEMO_MODE && demoRuntime) session.partial=demoRuntime.simulator.partial(m.id);
   $("partial").textContent = session.partial;
   const speakerIds = [
     ...new Set(m.turns.flatMap((t) => (t.speaker ? [t.speaker] : []))),
@@ -510,6 +529,7 @@ function render() {
   for (const name of ["pause", "request-guidance", "dismiss", "end"])
     button(name).disabled = state.busy;
   button("request-guidance").disabled = state.busy || m.paused;
+  if(DEMO_MODE){$("capture-label").textContent=live?(state.muted?"Sample replay paused":"Simulated transcript · no audio captured"):"Simulation ended";button("mute").disabled=state.busy;button("mute").textContent=state.muted?"Resume replay":"Pause replay";button("start").textContent="Start simulated meeting";}
   renderReport();
   $("report-status").classList.toggle("is-loading",m.reportStatus==="processing");
   $("report-panel").setAttribute("aria-busy",String(m.reportStatus==="processing"));
@@ -604,6 +624,7 @@ function stopCapture() {
   state.muted = false;
 }
 function needsTeamsInvite() {
+  if(DEMO_MODE)return false;
   return input("audio-mode").value === "teams" && state.session?.meeting.phase !== "live";
 }
 function validTeamsInvite() {
@@ -615,6 +636,7 @@ function validTeamsInvite() {
 async function start() {
   if (!state.session || !input("consent").checked || state.busy) return;
   if(needsTeamsInvite() && !validTeamsInvite()) { render();input("live-teams-link").focus();return; }
+  if(DEMO_MODE){demoAudio?.unlock();await perform(async()=>{mergeMeeting(await api<Meeting>(`/meetings/${state.session!.meeting.id}/start`,"POST",{greetingEnabled:input("join-greeting").checked}));state.status="Simulated meeting: fictional transcript and Rally replies. No microphone, meeting or model connection.";await refresh();});return;}
   audioCheck.stop();
   unlockPresenceAudio();
   const session = state.session,
@@ -650,6 +672,7 @@ async function start() {
         await api(`/meetings/${id}/teams/connect`, "POST", {
           meetingUrl: input("live-teams-link").value.trim(),
           consented: true,
+          greetingEnabled:input("join-greeting").checked,
         });
         while (true) {
           if (controller.signal.aborted) {
@@ -801,6 +824,8 @@ async function end() {
   });
 }
 async function command(type: string) {
+  if(DEMO_MODE && type==="request_guidance")demoAudio?.unlock();
+  if(DEMO_MODE && type==="dismiss")demoDismissed=state.session?.meeting.interventions.at(-1)?.id||"";
   speech.cancel();
   state.media?.stopSpeech(undefined, type !== "request_guidance");
   if (!state.session) return;
@@ -986,6 +1011,7 @@ button("prepare").onclick = () =>
   });
 button("mute").onclick = () => {
   state.muted = !state.muted;
+  if(DEMO_MODE&&demoRuntime&&state.session){demoRuntime.simulator.pauseReplay(state.session.meeting.id,state.muted);}
   state.media?.setMuted(state.muted);
   render();
 };
@@ -1024,6 +1050,7 @@ button("confirm-delete").onclick = () =>
     await loadHistory();
   });
 button("export").onclick = () => {
+  if(DEMO_MODE && state.session){const blob=new Blob([JSON.stringify({provenance:"Synthetic in-browser simulation; no live AI or meeting recording.",...state.session.meeting},null,2)],{type:"application/json"});const url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="rally-simulated-meeting.json";a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);return;}
   if (state.session)
     location.href = `/api/meetings/${state.session.meeting.id}/export`;
 };
@@ -1118,7 +1145,7 @@ setInterval(() => {
   )
     void refresh();
 }, 3000);
-void api<User>("/auth/me")
+if(!DEMO_MODE)void api<User>("/auth/me")
   .then(signedIn)
   .catch((error) => {
     showAuth();
@@ -1207,3 +1234,37 @@ input('moderation-mode').onchange=()=>{const m=state.session?.meeting;if(!m)retu
 
 setupTheme();
 setupActionFeedback();
+
+if(DEMO_MODE)void (async()=>{
+ demoRuntime=await import('./demo-api.ts');
+ const {DemoAudio}=await import('./demo-audio.ts');demoAudio=new DemoAudio(toast);demoRuntime.simulator.attachAudio(demoAudio);
+ window.addEventListener('pagehide',()=>demoAudio?.dispose());document.addEventListener('visibilitychange',()=>{demoRuntime?.simulator.visible(document.visibilityState==='visible'?state.session?.meeting.id??null:null);});
+ // Ephemeral records do not survive reload; retain only the preloaded example deep link.
+ if(location.hash&&!/^#(?:meeting|report)\/demo-1$/.test(location.hash))history.replaceState(null,'',location.pathname+location.search);
+ document.body.classList.add('demo-mode');
+ const banner=document.createElement('aside');banner.className='demo-banner';banner.innerHTML='<p><strong>Demo mode · simulated meeting</strong><br>Fictional conversation and replies. No audio capture, meetings or AI calls. Changes reset on reload.</p><div><button id="reset-demo">Reset demo</button> <a href="/">Exit demo</a></div>';document.body.prepend(banner);
+ const bannerSize=new ResizeObserver(()=>document.documentElement.style.setProperty('--demo-banner-height',`${banner.getBoundingClientRect().height}px`));bannerSize.observe(banner);window.addEventListener('pagehide',()=>bannerSize.disconnect());
+ $('start-title').textContent='Review the plan. Then run the sample.';
+ button('reset-demo').onclick=()=>{location.hash='';location.reload();};
+ button('logout').textContent='Exit demo';button('logout').onclick=()=>location.assign('/');
+ button('mobile-logout').textContent='Exit demo';
+ const form=$<HTMLFormElement>('create-form');
+ form.querySelector<HTMLInputElement>('[name=title]')!.value='Cache rollout · release readiness';
+ form.querySelector<HTMLTextAreaElement>('[name=agenda]')!.value=demoRuntime.simulator.records.values().next().value!.agenda;
+ const createNote=document.createElement('p');createNote.className='notice';createNote.textContent='Demo mode runs a fictional engineering discussion. You can edit the title and agenda; the scripted conversation remains the cache rollout scenario.';form.insertBefore(createNote,form.querySelector('label'));
+ for(const option of $<HTMLSelectElement>('audio-mode').options)option.textContent+=' · simulated';
+ $('consent').parentElement!.lastChild!.textContent=' I understand this is a fictional simulation with prerecorded voices; no real participants or microphone are connected.';
+ $('transcript-label').textContent='Simulated streaming transcript';
+ $('rally-replies-section').querySelector('p')!.textContent='Scripted Rally replies with prerecorded Meta speech, separate from the simulated participant transcript.';
+ $('share-report').textContent='Simulate report sharing';
+ $('report-sharing-dialog').querySelector('p')!.textContent='Simulation only: add or revoke a fictional recipient to explore this dialog. This grants no real account access.';
+ $('export-pdf').textContent='Print / save PDF';
+ const printNotice=document.createElement('p');printNotice.className='demo-print-only';printNotice.textContent='Synthetic sample report. Fictional conversation; no live model analysis.';$('report-panel').prepend(printNotice);
+ $('check-audio').onclick=()=>toast('Demo mode does not access audio. Start a simulated meeting instead.');
+ $('test-voice').onclick=()=>toast('Demo mode plays prerecorded Meta voice clips.');
+ const audioToggle=input('spoken-prompts');audioToggle.checked=true;$('voice-toggle-label').lastChild!.textContent='Demo audio';audioToggle.onchange=()=>{demoAudio?.setEnabled(audioToggle.checked);if(audioToggle.checked)demoAudio?.unlock();};
+ $('follow-up-whatsapp').removeAttribute('href');$('follow-up-whatsapp').textContent='WhatsApp delivery disabled in demo';$('follow-up-whatsapp').addEventListener('click',e=>{e.preventDefault();toast('This is a local draft; demo mode does not send messages.');});
+ document.querySelectorAll('#meeting .model-attribution').forEach(el=>{const note=document.createElement('small');note.textContent=' · simulated in demo';el.append(note);});
+ await signedIn({id:'demo-user',username:'Demo workspace',role:'user'});
+ setInterval(()=>{demoRuntime!.simulator.step();if(state.session)void refresh();},200);
+})();

@@ -1,0 +1,13 @@
+{
+  "sourceRevision": "0ebc44f",
+  "source": "Checked-in portable demo/, served on loopback; fresh browser profile; fictional sample only.",
+  "files": {
+    "workspace-tour.gif": "71c8fc179432a4a3ca90e5ac7ff01e7bdaf5f08964f5d887558c267164cf9311",
+    "workspace-home.png": "f9069460813e6d0704249a3ab9f42cf947ffcb769e82142e28ae175bb3e91f02"
+  },
+  "privacy": "Fictional Alex/Priya/Sam only; no real participants, user accounts, transcripts, meeting invitations, API keys, desktop/browser chrome, or personal files. Browser external requests: 0.",
+  "timing": "23-second edited screenshot tour with holds and cuts. Partial captions are simulated; not a live inference or latency measurement.",
+  "capture": "1400x1000 bounded viewport; GIF resized to1000px wide,2fps. Audio muted during capture; GIF has no audio.",
+  "paidCalls": 0,
+  "appearance": "Dark explicitly selected through rally:appearance; data-theme=dark asserted before all13screenshots."
+}

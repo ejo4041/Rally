@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="310" viewBox="0 0 1200 310" role="img" aria-labelledby="title desc">
+<title id="title">Rally — Make the time together count.</title><desc id="desc">AI meeting facilitation built with Meta models. Prepare, listen, guide and follow through. Node 24+, TypeScript, portable sample.</desc>
+<defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="#0c1620"/><stop offset="1" stop-color="#193b3b"/></linearGradient><radialGradient id="glow"><stop stop-color="#7bd5bc" stop-opacity=".18"/><stop offset="1" stop-color="#7bd5bc" stop-opacity="0"/></radialGradient></defs>
+<rect width="1200" height="310" rx="20" fill="url(#bg)"/><circle cx="1030" cy="100" r="240" fill="url(#glow)"/>
+<g fill="none" stroke="#bee9de" stroke-width="3"><rect x="48" y="40" width="36" height="36"/><path d="M57 40v36m9-36v36m9-36v36"/></g>
+<g font-family="system-ui,-apple-system,Segoe UI,sans-serif"><text x="98" y="76" font-size="48" font-weight="750" fill="#f4f8fa">rally<tspan fill="#d9b65e">.</tspan></text>
+<text x="48" y="145" font-size="39" font-weight="700" fill="#f4f8fa">Make the time <tspan fill="#bee9de">together count.</tspan></text>
+<text x="50" y="182" font-size="21" fill="#b8cdd4">Your agenda. A clearer conversation. Next steps grounded in what was said.</text>
+<g font-size="14" font-weight="600"><rect x="48" y="219" width="154" height="34" rx="17" fill="#274445"/><text x="66" y="241" fill="#d3f0e7">Built with Meta AI</text><rect x="214" y="219" width="102" height="34" rx="17" fill="#263441"/><text x="233" y="241" fill="#d8e5ec">Node 24+</text><rect x="328" y="219" width="110" height="34" rx="17" fill="#263441"/><text x="343" y="241" fill="#d8e5ec">TypeScript</text><rect x="450" y="219" width="166" height="34" rx="17" fill="#263441"/><text x="469" y="241" fill="#d8e5ec">Portable sample</text></g>
+<g font-size="15" fill="#a8c8ca"><text x="846" y="62">PREPARE</text><text x="984" y="62">LISTEN</text><text x="846" y="92">GUIDE</text><text x="984" y="92">FOLLOW THROUGH</text></g></g></svg>

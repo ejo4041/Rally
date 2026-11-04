@@ -1,0 +1,28 @@
+{
+  "kind": "authored-synthetic-demo-audio",
+  "clips": 23,
+  "totalSecondsIncludingAskVariants": 150.241375,
+  "localParticipantClips": 17,
+  "hostedRallyClips": 6,
+  "hostedStatuses": [
+    200,
+    200,
+    200,
+    200,
+    200,
+    200
+  ],
+  "museCalls": 0,
+  "localModelAPIFeesUSD": 0,
+  "hostedSpeechAndInfrastructureCost": "unknown",
+  "runtimeModelCalls": 0,
+  "speakerMap": {
+    "Alex": "Meta MMS English",
+    "Sam": "Meta MMS English (same underlying voice as Alex)",
+    "Priya": "Meta FastSpeech2 + bundled HiFi-GAN",
+    "Rally": "Hosted SeamlessM4T-v2 default voice"
+  },
+  "audioManifest": "demo/demo-audio/manifest.json",
+  "generator": "scripts/build-demo-audio.mjs",
+  "note": "No model weights, secrets, real participant recordings or production voice changes. Alex and Sam intentionally share MMS; Priya uses FastSpeech2. Fixed assets only; approximate caption alignment, not ASR."
+}

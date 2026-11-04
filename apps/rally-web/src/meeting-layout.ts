@@ -4,7 +4,7 @@ export function setupMeetingLayout() {
  const restore=new Map<string,()=>void>();
  const planHome=$('agenda-panel').parentNode!,planNext=$('agenda-panel').nextSibling;
  let current:Meeting|null=null;
- function positionPlan(){if(!current||restore.has('plan-sheet'))return;const panel=$('agenda-panel');if(matchMedia('(max-width:760px)').matches&&!['live','ended'].includes(current.phase))$('meeting').insertBefore(panel,$('start-panel'));else if(panel.parentNode!==planHome)planHome.insertBefore(panel,planNext?.parentNode===planHome?planNext:null);}
+ function positionPlan(){if(!current||restore.has('plan-sheet'))return;const panel=$('agenda-panel');if(matchMedia('(max-width:760px)').matches&&!['live','ended'].includes(current.phase))$('meeting').insertBefore(panel,$('start-panel').nextSibling);else if(panel.parentNode!==planHome)planHome.insertBefore(panel,planNext?.parentNode===planHome?planNext:null);}
  addEventListener('resize',positionPlan);
  function open(dialogId:string,slotId:string,ids:string[]) {
   const dialog=$(dialogId) as HTMLDialogElement;

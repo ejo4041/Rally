@@ -22,3 +22,7 @@ The local English reference includes the CMU Pronouncing Dictionary, copyright C
 ## Experimental Meta phone synthesis
 
 The opt-in `facebook/fastspeech2-en-ljspeech` checkpoint and bundled HiFi-GAN vocoder are pinned in the [model manifest](experiments/meta-fastspeech2/model-manifest.json). Selected upstream fairseq definitions are copied without changes and verified against their [source manifest](experiments/meta-fastspeech2/vendor/manifest.json). Preserve the full [MIT license](experiments/meta-fastspeech2/vendor/LICENSE). Meta's upstream fairseq README expressly applies that license to pretrained models; this license basis differs from MMS English's CC BY-NC 4.0. Weights are provisioned outside Git/source exports. The existing licensed CMU dictionary supplies stressed phones; no third-party neural G2P or TTS checkpoint is used. [Research, provenance and limitations](docs/research/meta-phoneme-backend-feasibility-2026-11-02.md).
+
+## Prerecorded synthetic demo voices
+
+The public sample ships generated Meta MMS English, Meta FastSpeech2/HiFi-GAN and hosted Seamless speech clips, not real participant recordings or model weights. [Asset attribution, model/revision mapping and limits](demo/demo-audio/README.md), [text/duration/hash manifest](demo/demo-audio/manifest.json). Model-specific notices above remain applicable; the sample does not assert additional commercial rights. Alex and Sam share one MMS voice; Priya uses FastSpeech2; Rally uses the existing Seamless default.

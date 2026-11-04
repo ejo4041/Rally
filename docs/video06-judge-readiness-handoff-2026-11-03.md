@@ -1,0 +1,13 @@
+# Video 06 and judge setup handoff — November 3
+
+Source changes were developed in `/srv/hackathon/rally-judge-ready` on `docs/judge-ready-video06`, then fast-forwarded to main at `05a264a` (plus this handoff commit). No production application/UI deployment was needed. Other developer worktrees were left on their existing branches.
+
+Version 06: `/srv/hackathon/artifacts/human-demo-20261103/06/06 - Rally - 3 Minute Demo.mp4`. Matching numbered SRT, manifest, verification and build script are beside it. Local review export: `C:\Users\Eoffermann\Downloads\Rally Demo Edit 2026-11-02\06 - Rally - 3 Minute Demo.mp4`. Exactly180seconds,1080p30;5400frames. SHA256 `e957a0d26d7c5a6562806f0367e99c573a6c351db7f23fd0f7ddb7a0c9cdae48`. Full decode passed; audio stream unchanged from05. New November03 group meeting and rally3.gif replace older muted B-roll, setup/transcription/response close-ups. No source media or01–05 export was altered. No video upload performed.
+
+Judge entry: https://rally.tail703f9e.ts.net/demo.html — same UI with fictional text and prerecorded Meta speech; no authentication, microphone, provider calls or private meeting access. Local fallback: Python serve root demo/. The local submission form working draft now points to06 and includes the public sample invitation.
+
+Own-key source setup: docs/judge-quickstart.md. New scripts/init-local.mjs creates private persistent MFA-key config without a shared password. Closed registration and forced enrollment preserved. Combined launcher now loads the chosen checkout config before computing environment. Three separate locked installs are needed: packages/living-silk, apps/rally-api, apps/rally-web. See docs/judge-setup-verification-2026-11-03.md for evidence and limits:191unit tests, both type checks/build, actual LiveKit installer and HTTP bootstrap/enrollment passed, zero paid provider calls.
+
+Remaining external access issues: anonymous GitHub still404 (visibility unchanged); required Nexus mirror unresolved on droplet, API offline cache incomplete, so a fresh full API installation is not proven. Frontend and Silk offline installs passed. Existing API dependencies were reused for backend checks. Do not claim a clean full installation or live own-key inference was verified. Source license/artwork status remains in source-release-readiness.md. No model key, activation token, TOTP secret or runtime database was committed.
+
+Temporary bootstrap stack on3406/5406/7906 was stopped; production3301 was not restarted. The isolated checkout retains ignored first-run fixture files only; these are not real judge accounts or credentials. Never promote its .env.local/.data into production.

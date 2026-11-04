@@ -1,0 +1,242 @@
+export const demoClips = {
+  "greeting": {
+    "file": "greeting.wav",
+    "text": "Hi team, Rally here. Let's get this meeting started. Here is the agenda: Readiness and performance; Blockers and release gates; Owners and next steps.",
+    "speaker": "Rally",
+    "duration": 8.52,
+    "model": "facebook/seamless-m4t-v2-large",
+    "revision": null,
+    "sha256": "ac10261a22dd4d29447eec26c16281f380471c7139551cb593b1ae72371d6065",
+    "gain": 0.6716421345607062
+  },
+  "turn-0": {
+    "file": "turn-0.wav",
+    "text": "Let’s review the cache rollout. The canary is healthy, but we still need to decide whether the release is ready.",
+    "speaker": "Alex",
+    "duration": 7.5446875,
+    "model": "facebook/mms-tts-eng",
+    "revision": "c71de0fe7204c83f1c10820a7d696d0b450048ba",
+    "sha256": "b12f1f257e3f068bd78d97f886f3fedd19f1126094c174d18966973067f8f4dd",
+    "gain": 0.6378557564091731
+  },
+  "turn-1": {
+    "file": "turn-1.wav",
+    "text": "The new cache cut the ninety-fifth percentile response time from four hundred milliseconds to one hundred and eighty in the staging benchmark.",
+    "speaker": "Priya",
+    "duration": 7.9064375,
+    "model": "facebook/fastspeech2-en-ljspeech",
+    "revision": "a3e3e5e2e62bb7ca7514b11aa469e9c5b01a20bf",
+    "sha256": "d33025aab07fcba2854173ae59112c42ce94375f9394d3559d8a6d6a60040f26",
+    "gain": 1.216993962298339
+  },
+  "turn-2": {
+    "file": "turn-2.wav",
+    "text": "The error rate is steady. I would still like a rollback threshold written down before we expand traffic.",
+    "speaker": "Sam",
+    "duration": 7.1251875,
+    "model": "facebook/mms-tts-eng",
+    "revision": "c71de0fe7204c83f1c10820a7d696d0b450048ba",
+    "sha256": "ec278bb3fbe6a53f54f20d555eadd3ff832983351cefdb068ef92f329e5a7c5e",
+    "gain": 0.5563749972497403
+  },
+  "turn-3": {
+    "file": "turn-3.wav",
+    "text": "Good point. The mobile sign-in regression is our remaining blocker. We cannot ship that to customers.",
+    "speaker": "Alex",
+    "duration": 7.2926875,
+    "model": "facebook/mms-tts-eng",
+    "revision": "c71de0fe7204c83f1c10820a7d696d0b450048ba",
+    "sha256": "d4b2282d748a985691a4e5b1f6b758d851c6fa49963257bbc3b3c179d6f9b3f2",
+    "gain": 0.6411502601756414
+  },
+  "turn-4": {
+    "file": "turn-4.wav",
+    "text": "I will fix the mobile sign-in regression by Tuesday and add a regression test to the authentication suite.",
+    "speaker": "Priya",
+    "duration": 5.7005,
+    "model": "facebook/fastspeech2-en-ljspeech",
+    "revision": "a3e3e5e2e62bb7ca7514b11aa469e9c5b01a20bf",
+    "sha256": "35c4a537ed65588913639fd964ff6193b3c3001613ed1703027b89cd87d169ba",
+    "gain": 1.0562782868881349
+  },
+  "turn-5": {
+    "file": "turn-5.wav",
+    "text": "Could someone update the launch checklist? We have not agreed who owns that yet.",
+    "speaker": "Sam",
+    "duration": 4.683125,
+    "model": "facebook/mms-tts-eng",
+    "revision": "c71de0fe7204c83f1c10820a7d696d0b450048ba",
+    "sha256": "f4cb2aeef8e248ec69bb46ff49cdb5998e2aa9431170f84f04231c89597e724f",
+    "gain": 0.656797985810935
+  },
+  "turn-6": {
+    "file": "turn-6.wav",
+    "text": "The regression has an owner and a Tuesday target. Checklist ownership is still open. Should launch depend on the regression passing?",
+    "speaker": "Rally",
+    "duration": 7.32,
+    "model": "facebook/seamless-m4t-v2-large",
+    "revision": null,
+    "sha256": "aedc3d90219bf4d0a03b138884b2e74722b6d4b3f2636be151319d0b4740df45",
+    "gain": 0.6049716030093191
+  },
+  "turn-7": {
+    "file": "turn-7.wav",
+    "text": "Yes. We agree to launch only after the mobile regression passes. We have not chosen a launch date.",
+    "speaker": "Alex",
+    "duration": 7.5231875,
+    "model": "facebook/mms-tts-eng",
+    "revision": "c71de0fe7204c83f1c10820a7d696d0b450048ba",
+    "sha256": "5e0f98cc48f8c570d571cdb81b5e3e568bfc6540c8e7fa1d7d129dfc20d3a958",
+    "gain": 0.6176471392831107
+  },
+  "turn-8": {
+    "file": "turn-8.wav",
+    "text": "Agreed. Keep the launch date open and the checklist owner unassigned until someone accepts it.",
+    "speaker": "Sam",
+    "duration": 5.5606875,
+    "model": "facebook/mms-tts-eng",
+    "revision": "c71de0fe7204c83f1c10820a7d696d0b450048ba",
+    "sha256": "26aa8f7113b077b6c09698dd69c7690b6cffafa208785a409d14ef42b342612f",
+    "gain": 0.7392331185640291
+  },
+  "turn-9": {
+    "file": "turn-9.wav",
+    "text": "For the canary, we can compare the request latency and error budget against the existing release in the same region.",
+    "speaker": "Priya",
+    "duration": 6.49,
+    "model": "facebook/fastspeech2-en-ljspeech",
+    "revision": "a3e3e5e2e62bb7ca7514b11aa469e9c5b01a20bf",
+    "sha256": "a69d8e0dec6a03c5ce84ddaed18b9c638c8bc7d477c92c2bd37845d50e6d3c27",
+    "gain": 1.173344123713724
+  },
+  "turn-10": {
+    "file": "turn-10.wav",
+    "text": "I can write up the rollback thresholds. I need to check the baseline before I can commit to a deadline.",
+    "speaker": "Sam",
+    "duration": 7.382375,
+    "model": "facebook/mms-tts-eng",
+    "revision": "c71de0fe7204c83f1c10820a7d696d0b450048ba",
+    "sha256": "e14c4c8ab68656786ce7e535789e483dbf788afb83ec012372fb1ee09c61649f",
+    "gain": 0.6526854696600964
+  },
+  "turn-11": {
+    "file": "turn-11.wav",
+    "text": "Thanks, Sam. The owner is confirmed, but the deadline is still open. We should not invent one in the notes.",
+    "speaker": "Alex",
+    "duration": 8.08,
+    "model": "facebook/mms-tts-eng",
+    "revision": "c71de0fe7204c83f1c10820a7d696d0b450048ba",
+    "sha256": "0b8cf3cb923ed2e19d5ba55abe188ca04b8997612e01dd93c3d99e5cda723f96",
+    "gain": 0.6546761227591896
+  },
+  "turn-12": {
+    "file": "turn-12.wav",
+    "text": "Did anyone see the new developer conference schedule? The distributed systems session sounds interesting.",
+    "speaker": "Priya",
+    "duration": 6.372125,
+    "model": "facebook/fastspeech2-en-ljspeech",
+    "revision": "a3e3e5e2e62bb7ca7514b11aa469e9c5b01a20bf",
+    "sha256": "d732052df41d4ef611a69a17d2e1160ecbe20d9a404f9df926b23fa0fcc17bf2",
+    "gain": 1.2702507933211924
+  },
+  "turn-13": {
+    "file": "turn-13.wav",
+    "text": "Yes, though let’s save that for later. We still need to check the release gates.",
+    "speaker": "Sam",
+    "duration": 4.6505625,
+    "model": "facebook/mms-tts-eng",
+    "revision": "c71de0fe7204c83f1c10820a7d696d0b450048ba",
+    "sha256": "ca5f040a392d8c3a6fa9a5992d201e044442cf979f0008f3377cc8e68402c0a0",
+    "gain": 0.6320208118830711
+  },
+  "turn-14": {
+    "file": "turn-14.wav",
+    "text": "One release gate is confirmed: the mobile regression must pass. Sam owns the rollback thresholds with no agreed deadline. The launch checklist still needs an owner.",
+    "speaker": "Rally",
+    "duration": 9.06,
+    "model": "facebook/seamless-m4t-v2-large",
+    "revision": null,
+    "sha256": "db1052bd6cf2c951c94327414ed00e30481f3446cb15a38bfbef2d566eb5daa7",
+    "gain": 0.6160368230230487
+  },
+  "turn-15": {
+    "file": "turn-15.wav",
+    "text": "Hey Rally, what did we decide about launch?",
+    "speaker": "Alex",
+    "duration": 2.5955,
+    "model": "facebook/mms-tts-eng",
+    "revision": "c71de0fe7204c83f1c10820a7d696d0b450048ba",
+    "sha256": "6cda69eebb53f137cd096953960fae7e3dbf612cf8c9237d717ab99a7eb3c011",
+    "gain": 0.5373739532935419
+  },
+  "turn-16": {
+    "file": "turn-16.wav",
+    "text": "The team agreed to launch only after the mobile sign-in regression passes. There is no agreed launch date, and the checklist owner remains unconfirmed.",
+    "speaker": "Rally",
+    "duration": 8.06,
+    "model": "facebook/seamless-m4t-v2-large",
+    "revision": null,
+    "sha256": "65202d0139bc1d513fb6f59ce639371ca24b9802df341d055c78d23c5a406ddf",
+    "gain": 0.6119720493770449
+  },
+  "turn-17": {
+    "file": "turn-17.wav",
+    "text": "That matches my understanding. My fix and its regression test are due Tuesday.",
+    "speaker": "Priya",
+    "duration": 4.8395625,
+    "model": "facebook/fastspeech2-en-ljspeech",
+    "revision": "a3e3e5e2e62bb7ca7514b11aa469e9c5b01a20bf",
+    "sha256": "994e5844a9805a4204646e712d5ddf290b02cbad3d7d2da36a31524aba18219f",
+    "gain": 1.1604021843195558
+  },
+  "turn-18": {
+    "file": "turn-18.wav",
+    "text": "I will document the rollback thresholds. The checklist assignment still needs a follow-up.",
+    "speaker": "Sam",
+    "duration": 5.732,
+    "model": "facebook/mms-tts-eng",
+    "revision": "c71de0fe7204c83f1c10820a7d696d0b450048ba",
+    "sha256": "3b4631404a4006268f99abbdaec600b9386c4fe96177d010eb8c6646cf995660",
+    "gain": 0.6206529584637722
+  },
+  "turn-19": {
+    "file": "turn-19.wav",
+    "text": "Exactly. Let’s keep those open questions visible rather than treating them as completed work.",
+    "speaker": "Alex",
+    "duration": 6.30275,
+    "model": "facebook/mms-tts-eng",
+    "revision": "c71de0fe7204c83f1c10820a7d696d0b450048ba",
+    "sha256": "832e07c4a5fa67bd324625ce5823d5d8e3145afe46f3fa5669c9a430b2367cb0",
+    "gain": 0.679616982245045
+  },
+  "turn-20": {
+    "file": "turn-20.wav",
+    "text": "Ready to wrap up: a conditional launch decision, two assigned actions, and two open details. End the meeting when you are ready to review the sample report.",
+    "speaker": "Rally",
+    "duration": 8.64,
+    "model": "facebook/seamless-m4t-v2-large",
+    "revision": null,
+    "sha256": "a0d8d820347445366c0a1e67b92380f21b5c19b8c495c92ed08dc4691d93bf41",
+    "gain": 0.6506736915381311
+  },
+  "ask-early": {
+    "file": "ask-early.wav",
+    "text": "Sample answer: Review the release gates, then confirm owners and deadlines.",
+    "speaker": "Rally",
+    "duration": 4.52,
+    "model": "facebook/seamless-m4t-v2-large",
+    "revision": null,
+    "sha256": "de20e5ae0da80d0c26722cbfa838f7894d93ab64f0ad612ef1bfc69be0165cd4",
+    "gain": 0.6672479578237311
+  },
+  "ask-late": {
+    "file": "ask-late.wav",
+    "text": "Sample answer: Launch depends on the mobile regression passing. Checklist ownership and the launch date remain unresolved.",
+    "speaker": "Rally",
+    "duration": 6.86,
+    "model": "facebook/seamless-m4t-v2-large",
+    "revision": null,
+    "sha256": "68e0c0835bde95f0cdad4c5c2b07538b8f68384948427c29db93226b79fa4b37",
+    "gain": 0.6319054100507618
+  }
+} as const;

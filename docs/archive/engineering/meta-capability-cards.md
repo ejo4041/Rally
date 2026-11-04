@@ -10,4 +10,4 @@ Validation:17 frontend unit tests, typecheck/build, full synthetic feedback brow
 
 ## Deployed
 
-Static release69720b3 is active at https://rally.tail703f9e.ts.net/ and merged into main. Backend source compared byte-for-byte, SQLite backed up, no API/media restart. Public actual-WebGL mascot, theme persistence, MFA, loading, PDF and report ACL checks pass with temporary records removed. [Evidence](research/meta-cards-deployed.json). Final documentation checkpoint merged afterward.
+Static release69720b3 is active at https://rally.tail703f9e.ts.net/ and merged into main. Backend source compared byte-for-byte, SQLite backed up, no API/media restart. Public actual-WebGL mascot, theme persistence, MFA, loading, PDF and report ACL checks pass with temporary records removed. [Evidence](../../research/meta-cards-deployed.json). Final documentation checkpoint merged afterward.

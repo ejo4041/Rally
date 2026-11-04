@@ -95,6 +95,7 @@ export function createApplication(
     current: (id) => meetings.get(id),
     save: (m) => meetings.save(m),
     start: (m) => engine.start(m, true),
+    connected: (m) => engine.greet(m),
     end: (m) => engine.end(m),
     interrupt: (m) => engine.interrupt(m),
     renew: (id) => engine.renewCall(id),
@@ -492,9 +493,9 @@ export function createApplication(
     )
       throw new HttpError("This host already has an active meeting", 409);
     const input = z
-      .object({ meetingUrl: z.string().max(4000), consented: z.literal(true) })
+      .object({ meetingUrl: z.string().max(4000), consented: z.literal(true), greetingEnabled:z.boolean().default(false) })
       .parse(req.body);
-    res.status(202).json(liveTeams.join(m, input.meetingUrl, input.consented));
+    res.status(202).json(liveTeams.join(m, input.meetingUrl, input.consented, input.greetingEnabled));
   });
   app.get("/api/meetings/:id/teams/status", (req, res) =>
     res.json(liveTeams.status(owned(req).id)),
