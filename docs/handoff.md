@@ -247,3 +247,8 @@ Moved nine form-answer, presenter-script and editing-plan documents to the priva
 ## November4 — final README and judge check
 
 README links the published180second YouTube demo and describes Rally’s visible personality, with a short fictional-sample evaluation path. Signed-out YouTube playability and anonymous GitHub/raw-source access pass; public sample Ready report, unresolved details and source highlighting checked. Documentation checks passed. Private final review saved under artifacts/submission-preparation-20261104/final-judge-review.md; no new submission-draft files added to source. Remaining records: visualization package rights/license confirmation and unverified fresh full API install. No runtime/video/deployment/visibility changes or final form submission.
+
+
+## November4 — fresh-clone quickstart and portable npm setup
+
+Fresh public HTTPS clone at dbca636ran the exact README Python server command on127.0.0.1:8000. Browser verified home, completed report/source highlighting, create/plan, consent gate, simulated transcript, Ask Rally and End/report; zero API requests. Portable bundle hashes matched provenance;25nonempty sample WAVs served successfully. Public setup docs now use npm’s configured registry;32API-lockfile tarball URLs normalized without version/integrity changes. Internal host/employer references in the current tracked tree were generalized, with dated test limitations and attribution preserved. No package download/publication, history rewrite or runtime deployment. Droplet SSH dropped after the same edits were prepared but before commit/push, so publication was completed from the fresh local checkout. On reconnect, compare the server’s uncommitted preparation before updating that worktree.

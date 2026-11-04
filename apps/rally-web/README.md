@@ -4,7 +4,7 @@ The current TypeScript frontend shares its interface between the authenticated f
 
 Follow the [judge quickstart](../../docs/judge-quickstart.md) to run both servers, activate your invited administrator with MFA and enable your own API key. There is no open signup. For immediate evaluation without installation or credentials, use [the hosted sample](https://rally.tail703f9e.ts.net/demo.html) or serve the root `demo/` directory with Python.
 
-From this directory after installing locked dependencies through Nexus:
+From this directory after installing locked dependencies with npm:
 
 ```sh
 npm run typecheck

@@ -14,7 +14,7 @@ Start here when resuming from home. This note supersedes earlier “morning”, 
 
 ## Account and session context
 
-Eric confirmed that the daytime/local conversation is on his **work account**, while the Codex session on this DigitalOcean droplet uses his **personal account**, which owns Rally's Sites project. The local connection could see only AI Operations in Veilant and could not publish Rally across the workspace boundary. Viewer sharing did not solve editing access. At the user's explicit request, we submitted the staged deployment to the existing idle personal Codex session on the droplet; it successfully published version 7 using its own supported Sites tools. No account authentication was extracted or transferred. Use the personal session for future Sites changes; no replacement Site is needed.
+Eric confirmed that the daytime/local conversation is on his **work account**, while the Codex session on this DigitalOcean droplet uses his **personal account**, which owns Rally's Sites project. The local connection could see only the work-account workspace and could not publish Rally across the workspace boundary. Viewer sharing did not solve editing access. At the user's explicit request, we submitted the staged deployment to the existing idle personal Codex session on the droplet; it successfully published version 7 using its own supported Sites tools. No account authentication was extracted or transferred. Use the personal session for future Sites changes; no replacement Site is needed.
 
 The existing session is `hack` user's tmux session **team**, pane **team:0.0**, working directory `/srv/hackathon/repo`. It is idle after its deployment turn; its last chat answer predates the subsequent live test, pacing fix and updated costs. **Read these files rather than relying on that last answer.** No further task has been submitted to it by this handoff.
 
@@ -81,7 +81,7 @@ cd /srv/hackathon/repo/experiments/teams-web-client
 /srv/hackathon/tools/node/bin/node --test transcribe.test.mjs
 ```
 
-Private Pulse sink/source and Chromium debug port are loopback/private; do not expose them for this workflow. Ignored `.env.local` at the repo root already contains the model key, runner origin, bridge secret and Sites runtime service token. Keep values out of chat, source and Markdown. No npm packages were downloaded for this work; any future downloads must use **nexus.rinet.io**, preserving existing auth/config, never public npm fallback.
+Private Pulse sink/source and Chromium debug port are loopback/private; do not expose them for this workflow. Ignored `.env.local` at the repo root already contains the model key, runner origin, bridge secret and Sites runtime service token. Keep values out of chat, source and Markdown. No npm packages were downloaded for this work; any future downloads must follow the operator’s approved npm configuration and preserve existing authentication.
 
 ## Next session: smallest useful test
 

@@ -8,3 +8,8 @@ Branch: `docs/judge-ready-video06`, isolated checkout on the droplet. Production
 - init-local generated a fresh private configuration and persistent MFA key without displaying it. Admin CLI generated a private one-time invitation. A separate loopback development stack returned health OK and HTTP 200 for the frontend. Its real HTTP activation/enrollment endpoints accepted the invitation, required TOTP enrollment and returned the expected local administrator identity; unauthenticated meeting access was denied. No shared password or authentication bypass was added.
 - All first-run data used an ignored, separate database. No production database was opened/migrated by the bootstrap test. The temporary stack was stopped after verification. No paid provider calls were made; real key entitlement, transcription/reasoning availability and full Teams/speech provisioning are not established by these tests.
 - Anonymous GitHub URL returned 404. Public source access remains an owner visibility decision. License/asset status is retained in source-release-readiness.md.
+
+
+## November4 portability update
+
+The public setup guide now uses standard npm commands and the API lockfile uses canonical public package URLs, preserving every version and integrity hash. A fresh anonymous HTTPS clone and the exact Python-only quickstart were exercised locally: home, completed report/source highlighting, new meeting/consent, simulated transcript, Ask Rally and End/report all passed without npm installation, credentials or provider calls. This sample check does not establish a fresh full API install with real model credentials. The earlier cached-dependency test limits remain historical evidence.

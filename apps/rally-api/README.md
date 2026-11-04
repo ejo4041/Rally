@@ -13,6 +13,6 @@ npm run typecheck
 npm test
 ```
 
-Use the Nexus registry for installs as documented in the quickstart. `npm run dev` starts a loopback LiveKit instance and the API. The root `node scripts/dev-rally.mjs` starts the frontend too. API defaults to 127.0.0.1:3001; LiveKit to 127.0.0.1:7880. SQLite lives in ignored `.data/`. `RALLY_ENV_FILE` selects an explicit configuration file; the combined launcher defaults to its own checkout's `.env.local`.
+Install dependencies with npm as documented in the quickstart. `npm run dev` starts a loopback LiveKit instance and the API. The root `node scripts/dev-rally.mjs` starts the frontend too. API defaults to 127.0.0.1:3001; LiveKit to 127.0.0.1:7880. SQLite lives in ignored `.data/`. `RALLY_ENV_FILE` selects an explicit configuration file; the combined launcher defaults to its own checkout's `.env.local`.
 
 `npm run test:media` and `npm run test:muse` are separate integration checks with service/device or paid-call prerequisites. Ordinary tests use fixtures. See [API contract](../../docs/backend-api.md), [model interfaces](../../docs/model-interfaces.md), and [current handoff](../../docs/handoff.md) for details and deployment verification boundaries.

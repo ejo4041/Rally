@@ -12,7 +12,7 @@ Actual meeting results and limits: [test report](../../docs/research/teams-web-c
 
 ## Prerequisites
 
-- Existing Node at `/srv/hackathon/tools/node/bin/node` and existing pinned Playwright 1.64.1 at `../teams-audio/node_modules/playwright`. No new npm dependencies were downloaded for this experiment. Any future npm download must use the established Nexus registry and preserve authentication.
+- Existing Node at `/srv/hackathon/tools/node/bin/node` and existing pinned Playwright 1.64.1 at `../teams-audio/node_modules/playwright`. No new npm dependencies were downloaded for this experiment. Any future npm download should use the configured npm registry and preserve authentication.
 - Existing Playwright Chromium at `/home/hack/.cache/ms-playwright/chromium-1248/chrome-linux64/chrome`.
 - OS packages installed for this test: `pulseaudio`, `pulseaudio-utils`, `xvfb`, `xauth`, `libcups2t64`, `espeak-ng`, and their dependencies. No distribution upgrade or reboot was performed.
 - Commands below run as `hack`, with `XDG_RUNTIME_DIR=/run/user/1000` and `LD_LIBRARY_PATH=/srv/hackathon/tools/browser-libs`.

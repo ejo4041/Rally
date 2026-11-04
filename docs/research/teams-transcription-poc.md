@@ -26,7 +26,7 @@ Updated 2026-10-28. User requested transcription and pasting a Teams invite into
 
 ## Publication blocker and account boundary
 
-This chat's Sites connection lists only AI Operations in Veilant and returns NOT_FOUND for Rally's exact project ID `appgprj_6ae17976c3c88191a5b2627b0187e484`. User confirmed the accounts are members of different workspaces. Cross-workspace viewer sharing does not grant Site editing; supported editor collaboration requires same-workspace membership. Continue publication from the owning account/workspace, or use a real member of that same workspace with editor access. Do not create a replacement Site or reuse/extract another session's account tokens.
+The work account's Sites connection lists a different workspace and returns NOT_FOUND for Rally's project. User confirmed the accounts are members of different workspaces. Cross-workspace viewer sharing does not grant Site editing; supported editor collaboration requires same-workspace membership. Continue publication from the owning account/workspace, or use a real member of that same workspace with editor access. Do not create a replacement Site or reuse/extract another session's account tokens.
 
 Existing URL: https://rally-meeting-moderator.excavator3496.chatgpt.site
 Preserve its custom/restricted audience and existing runtime secrets.

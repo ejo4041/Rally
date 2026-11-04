@@ -28,11 +28,11 @@ Read states SOC2TypeII, encryption and opt-in model improvement. Those are vendo
 
 Sources: [Facilitator capabilities and licensing](https://support.microsoft.com/en-us/teams/copilot/facilitator-in-microsoft-teams-meetings), [GA versus preview](https://learn.microsoft.com/MicrosoftTeams/facilitator-teams), [Otter voice scope](https://help.otter.ai/hc/en-us/articles/30839137508631-Otter-AI-Chat-with-voice), [Fellow pricing](https://fellow.ai/pricing), [Fireflies Live Assist](https://guide.fireflies.ai/articles/6032274417-what-is-fireflies-live-assist-get-real-time-suggestions-answers-and-notes-live-during-the-meeting), [Hedy suggestions](https://hedy.ai/help/automatic-suggestions/), [Hedy pricing](https://www.hedy.ai/pricing/), [Hedy monthly price](https://www.hedy.ai/contact/).
 
-## Product and Veilant implications — hypotheses
+## Product and service-business implications — hypotheses
 
 Lead with the meeting outcome, not the transcript: a release condition remains conditional, a proposed owner is not silently converted into an accepted commitment, and unresolved issues remain visible. Rally implements these as behavior requirements and evidence handling, not as a verified competitive accuracy advantage.
 
-A plausible Veilant offer combines facilitated project/change meetings with a reviewed decision/action record that can be handed into Jira/Confluence. Automated system writes and enterprise integrations are future scope, not current shipped capabilities. Sell to team leads/delivery owners facing repeated decision and ownership failures; validate that pain before competing for generic per-seat transcription budgets.
+A plausible service offer combines facilitated project/change meetings with a reviewed decision/action record that can be handed into Jira/Confluence. Automated system writes and enterprise integrations are future scope, not current shipped capabilities. Sell to team leads/delivery owners facing repeated decision and ownership failures; validate that pain before competing for generic per-seat transcription budgets.
 
 Rally currently provides a guest Teams participant plus browser microphone/tab capture. WhatsApp native guest joining remains experimental. It is not a mature native multi-platform service. Self-hosted application controls are useful, but ASR/reasoning and hosted speech still involve external services; do not claim fully local processing or audited compliance.
 

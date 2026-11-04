@@ -14,7 +14,7 @@ This is a local model adapter, not a second product backend. It generates modera
 
 ## Reproduce
 
-Python 3.12 and Node 24 were used. Install CPU PyTorch first to avoid pulling a GPU runtime. No npm installation is needed. If npm downloads are needed elsewhere in Rally, preserve the project's required Nexus registry.
+Python 3.12 and Node 24 were used. Install CPU PyTorch first to avoid pulling a GPU runtime. No npm installation is needed. If npm downloads are needed elsewhere in Rally, use the configured npm registry and preserve existing authentication settings.
 
 ```bash
 uv venv /srv/hackathon/tools/mms-venv

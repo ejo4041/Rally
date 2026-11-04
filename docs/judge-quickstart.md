@@ -14,17 +14,17 @@ Open http://127.0.0.1:8000/. Create a meeting, start its simulation, watch the t
 
 Use **Node 24 or later**, npm, Git, and Linux x64 (WSL2 is suitable for the baseline browser capture path). The automatic LiveKit installer also needs `tar` and outbound access to GitHub releases. A current Chrome/Edge browser is recommended. Native macOS/Windows require a separately installed compatible LiveKit binary via `LIVEKIT_BINARY`; they have not been tested for the full guest-Teams stack.
 
-Clone `https://github.com/ejo4041/Rally`, then run these commands from its root. All npm downloads use the Veilant Nexus mirror:
+Clone `https://github.com/ejo4041/Rally`, then run these commands from its root. Install the locked dependencies with npm:
 
 ```sh
-npm ci --prefix packages/living-silk --registry=https://nexus.rinet.io/repository/npm/
-npm ci --prefix apps/rally-api --registry=https://nexus.rinet.io/repository/npm/
-npm ci --prefix apps/rally-web --registry=https://nexus.rinet.io/repository/npm/
+npm ci --prefix packages/living-silk
+npm ci --prefix apps/rally-api
+npm ci --prefix apps/rally-web
 node scripts/init-local.mjs
 npm run setup:media --prefix apps/rally-api
 ```
 
-The mirror must be reachable from your network. There is no public-registry fallback. If it cannot resolve or requires access you do not have, use the dependency-free sample above; a fresh full installation has this external dependency. The LiveKit download is version-pinned and SHA-256 checked against its release checksums. Installed packages are locked by the two committed package-lock files.
+These commands use npm’s configured registry; a standard npm installation uses the public npm registry. If your organization requires a package mirror, use your approved npm configuration. No organization-specific npm registry or registry account is required by Rally. The LiveKit download is version-pinned and SHA-256 checked against its release checksums. Dependency versions and integrity hashes are pinned in each package’s committed lockfile.
 
 `init-local` writes an ignored `.env.local`, generates a persistent random MFA encryption key and leaves model spending off. It refuses to overwrite existing configuration. Keep this file private and back up its MFA key with your database. Losing/changing the key invalidates existing encrypted authenticator secrets. On Windows-mounted filesystems, also protect the file with Windows access controls.
 
